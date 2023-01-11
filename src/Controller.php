@@ -55,6 +55,19 @@ class Controller {
     }
 
     /**
+     * Load view
+     * @param string $name
+     * @param array $variables
+     * @return void
+     * @throws Exception\ViewException
+     */
+    public function loadView(string $name, array $variables = []) : void {
+        $view = new View();
+
+        echo $view->render($name, $variables);
+    }
+
+    /**
      * Magic __get
      * @param string $name
      * @return mixed|Model

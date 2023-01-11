@@ -3,6 +3,7 @@
 namespace Controller;
 
 use Krzysztofzylka\MicroFramework\controller;
+use Krzysztofzylka\MicroFramework\View;
 
 class test extends Controller {
 
@@ -14,6 +15,10 @@ class test extends Controller {
         var_dump($this);
         var_dump($this->loadModel('test'));
         var_dump($this->Test->test(), $this->name);
+    }
+
+    public function view() {
+        $this->loadView('view');
     }
 
 }

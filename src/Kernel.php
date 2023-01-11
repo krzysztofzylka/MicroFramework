@@ -60,6 +60,9 @@ class Kernel {
             throw new MicroFrameworkException('Project is not defined', 500);
         }
 
+        View::$filesystemLoader = new \Twig\Loader\FilesystemLoader(self::getPath('view'));
+        View::$environment = new \Twig\Environment(View::$filesystemLoader);
+
         if (!is_null($controllerName)) {
             self::loadController($controllerName, $controllerMethod, $controllerArguments);
         }

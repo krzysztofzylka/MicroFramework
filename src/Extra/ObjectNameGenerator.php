@@ -13,4 +13,13 @@ class ObjectNameGenerator {
         return '\controller\\' . $controllerName;
     }
 
+    /**
+     * Generate model class name
+     * @param string $modelName
+     * @return string
+     */
+    public static function model(string $modelName) : string {
+        return '\model\\' . $modelName;
+    }
+
 }

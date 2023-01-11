@@ -101,6 +101,8 @@ class Kernel {
             /** @var Controller $controller */
             $controller = new $class();
             $controller->name = $name;
+            $controller->method = $method;
+            $controller->arguments = $arguments;
 
             if (!method_exists($controller, $method)) {
                 throw new \Exception();
@@ -119,10 +121,16 @@ class Kernel {
     /**
      * Autoload
      * @return void
+     * @throws NotFoundException
      */
     public static function autoload() : void {
         spl_autoload_register(function ($class_name) {
             $path = File::repairPath(self::getProjectPath() . DIRECTORY_SEPARATOR . $class_name . '.php');
+
+            if (!file_exists($path)) {
+                throw new NotFoundException();
+            }
+
             include($path);
         });
     }

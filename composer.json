@@ -1,0 +1,21 @@
+{
+    "name": "krzysztofzylka/micro-framework",
+    "description": "Very fast micro php framework",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Krzysztofzylka\\MicroFramework\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Krzysztof Żyłka",
+            "email": "krzysztofzylka@yahoo.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "krzysztofzylka/simple-libraries": "^1.0"
+    }
+}

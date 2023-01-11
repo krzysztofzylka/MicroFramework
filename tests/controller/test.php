@@ -3,7 +3,6 @@
 namespace Controller;
 
 use Krzysztofzylka\MicroFramework\controller;
-use Krzysztofzylka\MicroFramework\View;
 
 class test extends Controller {
 

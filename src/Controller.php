@@ -2,6 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use krzysztofzylka\DatabaseManager\DatabaseManager;
+use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 
@@ -45,6 +47,10 @@ class Controller {
             $model = new $class();
             $model->name = $name;
             $model->controller = $this;
+
+            if ($model->useTable && isset(DatabaseManager::$connection)) {
+                $model->tableInstance = (new Table())->setName($model->tableName ?? $name);
+            }
         } catch (\Exception) {
             throw new NotFoundException();
         }

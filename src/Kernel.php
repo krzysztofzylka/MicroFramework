@@ -2,6 +2,10 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use krzysztofzylka\DatabaseManager\DatabaseConnect;
+use krzysztofzylka\DatabaseManager\DatabaseManager;
+use krzysztofzylka\DatabaseManager\Exception\ConnectException;
+use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
@@ -27,6 +31,8 @@ class Kernel {
         'model' => null,
         'view' => null
     ];
+
+    private static array $databaseInstance;
 
     /**
      * Init project
@@ -136,6 +142,21 @@ class Kernel {
 
             include($path);
         });
+    }
+
+    /**
+     * Database connect
+     * @param DatabaseConnect $databaseConnect
+     * @return void
+     * @throws DatabaseException
+     */
+    public static function databaseConnect(DatabaseConnect $databaseConnect) : void {
+        try {
+            $databaseManager = new DatabaseManager();
+            $databaseManager->connect($databaseConnect);
+        } catch (ConnectException $exception) {
+            throw new DatabaseException($exception->getHiddenMessage());
+        }
     }
 
 }

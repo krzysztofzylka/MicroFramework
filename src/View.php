@@ -48,6 +48,17 @@ class View {
                 $name = $this->controller->name . DIRECTORY_SEPARATOR . $name;
             }
 
+            $nameExplode = explode('/', $name);
+
+            $app = [
+                'controller' => $this->controller,
+                'view' => $this,
+                'name' => end($nameExplode),
+                'variables' => $variables
+            ];
+
+            View::$environment->addGlobal('app', $app);
+
             return self::$environment->render($name . '.twig', $variables);
         } catch (\Exception $exception) {
             throw new ViewException($exception->getMessage());

@@ -68,7 +68,8 @@ class Kernel {
         }
 
         View::$filesystemLoader = new \Twig\Loader\FilesystemLoader(self::getPath('view'));
-        View::$environment = new \Twig\Environment(View::$filesystemLoader);
+        View::$environment = new \Twig\Environment(View::$filesystemLoader, ['debug' => true]);
+        View::$environment->addExtension(new \Twig\Extension\DebugExtension());
 
         if (!is_null($controllerName)) {
             self::loadController($controllerName, $controllerMethod, $controllerArguments);

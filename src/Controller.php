@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework;
 
 use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Table;
+use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 
@@ -57,6 +58,7 @@ class Controller {
 
             if ($model->useTable && isset(DatabaseManager::$connection)) {
                 $model->tableInstance = (new Table())->setName($model->tableName ?? $name);
+                $model->transactionInstance = new Transaction();
             }
         } catch (\Exception) {
             throw new NotFoundException();

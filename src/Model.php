@@ -6,6 +6,7 @@ use krzysztofzylka\DatabaseManager\Condition;
 use krzysztofzylka\DatabaseManager\Enum\BindType;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Table;
+use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 
 class Model {
@@ -39,6 +40,12 @@ class Model {
      * @var Table
      */
     public Table $tableInstance;
+
+    /**
+     * Database transaction instance
+     * @var Transaction
+     */
+    public Transaction $transactionInstance;
 
     /**
      * POST data
@@ -304,6 +311,63 @@ class Model {
      */
     public function afterUpdate(?string $columnName = null, ?string $value = null) : bool {
         return true;
+    }
+
+    /**
+     * Begin transaction
+     * @return bool
+     * @throws DatabaseException
+     */
+    public function transactionBegin() : bool {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        try {
+            $this->transactionInstance->begin();
+
+            return true;
+        } catch (DatabaseManagerException $exception) {
+            throw new DatabaseException($exception->getHiddenMessage());
+        }
+    }
+
+    /**
+     * Commit transaction
+     * @return bool
+     * @throws DatabaseException
+     */
+    public function transactionCommit() : bool {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        try {
+            $this->transactionInstance->commit();
+
+            return true;
+        } catch (DatabaseManagerException $exception) {
+            throw new DatabaseException($exception->getHiddenMessage());
+        }
+    }
+
+    /**
+     * Rollback transaction
+     * @return bool
+     * @throws DatabaseException
+     */
+    public function transactionRollback() : bool {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        try {
+            $this->transactionInstance->rollback();
+
+            return true;
+        } catch (DatabaseManagerException $exception) {
+            throw new DatabaseException($exception->getHiddenMessage());
+        }
     }
 
 }

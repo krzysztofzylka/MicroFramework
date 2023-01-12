@@ -21,6 +21,21 @@ class View {
     public static Environment $environment;
 
     /**
+     * Controller
+     * @var Controller
+     */
+    private Controller $controller;
+
+    /**
+     * Set controller
+     * @param Controller $controller
+     * @return void
+     */
+    public function setController(Controller $controller) : void {
+        $this->controller = $controller;
+    }
+
+    /**
      * Load view
      * @param string $name
      * @param array $variables
@@ -29,6 +44,10 @@ class View {
      */
     public function render(string $name, array $variables = []) : string {
         try {
+            if (isset($this->controller)) {
+                $name = $this->controller->name . DIRECTORY_SEPARATOR . $name;
+            }
+
             return self::$environment->render($name . '.twig', $variables);
         } catch (\Exception $exception) {
             throw new ViewException($exception->getMessage());

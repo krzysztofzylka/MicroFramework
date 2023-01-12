@@ -69,6 +69,7 @@ class Controller {
      */
     public function loadView(string $name, array $variables = []) : void {
         $view = new View();
+        $view->setController($this);
 
         echo $view->render($name, $variables);
     }

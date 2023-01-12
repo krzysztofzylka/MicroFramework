@@ -116,13 +116,11 @@ class Kernel {
             if (!method_exists($controller, $method)) {
                 throw new \Exception();
             }
-
-            call_user_func_array([$controller, $method], $arguments);
         } catch (\Exception) {
             throw new NotFoundException();
         }
 
-
+        call_user_func_array([$controller, $method], $arguments);
 
         return $controller;
     }

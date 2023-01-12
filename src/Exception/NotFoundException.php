@@ -4,8 +4,8 @@ namespace Krzysztofzylka\MicroFramework\Exception;
 
 class NotFoundException extends MicroFrameworkException {
 
-    public function __construct() {
-        parent::__construct('Object not found.', 404);
+    public function __construct(string $message = 'Object not found.') {
+        parent::__construct($message, 404);
     }
 
 }

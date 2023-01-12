@@ -34,6 +34,12 @@ class Controller {
     public array $models = [];
 
     /**
+     * POST data
+     * @var ?array
+     */
+    public ?array $data = null;
+
+    /**
      * Load model
      * @param string $name
      * @return Model
@@ -47,6 +53,7 @@ class Controller {
             $model = new $class();
             $model->name = $name;
             $model->controller = $this;
+            $model->data = $this->data;
 
             if ($model->useTable && isset(DatabaseManager::$connection)) {
                 $model->tableInstance = (new Table())->setName($model->tableName ?? $name);
@@ -62,16 +69,16 @@ class Controller {
 
     /**
      * Load view
-     * @param string $name
+     * @param ?string $name
      * @param array $variables
      * @return void
      * @throws Exception\ViewException
      */
-    public function loadView(string $name, array $variables = []) : void {
+    public function loadView(?string $name = null, array $variables = []) : void {
         $view = new View();
         $view->setController($this);
 
-        echo $view->render($name, $variables);
+        echo $view->render($name ?? $this->method, $variables);
     }
 
     /**

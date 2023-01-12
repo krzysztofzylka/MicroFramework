@@ -41,6 +41,12 @@ class Model {
     public Table $tableInstance;
 
     /**
+     * POST data
+     * @var ?array
+     */
+    public ?array $data = null;
+
+    /**
      * Set ID
      * @param ?int $id
      * @return bool
@@ -119,7 +125,15 @@ class Model {
         }
 
         try {
-            return $this->tableInstance->insert($data);
+            if (!$this->beforeInsert()) {
+                return false;
+            }
+
+            if ($this->tableInstance->insert($data)) {
+                return $this->afterInsert();
+            } else {
+                return false;
+            }
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
@@ -174,7 +188,15 @@ class Model {
         }
 
         try {
-            return $this->tableInstance->update($data);
+            if (!$this->beforeUpdate()) {
+                return false;
+            }
+
+            if ($this->tableInstance->update($data)) {
+                return $this->afterUpdate();
+            } else {
+                return false;
+            }
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
@@ -193,7 +215,15 @@ class Model {
         }
 
         try {
-            return $this->tableInstance->updateValue($columnName, $value);
+            if (!$this->beforeUpdate($columnName, $value)) {
+                return false;
+            }
+
+            if ($this->tableInstance->updateValue($columnName, $value)) {
+                return $this->afterUpdate($columnName, $value);
+            } else {
+                return false;
+            }
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
@@ -238,6 +268,42 @@ class Model {
         }
 
         return $this;
+    }
+
+    /**
+     * Before insert
+     * @return bool
+     */
+    public function beforeInsert() : bool {
+        return true;
+    }
+
+    /**
+     * After insert
+     * @return bool
+     */
+    public function afterInsert() : bool {
+        return true;
+    }
+
+    /**
+     * Before update
+     * @param ?string $columnName if updateValue
+     * @param ?string $value if updateValue
+     * @return bool
+     */
+    public function beforeUpdate(?string $columnName = null, ?string $value = null) : bool {
+        return true;
+    }
+
+    /**
+     * After update
+     * @param ?string $columnName if updateValue
+     * @param ?string $value if updateValue
+     * @return bool
+     */
+    public function afterUpdate(?string $columnName = null, ?string $value = null) : bool {
+        return true;
     }
 
 }

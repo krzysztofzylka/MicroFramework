@@ -10,6 +10,7 @@ use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use krzysztofzylka\SimpleLibraries\Library\File;
+use krzysztofzylka\SimpleLibraries\Library\Request;
 
 /**
  * Kernel
@@ -112,6 +113,7 @@ class Kernel {
             $controller->name = $name;
             $controller->method = $method;
             $controller->arguments = $arguments;
+            $controller->data = self::getData();
 
             if (!method_exists($controller, $method)) {
                 throw new \Exception();
@@ -155,6 +157,18 @@ class Kernel {
         } catch (ConnectException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
+    }
+
+    /**
+     * Get post data
+     * @return ?array
+     */
+    private static function getData() : ?array {
+        if (!Request::isPost()) {
+            return null;
+        }
+
+        return Request::getAllPostEscapeData();
     }
 
 }

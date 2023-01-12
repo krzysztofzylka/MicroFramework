@@ -200,6 +200,24 @@ class Model {
     }
 
     /**
+     * Delete
+     * @param ?int $id
+     * @return bool
+     * @throws DatabaseException
+     */
+    public function delete(?int $id = null) : bool {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        try {
+            return $this->tableInstance->delete($id);
+        } catch (DatabaseManagerException $exception) {
+            throw new DatabaseException($exception->getHiddenMessage());
+        }
+    }
+
+    /**
      * Bind table
      * @param BindType $bindType
      * @param string $tableName
@@ -222,4 +240,4 @@ class Model {
         return $this;
     }
 
-    }
+}

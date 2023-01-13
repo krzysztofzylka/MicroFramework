@@ -33,8 +33,6 @@ class Kernel {
         'view' => null
     ];
 
-    private static array $databaseInstance;
-
     /**
      * Init project
      * @param string $projectPath

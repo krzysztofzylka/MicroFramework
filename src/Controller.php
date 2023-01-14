@@ -6,6 +6,7 @@ use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
+use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 
 class Controller {
@@ -39,6 +40,12 @@ class Controller {
      * @var ?array
      */
     public ?array $data = null;
+
+    /**
+     * Html generator
+     * @var Html
+     */
+    public Html $htmlGenerator;
 
     /**
      * Load model

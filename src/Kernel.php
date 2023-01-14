@@ -8,6 +8,7 @@ use krzysztofzylka\DatabaseManager\Exception\ConnectException;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
+use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use krzysztofzylka\SimpleLibraries\Library\File;
 use krzysztofzylka\SimpleLibraries\Library\Request;
@@ -113,6 +114,7 @@ class Kernel {
             $controller->method = $method;
             $controller->arguments = $arguments;
             $controller->data = self::getData();
+            $controller->htmlGenerator = new Html();
 
             if (!method_exists($controller, $method)) {
                 throw new \Exception();
@@ -162,7 +164,7 @@ class Kernel {
      * Get post data
      * @return ?array
      */
-    private static function getData() : ?array {
+    public static function getData() : ?array {
         if (!Request::isPost()) {
             return null;
         }

@@ -8,6 +8,7 @@ use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
+use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 
 class Model {
 
@@ -94,6 +95,32 @@ class Model {
 
         try {
             return $this->tableInstance->find($condition, $orderBy);
+        } catch (DatabaseManagerException $exception) {
+            throw new DatabaseException($exception->getHiddenMessage());
+        }
+    }
+
+    /**
+     * Select required
+     * @param ?Condition $condition
+     * @param ?string $orderBy
+     * @return array|false
+     * @throws DatabaseException
+     * @throws NotFoundException
+     */
+    public function findRequired(?Condition $condition = null, ?string $orderBy = null) : array|false {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        try {
+             $find = $this->find($condition, $orderBy);
+
+             if (!$find) {
+                 throw new NotFoundException();
+             }
+
+             return $find;
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }

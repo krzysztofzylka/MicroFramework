@@ -31,7 +31,8 @@ class Kernel {
     private static array $paths = [
         'controller' => null,
         'model' => null,
-        'view' => null
+        'view' => null,
+        'storage' => null
     ];
 
     /**
@@ -44,6 +45,7 @@ class Kernel {
         self::$paths['controller'] = $projectPath . '/controller';
         self::$paths['model'] = $projectPath . '/model';
         self::$paths['view'] = $projectPath . '/view';
+        self::$paths['storage'] = $projectPath . '/storage';
 
         foreach (self::$paths as $name => $path) {
             self::$paths[$name] = File::repairPath($path);

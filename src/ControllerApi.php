@@ -42,4 +42,20 @@ class ControllerApi extends Controller {
         );
     }
 
+    /**
+     * Get request method
+     * @return string
+     */
+    public function getRequestMethod() : string {
+        return $_SERVER['REQUEST_METHOD'];
+    }
+
+    /**
+     * Get body content
+     * @return false|string
+     */
+    public function getBodyContent() : false|string {
+        return file_get_contents('php://input');
+    }
+
 }

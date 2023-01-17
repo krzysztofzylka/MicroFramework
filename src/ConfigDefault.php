@@ -16,6 +16,8 @@ class ConfigDefault {
      */
     public $defaultMethod = 'index';
 
+    /** API */
+
     /**
      * API active
      * @var bool
@@ -27,5 +29,13 @@ class ConfigDefault {
      * @var ?string
      */
     public ?string $apiUri = 'api';
+
+    /** Database */
+
+    /**
+     * Active database
+     * @var bool
+     */
+    public bool $database = false;
 
 }

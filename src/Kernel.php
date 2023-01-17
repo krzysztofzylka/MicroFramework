@@ -36,6 +36,12 @@ class Kernel {
     ];
 
     /**
+     * Config
+     * @var object
+     */
+    private static object $config;
+
+    /**
      * Init project
      * @param string $projectPath
      * @return void
@@ -75,6 +81,27 @@ class Kernel {
         if (!is_null($controllerName)) {
             self::loadController($controllerName, $controllerMethod, $controllerArguments);
         }
+    }
+
+    /**
+     * Run framework
+     * @return void
+     * @throws MicroFrameworkException
+     * @throws NotFoundException
+     */
+    public static function run() : void {
+        if (!isset(self::$config)) {
+            self::$config = new ConfigDefault();
+        }
+
+        $url = $_GET['url'] ?? self::getConfig()->defaultPage;
+        $explode = explode('/', $url);
+
+        $controller = $explode[0];
+        $method = $explode[1] ?? self::getConfig()->defaultMethod;
+        $arguments = array_slice($explode, 2);
+
+        self::init($controller, $method, $arguments);
     }
 
     /**
@@ -172,6 +199,23 @@ class Kernel {
         }
 
         return Request::getAllPostEscapeData();
+    }
+
+    /**
+     * Set config
+     * @param object $config
+     * @return void
+     */
+    public static function setConfig(object $config) : void {
+        self::$config = $config;
+    }
+
+    /**
+     * Get config
+     * @return ConfigDefault
+     */
+    public static function getConfig() : object {
+        return self::$config;
     }
 
 }

@@ -30,6 +30,7 @@ class Kernel {
      */
     private static array $paths = [
         'controller' => null,
+        'api_controller' => null,
         'model' => null,
         'view' => null,
         'storage' => null
@@ -49,6 +50,7 @@ class Kernel {
     public static function create(string $projectPath) : void {
         self::$projectPath = $projectPath;
         self::$paths['controller'] = $projectPath . '/controller';
+        self::$paths['api_controller'] = $projectPath . '/api_controller';
         self::$paths['model'] = $projectPath . '/model';
         self::$paths['view'] = $projectPath . '/view';
         self::$paths['storage'] = $projectPath . '/storage';
@@ -65,11 +67,12 @@ class Kernel {
      * @param ?string $controllerName
      * @param string $controllerMethod
      * @param array $controllerArguments
+     * @param array $params additional init params
      * @return void
      * @throws MicroFrameworkException
      * @throws NotFoundException
      */
-    public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = []) : void {
+    public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = [], array $params = []) : void {
         if (!self::$projectPath) {
             throw new MicroFrameworkException('Project is not defined', 500);
         }
@@ -79,7 +82,7 @@ class Kernel {
         View::$environment->addExtension(new \Twig\Extension\DebugExtension());
 
         if (!is_null($controllerName)) {
-            self::loadController($controllerName, $controllerMethod, $controllerArguments);
+            self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false]);
         }
     }
 
@@ -98,10 +101,19 @@ class Kernel {
         $explode = explode('/', $url);
 
         $controller = $explode[0];
-        $method = $explode[1] ?? self::getConfig()->defaultMethod;
-        $arguments = array_slice($explode, 2);
 
-        self::init($controller, $method, $arguments);
+        if (self::$config->api && $controller === 'api') {
+            $controller = $explode[1];
+            $method = $explode[2] ?? self::getConfig()->defaultMethod;
+            $arguments = array_slice($explode, 3);
+
+            self::init($controller, $method, $arguments, ['api' => true]);
+        } else {
+            $method = $explode[1] ?? self::getConfig()->defaultMethod;
+            $arguments = array_slice($explode, 2);
+
+            self::init($controller, $method, $arguments);
+        }
     }
 
     /**
@@ -130,11 +142,16 @@ class Kernel {
      * @param string $name
      * @param string $method
      * @param array $arguments
+     * @param array $params additional params for loader
      * @return Controller
      * @throws NotFoundException
      */
-    public static function loadController(string $name, string $method = 'index', array $arguments = []) : Controller {
-        $class = ObjectNameGenerator::controller($name);
+    public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []) : Controller {
+        if (isset($params['api']) && $params['api']) {
+            $class = ObjectNameGenerator::controllerApi($name);
+        } else {
+            $class = ObjectNameGenerator::controller($name);
+        }
 
         try {
             /** @var Controller $controller */

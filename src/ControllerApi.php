@@ -2,6 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use krzysztofzylka\SimpleLibraries\Library\Response;
+
 class ControllerApi extends Controller {
 
     /**
@@ -10,8 +12,34 @@ class ControllerApi extends Controller {
      */
     public bool $isApi = true;
 
-    public function responseJson(array $data) {
+    /**
+     * Response JSON
+     * @param array $data
+     * @return never
+     */
+    public function responseJson(array $data) : never {
+        $response = new Response();
+        $response->json($data);
+    }
 
+    /**
+     * Response JSON error
+     * @param string $message
+     * @param int $code
+     * @return never
+     */
+    public function responseError(string $message, int $code = 400) : never {
+        http_response_code($code);
+
+        $response = new Response();
+        $response->json(
+            [
+                'error' => [
+                    'message' => $message,
+                    'code' => $code
+                ]
+            ]
+        );
     }
 
 }

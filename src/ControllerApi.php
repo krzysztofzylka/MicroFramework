@@ -28,7 +28,7 @@ class ControllerApi extends Controller {
 
     /**
      * Constructor
-     * - Automatic authorization
+     * - Automatic api authorization
      */
     public function __construct() {
         if ($this->auth) {

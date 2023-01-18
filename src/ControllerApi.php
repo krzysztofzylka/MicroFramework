@@ -26,6 +26,10 @@ class ControllerApi extends Controller {
      */
     public AuthorizationType $authorizationType = AuthorizationType::basic;
 
+    /**
+     * Constructor
+     * - Automatic authorization
+     */
     public function __construct() {
         if ($this->auth) {
             if ($this->authorizationType === AuthorizationType::basic) {

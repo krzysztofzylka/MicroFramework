@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework\Api;
 
+use Exception;
 use Krzysztofzylka\MicroFramework\Extension\Account;
 
 class Authorization {
@@ -15,7 +16,7 @@ class Authorization {
     public function basic(string $username, string $password) : bool {
         try {
             return (new Account())->login($username, $password);
-        } catch (\Exception) {
+        } catch (Exception) {
             return false;
         }
     }

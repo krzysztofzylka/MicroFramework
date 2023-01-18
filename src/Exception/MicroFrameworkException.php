@@ -2,5 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework\Exception;
 
-class MicroFrameworkException extends \Exception {
+use Exception;
+
+class MicroFrameworkException extends Exception {
 }

@@ -4,7 +4,7 @@ namespace controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
 
-class Index extends Controller {
+class index extends Controller {
 
     public function index() {
         $this->loadView();

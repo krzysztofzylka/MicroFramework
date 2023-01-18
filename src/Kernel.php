@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use Exception;
 use krzysztofzylka\DatabaseManager\DatabaseConnect;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Exception\ConnectException;
@@ -12,6 +13,9 @@ use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use krzysztofzylka\SimpleLibraries\Library\File;
 use krzysztofzylka\SimpleLibraries\Library\Request;
+use Twig\Environment;
+use Twig\Extension\DebugExtension;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * Kernel
@@ -77,9 +81,9 @@ class Kernel {
             throw new MicroFrameworkException('Project is not defined', 500);
         }
 
-        View::$filesystemLoader = new \Twig\Loader\FilesystemLoader(self::getPath('view'));
-        View::$environment = new \Twig\Environment(View::$filesystemLoader, ['debug' => true]);
-        View::$environment->addExtension(new \Twig\Extension\DebugExtension());
+        View::$filesystemLoader = new FilesystemLoader(self::getPath('view'));
+        View::$environment = new Environment(View::$filesystemLoader, ['debug' => true]);
+        View::$environment->addExtension(new DebugExtension());
 
         if (!is_null($controllerName)) {
             self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false]);
@@ -175,9 +179,9 @@ class Kernel {
             $controller->htmlGenerator = new Html();
 
             if (!method_exists($controller, $method)) {
-                throw new \Exception();
+                throw new Exception();
             }
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new NotFoundException();
         }
 

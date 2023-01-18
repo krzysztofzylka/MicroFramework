@@ -365,6 +365,7 @@ trait Form {
      * @param ?string $title
      * @param array $params
      * @return string
+     * @throws MicroFrameworkException
      * @ignore
      */
     private function generateTitle(?string $title, array $params) : string {

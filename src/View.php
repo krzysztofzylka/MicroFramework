@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use Exception;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -58,7 +59,7 @@ class View {
             ]);
 
             return self::$environment->render($name . '.twig', $variables);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new ViewException($exception->getMessage());
         }
     }

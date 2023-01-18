@@ -66,8 +66,8 @@ class Html {
             }
 
             return ' ' . trim($attributesString);
-        } catch (Exception $e) {
-            throw new MicroFrameworkException('Wystąpił błąd podczas generowania atrybutów html.', 500, null, $e->getMessage());
+        } catch (Exception) {
+            throw new MicroFrameworkException('Wystąpił błąd podczas generowania atrybutów html.', 500, null);
         }
     }
 
@@ -182,6 +182,7 @@ class Html {
      * @param array $attributes atrybuty
      * @param bool $show czy ma być zwrócony
      * @return string
+     * @throws MicroFrameworkException
      */
     public function icon(string $icon, ?string $title = null, ?string $color = null, array $attributes = [], bool $show = true) : string {
         if (!$show) {

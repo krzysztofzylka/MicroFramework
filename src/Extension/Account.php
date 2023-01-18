@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension;
 
+use Exception;
 use krzysztofzylka\DatabaseManager\Condition;
 use krzysztofzylka\DatabaseManager\CreateTable;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
@@ -67,7 +68,7 @@ class Account {
     public static function getAccountData(int $id) : array {
         try {
             return self::$tableInstance->find((new Condition())->where('id', $id));
-        } catch (\Exception) {
+        } catch (Exception) {
             return [];
         }
     }

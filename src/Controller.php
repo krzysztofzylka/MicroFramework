@@ -2,6 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use Exception;
+use Exception\ViewException;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
@@ -73,7 +75,7 @@ class Controller {
                 $model->tableInstance = (new Table())->setName($model->tableName ?? $name);
                 $model->transactionInstance = new Transaction();
             }
-        } catch (\Exception) {
+        } catch (Exception) {
             throw new NotFoundException();
         }
 
@@ -87,7 +89,7 @@ class Controller {
      * @param ?string $name
      * @param array $variables
      * @return void
-     * @throws Exception\ViewException
+     * @throws ViewException
      */
     public function loadView(?string $name = null, array $variables = []) : void {
         $view = new View();

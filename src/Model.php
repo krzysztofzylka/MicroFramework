@@ -121,7 +121,7 @@ class Model {
              }
 
              return $find;
-        } catch (DatabaseManagerException $exception) {
+        } catch (DatabaseException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
     }
@@ -288,18 +288,13 @@ class Model {
      * @param ?string $primaryKey
      * @param ?string $foreignKey
      * @return $this
-     * @throws DatabaseException
      */
     public function bind(BindType $bindType, string $tableName, ?string $primaryKey = null, ?string $foreignKey = null) : self {
         if (!isset($this->tableInstance)) {
             return $this;
         }
 
-        try {
-            $this->tableInstance->bind($bindType, $tableName, $primaryKey, $foreignKey);
-        } catch (DatabaseManagerException $exception) {
-            throw new DatabaseException($exception->getHiddenMessage());
-        }
+        $this->tableInstance->bind($bindType, $tableName, $primaryKey, $foreignKey);
 
         return $this;
     }

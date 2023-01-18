@@ -14,6 +14,15 @@ class ObjectNameGenerator {
     }
 
     /**
+     * Generate api controller class name
+     * @param string $controllerName
+     * @return string
+     */
+    public static function controllerApi(string $controllerName) : string {
+        return '\api_controller\\' . $controllerName;
+    }
+
+    /**
      * Generate model class name
      * @param string $modelName
      * @return string

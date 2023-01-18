@@ -32,9 +32,9 @@ class Model {
 
     /**
      * Controller
-     * @var Controller
+     * @var Controller|ControllerApi
      */
-    public Controller $controller;
+    public Controller|ControllerApi $controller;
 
     /**
      * Database table instance

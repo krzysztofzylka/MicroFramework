@@ -48,6 +48,12 @@ class Controller {
     public Html $htmlGenerator;
 
     /**
+     * Is API controller
+     * @var bool
+     */
+    public bool $isApi = false;
+
+    /**
      * Load model
      * @param string $name
      * @return Model

@@ -97,6 +97,17 @@ class Kernel {
             self::$config = new ConfigDefault();
         }
 
+        if (self::$config->database) {
+            $databaseManager = new DatabaseManager();
+            $databaseManager->connect(
+                (new DatabaseConnect())
+                    ->setHost(self::$config->databaseHost)
+                    ->setUsername(self::$config->databaseUsername)
+                    ->setPassword(self::$config->databasePassword)
+                    ->setDatabaseName(self::$config->databaseName)
+            );
+        }
+
         $url = $_GET['url'] ?? self::getConfig()->defaultPage;
         $explode = explode('/', $url);
 

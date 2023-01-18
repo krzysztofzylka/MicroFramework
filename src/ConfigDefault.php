@@ -38,4 +38,28 @@ class ConfigDefault {
      */
     public bool $database = false;
 
+    /**
+     * Database host
+     * @var string
+     */
+    public string $databaseHost = '127.0.0.1';
+
+    /**
+     * Database username
+     * @var string
+     */
+    public string $databaseUsername = '';
+
+    /**
+     * Database password
+     * @var string
+     */
+    public string $databasePassword = '';
+
+    /**
+     * Database name
+     * @var string
+     */
+    public string $databaseName = '';
+
 }

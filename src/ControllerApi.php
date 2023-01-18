@@ -2,6 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use Krzysztofzylka\MicroFramework\Api\Authorization;
+use Krzysztofzylka\MicroFramework\Api\Enum\AuthorizationType;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 
 class ControllerApi extends Controller {
@@ -11,6 +13,38 @@ class ControllerApi extends Controller {
      * @var bool
      */
     public bool $isApi = true;
+
+    /**
+     * Authorization
+     * @var bool
+     */
+    public bool $auth = false;
+
+    /**
+     * Authorization type
+     * @var AuthorizationType
+     */
+    public AuthorizationType $authorizationType = AuthorizationType::basic;
+
+    public function __construct() {
+        if ($this->auth) {
+            if ($this->authorizationType === AuthorizationType::basic) {
+                $auth = false;
+                $username = isset($_SERVER['PHP_AUTH_USER']) ? htmlspecialchars($_SERVER['PHP_AUTH_USER']) : false;
+                $password = isset($_SERVER['PHP_AUTH_PW']) ? htmlspecialchars($_SERVER['PHP_AUTH_PW']) : false;
+
+                if ($username && $password) {
+                    $authorization = new Authorization();
+
+                    $auth = $authorization->basic($username, $password);
+                }
+
+                if (!$auth) {
+                    $this->responseError('Not authorized', 401);
+                }
+            }
+        }
+    }
 
     /**
      * Response JSON

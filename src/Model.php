@@ -122,7 +122,7 @@ class Model {
 
              return $find;
         } catch (DatabaseException $exception) {
-            throw new DatabaseException($exception->getHiddenMessage());
+            throw new DatabaseException($exception->getMessage());
         }
     }
 

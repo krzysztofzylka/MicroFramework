@@ -3,7 +3,7 @@
 namespace Krzysztofzylka\MicroFramework;
 
 use Exception;
-use Exception\ViewException;
+use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;

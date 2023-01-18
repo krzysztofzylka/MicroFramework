@@ -8,13 +8,13 @@ class ConfigDefault {
      * Default page
      * @var string
      */
-    public $defaultPage = 'index/index';
+    public string $defaultPage = 'index/index';
 
     /**
      * Default controller method
      * @var string
      */
-    public $defaultMethod = 'index';
+    public string $defaultMethod = 'index';
 
     /** API */
 

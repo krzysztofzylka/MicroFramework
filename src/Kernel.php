@@ -89,6 +89,7 @@ class Kernel {
     /**
      * Run framework
      * @return void
+     * @throws ConnectException
      * @throws MicroFrameworkException
      * @throws NotFoundException
      */
@@ -113,7 +114,7 @@ class Kernel {
 
         $controller = $explode[0];
 
-        if (self::$config->api && $controller === 'api') {
+        if (self::$config->api && $controller === self::$config->apiUri) {
             $controller = $explode[1];
             $method = $explode[2] ?? self::getConfig()->defaultMethod;
             $arguments = array_slice($explode, 3);

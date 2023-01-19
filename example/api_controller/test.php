@@ -6,9 +6,20 @@ use Krzysztofzylka\MicroFramework\ControllerApi;
 
 class test extends ControllerApi {
 
-    public bool $auth = true;
+    public bool $auth = false;
 
-    public function index() {
-        $this->responseJson([$this->getRequestMethod(), $this->getBodyContent(), $_SERVER, $_SESSION, $_POST, $_GET, $_REQUEST, $_COOKIE]);
+    public function insert() {
+        $this->allowRequestMethod('POST');
+        $this->contentBodyIsJson();
+        $this->contentBodyValidate(['name', 'value']);
+        $content = json_decode($this->getBodyContent(), true);
+
+        try {
+            $this->loadModel('test')->insert(['name' => $content['name'], 'value' => $content['value']]);
+            $this->responseJson(['status' => 'success']);
+        } catch (\Exception $e) {
+            $this->responseError('Internal error');
+        }
     }
+
 }

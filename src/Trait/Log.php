@@ -1,0 +1,32 @@
+<?php
+
+namespace Krzysztofzylka\MicroFramework\Trait;
+
+use DateTime;
+use Krzysztofzylka\MicroFramework\Extension\Account;
+use Krzysztofzylka\MicroFramework\Kernel;
+use krzysztofzylka\SimpleLibraries\Library\Client;
+
+trait Log {
+
+    public function log(string $message, string $level = 'INFO', array $content = []) : bool {
+        $backtrace = debug_backtrace()[0];
+        $logPath = Kernel::getPath('logs') . '/' . date('Y_m_d') . '.log.json';
+        $logContent = [
+            'datetime' => DateTime::createFromFormat('U.u', sprintf('%.f', microtime(true)))->format('Y-m-d H:i:s.u'),
+            'level' => $level,
+            'message' => $message,
+            'content' => $content,
+            'ip' => Client::getIP(),
+            'file' => $backtrace['file'],
+            'class' => $backtrace['class'],
+            'function' => $backtrace['function'],
+            'line' => $backtrace['line'],
+            'accountId' => Account::$accountId,
+            'get' => $_GET
+        ];
+
+        return (bool)file_put_contents($logPath, json_encode($logContent) . PHP_EOL, FILE_APPEND);
+    }
+
+}

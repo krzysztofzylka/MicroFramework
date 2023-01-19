@@ -10,8 +10,11 @@ use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
+use Krzysztofzylka\MicroFramework\Trait\Log;
 
 class Controller {
+
+    use Log;
 
     /**
      * Controller name

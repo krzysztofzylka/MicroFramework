@@ -37,7 +37,8 @@ class Kernel {
         'api_controller' => null,
         'model' => null,
         'view' => null,
-        'storage' => null
+        'storage' => null,
+        'logs' => null
     ];
 
     /**
@@ -58,6 +59,7 @@ class Kernel {
         self::$paths['model'] = $projectPath . '/model';
         self::$paths['view'] = $projectPath . '/view';
         self::$paths['storage'] = $projectPath . '/storage';
+        self::$paths['logs'] = self::$paths['storage'] . '/logs';
 
         foreach (self::$paths as $name => $path) {
             self::$paths[$name] = File::repairPath($path);

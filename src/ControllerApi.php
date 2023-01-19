@@ -4,9 +4,12 @@ namespace Krzysztofzylka\MicroFramework;
 
 use Krzysztofzylka\MicroFramework\Api\Authorization;
 use Krzysztofzylka\MicroFramework\Api\Enum\AuthorizationType;
+use Krzysztofzylka\MicroFramework\Trait\Log;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 
 class ControllerApi extends Controller {
+
+    use Log;
 
     /**
      * Is API controller
@@ -42,6 +45,7 @@ class ControllerApi extends Controller {
                 }
 
                 if (!$auth) {
+                    $this->log('Authorization failed', 'WARNING', ['username' => $username, 'authorizationType' => $this->authorizationType->name]);
                     $this->responseError('Not authorized', 401);
                 }
             }

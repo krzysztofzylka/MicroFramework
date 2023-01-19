@@ -100,8 +100,6 @@ class ControllerApi extends Controller {
 
         if (!in_array($this->getRequestMethod(), $method)) {
             $this->responseError('Bad request', 400);
-
-            exit;
         }
     }
 
@@ -114,8 +112,6 @@ class ControllerApi extends Controller {
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             $this->responseError('Bad request', 400);
-
-            exit;
         }
     }
 
@@ -131,8 +127,6 @@ class ControllerApi extends Controller {
         foreach ($keyList as $key) {
             if (!in_array($key, $contentBodyKeys)) {
                 $this->responseError('Invalid input data', 400);
-
-                exit;
             }
         }
     }

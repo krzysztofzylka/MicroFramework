@@ -16,6 +16,10 @@ use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\Hash;
 use krzysztofzylka\SimpleLibraries\Library\Session;
 
+/**
+ * Account extension
+ * @package Extension
+ */
 class Account {
 
     private static Table $tableInstance;

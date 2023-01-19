@@ -5,6 +5,10 @@ namespace Krzysztofzylka\MicroFramework\Api;
 use Exception;
 use Krzysztofzylka\MicroFramework\Extension\Account;
 
+/**
+ * Authorization
+ * @package Api
+ */
 class Authorization {
 
     /**

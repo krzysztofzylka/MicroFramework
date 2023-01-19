@@ -2,6 +2,10 @@
 
 namespace Krzysztofzylka\MicroFramework\Extra;
 
+/**
+ * Object name generator
+ * @package Extra
+ */
 class ObjectNameGenerator {
 
     /**

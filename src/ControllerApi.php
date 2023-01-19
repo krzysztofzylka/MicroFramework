@@ -7,6 +7,10 @@ use Krzysztofzylka\MicroFramework\Api\Enum\AuthorizationType;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 
+/**
+ * Api controller
+ * @package Controller
+ */
 class ControllerApi extends Controller {
 
     use Log;
@@ -72,14 +76,7 @@ class ControllerApi extends Controller {
         http_response_code($code);
 
         $response = new Response();
-        $response->json(
-            [
-                'error' => [
-                    'message' => $message,
-                    'code' => $code
-                ]
-            ]
-        );
+        $response->json(['error' => ['message' => $message, 'code' => $code]]);
     }
 
     /**

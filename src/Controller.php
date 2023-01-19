@@ -12,6 +12,10 @@ use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 
+/**
+ * Controller
+ * @package Controller
+ */
 class Controller {
 
     use Log;

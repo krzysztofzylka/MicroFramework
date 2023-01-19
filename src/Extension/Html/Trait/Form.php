@@ -6,6 +6,9 @@ use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Kernel;
 
+/**
+ * Html helper - forms
+ */
 trait Form {
 
     /**

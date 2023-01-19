@@ -33,14 +33,12 @@ class ControllerApi extends Controller {
     public function __construct() {
         if ($this->auth) {
             if ($this->authorizationType === AuthorizationType::basic) {
-                $auth = false;
                 $username = isset($_SERVER['PHP_AUTH_USER']) ? htmlspecialchars($_SERVER['PHP_AUTH_USER']) : false;
                 $password = isset($_SERVER['PHP_AUTH_PW']) ? htmlspecialchars($_SERVER['PHP_AUTH_PW']) : false;
+                $auth = false;
 
                 if ($username && $password) {
-                    $authorization = new Authorization();
-
-                    $auth = $authorization->basic($username, $password);
+                    $auth = (new Authorization())->basic($username, $password);
                 }
 
                 if (!$auth) {

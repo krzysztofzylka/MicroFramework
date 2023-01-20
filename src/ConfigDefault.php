@@ -62,4 +62,10 @@ class ConfigDefault {
      */
     public string $databaseName = '';
 
+    /**
+     * Page URL
+     * @var string
+     */
+    public string $pageUrl = 'http://127.0.0.1/';
+
 }

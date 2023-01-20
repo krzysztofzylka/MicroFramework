@@ -11,6 +11,7 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use Krzysztofzylka\MicroFramework\Trait\Log;
+use krzysztofzylka\SimpleLibraries\Library\Redirect;
 
 /**
  * Controller
@@ -116,6 +117,19 @@ class Controller {
         }
 
         return trigger_error('Undefined property ' . $name, E_USER_WARNING);
+    }
+
+    /**
+     * Redirect
+     * @param string $url
+     * @return never
+     */
+    public function redirect(string $url) : never {
+        if (str_starts_with($url, '/')) {
+            Redirect::redirect(Kernel::getConfig()->pageUrl . substr($url, 1));
+        } else {
+            Redirect::redirect($url);
+        }
     }
 
 }

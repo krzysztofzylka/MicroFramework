@@ -40,6 +40,23 @@ trait Form {
         $this->getData($name, $params, $attributes);
         $input = $this->clearTag('input', null, [...$params, ...$attributes])->__toString();
 
+        if (isset($this->formValidation)) {
+            $validation = $this->formValidation;
+            $findValidation = true;
+
+            foreach (explode('/', $name) as $explodeName) {
+                if (isset($validation[$explodeName])) {
+                    $validation = $validation[$explodeName];
+                } else {
+                    $findValidation = false;
+                }
+            }
+
+            if ($findValidation) {
+                $input .= $this->clearTag('div', $validation, ['id' => 'fieldError', 'class' => 'form-text text-danger']);
+            }
+        }
+
         return $this->tag('div', $this->generateTitle($title, $params) . $input, ['class' => 'form-group mb-2']);
     }
 

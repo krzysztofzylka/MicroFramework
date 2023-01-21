@@ -16,7 +16,7 @@ class required {
      */
     public function __construct($value) {
         if (empty($value)) {
-            throw new ValidationException('This field id required');
+            throw new ValidationException('This field is required');
         }
     }
 

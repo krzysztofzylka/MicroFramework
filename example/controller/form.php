@@ -23,15 +23,20 @@ class form extends Controller {
                                 throw new ValidationException('content is testing');
                             }
                         }
+                    ],
+                    'text2' => [
+                        'required'
                     ]
                 ]
             ]
         );
-        $validation->validate($this->data);
+        $validationData = $validation->validate($this->data);
 
         $form1 = (new Html())->form(
             (new Html())
-                ->input('validTest/text', 'required')
+                ->setFormValidation($validationData)
+                ->input('validTest/text', 'required, length 6-48, no "testing" value')
+                ->input('validTest/text2', 'required')
                 ->button('Wyślij')
         );
 

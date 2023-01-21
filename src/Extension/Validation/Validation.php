@@ -34,6 +34,10 @@ class Validation {
             $modelValidation = $this->validation[$model];
 
             foreach ($modelData as $name => $value) {
+                if (!isset($modelValidation[$name])) {
+                    continue;
+                }
+
                 $scanErrors = $this->_validateElement($name, $value, $modelValidation[$name]);
 
                 if (is_string($scanErrors)) {
@@ -41,8 +45,6 @@ class Validation {
                 }
             }
         }
-
-        var_dump(['errors' => $errors]);
 
         return $errors;
     }

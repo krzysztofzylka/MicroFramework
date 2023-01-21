@@ -12,6 +12,16 @@ use Krzysztofzylka\MicroFramework\Kernel;
 trait Form {
 
     /**
+     * Create form tag
+     * @param string $content
+     * @return Html
+     * @throws MicroFrameworkException
+     */
+    public function form(string $content) : Html {
+        return $this->tag('form', $content, ['method' => 'post']);
+    }
+
+    /**
      * Input
      * @param string $name Nazwa elementu w formacie abc/def...
      * @param ?string $title Tytuł elementu

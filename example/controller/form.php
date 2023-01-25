@@ -26,7 +26,14 @@ class form extends Controller {
                     ],
                     'text2' => [
                         'required'
-                    ]
+                    ],
+                    'textarea' => [
+                        'required',
+                        'length' => ['min' => 10]
+                    ],
+                    'select' => [
+                        'required'
+                    ],
                 ]
             ]
         );
@@ -37,6 +44,8 @@ class form extends Controller {
                 ->setFormValidation($validationData)
                 ->input('validTest/text', 'required, length 6-48, no "testing" value')
                 ->input('validTest/text2', 'required')
+                ->textarea('validTest/textarea', 'required, min length 10')
+                ->select('validTest/select', ['' => '', 'a' => '1', 'b' => '2'])
                 ->button('Wyślij')
         );
 

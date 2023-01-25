@@ -30,6 +30,8 @@ trait Form {
      * @throws MicroFrameworkException
      */
     public function input(string $name, ?string $title = null, array $attributes = []) : Html {
+        $invalidText = $this->getInvalidText($name);
+
         $params = [
             'class' => 'form-control',
             'type' => 'text',
@@ -37,25 +39,12 @@ trait Form {
             'id' => $this->formId($name)
         ];
 
-        $this->getData($name, $params, $attributes);
-        $input = $this->clearTag('input', null, [...$params, ...$attributes])->__toString();
-
-        if (isset($this->formValidation)) {
-            $validation = $this->formValidation;
-            $findValidation = true;
-
-            foreach (explode('/', $name) as $explodeName) {
-                if (isset($validation[$explodeName])) {
-                    $validation = $validation[$explodeName];
-                } else {
-                    $findValidation = false;
-                }
-            }
-
-            if ($findValidation) {
-                $input .= $this->clearTag('div', $validation, ['id' => 'fieldError', 'class' => 'form-text text-danger']);
-            }
+        if ($invalidText) {
+            $params['class'] .= ' is-invalid';
         }
+
+        $this->getData($name, $params, $attributes);
+        $input = $this->clearTag('input', null, [...$params, ...$attributes])->__toString() . $this->generateInvalidDiv($invalidText);
 
         return $this->tag('div', $this->generateTitle($title, $params) . $input, ['class' => 'form-group mb-2']);
     }
@@ -93,11 +82,17 @@ trait Form {
      * @throws MicroFrameworkException
      */
     public function select(string $name, array $options, ?string $selected = null, ?string $title = null, array $attributes = []) : Html {
+        $invalidText = $this->getInvalidText($name);
+
         $params = [
             'class' => 'form-select',
             'name' => $this->formName($name),
             'id' => $this->formId($name)
         ];
+
+        if ($invalidText) {
+            $params['class'] .= ' is-invalid';
+        }
 
         $optionsString = '';
 
@@ -118,7 +113,7 @@ trait Form {
             $optionsString .= $htmlOption->tag('option', $value, $optionAttributes);
         }
 
-        $select = $this->clearTag('select', $optionsString, [...$params, ...$attributes]);
+        $select = $this->clearTag('select', $optionsString, [...$params, ...$attributes]) . $this->generateInvalidDiv($invalidText);
 
         return $this->tag('div', $this->generateTitle($title, $params) . $select, ['class' => 'form-group mb-2']);
     }
@@ -135,11 +130,17 @@ trait Form {
      * @throws MicroFrameworkException
      */
     public function select2(string $name, array $options, string|array $selected = null, ?string $title = null, array $attributes = [], array $select2attr = []) : Html {
+        $invalidText = $this->getInvalidText($name);
+
         $params = [
             'class' => 'form-select',
             'name' => $this->formName($name),
             'id' => $this->formId($name)
         ];
+
+        if ($invalidText) {
+            $params['class'] .= ' is-invalid';
+        }
 
         $optionsString = '';
 
@@ -168,7 +169,7 @@ trait Form {
             $optionsString .= $htmlOption->tag('option', $value, $optionAttributes);
         }
 
-        $select = $this->clearTag('select', $optionsString, [...$params, ...$attributes]);
+        $select = $this->clearTag('select', $optionsString, [...$params, ...$attributes]) . $this->generateInvalidDiv($invalidText);
 
         return $this->tag('div', $this->generateTitle($title, $params) . $select, ['class' => 'form-group mb-2'])
             ->tag(
@@ -278,14 +279,20 @@ trait Form {
      * @throws MicroFrameworkException
      */
     public function textarea(string $name, ?string $title = null, array $attributes = [], ?string $value = null) : Html {
+        $invalidText = $this->getInvalidText($name);
+
         $params = [
             'class' => 'form-control',
             'name' => $this->formName($name),
             'id' => $this->formId($name)
         ];
 
+        if ($invalidText) {
+            $params['class'] .= ' is-invalid';
+        }
+
         $data = $value ?? $this->getData($name);
-        $textarea = $this->clearTag('textarea', $data ?? '', [...$params, ...$attributes]);
+        $textarea = $this->clearTag('textarea', $data ?? '', [...$params, ...$attributes]) . $this->generateInvalidDiv($invalidText);;
 
         return $this->tag('div', $this->generateTitle($title, $params) . $textarea, ['class' => 'form-group mb-2']);
     }
@@ -441,6 +448,43 @@ trait Form {
         }
 
         return $return;
+    }
+
+    /**
+     * Ger invalid text
+     * @param string $name
+     * @return string|false
+     */
+    private function getInvalidText(string $name) : string|false {
+        if (!isset($this->formValidation)) {
+            return false;
+        }
+
+        $validation = $this->formValidation;
+
+        foreach (explode('/', $name) as $explodeName) {
+            if (!isset($validation[$explodeName])) {
+                return false;
+            }
+
+            $validation = $validation[$explodeName];
+        }
+
+        return $validation;
+    }
+
+    /**
+     * Generate invalid feedback tag
+     * @param string|false $invalidText
+     * @return string
+     * @throws MicroFrameworkException
+     */
+    private function generateInvalidDiv(string|false $invalidText) : string {
+        if ($invalidText) {
+            return $this->clearTag('div', $invalidText, ['id' => 'fieldError', 'class' => 'invalid-feedback'])->__toString();
+        }
+
+        return '';
     }
 
 }

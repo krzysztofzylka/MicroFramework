@@ -26,7 +26,7 @@ class Validation {
     public function validate(?array $data) : array {
         $errors = [];
 
-        foreach ($data as $model => $modelData) {
+        foreach ($data ?? [] as $model => $modelData) {
             if (!isset($this->validation[$model])) {
                 continue;
             }

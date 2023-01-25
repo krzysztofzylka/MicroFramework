@@ -17,9 +17,9 @@ class length {
      * @throws ValidationException
      */
     public function __construct($value, $key, $data) {
-        if ($data['min'] && strlen($value) < $data['min']) {
+        if (isset($data['min']) && strlen($value) < $data['min']) {
             throw new ValidationException('Value must be more or equal to ' . $data['min']);
-        } elseif ($data['max'] && strlen($value) > $data['max']) {
+        } elseif (isset($data['max']) && strlen($value) > $data['max']) {
             throw new ValidationException('Value must be less or equal to ' . $data['max']);
         }
     }

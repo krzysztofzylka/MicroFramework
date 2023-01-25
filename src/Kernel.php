@@ -33,6 +33,7 @@ class Kernel {
      * @var array
      */
     private static array $paths = [
+        'public' => null,
         'controller' => null,
         'api_controller' => null,
         'model' => null,
@@ -54,6 +55,7 @@ class Kernel {
      */
     public static function create(string $projectPath) : void {
         self::$projectPath = $projectPath;
+        self::$paths['public'] = realpath($projectPath . '/public');
         self::$paths['controller'] = $projectPath . '/controller';
         self::$paths['api_controller'] = $projectPath . '/api_controller';
         self::$paths['model'] = $projectPath . '/model';
@@ -65,6 +67,10 @@ class Kernel {
             self::$paths[$name] = File::repairPath($path);
 
             File::mkdir($path);
+        }
+
+        if (!file_exists(self::$paths['public'] . '/.htaccess')) {
+            copy(__DIR__ . '/Init/.htaccess', self::$paths['public'] . '/.htaccess');
         }
     }
 

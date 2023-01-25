@@ -1,6 +1,6 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\Extension;
+namespace Krzysztofzylka\MicroFramework\Extension\Account;
 
 use Exception;
 use krzysztofzylka\DatabaseManager\Condition;

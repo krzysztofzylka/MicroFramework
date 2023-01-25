@@ -35,4 +35,13 @@ class ObjectNameGenerator {
         return '\model\\' . $modelName;
     }
 
+    /**
+     * Generate predefined validation class name
+     * @param string $validationName
+     * @return string
+     */
+    public static function predefinedValidationClass(string $validationName) : string {
+        return '\Krzysztofzylka\MicroFramework\Extension\Validation\Predefined\\' . $validationName;
+    }
+
 }

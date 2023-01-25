@@ -12,6 +12,24 @@ use Krzysztofzylka\MicroFramework\Extension\Html\Trait\Form;
  */
 class Html {
 
+    /**
+     * Form validations
+     * @var array
+     * @ignore
+     */
+    private array $formValidation;
+
+    /**
+     * Add form validations
+     * @param array $formValidation
+     * @return Html
+     */
+    public function setFormValidation(array $formValidation) : Html {
+        $this->formValidation = $formValidation;
+
+        return $this;
+    }
+
     use Form;
 
     /**

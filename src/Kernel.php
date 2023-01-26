@@ -181,21 +181,7 @@ class Kernel {
             $class = ObjectNameGenerator::controller($name);
         }
 
-        if (self::getConfig()->authControl) {
-            if (!AuthControl::checkAuthorization($class, $method)) {
-                if (isset($params['api']) && $params['api']) {
-                    (new ControllerApi())->responseError('Not authorized', 401);
-                } else {
-                    switch(self::getConfig()->authControlAction) {
-                        case AuthControlAction::redirect:
-                            (new Controller())->redirect(self::getConfig()->authControlRedirect);
-                        case AuthControlAction::exception:
-                        default:
-                            throw new NoAuthException();
-                    }
-                }
-            }
-        }
+        AuthControl::run($class, $method, isset($params['api']) && $params['api']);
 
         try {
             /** @var Controller $controller */

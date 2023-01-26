@@ -52,6 +52,7 @@ class AuthControl {
      * @param $class
      * @param $method
      * @return bool
+     * @throws SimpleLibraryException
      */
     public static function checkAuthorization(string $class, string $method) : bool {
         $requireAuth = PHPDoc::getClassMethodComment($class, $method, 'auth')[0] ?? Kernel::getConfig()->authControlDefaultRequireAuth;

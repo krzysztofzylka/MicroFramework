@@ -9,6 +9,9 @@ use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
+use Krzysztofzylka\MicroFramework\Exception\ValidationException;
+use Krzysztofzylka\MicroFramework\Extension\Account\Account;
+use Krzysztofzylka\MicroFramework\Extension\Validation\Validation;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 
 class Model {
@@ -56,6 +59,12 @@ class Model {
      * @var ?array
      */
     public ?array $data = null;
+
+    /**
+     * Validation errors
+     * @var ?array
+     */
+    public ?array $validationErrors = [];
 
     /**
      * Set ID
@@ -393,6 +402,37 @@ class Model {
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
+    }
+
+    /**
+     * Validation list
+     * @return array
+     */
+    public function validations() : array {
+        return [];
+    }
+
+    /**
+     * Validate data
+     * @param ?array $data
+     * @return bool
+     */
+    public function validate(?array $data = null) : bool {
+        $data = $data ?? $this->data;
+
+        $validation = new Validation();
+        $validation->setValidation($this->validations());
+        $this->validationErrors = $validation->validate($data);
+
+        if (empty($this->validationErrors)) {
+            return true;
+        }
+
+        if (Kernel::getConfig()->debug) {
+            $this->log('validation fail', 'INFO', $this->validationErrors);
+        }
+
+        return false;
     }
 
 }

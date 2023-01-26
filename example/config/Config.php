@@ -6,6 +6,7 @@ use Krzysztofzylka\MicroFramework\ConfigDefault;
 
 class Config extends ConfigDefault {
 
+    public bool $debug = true;
     public bool $api = true;
 
     public bool $database = true;

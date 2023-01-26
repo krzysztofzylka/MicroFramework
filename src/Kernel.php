@@ -15,7 +15,6 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use krzysztofzylka\SimpleLibraries\Library\File;
-use krzysztofzylka\SimpleLibraries\Library\PHPDoc;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;

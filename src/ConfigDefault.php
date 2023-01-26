@@ -7,6 +7,12 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Enum\AuthControlAction;
 class ConfigDefault {
 
     /**
+     * Debug
+     * @var bool
+     */
+    public bool $debug = false;
+
+    /**
      * Default page
      * @var string
      */

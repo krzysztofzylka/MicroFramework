@@ -45,18 +45,20 @@ class View {
      */
     public function render(string $name, array $variables = []) : string {
         try {
+            $globalVariables = [
+                'view' => $this,
+                'variables' => $variables
+            ];
+
             if (isset($this->controller)) {
                 $name = $this->controller->name . DIRECTORY_SEPARATOR . $name;
+                $globalVariables['controller'] = $this->controller;
             }
 
             $nameExplode = explode('/', $name);
+            $globalVariables['name'] = end($nameExplode);
 
-            View::$environment->addGlobal('app', [
-                'controller' => $this->controller,
-                'view' => $this,
-                'name' => end($nameExplode),
-                'variables' => $variables
-            ]);
+            View::$environment->addGlobal('app', $globalVariables);
             View::$environment->setCache(false);
 
             return self::$environment->render($name . '.twig', $variables);

@@ -33,7 +33,7 @@ class form extends Controller {
                     ],
                     'select' => [
                         'required'
-                    ],
+                    ]
                 ]
             ]
         );

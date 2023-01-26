@@ -57,6 +57,7 @@ class View {
                 'name' => end($nameExplode),
                 'variables' => $variables
             ]);
+            View::$environment->setCache(false);
 
             return self::$environment->render($name . '.twig', $variables);
         } catch (Exception $exception) {

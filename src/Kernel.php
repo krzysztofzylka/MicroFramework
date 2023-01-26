@@ -8,10 +8,14 @@ use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Exception\ConnectException;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
+use Krzysztofzylka\MicroFramework\Exception\NoAuthException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
+use Krzysztofzylka\MicroFramework\Extension\Account\Enum\AuthControlAction;
+use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use krzysztofzylka\SimpleLibraries\Library\File;
+use krzysztofzylka\SimpleLibraries\Library\PHPDoc;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
@@ -169,12 +173,29 @@ class Kernel {
      * @param array $params additional params for loader
      * @return Controller
      * @throws NotFoundException
+     * @throws NoAuthException
      */
     public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []) : Controller {
         if (isset($params['api']) && $params['api']) {
             $class = ObjectNameGenerator::controllerApi($name);
         } else {
             $class = ObjectNameGenerator::controller($name);
+        }
+
+        if (self::getConfig()->authControl) {
+            if (!AuthControl::checkAuthorization($class, $method)) {
+                if (isset($params['api']) && $params['api']) {
+                    (new ControllerApi())->responseError('Not authorized', 401);
+                } else {
+                    switch(self::getConfig()->authControlAction) {
+                        case AuthControlAction::redirect:
+                            (new Controller())->redirect(self::getConfig()->authControlRedirect);
+                        case AuthControlAction::exception:
+                        default:
+                            throw new NoAuthException();
+                    }
+                }
+            }
         }
 
         try {

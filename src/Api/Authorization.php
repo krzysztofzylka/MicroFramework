@@ -3,7 +3,7 @@
 namespace Krzysztofzylka\MicroFramework\Api;
 
 use Exception;
-use Krzysztofzylka\MicroFramework\Extension\Account;
+use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 
 /**
  * Authorization

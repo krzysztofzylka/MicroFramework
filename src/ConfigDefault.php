@@ -2,6 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use Krzysztofzylka\MicroFramework\Extension\Account\Enum\AuthControlAction;
+
 class ConfigDefault {
 
     /**
@@ -67,5 +69,31 @@ class ConfigDefault {
      * @var string
      */
     public string $pageUrl = 'http://127.0.0.1/';
+
+    /** Extension Authorize */
+
+    /**
+     * Auth control
+     * @var bool
+     */
+    public bool $authControl = false;
+
+    /**
+     * Default require auth
+     * @var bool
+     */
+    public bool $authControlDefaultRequireAuth = true;
+
+    /**
+     * Auth control action
+     * @var AuthControlAction
+     */
+    public AuthControlAction $authControlAction = AuthControlAction::exception;
+
+    /**
+     * Auth control redirect url
+     * @var string
+     */
+    public string $authControlRedirect = '';
 
 }

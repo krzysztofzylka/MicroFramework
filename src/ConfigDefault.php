@@ -79,15 +79,21 @@ class ConfigDefault {
     public bool $authControl = false;
 
     /**
+     * Default require auth
+     * @var bool
+     */
+    public bool $authControlDefaultRequireAuth = true;
+
+    /**
      * Auth control action
      * @var AuthControlAction
      */
-    public AuthControlAction $authControlAction = AuthControlAction::redirect;
+    public AuthControlAction $authControlAction = AuthControlAction::exception;
 
     /**
      * Auth control redirect url
      * @var string
      */
-    public string $authControlRedirect = 'index/index';
+    public string $authControlRedirect = '';
 
 }

@@ -10,7 +10,7 @@ use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NoAuthException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
-use Krzysztofzylka\MicroFramework\Extension\Account\Enum\AuthControlAction;
+use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
@@ -122,6 +122,10 @@ class Kernel {
                     ->setPassword(self::$config->databasePassword)
                     ->setDatabaseName(self::$config->databaseName)
             );
+        }
+
+        if (Account::isLogged()) {
+            new Account();
         }
 
         $url = $_GET['url'] ?? self::getConfig()->defaultPage;

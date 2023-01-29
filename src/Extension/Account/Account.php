@@ -6,12 +6,14 @@ use Exception;
 use krzysztofzylka\DatabaseManager\Condition;
 use krzysztofzylka\DatabaseManager\CreateTable;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
+use krzysztofzylka\DatabaseManager\Enum\DatabaseType;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Exception\UpdateException;
 use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Exception\AccountException;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
+use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\Hash;
 use krzysztofzylka\SimpleLibraries\Library\Session;
@@ -44,10 +46,18 @@ class Account {
 
     /**
      * Constructor
+     * @throws DatabaseException
      */
     public function __construct() {
         if (!isset(self::$tableInstance)) {
             self::$tableInstance = (new Table())->setName('account');
+        }
+
+        if (Kernel::getConfig()->authControl === true
+            && DatabaseManager::getDatabaseType() === DatabaseType::mysql
+            && !self::$tableInstance->exists()
+        ) {
+            self::install();
         }
 
         if (self::isLogged()) {

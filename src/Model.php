@@ -71,7 +71,7 @@ class Model {
      * @param ?int $id
      * @return bool
      */
-    public function setId(?int $id) : bool {
+    public function setId(?int $id = null) : bool {
         if (!isset($this->tableInstance)) {
             return false;
         }

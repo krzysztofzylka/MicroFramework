@@ -33,6 +33,15 @@ class form extends Controller {
                     ],
                     'select' => [
                         'required'
+                    ],
+                    'date' => [
+                        'isValidDate'
+                    ],
+                    'date2' => [
+                        'isValidDate'
+                    ],
+                    'email' => [
+                        'isEmail'
                     ]
                 ]
             ]
@@ -46,7 +55,10 @@ class form extends Controller {
                 ->input('validTest/text2', 'required')
                 ->textarea('validTest/textarea', 'required, min length 10')
                 ->select('validTest/select', ['' => '', 'a' => '1', 'b' => '2'])
-                ->button('Wyślij')
+                ->input('validTest/date', 'isDate', ['type' => 'date'])
+                ->input('validTest/date2', 'isDate')
+                ->input('validTest/email', 'isEmail')
+                ->button('Check')
         );
 
         $this->loadView(null, ['form1' => $form1]);

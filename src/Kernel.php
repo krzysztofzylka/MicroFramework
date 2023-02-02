@@ -42,7 +42,8 @@ class Kernel {
         'model' => null,
         'view' => null,
         'storage' => null,
-        'logs' => null
+        'logs' => null,
+        'database_updater' => null
     ];
 
     /**
@@ -65,6 +66,7 @@ class Kernel {
         self::$paths['view'] = $projectPath . '/view';
         self::$paths['storage'] = $projectPath . '/storage';
         self::$paths['logs'] = self::$paths['storage'] . '/logs';
+        self::$paths['database_updater'] = $projectPath . '/database_updater';
 
         foreach (self::$paths as $name => $path) {
             self::$paths[$name] = File::repairPath($path);
@@ -105,6 +107,7 @@ class Kernel {
      * Run framework
      * @return void
      * @throws ConnectException
+     * @throws DatabaseException
      * @throws MicroFrameworkException
      * @throws NotFoundException
      */
@@ -113,16 +116,7 @@ class Kernel {
             self::$config = new ConfigDefault();
         }
 
-        if (self::$config->database) {
-            $databaseManager = new DatabaseManager();
-            $databaseManager->connect(
-                (new DatabaseConnect())
-                    ->setHost(self::$config->databaseHost)
-                    ->setUsername(self::$config->databaseUsername)
-                    ->setPassword(self::$config->databasePassword)
-                    ->setDatabaseName(self::$config->databaseName)
-            );
-        }
+        self::configDatabaseConnect();
 
         if (Account::isLogged()) {
             new Account();
@@ -144,6 +138,24 @@ class Kernel {
             $arguments = array_slice($explode, 2);
 
             self::init($controller, $method, $arguments);
+        }
+    }
+
+    /**
+     * Connect to database
+     * @return void
+     * @throws ConnectException
+     */
+    public static function configDatabaseConnect() : void {
+        if (self::$config->database) {
+            $databaseManager = new DatabaseManager();
+            $databaseManager->connect(
+                (new DatabaseConnect())
+                    ->setHost(self::$config->databaseHost)
+                    ->setUsername(self::$config->databaseUsername)
+                    ->setPassword(self::$config->databasePassword)
+                    ->setDatabaseName(self::$config->databaseName)
+            );
         }
     }
 

@@ -2,15 +2,12 @@
 
 namespace Krzysztofzylka\MicroFramework\Executable;
 
+use Exception;
 use krzysztofzylka\DatabaseManager\Column;
 use krzysztofzylka\DatabaseManager\Condition;
 use krzysztofzylka\DatabaseManager\CreateTable;
 use krzysztofzylka\DatabaseManager\Enum\ColumnType;
-use krzysztofzylka\DatabaseManager\Exception\ConditionException;
 use krzysztofzylka\DatabaseManager\Exception\CreateTableException;
-use krzysztofzylka\DatabaseManager\Exception\InsertException;
-use krzysztofzylka\DatabaseManager\Exception\SelectException;
-use krzysztofzylka\DatabaseManager\Exception\UpdateException;
 use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Extension\Database\Enum\UpdateStatus;
 use Krzysztofzylka\MicroFramework\Kernel;
@@ -60,38 +57,38 @@ class DatabaseUpdater {
     /**
      * Run script
      * @return void
-     * @throws ConditionException
-     * @throws InsertException
-     * @throws SelectException
-     * @throws UpdateException
      */
     public function run() : void {
-        $updateFiles = glob(Kernel::getPath('database_updater') . '/*.php');
+        try {
+            $updateFiles = glob(Kernel::getPath('database_updater') . '/*.php');
 
-        foreach ($updateFiles as $filePath) {
-            $name = str_replace('.' . pathinfo($filePath, PATHINFO_EXTENSION), '', basename($filePath));
+            foreach ($updateFiles as $filePath) {
+                $name = str_replace('.' . pathinfo($filePath, PATHINFO_EXTENSION), '', basename($filePath));
 
-            if (!$this->updateTable->findIsset((new Condition())->where('name', $name))) {
-                $this->updateTable->insert(['name' => $name]);
+                if (!$this->updateTable->findIsset((new Condition())->where('name', $name))) {
+                    $this->updateTable->insert(['name' => $name]);
 
-                try {
-                    include($filePath);
+                    try {
+                        include($filePath);
 
-                    $this->updateTable->updateValue('status', UpdateStatus::Success->value);
-                } catch (\Exception $exception) {
-                    $this->updateTable->updateValue('status', UpdateStatus::Fail->value);
+                        $this->updateTable->updateValue('status', UpdateStatus::Success->value);
+                    } catch (Exception $exception) {
+                        $this->updateTable->updateValue('status', UpdateStatus::Fail->value);
 
-                    $this->log(
-                        'Database update fail',
-                        'ERROR',
-                        [
-                            'name' => $name,
-                            'filePath' => $filePath,
-                            'exception' => $exception
-                        ]
-                    );
+                        $this->log(
+                            'Database update fail',
+                            'ERROR',
+                            [
+                                'name' => $name,
+                                'filePath' => $filePath,
+                                'exception' => $exception
+                            ]
+                        );
+                    }
                 }
             }
+        } catch (Exception $exception) {
+            $this->log('Database init fail', 'ERROR', ['exception' => $exception]);
         }
     }
 

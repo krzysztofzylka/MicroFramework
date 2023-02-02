@@ -8,7 +8,7 @@ return (new class extends \Krzysztofzylka\MicroFramework\Extension\Database\Upda
 
     public function run() {
         (new CreateTable())
-            ->setName('dupa')
+            ->setName('example')
             ->addIdColumn()
             ->addColumn(
                 (new Column())

@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use Exception;
 use krzysztofzylka\DatabaseManager\Condition;
 use krzysztofzylka\DatabaseManager\Enum\BindType;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
@@ -9,8 +10,6 @@ use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
-use Krzysztofzylka\MicroFramework\Exception\ValidationException;
-use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Validation\Validation;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 
@@ -433,6 +432,35 @@ class Model {
         }
 
         return false;
+    }
+
+    /**
+     * Load model
+     * @param string $name
+     * @return Model
+     * @throws NotFoundException
+     */
+    public function loadModel(string $name) : Model {
+        $class = ObjectNameGenerator::model($name);
+
+        try {
+            /** @var Model $model */
+            $model = new $class();
+            $model->name = $name;
+            $model->controller = $this->controller;
+            $model->data = $this->data;
+
+            if ($model->useTable && isset(DatabaseManager::$connection)) {
+                $model->tableInstance = (new Table())->setName($model->tableName ?? $name);
+                $model->transactionInstance = new Transaction();
+            }
+        } catch (Exception) {
+            throw new NotFoundException();
+        }
+
+        $this->models[ucfirst($name)] = $model;
+
+        return $model;
     }
 
 }

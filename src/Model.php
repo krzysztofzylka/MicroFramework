@@ -62,6 +62,12 @@ class Model {
     public ?array $data = null;
 
     /**
+     * Models
+     * @var array
+     */
+    public array $models = [];
+
+    /**
      * Validation errors
      * @var ?array
      */
@@ -460,9 +466,22 @@ class Model {
             throw new NotFoundException();
         }
 
-        $this->models[ucfirst($name)] = $model;
+        $this->models[str_replace('_', '', ucwords($name, '_'))] = $model;
 
         return $model;
+    }
+
+    /**
+     * Magic __get
+     * @param string $name
+     * @return mixed|Model
+     */
+    public function __get(string $name) : mixed {
+        if (in_array($name, array_keys($this->models))) {
+            return $this->models[$name];
+        }
+
+        return trigger_error('Undefined property ' . $name, E_USER_WARNING);
     }
 
 }

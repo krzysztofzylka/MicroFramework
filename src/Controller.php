@@ -87,7 +87,7 @@ class Controller {
             throw new NotFoundException();
         }
 
-        $this->models[ucfirst($name)] = $model;
+        $this->models[str_replace('_', '', ucwords($name, '_'))] = $model;
 
         return $model;
     }

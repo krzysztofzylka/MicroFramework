@@ -17,7 +17,7 @@ class isEmail {
      * @throws ValidationException
      */
     public function __construct($value) {
-        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+        if (!empty($value) && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
             throw new ValidationException('Invalid email format');
         }
     }

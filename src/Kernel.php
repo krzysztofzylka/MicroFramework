@@ -17,6 +17,7 @@ use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use krzysztofzylka\SimpleLibraries\Library\File;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use Twig\Environment;
+use Twig\Error\LoaderError;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 
@@ -88,6 +89,7 @@ class Kernel {
      * @return void
      * @throws MicroFrameworkException
      * @throws NotFoundException
+     * @throws LoaderError
      */
     public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = [], array $params = []) : void {
         if (!self::$projectPath) {
@@ -95,8 +97,10 @@ class Kernel {
         }
 
         View::$filesystemLoader = new FilesystemLoader(self::getPath('view'));
+        View::$filesystemLoader->addPath(__DIR__ . '/Extension/Twig/Macros');
         View::$environment = new Environment(View::$filesystemLoader, ['debug' => true]);
         View::$environment->addExtension(new DebugExtension());
+        View::$environment->setCache(false);
 
         if (!is_null($controllerName)) {
             self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false]);

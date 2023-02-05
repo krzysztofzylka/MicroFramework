@@ -14,4 +14,8 @@ class index extends Controller {
     public function index() {
         $this->loadView();
     }
+
+    public function dialogbox() {
+        $this->layout = 'dialogbox';
+    }
 }

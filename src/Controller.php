@@ -64,6 +64,13 @@ class Controller {
     public bool $isApi = false;
 
     /**
+     * Layout<br>
+     * null / dialogbox
+     * @var ?string
+     */
+    public ?string $layout = null;
+
+    /**
      * Load model
      * @param string ...$name
      * @return Model

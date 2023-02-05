@@ -58,10 +58,10 @@ class View {
             $nameExplode = explode('/', $name);
             $globalVariables['name'] = end($nameExplode);
 
-            View::$environment->addGlobal('app', $globalVariables);
-            View::$environment->setCache(false);
+            $environment = self::$environment;
+            $environment->addGlobal('app', $globalVariables);
 
-            return self::$environment->render($name . '.twig', $variables);
+            return $environment->render($name . '.twig', $variables);
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage());
         }

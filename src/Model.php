@@ -444,11 +444,21 @@ class Model {
 
     /**
      * Load model
-     * @param string $name
+     * @param string ...$name
      * @return Model
      * @throws NotFoundException
      */
-    public function loadModel(string $name) : Model {
+    public function loadModel(string ...$name) : Model {
+        if (count($name) > 1) {
+            foreach ($name as $singleName) {
+                $lastModel = $this->loadModel($singleName);
+            }
+
+            return $lastModel;
+        } else {
+            $name = $name[0];
+        }
+
         $class = ObjectNameGenerator::model($name);
 
         try {

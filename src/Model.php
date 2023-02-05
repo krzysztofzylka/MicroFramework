@@ -436,7 +436,7 @@ class Model {
         }
 
         if (Kernel::getConfig()->debug) {
-            $this->log('validation fail', 'INFO', $this->validationErrors);
+            $this->log('Validation fail', 'WARNING', $this->validationErrors);
         }
 
         return false;
@@ -462,7 +462,9 @@ class Model {
                 $model->tableInstance = (new Table())->setName($model->tableName ?? $name);
                 $model->transactionInstance = new Transaction();
             }
-        } catch (Exception) {
+        } catch (Exception $exception) {
+            $this->log('Fail load model', 'ERR', ['exception' => $exception]);
+
             throw new NotFoundException();
         }
 

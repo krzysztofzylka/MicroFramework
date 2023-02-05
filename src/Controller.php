@@ -83,7 +83,9 @@ class Controller {
                 $model->tableInstance = (new Table())->setName($model->tableName ?? $name);
                 $model->transactionInstance = new Transaction();
             }
-        } catch (Exception) {
+        } catch (Exception $exception) {
+            $this->log('Fail load model', 'ERR', ['exception' => $exception]);
+
             throw new NotFoundException();
         }
 

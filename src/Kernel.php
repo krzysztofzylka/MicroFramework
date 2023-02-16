@@ -119,6 +119,8 @@ class Kernel {
             self::$config = new ConfigDefault();
         }
 
+        self::errorHandler();
+
         self::configDatabaseConnect();
 
         if (Account::isLogged()) {

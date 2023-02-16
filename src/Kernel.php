@@ -96,14 +96,22 @@ class Kernel {
             throw new MicroFrameworkException('Project is not defined', 500);
         }
 
-        View::$filesystemLoader = new FilesystemLoader(self::getPath('view'));
-        View::$filesystemLoader->addPath(__DIR__ . '/Twig/template');
-        View::$environment = new Environment(View::$filesystemLoader, ['debug' => true]);
-        View::$environment->addExtension(new DebugExtension());
+        self::initViewVariables();
 
         if (!is_null($controllerName)) {
             self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false]);
         }
+    }
+
+    /**
+     * init view variables
+     * @throws LoaderError
+     */
+    public static function initViewVariables() : void {
+        View::$filesystemLoader = new FilesystemLoader(self::getPath('view'));
+        View::$filesystemLoader->addPath(__DIR__ . '/Twig/template');
+        View::$environment = new Environment(View::$filesystemLoader, ['debug' => true]);
+        View::$environment->addExtension(new DebugExtension());
     }
 
     /**

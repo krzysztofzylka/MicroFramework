@@ -58,6 +58,10 @@ class View {
             $nameExplode = explode('/', $name);
             $globalVariables['name'] = end($nameExplode);
 
+            if (!isset(View::$environment) || !isset(View::$filesystemLoader)) {
+                Kernel::initViewVariables();
+            }
+
             View::$environment->addGlobal('app', $globalVariables);
             View::$environment->setCache(false);
 

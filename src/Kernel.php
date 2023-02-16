@@ -288,4 +288,13 @@ class Kernel {
         return self::$config;
     }
 
+    /**
+     * Error handler
+     * @return void
+     */
+    public static function errorHandler() : void {
+        set_error_handler('\Krzysztofzylka\MicroFramework\Extension\ErrorHandler\ErrorHandler::errorHandler');
+        register_shutdown_function('Krzysztofzylka\MicroFramework\Extension\ErrorHandler\ErrorHandler::shutdownHandler');
+    }
+
 }

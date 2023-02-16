@@ -17,6 +17,7 @@ use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use krzysztofzylka\SimpleLibraries\Library\File;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use Twig\Environment;
+use Twig\Error\LoaderError;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 
@@ -88,6 +89,7 @@ class Kernel {
      * @return void
      * @throws MicroFrameworkException
      * @throws NotFoundException
+     * @throws LoaderError
      */
     public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = [], array $params = []) : void {
         if (!self::$projectPath) {
@@ -149,14 +151,18 @@ class Kernel {
      */
     public static function configDatabaseConnect() : void {
         if (self::$config->database) {
+            $databaseConnect = (new DatabaseConnect())
+                ->setHost(self::$config->databaseHost)
+                ->setUsername(self::$config->databaseUsername)
+                ->setPassword(self::$config->databasePassword)
+                ->setDatabaseName(self::$config->databaseName);
+
+            if (self::getConfig()->debug) {
+                $databaseConnect->setDebug(true);
+            }
+
             $databaseManager = new DatabaseManager();
-            $databaseManager->connect(
-                (new DatabaseConnect())
-                    ->setHost(self::$config->databaseHost)
-                    ->setUsername(self::$config->databaseUsername)
-                    ->setPassword(self::$config->databasePassword)
-                    ->setDatabaseName(self::$config->databaseName)
-            );
+            $databaseManager->connect($databaseConnect);
         }
     }
 

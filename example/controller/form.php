@@ -10,7 +10,6 @@ use Krzysztofzylka\MicroFramework\Extension\Validation\Validation;
 class form extends Controller {
 
     public function validationTest() {
-
         $validation = new Validation();
         $validation->setValidation(
             [

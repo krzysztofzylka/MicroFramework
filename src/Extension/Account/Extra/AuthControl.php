@@ -2,7 +2,6 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Account\Extra;
 
-use Exception;
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\ControllerApi;
 use Krzysztofzylka\MicroFramework\Exception\NoAuthException;
@@ -49,8 +48,8 @@ class AuthControl {
 
     /**
      * Check class method authorization
-     * @param $class
-     * @param $method
+     * @param string $class
+     * @param string $method
      * @return bool
      * @throws SimpleLibraryException
      */

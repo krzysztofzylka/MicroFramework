@@ -11,7 +11,7 @@ class index extends Controller {
      * @return void
      * @throws ViewException
      */
-    public function index() {
+    public function index() : void {
         $this->loadView();
     }
 

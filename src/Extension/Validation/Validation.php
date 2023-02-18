@@ -20,7 +20,7 @@ class Validation {
 
     /**
      * Valiate data
-     * @param array $data
+     * @param ?array $data
      * @return array
      */
     public function validate(?array $data) : array {

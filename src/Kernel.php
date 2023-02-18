@@ -96,11 +96,7 @@ class Kernel {
             throw new MicroFrameworkException('Project is not defined', 500);
         }
 
-        View::$filesystemLoader = new FilesystemLoader(self::getPath('view'));
-        View::$filesystemLoader->addPath(__DIR__ . '/Extension/Twig/Macros');
-        View::$environment = new Environment(View::$filesystemLoader, ['debug' => true]);
-        View::$environment->addExtension(new DebugExtension());
-        View::$environment->setCache(false);
+        self::initViewVariables();
 
         if (!is_null($controllerName)) {
             self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false]);
@@ -108,10 +104,23 @@ class Kernel {
     }
 
     /**
+     * init view variables
+     * @throws LoaderError
+     */
+    public static function initViewVariables() : void {
+        View::$filesystemLoader = new FilesystemLoader(self::getPath('view'));
+        View::$filesystemLoader->addPath(__DIR__ . '/Twig/template');
+        View::$filesystemLoader->addPath(__DIR__ . '/Extension/Twig/Macros');
+        View::$environment = new Environment(View::$filesystemLoader, ['debug' => true]);
+        View::$environment->addExtension(new DebugExtension());
+        View::$environment->setCache(false);
+    }
+
+    /**
      * Run framework
      * @return void
      * @throws ConnectException
-     * @throws DatabaseException
+     * @throws LoaderError
      * @throws MicroFrameworkException
      * @throws NotFoundException
      */
@@ -119,6 +128,8 @@ class Kernel {
         if (!isset(self::$config)) {
             self::$config = new ConfigDefault();
         }
+
+        self::errorHandler();
 
         self::configDatabaseConnect();
 
@@ -152,14 +163,18 @@ class Kernel {
      */
     public static function configDatabaseConnect() : void {
         if (self::$config->database) {
+            $databaseConnect = (new DatabaseConnect())
+                ->setHost(self::$config->databaseHost)
+                ->setUsername(self::$config->databaseUsername)
+                ->setPassword(self::$config->databasePassword)
+                ->setDatabaseName(self::$config->databaseName);
+
+            if (self::getConfig()->debug) {
+                $databaseConnect->setDebug(true);
+            }
+
             $databaseManager = new DatabaseManager();
-            $databaseManager->connect(
-                (new DatabaseConnect())
-                    ->setHost(self::$config->databaseHost)
-                    ->setUsername(self::$config->databaseUsername)
-                    ->setPassword(self::$config->databasePassword)
-                    ->setDatabaseName(self::$config->databaseName)
-            );
+            $databaseManager->connect($databaseConnect);
         }
     }
 
@@ -283,6 +298,15 @@ class Kernel {
      */
     public static function getConfig() : object {
         return self::$config;
+    }
+
+    /**
+     * Error handler
+     * @return void
+     */
+    public static function errorHandler() : void {
+        set_error_handler('\Krzysztofzylka\MicroFramework\Extension\ErrorHandler\ErrorHandler::errorHandler');
+        register_shutdown_function('Krzysztofzylka\MicroFramework\Extension\ErrorHandler\ErrorHandler::shutdownHandler');
     }
 
 }

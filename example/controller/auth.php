@@ -2,7 +2,9 @@
 
 namespace controller;
 
+use Exception;
 use Krzysztofzylka\MicroFramework\Controller;
+use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\ValidationException;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
@@ -15,8 +17,9 @@ class auth extends Controller {
     /**
      * @return void
      * @throws ViewException
+     * @throws MicroFrameworkException
      */
-    public function index() {
+    public function index() : void {
         if (Account::isLogged()) {
             $this->redirect(Kernel::getConfig()->defaultPage);
         }
@@ -38,7 +41,7 @@ class auth extends Controller {
                                 $account->login($this->data['auth']['login'], $this->data['auth']['password']);
 
                                 $this->redirect(Kernel::getConfig()->defaultPage);
-                            } catch (\Exception) {
+                            } catch (Exception) {
                                 throw new ValidationException('Login failed');
                             }
                         }

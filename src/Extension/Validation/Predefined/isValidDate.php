@@ -12,8 +12,6 @@ class isValidDate {
 
     /**
      * @param $value
-     * @param $key
-     * @param $data
      * @throws ValidationException
      */
     public function __construct($value) {

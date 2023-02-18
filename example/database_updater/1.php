@@ -3,10 +3,11 @@
 use krzysztofzylka\DatabaseManager\Column;
 use krzysztofzylka\DatabaseManager\CreateTable;
 use krzysztofzylka\DatabaseManager\Enum\ColumnType;
+use Krzysztofzylka\MicroFramework\Extension\Database\Updater;
 
-return (new class extends \Krzysztofzylka\MicroFramework\Extension\Database\Updater {
+return (new class extends Updater {
 
-    public function run() {
+    public function run() : void {
         (new CreateTable())
             ->setName('example')
             ->addIdColumn()

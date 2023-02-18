@@ -118,7 +118,7 @@ class Kernel {
      * Run framework
      * @return void
      * @throws ConnectException
-     * @throws DatabaseException
+     * @throws LoaderError
      * @throws MicroFrameworkException
      * @throws NotFoundException
      */

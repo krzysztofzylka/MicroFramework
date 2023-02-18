@@ -2,6 +2,7 @@
 
 namespace api_controller;
 
+use Exception;
 use Krzysztofzylka\MicroFramework\ControllerApi;
 
 class test extends ControllerApi {
@@ -17,7 +18,7 @@ class test extends ControllerApi {
         try {
             $this->loadModel('test')->insert(['name' => $content['name'], 'value' => $content['value']]);
             $this->responseJson(['status' => 'success']);
-        } catch (\Exception $e) {
+        } catch (Exception) {
             $this->responseError('Internal error');
         }
     }

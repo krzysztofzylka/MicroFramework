@@ -292,7 +292,7 @@ trait Form {
         }
 
         $data = $value ?? $this->getData($name);
-        $textarea = $this->clearTag('textarea', $data ?? '', [...$params, ...$attributes]) . $this->generateInvalidDiv($invalidText);;
+        $textarea = $this->clearTag('textarea', $data ?? '', [...$params, ...$attributes]) . $this->generateInvalidDiv($invalidText);
 
         return $this->tag('div', $this->generateTitle($title, $params) . $textarea, ['class' => 'form-group mb-2']);
     }

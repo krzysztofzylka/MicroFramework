@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\ErrorHandler;
 
+use DateTime;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\Client;
@@ -19,7 +20,7 @@ class ErrorHandler {
         $backtrace = debug_backtrace()[0];
         $logPath = Kernel::getPath('logs') . '/' . date('Y_m_d') . '.log.json';
         $logContent = [
-            'datetime' => \DateTime::createFromFormat('U.u', sprintf('%.f', microtime(true)))->format('Y-m-d H:i:s.u'),
+            'datetime' => DateTime::createFromFormat('U.u', sprintf('%.f', microtime(true)))->format('Y-m-d H:i:s.u'),
             'level' => $level,
             'message' => $message,
             'content' => $content,

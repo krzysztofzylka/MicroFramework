@@ -74,6 +74,12 @@ class Model {
     public ?array $validationErrors = [];
 
     /**
+     * Parent model
+     * @var ?Model
+     */
+    public ?Model $parentModel = null;
+
+    /**
      * Set ID
      * @param ?int $id
      * @return bool
@@ -102,12 +108,12 @@ class Model {
 
     /**
      * Select
-     * @param ?Condition $condition
+     * @param null|array|Condition $condition
      * @param ?string $orderBy
      * @return array|false
      * @throws DatabaseException
      */
-    public function find(?Condition $condition = null, ?string $orderBy = null) : array|false {
+    public function find(null|array|Condition $condition = null, ?string $orderBy = null) : array|false {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -121,13 +127,13 @@ class Model {
 
     /**
      * Select required
-     * @param ?Condition $condition
+     * @param null|array|Condition $condition
      * @param ?string $orderBy
      * @return array|false
      * @throws DatabaseException
      * @throws NotFoundException
      */
-    public function findRequired(?Condition $condition = null, ?string $orderBy = null) : array|false {
+    public function findRequired(null|array|Condition $condition = null, ?string $orderBy = null) : array|false {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -147,14 +153,14 @@ class Model {
 
     /**
      * Find all
-     * @param ?Condition $condition
+     * @param null|array|Condition $condition
      * @param ?string $orderBy
      * @param ?string $limit
      * @param ?string $groupBy
      * @return array|false
      * @throws DatabaseException
      */
-    public function findAll(?Condition $condition = null, ?string $orderBy = null, ?string $limit = null, ?string $groupBy = null) : array|false {
+    public function findAll(null|array|Condition $condition = null, ?string $orderBy = null, ?string $limit = null, ?string $groupBy = null) : array|false {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -194,12 +200,12 @@ class Model {
 
     /**
      * Find count
-     * @param ?Condition $condition
+     * @param null|array|Condition $condition
      * @param ?string $groupBy
      * @return int
      * @throws DatabaseException
      */
-    public function findCount(?Condition $condition = null, ?string $groupBy = null) : int {
+    public function findCount(null|array|Condition $condition = null, ?string $groupBy = null) : int {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -213,11 +219,11 @@ class Model {
 
     /**
      * Find isset
-     * @param ?Condition $condition
+     * @param null|array|Condition $condition
      * @return bool
      * @throws DatabaseException
      */
-    public function findIsset(?Condition $condition = null) : bool {
+    public function findIsset(null|array|Condition $condition = null) : bool {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -467,9 +473,10 @@ class Model {
             $model->name = $name;
             $model->controller = $this->controller;
             $model->data = $this->data;
+            $model->parentModel = $this;
 
             if ($model->useTable && isset(DatabaseManager::$connection)) {
-                $model->tableInstance = (new Table())->setName($model->tableName ?? $name);
+                $model->tableInstance = new Table($model->tableName ?? $name);
                 $model->transactionInstance = new Transaction();
             }
         } catch (Exception $exception) {

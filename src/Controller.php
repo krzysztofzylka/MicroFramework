@@ -90,7 +90,7 @@ class Controller {
             $model->data = $this->data;
 
             if ($model->useTable && isset(DatabaseManager::$connection)) {
-                $model->tableInstance = (new Table())->setName($model->tableName ?? $name);
+                $model->tableInstance = new Table($model->tableName ?? $name);
                 $model->transactionInstance = new Transaction();
             }
         } catch (Exception $exception) {

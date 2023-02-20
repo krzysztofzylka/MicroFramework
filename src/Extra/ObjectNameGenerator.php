@@ -18,6 +18,15 @@ class ObjectNameGenerator {
     }
 
     /**
+     * Generate controller class name
+     * @param string $controllerName
+     * @return string
+     */
+    public static function controllerPa(string $controllerName) : string {
+        return '\Krzysztofzylka\MicroFramework\AdminPanel\controller\\' . $controllerName;
+    }
+
+    /**
      * Generate api controller class name
      * @param string $controllerName
      * @return string

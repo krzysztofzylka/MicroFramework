@@ -99,7 +99,14 @@ class Kernel {
         self::initViewVariables();
 
         if (!is_null($controllerName)) {
-            self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false]);
+            $isAdminPanel = false;
+
+            if (str_starts_with($controllerName, 'pa')) {
+                $isAdminPanel = true;
+                $controllerName = lcfirst(substr($controllerName, 2));
+            }
+
+            self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false, 'isAdminPanel' => $isAdminPanel]);
         }
     }
 
@@ -206,9 +213,12 @@ class Kernel {
      * @return Controller
      * @throws NotFoundException
      * @throws NoAuthException
+     * @throws MicroFrameworkException
      */
     public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []) : Controller {
-        if (isset($params['api']) && $params['api']) {
+        if (isset($params['isAdminPanel']) && $params['isAdminPanel']) {
+            $class = ObjectNameGenerator::controllerPa($name);
+        } elseif (isset($params['api']) && $params['api']) {
             $class = ObjectNameGenerator::controllerApi($name);
         } else {
             $class = ObjectNameGenerator::controller($name);
@@ -226,10 +236,12 @@ class Kernel {
             $controller->htmlGenerator = new Html();
 
             if (!method_exists($controller, $method)) {
-                throw new Exception();
+                throw new Exception('Method ' . $method . ' not exists in controller ' . $name);
             }
-        } catch (Exception) {
-            throw new NotFoundException();
+        } catch (NotFoundException $exception) {
+            throw new NotFoundException($exception->getHiddenMessage());
+        } catch (Exception $exception) {
+            throw new MicroFrameworkException($exception->getMessage());
         }
 
         call_user_func_array([$controller, $method], $arguments);

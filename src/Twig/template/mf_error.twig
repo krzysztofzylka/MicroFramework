@@ -23,21 +23,26 @@
                 overflow: auto;
             }
             * { position: relative; margin: 0; padding: 0; box-sizing: border-box; }
-            .centered { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
             h1 { margin-bottom: 50px; font-family: 'Lato', sans-serif; font-size: 50px; }
             .message { font-size: 0.4em; margin-top: 8px; }
         </style>
     </head>
-    <body>
-        <section class="centered">
-            <h1>
-                {{ code }} {{ title }}
-                <div class="message" style="text-align: center;">{{ message }}</div>
-            </h1>
+    <body style="width: 100%; height: 100%;">
+        <div class="p-4">
+            <center>
+                <h1>
+                    {{ code }} {{ title }}
+                    <div class="message" style="text-align: center;">{{ message }}</div>
+                </h1>
+            </center>
 
             {% if debug != false %}
-                <div class="alert alert-info ms-4 me-4">{{ debug }}</div>
+                {% if hiddenMessage != false %}
+                    <div class="alert alert-danger">{{ hiddenMessage }}</div>
+                {% endif %}
+
+                <div class="alert alert-info"><pre>{{ debug }}</pre></div>
             {% endif %}
-        </section>
+        </div>
     </body>
 </html>

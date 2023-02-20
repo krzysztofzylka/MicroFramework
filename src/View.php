@@ -71,4 +71,21 @@ class View {
         }
     }
 
+    public function renderError(int $code, Exception $exception, string $name = 'mf_error') : string {
+        $hiddenMessage = false;
+
+        if (method_exists($exception, 'getHiddenMessage')) {
+            $hiddenMessage = $exception->getHiddenMessage();
+        }
+
+        return $this->render(
+            $name,
+            [
+                'code' => $code ?? 500,
+                'debug' => Kernel::getConfig()->debug ? var_export($exception, true) : false,
+                'hiddenMessage' => $hiddenMessage
+            ]
+        );
+    }
+
 }

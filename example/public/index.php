@@ -19,11 +19,13 @@ try {
 } catch (Exception $exception) {
     $view = new View();
 
-    echo $view->render(
-        'mf_error',
-        [
-            'code' => $exception->getCode() ?? 500,
-            'debug' => Kernel::getConfig()->debug ? var_export($exception, true) : false
-        ]
-    );
+    echo $view->renderError($exception->getCode() ?? 500, $exception);
+
+//    echo $view->render(
+//        'mf_error',
+//        [
+//            'code' => $exception->getCode() ?? 500,
+//            'debug' => Kernel::getConfig()->debug ? var_export($exception, true) : false
+//        ]
+//    );
 }

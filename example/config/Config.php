@@ -11,7 +11,7 @@ class Config extends ConfigDefault {
 
     public bool $database = true;
     public string $databaseName = 'microframework';
-    public string $databasePassword = 'password';
+    public string $databasePassword = 'user';
     public string $databaseUsername = 'user';
     public bool $authControl = true;
 

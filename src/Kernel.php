@@ -38,6 +38,7 @@ class Kernel {
      */
     private static array $paths = [
         'public' => null,
+        'assets' => null,
         'controller' => null,
         'api_controller' => null,
         'model' => null,
@@ -68,6 +69,7 @@ class Kernel {
         self::$paths['storage'] = $projectPath . '/storage';
         self::$paths['logs'] = self::$paths['storage'] . '/logs';
         self::$paths['database_updater'] = $projectPath . '/database_updater';
+        self::$paths['assets'] = self::$paths['public'] . '/assets';
 
         foreach (self::$paths as $name => $path) {
             self::$paths[$name] = File::repairPath($path);
@@ -206,9 +208,9 @@ class Kernel {
 
     /**
      * Load controller
-     * @param string $name
-     * @param string $method
-     * @param array $arguments
+     * @param string $name controller name
+     * @param string $method method
+     * @param array $arguments method arguments
      * @param array $params additional params for loader
      * @return Controller
      * @throws NotFoundException
@@ -217,6 +219,14 @@ class Kernel {
      */
     public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []) : Controller {
         if (isset($params['isAdminPanel']) && $params['isAdminPanel']) {
+            if (!self::getConfig()->authControl) {
+                throw new NotFoundException('Account control is disabled');
+            } elseif (!Account::isLogged()) {
+                throw new NotFoundException('You not logged');
+            } elseif (!Account::$account['account']['admin']) {
+                throw new NotFoundException('You not have permission to admin panel');
+            }
+
             $class = ObjectNameGenerator::controllerPa($name);
         } elseif (isset($params['api']) && $params['api']) {
             $class = ObjectNameGenerator::controllerApi($name);
@@ -234,6 +244,7 @@ class Kernel {
             $controller->arguments = $arguments;
             $controller->data = self::getData();
             $controller->htmlGenerator = new Html();
+            $controller->params = $params;
 
             if (!method_exists($controller, $method)) {
                 throw new Exception('Method ' . $method . ' not exists in controller ' . $name);
@@ -241,7 +252,7 @@ class Kernel {
         } catch (NotFoundException $exception) {
             throw new NotFoundException($exception->getHiddenMessage());
         } catch (Exception $exception) {
-            throw new MicroFrameworkException($exception->getMessage());
+            throw new MicroFrameworkException($exception->getMessage(), $exception->getCode());
         }
 
         call_user_func_array([$controller, $method], $arguments);

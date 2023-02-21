@@ -13,8 +13,12 @@ class Config extends ConfigDefault {
     public string $databaseName = 'microframework';
     public string $databasePassword = 'user';
     public string $databaseUsername = 'user';
-    public bool $authControl = false;
+    public bool $authControl = true;
 
     public bool $authControlDefaultRequireAuth = false;
+
+    public string $defaultPage = '/index/index';
+
+    public string $pageUrl = 'http://micro.local/';
 
 }

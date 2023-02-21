@@ -1,5 +1,6 @@
 <?php
 ob_start();
+session_start();
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
@@ -20,12 +21,4 @@ try {
     $view = new View();
 
     echo $view->renderError($exception->getCode() ?? 500, $exception);
-
-//    echo $view->render(
-//        'mf_error',
-//        [
-//            'code' => $exception->getCode() ?? 500,
-//            'debug' => Kernel::getConfig()->debug ? var_export($exception, true) : false
-//        ]
-//    );
 }

@@ -4,10 +4,10 @@ namespace Krzysztofzylka\MicroFramework\AdminPanel\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
 
-class login extends Controller {
+class index extends Controller {
 
-    public function test() {
-        echo 'test pa';
+    public function index() {
+        $this->loadView();
     }
 
 }

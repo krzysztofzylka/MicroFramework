@@ -60,13 +60,16 @@ class DatabaseUpdater {
      */
     public function run() : void {
         try {
-            $updateFiles = glob(Kernel::getPath('database_updater') . '/*.php');
+            $updateFiles = glob(__DIR__ . '/../Extension/Database/Updater/*.php');
+            $updateFiles = array_merge($updateFiles, glob(Kernel::getPath('database_updater') . '/*.php'));
 
             foreach ($updateFiles as $filePath) {
                 $name = str_replace('.' . pathinfo($filePath, PATHINFO_EXTENSION), '', basename($filePath));
 
                 if (!$this->updateTable->findIsset((new Condition())->where('name', $name))) {
                     $this->updateTable->insert(['name' => $name]);
+
+                    echo '[' . date('Y-m-d H:i:s') . '] Run database updater: ' . $name . PHP_EOL;
 
                     try {
                         include($filePath);

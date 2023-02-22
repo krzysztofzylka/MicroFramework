@@ -90,7 +90,7 @@ class Controller {
 
         if (str_starts_with($name, 'pa')) {
             $class = ObjectNameGenerator::modelPa($name);
-        }else {
+        } else {
             $class = ObjectNameGenerator::model($name);
         }
 
@@ -106,7 +106,7 @@ class Controller {
                 $model->transactionInstance = new Transaction();
             }
         } catch (Exception $exception) {
-            $this->log('Fail load model', 'ERR', ['exception' => $exception]);
+            $this->log('Fail load model ' . $name, 'ERR', ['name' => $startName, 'class' => $class, 'exception' => $exception]);
 
             throw new NotFoundException('Not found model ' . $startName);
         }

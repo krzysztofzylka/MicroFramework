@@ -465,7 +465,13 @@ class Model {
             $name = $name[0];
         }
 
-        $class = ObjectNameGenerator::model($name);
+        $startName = $name;
+
+        if (str_starts_with($name, 'pa')) {
+            $class = ObjectNameGenerator::modelPa($name);
+        } else {
+            $class = ObjectNameGenerator::model($name);
+        }
 
         try {
             /** @var Model $model */
@@ -476,16 +482,16 @@ class Model {
             $model->parentModel = $this;
 
             if ($model->useTable && isset(DatabaseManager::$connection)) {
-                $model->tableInstance = new Table($model->tableName ?? $name);
+                $model->tableInstance = new Table($model->tableName ?? $startName);
                 $model->transactionInstance = new Transaction();
             }
         } catch (Exception $exception) {
-            $this->log('Fail load model', 'ERR', ['exception' => $exception]);
+            $this->log('Fail load model ' . $name, 'ERR', ['name' => $startName, 'class' => $class, 'exception' => $exception]);
 
-            throw new NotFoundException();
+            throw new NotFoundException('Not found model ' . $startName);
         }
 
-        $this->models[str_replace('_', '', ucwords($name, '_'))] = $model;
+        $this->models[str_replace('_', '', ucwords($startName, '_'))] = $model;
 
         return $model;
     }

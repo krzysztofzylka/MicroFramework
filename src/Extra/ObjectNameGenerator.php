@@ -45,6 +45,17 @@ class ObjectNameGenerator {
     }
 
     /**
+     * Generate model class name
+     * @param string $modelName
+     * @return string
+     */
+    public static function modelPa(string $modelName) : string {
+        $modelName = lcfirst(substr($modelName, 2));
+
+        return '\Krzysztofzylka\MicroFramework\AdminPanel\model\\' . $modelName;
+    }
+
+    /**
      * Generate predefined validation class name
      * @param string $validationName
      * @return string

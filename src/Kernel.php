@@ -219,7 +219,9 @@ class Kernel {
      */
     public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []) : Controller {
         if (isset($params['isAdminPanel']) && $params['isAdminPanel']) {
-            if (!self::getConfig()->authControl) {
+            if (!self::getConfig()->adminPanel) {
+                throw new NotFoundException('Admin panel is disabled');
+            } elseif (!self::getConfig()->authControl) {
                 throw new NotFoundException('Account control is disabled');
             } elseif (!Account::isLogged()) {
                 throw new NotFoundException('You not logged');

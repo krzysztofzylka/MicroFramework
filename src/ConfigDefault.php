@@ -102,4 +102,10 @@ class ConfigDefault {
      */
     public string $authControlRedirect = '';
 
+    /**
+     * Admin panel
+     * @var bool
+     */
+    public bool $adminPanel = false;
+
 }

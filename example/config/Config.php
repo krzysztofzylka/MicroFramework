@@ -21,4 +21,6 @@ class Config extends ConfigDefault {
 
     public string $pageUrl = 'http://micro.local/';
 
+    public bool $adminPanel = true;
+
 }

@@ -5,7 +5,7 @@ Logs
 {% endblock %}
 
 {% block content %}
-    <table class="table table-sm">
+    <table id="table">
         <thead>
             <tr>
                 <th width="200px">ID</th>
@@ -25,4 +25,12 @@ Logs
             {% endfor %}
         </tbody>
     </table>
+
+    <script>
+        $(document).ready( function () {
+            $('#table').DataTable({
+                "ordering": false
+            });
+        } );
+    </script>
 {% endblock %}

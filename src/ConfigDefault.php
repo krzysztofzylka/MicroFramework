@@ -4,7 +4,8 @@ namespace Krzysztofzylka\MicroFramework;
 
 use Krzysztofzylka\MicroFramework\Extension\Account\Enum\AuthControlAction;
 
-class ConfigDefault {
+class ConfigDefault
+{
 
     /**
      * Debug

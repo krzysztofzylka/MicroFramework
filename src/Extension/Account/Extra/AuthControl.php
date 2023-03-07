@@ -16,14 +16,16 @@ use krzysztofzylka\SimpleLibraries\Library\PHPDoc;
  * Auth control
  * @package Extension
  */
-class AuthControl {
+class AuthControl
+{
 
     /**
      * Start check authorization
      * @throws NotFoundException
      * @throws NoAuthException
      */
-    public static function run(string $class, string $method, bool $isApi) : void {
+    public static function run(string $class, string $method, bool $isApi): void
+    {
         if (Kernel::getConfig()->authControl) {
             try {
                 $checkAuthorization = self::checkAuthorization($class, $method);
@@ -35,7 +37,7 @@ class AuthControl {
                 if ($isApi) {
                     (new ControllerApi())->responseError('Not authorized', 401);
                 } else {
-                    switch(Kernel::getConfig()->authControlAction) {
+                    switch (Kernel::getConfig()->authControlAction) {
                         case AuthControlAction::redirect:
                             (new Controller())->redirect(Kernel::getConfig()->authControlRedirect);
                         case AuthControlAction::exception:
@@ -53,10 +55,11 @@ class AuthControl {
      * @return bool
      * @throws SimpleLibraryException
      */
-    public static function checkAuthorization(string $class, string $method) : bool {
+    public static function checkAuthorization(string $class, string $method): bool
+    {
         $requireAuth = PHPDoc::getClassMethodComment($class, $method, 'auth')[0] ?? Kernel::getConfig()->authControlDefaultRequireAuth;
 
-        if(is_string($requireAuth)) {
+        if (is_string($requireAuth)) {
             $requireAuth = filter_var($requireAuth, FILTER_VALIDATE_BOOLEAN);
         }
 

@@ -5,7 +5,8 @@ namespace Krzysztofzylka\MicroFramework\Extension\Database\Enum;
 /**
  * Update status
  */
-enum UpdateStatus : string {
+enum UpdateStatus: string
+{
 
     /**
      * Init

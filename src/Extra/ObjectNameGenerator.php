@@ -6,14 +6,16 @@ namespace Krzysztofzylka\MicroFramework\Extra;
  * Object name generator
  * @package Extra
  */
-class ObjectNameGenerator {
+class ObjectNameGenerator
+{
 
     /**
      * Generate controller class name
      * @param string $controllerName
      * @return string
      */
-    public static function controller(string $controllerName) : string {
+    public static function controller(string $controllerName): string
+    {
         return '\controller\\' . $controllerName;
     }
 
@@ -22,7 +24,8 @@ class ObjectNameGenerator {
      * @param string $controllerName
      * @return string
      */
-    public static function controllerApi(string $controllerName) : string {
+    public static function controllerApi(string $controllerName): string
+    {
         return '\api_controller\\' . $controllerName;
     }
 
@@ -31,7 +34,8 @@ class ObjectNameGenerator {
      * @param string $modelName
      * @return string
      */
-    public static function model(string $modelName) : string {
+    public static function model(string $modelName): string
+    {
         return '\model\\' . $modelName;
     }
 
@@ -40,7 +44,8 @@ class ObjectNameGenerator {
      * @param string $validationName
      * @return string
      */
-    public static function predefinedValidationClass(string $validationName) : string {
+    public static function predefinedValidationClass(string $validationName): string
+    {
         return '\Krzysztofzylka\MicroFramework\Extension\Validation\Predefined\\' . $validationName;
     }
 

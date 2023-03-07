@@ -7,7 +7,8 @@ use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-class View {
+class View
+{
 
     /**
      * Twig FileSystemLoader
@@ -32,7 +33,8 @@ class View {
      * @param Controller $controller
      * @return void
      */
-    public function setController(Controller $controller) : void {
+    public function setController(Controller $controller): void
+    {
         $this->controller = $controller;
     }
 
@@ -43,7 +45,8 @@ class View {
      * @return string
      * @throws ViewException
      */
-    public function render(string $name, array $variables = []) : string {
+    public function render(string $name, array $variables = []): string
+    {
         try {
             $globalVariables = [
                 'view' => $this,

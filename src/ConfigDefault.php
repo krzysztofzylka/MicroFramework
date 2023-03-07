@@ -103,4 +103,54 @@ class ConfigDefault
      */
     public string $authControlRedirect = '';
 
+    /** E-Mail */
+
+    /**
+     * Activate E-Mail
+     * @var bool
+     */
+    public bool $email = false;
+
+    /**
+     * E-Mail host
+     * @var string
+     */
+    public string $emailHost = '';
+
+    /**
+     * E-Mail SMTP auth
+     * @var bool
+     */
+    public bool $emailSMTPAuth = true;
+
+    /**
+     * E-Mail username
+     * @var string
+     */
+    public string $emailUsername = '';
+
+    /**
+     * E-Mail password
+     * @var string
+     */
+    public string $emailPassword = '';
+
+    /**
+     * E-Mail active SMTP secure
+     * @var bool
+     */
+    public bool $emailSMTPSecure = true;
+
+    /**
+     * E-Mail port
+     * @var int
+     */
+    public int $emailPort = 465;
+
+    /**
+     * E-Mail from in format: ['address@email.com', 'Company name']
+     * @var array
+     */
+    public array $emailFrom = [];
+
 }

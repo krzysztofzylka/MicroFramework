@@ -54,7 +54,12 @@ class View
             ];
 
             if (isset($this->controller)) {
-                $name = $this->controller->name . DIRECTORY_SEPARATOR . $name;
+                if (!str_starts_with($name, '/')) {
+                    $name = $this->controller->name . DIRECTORY_SEPARATOR . $name;
+                } else {
+                    $name = substr($name, 1);
+                }
+
                 $globalVariables['controller'] = $this->controller;
             }
 

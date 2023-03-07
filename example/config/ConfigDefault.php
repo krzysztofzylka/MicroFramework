@@ -2,9 +2,7 @@
 
 namespace config;
 
-use Krzysztofzylka\MicroFramework\ConfigDefault;
-
-class Config extends ConfigDefault {
+class ConfigDefault extends \Krzysztofzylka\MicroFramework\ConfigDefault {
 
     public bool $debug = true;
     public bool $api = true;

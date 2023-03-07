@@ -3,6 +3,8 @@
 namespace Krzysztofzylka\MicroFramework;
 
 use Krzysztofzylka\MicroFramework\Extension\Account\Enum\AuthControlAction;
+use Krzysztofzylka\MicroFramework\Extension\Email\Enum\PredefinedConfig;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class ConfigDefault
 {
@@ -102,5 +104,85 @@ class ConfigDefault
      * @var string
      */
     public string $authControlRedirect = '';
+
+    /** Extension E-Mail */
+
+    /**
+     * Email predefined config
+     * @var ?PredefinedConfig
+     */
+    public ?PredefinedConfig $emailPredefinedConfig = null;
+
+    /**
+     * Enable E-Mail
+     * @var bool
+     */
+    public bool $email = false;
+
+    /**
+     * Enable E-Mail debug
+     * @var bool
+     */
+    public bool $emailDebug = false;
+
+    /**
+     * Email is SMTP
+     * @var bool
+     */
+    public bool $emailIsSMTP = true;
+
+    /**
+     * Email host
+     * @var string
+     */
+    public string $emailHost = '';
+
+    /**
+     * Email SMTP auth
+     * @var bool
+     */
+    public bool $emailSMTPAuth = true;
+
+    /**
+     * Email username
+     * @var string
+     */
+    public string $emailUsername = '';
+
+    /**
+     * Email password
+     * @var string
+     */
+    public string $emailPassword = '';
+
+    /**
+     * Email charset
+     * @var string
+     */
+    public string $emailCharset = 'UTF-8';
+
+    /**
+     * Email SMTP secure
+     * @var string
+     */
+    public string $emailSMTPSecure = 'ssl';
+
+    /**
+     * Email port
+     * @var int
+     */
+    public int $emailPort = 25;
+
+    /**
+     * Email from, default $emailUsername
+     * @var ?string
+     */
+    public ?string $emailFrom = null;
+
+    /**
+     * Email from name
+     * @var string
+     */
+    public string $emailFromName = '';
 
 }

@@ -66,6 +66,6 @@ class auth extends Controller {
                 ->button('Zaloguj')
         );
 
-        $this->loadView(null, ['form' => $form]);
+        $this->loadView(['form' => $form]);
     }
 }

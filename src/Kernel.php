@@ -207,6 +207,7 @@ class Kernel
     {
         View::$filesystemLoader = new FilesystemLoader(self::getPath('view'));
         View::$filesystemLoader->addPath(__DIR__ . '/Twig/template');
+        View::$filesystemLoader->addPath(__DIR__ . '/Twig/email_template');
         View::$environment = new Environment(View::$filesystemLoader, ['debug' => true]);
         View::$environment->addExtension(new DebugExtension());
     }

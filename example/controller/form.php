@@ -60,7 +60,7 @@ class form extends Controller {
                 ->button('Check')
         );
 
-        $this->loadView(null, ['form1' => $form1]);
+        $this->loadView(['form1' => $form1]);
     }
 
 }

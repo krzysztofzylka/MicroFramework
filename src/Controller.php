@@ -108,12 +108,12 @@ class Controller
 
     /**
      * Load view
-     * @param ?string $name
      * @param array $variables
+     * @param ?string $name
      * @return void
      * @throws ViewException
      */
-    public function loadView(?string $name = null, array $variables = []): void
+    public function loadView(array $variables = [], ?string $name = null): void
     {
         $view = new View();
         $view->setController($this);

@@ -11,7 +11,8 @@ use krzysztofzylka\SimpleLibraries\Library\Client;
  * Logs
  * @package Trait
  */
-trait Log {
+trait Log
+{
 
     /**
      * Write log
@@ -20,7 +21,8 @@ trait Log {
      * @param array $content
      * @return bool
      */
-    public function log(string $message, string $level = 'INFO', array $content = []) : bool {
+    public function log(string $message, string $level = 'INFO', array $content = []): bool
+    {
         $backtrace = debug_backtrace()[0];
         $logPath = Kernel::getPath('logs') . '/' . date('Y_m_d') . '.log.json';
         $logContent = [

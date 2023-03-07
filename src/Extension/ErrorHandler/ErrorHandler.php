@@ -7,34 +7,8 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\Client;
 
-class ErrorHandler {
-
-    /**
-     * Write log
-     * @param string $message
-     * @param string $level log level, default INFO
-     * @param array $content
-     * @return void
-     */
-    private static function log(string $message, string $level = 'INFO', array $content = []) : void {
-        $backtrace = debug_backtrace()[0];
-        $logPath = Kernel::getPath('logs') . '/' . date('Y_m_d') . '.log.json';
-        $logContent = [
-            'datetime' => DateTime::createFromFormat('U.u', sprintf('%.f', microtime(true)))->format('Y-m-d H:i:s.u'),
-            'level' => $level,
-            'message' => $message,
-            'content' => $content,
-            'ip' => Client::getIP(),
-            'file' => $backtrace['file'],
-            'class' => $backtrace['class'],
-            'function' => $backtrace['function'],
-            'line' => $backtrace['line'],
-            'accountId' => Account::$accountId,
-            'get' => $_GET
-        ];
-
-        file_put_contents($logPath, json_encode($logContent) . PHP_EOL, FILE_APPEND);
-    }
+class ErrorHandler
+{
 
     /**
      * Catch php errors
@@ -43,7 +17,8 @@ class ErrorHandler {
      * @param $file
      * @param $line
      */
-    public static function errorHandler($type, $message, $file, $line) : void {
+    public static function errorHandler($type, $message, $file, $line): void
+    {
         if (!(error_reporting() & $type)) {
             return;
         }
@@ -78,10 +53,39 @@ class ErrorHandler {
     }
 
     /**
+     * Write log
+     * @param string $message
+     * @param string $level log level, default INFO
+     * @param array $content
+     * @return void
+     */
+    private static function log(string $message, string $level = 'INFO', array $content = []): void
+    {
+        $backtrace = debug_backtrace()[0];
+        $logPath = Kernel::getPath('logs') . '/' . date('Y_m_d') . '.log.json';
+        $logContent = [
+            'datetime' => DateTime::createFromFormat('U.u', sprintf('%.f', microtime(true)))->format('Y-m-d H:i:s.u'),
+            'level' => $level,
+            'message' => $message,
+            'content' => $content,
+            'ip' => Client::getIP(),
+            'file' => $backtrace['file'],
+            'class' => $backtrace['class'],
+            'function' => $backtrace['function'],
+            'line' => $backtrace['line'],
+            'accountId' => Account::$accountId,
+            'get' => $_GET
+        ];
+
+        file_put_contents($logPath, json_encode($logContent) . PHP_EOL, FILE_APPEND);
+    }
+
+    /**
      * Catch critical error
      * @return void
      */
-    public static function shutdownHandler() : void {
+    public static function shutdownHandler(): void
+    {
         $lastError = error_get_last();
 
         if ($lastError === null) {

@@ -24,7 +24,8 @@ use Twig\Loader\FilesystemLoader;
 /**
  * Kernel
  */
-class Kernel {
+class Kernel
+{
 
     /**
      * Project path
@@ -58,7 +59,8 @@ class Kernel {
      * @param string $projectPath
      * @return void
      */
-    public static function create(string $projectPath) : void {
+    public static function create(string $projectPath): void
+    {
         self::$projectPath = $projectPath;
         self::$paths['public'] = realpath($projectPath . '/public');
         self::$paths['controller'] = $projectPath . '/controller';
@@ -81,40 +83,6 @@ class Kernel {
     }
 
     /**
-     * Init framework
-     * @param ?string $controllerName
-     * @param string $controllerMethod
-     * @param array $controllerArguments
-     * @param array $params additional init params
-     * @return void
-     * @throws MicroFrameworkException
-     * @throws NotFoundException
-     * @throws LoaderError
-     */
-    public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = [], array $params = []) : void {
-        if (!self::$projectPath) {
-            throw new MicroFrameworkException('Project is not defined', 500);
-        }
-
-        self::initViewVariables();
-
-        if (!is_null($controllerName)) {
-            self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false]);
-        }
-    }
-
-    /**
-     * init view variables
-     * @throws LoaderError
-     */
-    public static function initViewVariables() : void {
-        View::$filesystemLoader = new FilesystemLoader(self::getPath('view'));
-        View::$filesystemLoader->addPath(__DIR__ . '/Twig/template');
-        View::$environment = new Environment(View::$filesystemLoader, ['debug' => true]);
-        View::$environment->addExtension(new DebugExtension());
-    }
-
-    /**
      * Run framework
      * @return void
      * @throws ConnectException
@@ -122,7 +90,8 @@ class Kernel {
      * @throws MicroFrameworkException
      * @throws NotFoundException
      */
-    public static function run() : void {
+    public static function run(): void
+    {
         if (!isset(self::$config)) {
             self::$config = new ConfigDefault();
         }
@@ -155,11 +124,22 @@ class Kernel {
     }
 
     /**
+     * Error handler
+     * @return void
+     */
+    public static function errorHandler(): void
+    {
+        set_error_handler('\Krzysztofzylka\MicroFramework\Extension\ErrorHandler\ErrorHandler::errorHandler');
+        register_shutdown_function('Krzysztofzylka\MicroFramework\Extension\ErrorHandler\ErrorHandler::shutdownHandler');
+    }
+
+    /**
      * Connect to database
      * @return void
      * @throws ConnectException
      */
-    public static function configDatabaseConnect() : void {
+    public static function configDatabaseConnect(): void
+    {
         if (self::$config->database) {
             $databaseConnect = (new DatabaseConnect())
                 ->setHost(self::$config->databaseHost)
@@ -177,11 +157,58 @@ class Kernel {
     }
 
     /**
-     * Get project path
-     * @return string
+     * Get config
+     * @return ConfigDefault
      */
-    public static function getProjectPath() : string {
-        return self::$projectPath;
+    public static function getConfig(): object
+    {
+        return self::$config;
+    }
+
+    /**
+     * Set config
+     * @param object $config
+     * @return void
+     */
+    public static function setConfig(object $config): void
+    {
+        self::$config = $config;
+    }
+
+    /**
+     * Init framework
+     * @param ?string $controllerName
+     * @param string $controllerMethod
+     * @param array $controllerArguments
+     * @param array $params additional init params
+     * @return void
+     * @throws MicroFrameworkException
+     * @throws NotFoundException
+     * @throws LoaderError
+     */
+    public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = [], array $params = []): void
+    {
+        if (!self::$projectPath) {
+            throw new MicroFrameworkException('Project is not defined', 500);
+        }
+
+        self::initViewVariables();
+
+        if (!is_null($controllerName)) {
+            self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false]);
+        }
+    }
+
+    /**
+     * init view variables
+     * @throws LoaderError
+     */
+    public static function initViewVariables(): void
+    {
+        View::$filesystemLoader = new FilesystemLoader(self::getPath('view'));
+        View::$filesystemLoader->addPath(__DIR__ . '/Twig/template');
+        View::$environment = new Environment(View::$filesystemLoader, ['debug' => true]);
+        View::$environment->addExtension(new DebugExtension());
     }
 
     /**
@@ -189,7 +216,8 @@ class Kernel {
      * @param string $name controller / model / view
      * @return string|false
      */
-    public static function getPath(string $name) : string|false {
+    public static function getPath(string $name): string|false
+    {
         if (!in_array($name, array_keys(self::$paths))) {
             return false;
         }
@@ -207,7 +235,8 @@ class Kernel {
      * @throws NotFoundException
      * @throws NoAuthException
      */
-    public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []) : Controller {
+    public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []): Controller
+    {
         if (isset($params['api']) && $params['api']) {
             $class = ObjectNameGenerator::controllerApi($name);
         } else {
@@ -238,11 +267,25 @@ class Kernel {
     }
 
     /**
+     * Get post data
+     * @return ?array
+     */
+    public static function getData(): ?array
+    {
+        if (!Request::isPost()) {
+            return null;
+        }
+
+        return Request::getAllPostEscapeData();
+    }
+
+    /**
      * Autoload
      * @return void
      * @throws NotFoundException
      */
-    public static function autoload() : void {
+    public static function autoload(): void
+    {
         spl_autoload_register(function ($class_name) {
             $path = File::repairPath(self::getProjectPath() . DIRECTORY_SEPARATOR . $class_name . '.php');
 
@@ -255,56 +298,28 @@ class Kernel {
     }
 
     /**
+     * Get project path
+     * @return string
+     */
+    public static function getProjectPath(): string
+    {
+        return self::$projectPath;
+    }
+
+    /**
      * Database connect
      * @param DatabaseConnect $databaseConnect
      * @return void
      * @throws DatabaseException
      */
-    public static function databaseConnect(DatabaseConnect $databaseConnect) : void {
+    public static function databaseConnect(DatabaseConnect $databaseConnect): void
+    {
         try {
             $databaseManager = new DatabaseManager();
             $databaseManager->connect($databaseConnect);
         } catch (ConnectException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
-    }
-
-    /**
-     * Get post data
-     * @return ?array
-     */
-    public static function getData() : ?array {
-        if (!Request::isPost()) {
-            return null;
-        }
-
-        return Request::getAllPostEscapeData();
-    }
-
-    /**
-     * Set config
-     * @param object $config
-     * @return void
-     */
-    public static function setConfig(object $config) : void {
-        self::$config = $config;
-    }
-
-    /**
-     * Get config
-     * @return ConfigDefault
-     */
-    public static function getConfig() : object {
-        return self::$config;
-    }
-
-    /**
-     * Error handler
-     * @return void
-     */
-    public static function errorHandler() : void {
-        set_error_handler('\Krzysztofzylka\MicroFramework\Extension\ErrorHandler\ErrorHandler::errorHandler');
-        register_shutdown_function('Krzysztofzylka\MicroFramework\Extension\ErrorHandler\ErrorHandler::shutdownHandler');
     }
 
 }

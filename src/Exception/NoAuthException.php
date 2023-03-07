@@ -3,12 +3,14 @@
 namespace Krzysztofzylka\MicroFramework\Exception;
 
 /**
- * Not found exception
+ * Not authorized exception
  * @package Exception
  */
-class NoAuthException extends MicroFrameworkException {
+class NoAuthException extends MicroFrameworkException
+{
 
-    public function __construct(string $message = 'Not authorized.') {
+    public function __construct(string $message = 'Not authorized.')
+    {
         parent::__construct($message, 401);
     }
 

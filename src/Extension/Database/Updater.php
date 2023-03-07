@@ -5,7 +5,8 @@ namespace Krzysztofzylka\MicroFramework\Extension\Database;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Table;
 
-class Updater {
+class Updater
+{
 
     /**
      * Table object
@@ -22,7 +23,8 @@ class Updater {
     /**
      * Init updater
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->table = new Table();
         $this->databaseManager = new DatabaseManager();
         $this->run();
@@ -32,7 +34,8 @@ class Updater {
      * Run script
      * @return void
      */
-    public function run() : void {
+    public function run(): void
+    {
     }
 
 }

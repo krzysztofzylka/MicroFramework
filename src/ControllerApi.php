@@ -11,7 +11,8 @@ use krzysztofzylka\SimpleLibraries\Library\Response;
  * Api controller
  * @package Controller
  */
-class ControllerApi extends Controller {
+class ControllerApi extends Controller
+{
 
     use Log;
 
@@ -37,7 +38,8 @@ class ControllerApi extends Controller {
      * Constructor
      * - Automatic api authorization
      */
-    public function __construct() {
+    public function __construct()
+    {
         if ($this->auth) {
             if ($this->authorizationType === AuthorizationType::basic) {
                 $username = isset($_SERVER['PHP_AUTH_USER']) ? htmlspecialchars($_SERVER['PHP_AUTH_USER']) : false;
@@ -57,22 +59,13 @@ class ControllerApi extends Controller {
     }
 
     /**
-     * Response JSON
-     * @param array $data
-     * @return never
-     */
-    public function responseJson(array $data) : never {
-        $response = new Response();
-        $response->json($data);
-    }
-
-    /**
      * Response JSON error
      * @param string $message
      * @param int $code
      * @return never
      */
-    public function responseError(string $message, int $code = 500) : never {
+    public function responseError(string $message, int $code = 500): never
+    {
         http_response_code($code);
 
         $response = new Response();
@@ -80,11 +73,14 @@ class ControllerApi extends Controller {
     }
 
     /**
-     * Get request method
-     * @return string
+     * Response JSON
+     * @param array $data
+     * @return never
      */
-    public function getRequestMethod() : string {
-        return $_SERVER['REQUEST_METHOD'];
+    public function responseJson(array $data): never
+    {
+        $response = new Response();
+        $response->json($data);
     }
 
     /**
@@ -92,7 +88,8 @@ class ControllerApi extends Controller {
      * @param string|array $method
      * @return void
      */
-    public function allowRequestMethod(string|array $method) : void {
+    public function allowRequestMethod(string|array $method): void
+    {
         $method = is_string($method) ? [$method] : $method;
 
         if (!in_array($this->getRequestMethod(), $method)) {
@@ -101,10 +98,20 @@ class ControllerApi extends Controller {
     }
 
     /**
+     * Get request method
+     * @return string
+     */
+    public function getRequestMethod(): string
+    {
+        return $_SERVER['REQUEST_METHOD'];
+    }
+
+    /**
      * Content body is json and response 400
      * @return void
      */
-    public function contentBodyIsJson() : void {
+    public function contentBodyIsJson(): void
+    {
         json_decode($this->getBodyContent());
 
         if (json_last_error() !== JSON_ERROR_NONE) {
@@ -113,11 +120,21 @@ class ControllerApi extends Controller {
     }
 
     /**
+     * Get body content
+     * @return false|string
+     */
+    public function getBodyContent(): false|string
+    {
+        return file_get_contents('php://input');
+    }
+
+    /**
      * Validate content body (json) and response 400
      * @param array $keyList
      * @return void
      */
-    public function contentBodyValidate(array $keyList) : void {
+    public function contentBodyValidate(array $keyList): void
+    {
         $contentBody = json_decode($this->getBodyContent(), true);
         $contentBodyKeys = array_keys($contentBody);
 
@@ -126,14 +143,6 @@ class ControllerApi extends Controller {
                 $this->responseError('Invalid input data', 400);
             }
         }
-    }
-
-    /**
-     * Get body content
-     * @return false|string
-     */
-    public function getBodyContent() : false|string {
-        return file_get_contents('php://input');
     }
 
 }

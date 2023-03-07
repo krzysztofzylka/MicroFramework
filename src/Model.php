@@ -15,7 +15,8 @@ use Krzysztofzylka\MicroFramework\Extension\Validation\Validation;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 
-class Model {
+class Model
+{
 
     use Log;
 
@@ -84,7 +85,8 @@ class Model {
      * @param ?int $id
      * @return bool
      */
-    public function setId(?int $id = null) : bool {
+    public function setId(?int $id = null): bool
+    {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -98,12 +100,40 @@ class Model {
      * Get ID
      * @return false|int|null
      */
-    public function getId() : false|null|int {
+    public function getId(): false|null|int
+    {
         if (!isset($this->tableInstance)) {
             return false;
         }
 
         return $this->tableInstance->getId();
+    }
+
+    /**
+     * Select required
+     * @param null|array|Condition $condition
+     * @param ?string $orderBy
+     * @return array|false
+     * @throws DatabaseException
+     * @throws NotFoundException
+     */
+    public function findRequired(null|array|Condition $condition = null, ?string $orderBy = null): array|false
+    {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        try {
+            $find = $this->find($condition, $orderBy);
+
+            if (!$find) {
+                throw new NotFoundException();
+            }
+
+            return $find;
+        } catch (DatabaseException $exception) {
+            throw new DatabaseException($exception->getMessage());
+        }
     }
 
     /**
@@ -113,7 +143,8 @@ class Model {
      * @return array|false
      * @throws DatabaseException
      */
-    public function find(null|array|Condition $condition = null, ?string $orderBy = null) : array|false {
+    public function find(null|array|Condition $condition = null, ?string $orderBy = null): array|false
+    {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -126,32 +157,6 @@ class Model {
     }
 
     /**
-     * Select required
-     * @param null|array|Condition $condition
-     * @param ?string $orderBy
-     * @return array|false
-     * @throws DatabaseException
-     * @throws NotFoundException
-     */
-    public function findRequired(null|array|Condition $condition = null, ?string $orderBy = null) : array|false {
-        if (!isset($this->tableInstance)) {
-            return false;
-        }
-
-        try {
-             $find = $this->find($condition, $orderBy);
-
-             if (!$find) {
-                 throw new NotFoundException();
-             }
-
-             return $find;
-        } catch (DatabaseException $exception) {
-            throw new DatabaseException($exception->getMessage());
-        }
-    }
-
-    /**
      * Find all
      * @param null|array|Condition $condition
      * @param ?string $orderBy
@@ -160,7 +165,8 @@ class Model {
      * @return array|false
      * @throws DatabaseException
      */
-    public function findAll(null|array|Condition $condition = null, ?string $orderBy = null, ?string $limit = null, ?string $groupBy = null) : array|false {
+    public function findAll(null|array|Condition $condition = null, ?string $orderBy = null, ?string $limit = null, ?string $groupBy = null): array|false
+    {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -178,7 +184,8 @@ class Model {
      * @return bool
      * @throws DatabaseException
      */
-    public function insert(array $data) : bool {
+    public function insert(array $data): bool
+    {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -199,13 +206,32 @@ class Model {
     }
 
     /**
+     * Before insert
+     * @return bool
+     */
+    public function beforeInsert(): bool
+    {
+        return true;
+    }
+
+    /**
+     * After insert
+     * @return bool
+     */
+    public function afterInsert(): bool
+    {
+        return true;
+    }
+
+    /**
      * Find count
      * @param null|array|Condition $condition
      * @param ?string $groupBy
      * @return int
      * @throws DatabaseException
      */
-    public function findCount(null|array|Condition $condition = null, ?string $groupBy = null) : int {
+    public function findCount(null|array|Condition $condition = null, ?string $groupBy = null): int
+    {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -223,7 +249,8 @@ class Model {
      * @return bool
      * @throws DatabaseException
      */
-    public function findIsset(null|array|Condition $condition = null) : bool {
+    public function findIsset(null|array|Condition $condition = null): bool
+    {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -241,7 +268,8 @@ class Model {
      * @return bool
      * @throws DatabaseException
      */
-    public function update(array $data) : bool {
+    public function update(array $data): bool
+    {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -262,13 +290,36 @@ class Model {
     }
 
     /**
+     * Before update
+     * @param ?string $columnName if updateValue
+     * @param ?string $value if updateValue
+     * @return bool
+     */
+    public function beforeUpdate(?string $columnName = null, ?string $value = null): bool
+    {
+        return true;
+    }
+
+    /**
+     * After update
+     * @param ?string $columnName if updateValue
+     * @param ?string $value if updateValue
+     * @return bool
+     */
+    public function afterUpdate(?string $columnName = null, ?string $value = null): bool
+    {
+        return true;
+    }
+
+    /**
      * Update single column
      * @param string $columnName
      * @param mixed $value
      * @return bool
      * @throws DatabaseException
      */
-    public function updateValue(string $columnName, mixed $value) : bool {
+    public function updateValue(string $columnName, mixed $value): bool
+    {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -294,7 +345,8 @@ class Model {
      * @return bool
      * @throws DatabaseException
      */
-    public function delete(?int $id = null) : bool {
+    public function delete(?int $id = null): bool
+    {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -314,7 +366,8 @@ class Model {
      * @param ?string $foreignKey
      * @return $this
      */
-    public function bind(BindType $bindType, string $tableName, ?string $primaryKey = null, ?string $foreignKey = null) : self {
+    public function bind(BindType $bindType, string $tableName, ?string $primaryKey = null, ?string $foreignKey = null): self
+    {
         if (!isset($this->tableInstance)) {
             return $this;
         }
@@ -325,47 +378,12 @@ class Model {
     }
 
     /**
-     * Before insert
-     * @return bool
-     */
-    public function beforeInsert() : bool {
-        return true;
-    }
-
-    /**
-     * After insert
-     * @return bool
-     */
-    public function afterInsert() : bool {
-        return true;
-    }
-
-    /**
-     * Before update
-     * @param ?string $columnName if updateValue
-     * @param ?string $value if updateValue
-     * @return bool
-     */
-    public function beforeUpdate(?string $columnName = null, ?string $value = null) : bool {
-        return true;
-    }
-
-    /**
-     * After update
-     * @param ?string $columnName if updateValue
-     * @param ?string $value if updateValue
-     * @return bool
-     */
-    public function afterUpdate(?string $columnName = null, ?string $value = null) : bool {
-        return true;
-    }
-
-    /**
      * Begin transaction
      * @return bool
      * @throws DatabaseException
      */
-    public function transactionBegin() : bool {
+    public function transactionBegin(): bool
+    {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -384,7 +402,8 @@ class Model {
      * @return bool
      * @throws DatabaseException
      */
-    public function transactionCommit() : bool {
+    public function transactionCommit(): bool
+    {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -403,7 +422,8 @@ class Model {
      * @return bool
      * @throws DatabaseException
      */
-    public function transactionRollback() : bool {
+    public function transactionRollback(): bool
+    {
         if (!isset($this->tableInstance)) {
             return false;
         }
@@ -418,19 +438,12 @@ class Model {
     }
 
     /**
-     * Validation list
-     * @return array
-     */
-    public function validations() : array {
-        return [];
-    }
-
-    /**
      * Validate data
      * @param ?array $data
      * @return bool
      */
-    public function validate(?array $data = null) : bool {
+    public function validate(?array $data = null): bool
+    {
         $data = $data ?? $this->data;
 
         $validation = new Validation();
@@ -449,12 +462,22 @@ class Model {
     }
 
     /**
+     * Validation list
+     * @return array
+     */
+    public function validations(): array
+    {
+        return [];
+    }
+
+    /**
      * Load model
      * @param string ...$name
      * @return Model
      * @throws NotFoundException
      */
-    public function loadModel(string ...$name) : Model {
+    public function loadModel(string ...$name): Model
+    {
         if (count($name) > 1) {
             foreach ($name as $singleName) {
                 $lastModel = $this->loadModel($singleName);
@@ -495,7 +518,8 @@ class Model {
      * @param string $name
      * @return mixed|Model
      */
-    public function __get(string $name) : mixed {
+    public function __get(string $name): mixed
+    {
         if (in_array($name, array_keys($this->models))) {
             return $this->models[$name];
         }

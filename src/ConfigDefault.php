@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework;
 
 use Krzysztofzylka\MicroFramework\Extension\Account\Enum\AuthControlAction;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class ConfigDefault
 {
@@ -112,6 +113,12 @@ class ConfigDefault
     public bool $email = false;
 
     /**
+     * Auth type
+     * @var string smtp
+     */
+    public string $emailAuthType = 'smtp';
+
+    /**
      * E-Mail host
      * @var string
      */
@@ -136,10 +143,10 @@ class ConfigDefault
     public string $emailPassword = '';
 
     /**
-     * E-Mail active SMTP secure
-     * @var bool
+     * E-Mail SMTP secure
+     * @var string
      */
-    public bool $emailSMTPSecure = true;
+    public string $emailSMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
 
     /**
      * E-Mail port
@@ -152,5 +159,11 @@ class ConfigDefault
      * @var array
      */
     public array $emailFrom = [];
+
+    /**
+     * Predefined connection config
+     * @var ?string
+     */
+    public ?string $emailPredefinedConfig = null;
 
 }

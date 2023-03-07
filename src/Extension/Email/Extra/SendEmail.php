@@ -2,11 +2,14 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Email\Extra;
 
+use Krzysztofzylka\MicroFramework\Trait\Log;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class SendEmail
 {
+
+    use Log;
 
     private PHPMailer $PHPMailer;
 
@@ -18,6 +21,15 @@ class SendEmail
     public function setPHPMailer(PHPMailer $PHPMailer): void
     {
         $this->PHPMailer = $PHPMailer;
+    }
+
+    /**
+     * Get PHPMailer Handler
+     * @return PHPMailer
+     */
+    public function getPHPMailerHandler(): PHPMailer
+    {
+        return $this->PHPMailer;
     }
 
     /**
@@ -102,8 +114,6 @@ class SendEmail
         $this->PHPMailer->isHTML($isHtml);
     }
 
-
-
     /**
      * Send E-Mail
      * @param string $subject subject
@@ -116,7 +126,23 @@ class SendEmail
         $this->PHPMailer->Subject = $subject;
         $this->PHPMailer->Body = $body;
 
-        return $this->PHPMailer->send();
+        $send = $this->PHPMailer->send();
+        $this->PHPMailer->smtpClose();
+
+        if (!$send) {
+            $this->log('Fail send e-mail', 'ERROR', ['errorInfo' => $this->getError()]);
+        }
+
+        return $send;
+    }
+
+    /**
+     * Get error
+     * @return string
+     */
+    public function getError(): string
+    {
+        return $this->PHPMailer->ErrorInfo;
     }
 
 }

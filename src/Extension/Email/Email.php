@@ -2,42 +2,20 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Email;
 
+use config\Config;
 use Exception;
+use Krzysztofzylka\MicroFramework\ConfigDefault;
 use Krzysztofzylka\MicroFramework\Extension\Email\Extra\SendEmail;
+use Krzysztofzylka\MicroFramework\Extension\Email\PredefinedConfig\Gmail;
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
 
 class Email
 {
 
     use Log;
-
-    /**
-     * Connect to email
-     * @param PHPMailer $phpMailer
-     * @param ?object $config
-     * @return void
-     * @throws \PHPMailer\PHPMailer\Exception
-     */
-    private function connect(PHPMailer $phpMailer, ?object $config = null): void
-    {
-        $config = $config ?? Kernel::getConfig();
-
-        $phpMailer->isSMTP();
-        $phpMailer->Host = $config->emailHost;
-        $phpMailer->SMTPAuth = $config->emailSMTPAuth;
-        $phpMailer->Username = $config->emailUsername;
-        $phpMailer->Password = $config->emailPassword;
-
-        if ($config->emailSMTPSecure) {
-            $phpMailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        }
-
-        $phpMailer->Port = $config->emailPort;
-
-        $phpMailer->setFrom($config->emailFrom[0], $config->emailFrom[1]);
-    }
 
     /**
      * Create new e-mail
@@ -55,6 +33,7 @@ class Email
 
             $sendMail = new SendEmail();
             $sendMail->setPHPMailer($PHPMailer);
+            $sendMail->isHtml();
 
             return $sendMail;
         } catch (Exception $exception) {
@@ -62,6 +41,46 @@ class Email
 
             return false;
         }
+    }
+
+    /**
+     * Connect to email
+     * @param PHPMailer $phpMailer
+     * @param ?object $config
+     * @return void
+     */
+    private function connect(PHPMailer $phpMailer, ?object $config = null): void
+    {
+        /** @var Config $config */
+        $config = $config ?? Kernel::getConfig();
+
+        if (!is_null($config->emailPredefinedConfig)) {
+            /** @var ConfigDefault $predefinedConfig */
+            if ($config->emailPredefinedConfig === 'gmail') {
+                $predefinedConfig = new Gmail();
+            }
+        }
+
+        $phpMailer->From = $config->emailFrom[0];
+        $phpMailer->FromName = $config->emailFrom[1];
+        $phpMailer->Username = $config->emailUsername;
+        $phpMailer->Password = $config->emailPassword;
+
+        if ($config->debug) {
+            $phpMailer->SMTPDebug = SMTP::DEBUG_SERVER;
+        }
+
+        if (($predefinedConfig->emailAuthType ?? $config->emailAuthType) === 'smtp') {
+            $phpMailer->isSMTP();
+            $phpMailer->SMTPAuth = $predefinedConfig->emailSMTPAuth ?? $config->emailSMTPAuth;
+            $phpMailer->Mailer = 'smtp';
+        }
+
+        $phpMailer->Host = $predefinedConfig->emailHost ?? $config->emailHost;
+        $phpMailer->SMTPSecure = $predefinedConfig->emailSMTPSecure ?? $config->emailSMTPSecure;
+        $phpMailer->CharSet = 'UTF-8';
+        $phpMailer->Port = $predefinedConfig->emailPort ?? $config->emailPort;
+
     }
 
 }

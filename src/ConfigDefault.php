@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework;
 
 use Krzysztofzylka\MicroFramework\Extension\Account\Enum\AuthControlAction;
+use Krzysztofzylka\MicroFramework\Extension\Email\Enum\PredefinedConfig;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class ConfigDefault
@@ -104,66 +105,84 @@ class ConfigDefault
      */
     public string $authControlRedirect = '';
 
-    /** E-Mail */
+    /** Extension E-Mail */
 
     /**
-     * Activate E-Mail
+     * Email predefined config
+     * @var ?PredefinedConfig
+     */
+    public ?PredefinedConfig $emailPredefinedConfig = null;
+
+    /**
+     * Enable E-Mail
      * @var bool
      */
     public bool $email = false;
 
     /**
-     * Auth type
-     * @var string smtp
+     * Enable E-Mail debug
+     * @var bool
      */
-    public string $emailAuthType = 'smtp';
+    public bool $emailDebug = false;
 
     /**
-     * E-Mail host
+     * Email is SMTP
+     * @var bool
+     */
+    public bool $emailIsSMTP = true;
+
+    /**
+     * Email host
      * @var string
      */
     public string $emailHost = '';
 
     /**
-     * E-Mail SMTP auth
+     * Email SMTP auth
      * @var bool
      */
     public bool $emailSMTPAuth = true;
 
     /**
-     * E-Mail username
+     * Email username
      * @var string
      */
     public string $emailUsername = '';
 
     /**
-     * E-Mail password
+     * Email password
      * @var string
      */
     public string $emailPassword = '';
 
     /**
-     * E-Mail SMTP secure
+     * Email charset
      * @var string
      */
-    public string $emailSMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+    public string $emailCharset = 'UTF-8';
 
     /**
-     * E-Mail port
+     * Email SMTP secure
+     * @var string
+     */
+    public string $emailSMTPSecure = 'ssl';
+
+    /**
+     * Email port
      * @var int
      */
-    public int $emailPort = 465;
+    public int $emailPort = 25;
 
     /**
-     * E-Mail from in format: ['address@email.com', 'Company name']
-     * @var array
-     */
-    public array $emailFrom = [];
-
-    /**
-     * Predefined connection config
+     * Email from, default $emailUsername
      * @var ?string
      */
-    public ?string $emailPredefinedConfig = null;
+    public ?string $emailFrom = null;
+
+    /**
+     * Email from name
+     * @var string
+     */
+    public string $emailFromName = '';
 
 }

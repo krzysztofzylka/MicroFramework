@@ -130,7 +130,14 @@ class SendEmail
         $this->PHPMailer->smtpClose();
 
         if (!$send) {
-            $this->log('Fail send e-mail', 'ERROR', ['errorInfo' => $this->getError()]);
+            $this->log(
+                'Fail send e-mail',
+                'ERROR',
+                [
+                    'error' => $this->getError(),
+                    'addresses' => $this->PHPMailer->getToAddresses()
+                ]
+            );
         }
 
         return $send;

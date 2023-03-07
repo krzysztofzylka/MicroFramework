@@ -1,6 +1,6 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\Extension\EMail\Extra;
+namespace Krzysztofzylka\MicroFramework\Extension\Email\Extra;
 
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;

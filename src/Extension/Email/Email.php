@@ -1,14 +1,14 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\Extension\EMail;
+namespace Krzysztofzylka\MicroFramework\Extension\Email;
 
 use Exception;
-use Krzysztofzylka\MicroFramework\Extension\EMail\Extra\SendEmail;
+use Krzysztofzylka\MicroFramework\Extension\Email\Extra\SendEmail;
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use PHPMailer\PHPMailer\PHPMailer;
 
-class EMail
+class Email
 {
 
     use Log;
@@ -43,7 +43,12 @@ class EMail
      * Create new e-mail
      * @return SendEmail|false
      */
-    public function newEmail() : SendEmail|false {
+    public function newEmail(): SendEmail|false
+    {
+        if (!Kernel::getConfig()->email) {
+            return false;
+        }
+
         try {
             $PHPMailer = new PHPMailer();
             $this->connect($PHPMailer);

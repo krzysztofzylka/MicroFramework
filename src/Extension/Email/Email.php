@@ -99,7 +99,7 @@ class Email
         string $address,
         string $subject,
         string $content,
-        ?string $layout = null,
+        string $layout = 'default',
         string $header = '',
         string $footer = ''
     ): bool
@@ -107,9 +107,14 @@ class Email
         $newEmail = $this->newEmail();
         $newEmail->addAddress($address);
 
+        $layout = match ($layout) {
+            'default' => 'mf_email_default',
+            default => $layout
+        };
+
         $view = new View();
         $htmlContent = $view->render(
-            $layout ?? 'mf_email_default',
+            $layout,
             [
                 'content' => $content,
                 'header' => $header,

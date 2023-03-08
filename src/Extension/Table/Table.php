@@ -2,6 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Table;
 
+use Krzysztofzylka\MicroFramework\Controller;
+use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Extension\Table\Extra\Cell;
 use Krzysztofzylka\MicroFramework\Model;
 use Krzysztofzylka\MicroFramework\Trait\Log;
@@ -24,17 +26,20 @@ class Table
     public ?Model $model = null;
 
     /**
+     * Controller
+     * @var Controller
+     */
+    public Controller $controller;
+
+    /**
      * Table columns:
      * [
      *   'key' => [ //key to database data in model eg. id for $result['id'] or user.name for $result['user']['name']
      *     'title' => 'Column title', //column title
-     *     'attribute' => [], //html attribute eg. ['css' => 'color: red']
-     *     'width' => 500, //column width
      *     'value' => '', //custom value
      *     'value' => function ($cell) {
      *       return $cell->val;
      *     }, //function custom value
-     *     'maxLength' => 90 //max length
      *   ],
      *   ...
      * ]
@@ -51,25 +56,34 @@ class Table
     /**
      * Render table
      * @return string
+     * @throws DatabaseException
      */
     public function render(): string
     {
-        $this->generateHeaders();
+        $this->query();
+
+        $this->html .= '<div class="tableRender">';
+        $this->renderAction();
+        $this->renderHeaders();
 
         if (empty($this->results) && isset($this->model)) {
             $this->results = $this->model->findAll();
         }
 
-        $this->generateBody();
+        $this->renderBody();
 
-        return '<table class="table table-sm">' . $this->html . '</table>';
+        $this->html .= '</div>';
+
+        $html = '<table class="table table-sm">' . $this->html . '</table>';
+
+        return $html;
     }
 
     /**
-     * Generate headers
+     * Render headers
      * @return void
      */
-    private function generateHeaders(): void
+    private function renderHeaders(): void
     {
         $this->html .= '<thead><tr>';
 
@@ -81,27 +95,70 @@ class Table
     }
 
     /**
-     * Generate body
+     * Render body
      * @return void
      */
-    private function generateBody(): void
+    private function renderBody(): void
     {
         $this->html .= '<tbody>';
-
-        var_dump($this->results);
 
         foreach ($this->results as $result) {
             $this->html .= '<tr>';
 
-            foreach ($this->columns as $column) {
+            foreach ($this->columns as $columnKey => $column) {
                 $cell = new Cell();
-                $cell->val = $column['value'];
+                $cell->val = $this->getArrayData($columnKey, $result);
+                $cell->data = $result;
+                $this->html .= '<td>';
+
+                if (isset($column['value']) && is_string($column['value'])) {
+                    $this->html .= $column['value'];
+                } elseif (isset($column['value']) && is_object($column['value'])) {
+                    $this->html .= $column['value']($cell);
+                } else {
+                    $this->html .= $cell->val;
+                }
+
+                $this->html .= '</td>';
             }
 
             $this->html .= '</tr>';
         }
 
         $this->html .= '</tbody>';
+    }
+
+    /**
+     * Render actions
+     * @return void
+     */
+    private function renderAction(): void
+    {
+        $this->html .= '<div class="actions">';
+        $this->html .= '<input value="xxx" />';
+        $this->html .= '</div>';
+    }
+
+    /**
+     * Get data from array
+     * @param string $name
+     * @param array $data
+     * @return mixed
+     */
+    private function getArrayData(string $name, array $data): mixed
+    {
+        $arrayData = '$data[\'' . implode('\'][\'', explode('.', $name)) . '\']';
+
+        return @eval("return $arrayData;");
+    }
+
+    /**
+     * Query
+     * @return void
+     */
+    private function query(): void
+    {
+
     }
 
 }

@@ -11,7 +11,8 @@ class index extends Controller {
      * @return void
      * @throws ViewException
      */
-    public function index() : void {
+    public function index(): void
+    {
         $this->loadView();
     }
 
@@ -23,10 +24,14 @@ class index extends Controller {
                 'title' => 'Username'
             ],
             'account.password' => [
-                'title' => 'Password'
+                'title' => 'Password',
+                'value' => 'asd'
             ],
             'account.date_created' => [
-                'title' => 'Created'
+                'title' => 'Created',
+                'value' => function ($cell) {
+                    return 'xx - ' . $cell->val;
+                }
             ],
             'account.date_modify' => [
                 'title' => 'Modify'

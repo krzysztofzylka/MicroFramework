@@ -134,8 +134,8 @@ class Table
      */
     private function renderAction(): void
     {
-        $this->html .= '<div class="actions">';
-        $this->html .= '<input value="xxx" />';
+        $this->html .= '<div class="actions float-end">';
+        $this->html .= '<input name="search" class="form-control" placeholder="Search..." />';
         $this->html .= '</div>';
     }
 

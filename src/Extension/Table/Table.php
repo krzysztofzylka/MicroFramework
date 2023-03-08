@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Table;
 
+use krzysztofzylka\DatabaseManager\Condition;
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Extension\Table\Extra\Cell;
@@ -12,6 +13,12 @@ class Table
 {
 
     use Log;
+
+    /**
+     * Table ID
+     * @var string
+     */
+    private string $id = '';
 
     /**
      * Html table
@@ -30,6 +37,18 @@ class Table
      * @var Controller
      */
     public Controller $controller;
+
+    /**
+     * Conditions
+     * @var Condition
+     */
+    private Condition $conditions;
+
+    /**
+     * Have conditions
+     * @var bool
+     */
+    private bool $haveCondition = false;
 
     /**
      * Table columns:
@@ -60,15 +79,13 @@ class Table
      */
     public function render(): string
     {
+        $this->generateDefaultData();
         $this->query();
+        $this->getResults();
 
-        $this->html .= '<div class="tableRender">';
+        $this->html .= '<div class="tableRender" id="' . $this->id . '">';
         $this->renderAction();
         $this->renderHeaders();
-
-        if (empty($this->results) && isset($this->model)) {
-            $this->results = $this->model->findAll();
-        }
 
         $this->renderBody();
 
@@ -77,6 +94,16 @@ class Table
         $html = '<table class="table table-sm">' . $this->html . '</table>';
 
         return $html;
+    }
+
+    /**
+     * Set table ID
+     * @param string $id
+     * @return void
+     */
+    public function setId(string $id): void
+    {
+        $this->id = $id;
     }
 
     /**
@@ -135,7 +162,7 @@ class Table
     private function renderAction(): void
     {
         $this->html .= '<div class="actions float-end">';
-        $this->html .= '<input name="search" class="form-control" placeholder="Search..." />';
+        $this->html .= '<form method="POST"><input type="hidden" name="table_id" value="' . $this->id . '" /><input name="search" class="form-control" placeholder="Search..." /></form>';
         $this->html .= '</div>';
     }
 
@@ -153,12 +180,57 @@ class Table
     }
 
     /**
+     * Generate default data
+     * @return void
+     */
+    private function generateDefaultData(): void
+    {
+        if (empty($this->id)) {
+            $id = $this->controller->name . '-' . $this->controller->method;
+
+            if (!empty($this->controller->arguments)) {
+                $id .= '-' . implode('-', $this->controller->arguments );
+            }
+
+            $this->setId($id);
+        }
+
+        $this->conditions = new Condition();
+    }
+
+    /**
      * Query
      * @return void
      */
     private function query(): void
     {
+        $data = $this->controller->data;
 
+        if (!$data || !$data['table_id'] || $data['table_id'] !== $this->id) {
+            return;
+        }
+
+        if ($data['search']) {
+            $this->haveCondition = true;
+            //$table = new Table();
+            $this->conditions->where('account.username', $data['search']);
+        }
+    }
+
+    /**
+     * Generate results
+     * @return void
+     * @throws DatabaseException
+     */
+    private function getResults(): void
+    {
+        if (empty($this->results) && isset($this->model)) {
+            if ($this->haveCondition) {
+                $this->results = $this->model->findAll($this->conditions);
+            } else {
+                $this->results = $this->model->findAll();
+            }
+        }
     }
 
 }

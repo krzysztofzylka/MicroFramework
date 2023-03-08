@@ -284,6 +284,7 @@ class Kernel
             $controller->htmlGenerator = new Html();
             $controller->params = $params;
             $controller->table = new Table();
+            $controller->table->controller = $controller;
 
             if (!method_exists($controller, $method)) {
                 throw new Exception('Method ' . $method . ' not exists in controller ' . $name);

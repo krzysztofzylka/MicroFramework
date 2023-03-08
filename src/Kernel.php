@@ -76,7 +76,7 @@ class Kernel
         foreach (self::$paths as $name => $path) {
             self::$paths[$name] = File::repairPath($path);
 
-            File::mkdir($path);
+            File::mkdir($path, 0755);
         }
 
         if (!file_exists(self::$paths['public'] . '/.htaccess')) {
@@ -112,17 +112,6 @@ class Kernel
 
             self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false, 'isAdminPanel' => $isAdminPanel]);
         }
-    }
-
-    /**
-     * init view variables
-     * @throws LoaderError
-     */
-    public static function initViewVariables() : void {
-        View::$filesystemLoader = new FilesystemLoader(self::getPath('view'));
-        View::$filesystemLoader->addPath(__DIR__ . '/Twig/template');
-        View::$environment = new Environment(View::$filesystemLoader, ['debug' => true]);
-        View::$environment->addExtension(new DebugExtension());
     }
 
     /**
@@ -216,30 +205,6 @@ class Kernel
     public static function setConfig(object $config): void
     {
         self::$config = $config;
-    }
-
-    /**
-     * Init framework
-     * @param ?string $controllerName
-     * @param string $controllerMethod
-     * @param array $controllerArguments
-     * @param array $params additional init params
-     * @return void
-     * @throws MicroFrameworkException
-     * @throws NotFoundException
-     * @throws LoaderError
-     */
-    public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = [], array $params = []): void
-    {
-        if (!self::$projectPath) {
-            throw new MicroFrameworkException('Project is not defined', 500);
-        }
-
-        self::initViewVariables();
-
-        if (!is_null($controllerName)) {
-            self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false]);
-        }
     }
 
     /**

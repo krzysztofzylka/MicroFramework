@@ -109,6 +109,11 @@ class Kernel
         $url = $_GET['url'] ?? self::getConfig()->defaultPage;
         $explode = explode('/', $url);
 
+        if (empty($explode[0])) {
+            unset($explode[0]);
+            $explode = array_values($explode);
+        }
+
         $controller = $explode[0];
 
         if (self::$config->api && $controller === self::$config->apiUri) {

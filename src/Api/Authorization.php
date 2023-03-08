@@ -9,7 +9,8 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Account;
  * Authorization
  * @package Api
  */
-class Authorization {
+class Authorization
+{
 
     /**
      * Basic auth
@@ -17,7 +18,8 @@ class Authorization {
      * @param string $password
      * @return bool
      */
-    public function basic(string $username, string $password) : bool {
+    public function basic(string $username, string $password): bool
+    {
         try {
             return (new Account())->login($username, $password);
         } catch (Exception) {

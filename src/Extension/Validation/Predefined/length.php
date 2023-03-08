@@ -8,7 +8,8 @@ use Krzysztofzylka\MicroFramework\Exception\ValidationException;
  * Length checker
  * @package Validation
  */
-class length {
+class length
+{
 
     /**
      * @param $value
@@ -16,7 +17,8 @@ class length {
      * @param $data
      * @throws ValidationException
      */
-    public function __construct($value, $key, $data) {
+    public function __construct($value, $key, $data)
+    {
         if (isset($data['min']) && strlen($value) < $data['min']) {
             throw new ValidationException('Value must be more or equal to ' . $data['min']);
         } elseif (isset($data['max']) && strlen($value) > $data['max']) {

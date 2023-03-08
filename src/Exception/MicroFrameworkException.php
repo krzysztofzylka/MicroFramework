@@ -8,7 +8,8 @@ use Exception;
  * Microframework exception (main)
  * @package Exception
  */
-class MicroFrameworkException extends Exception {
+class MicroFrameworkException extends Exception
+{
 
     /**
      * Hidden message

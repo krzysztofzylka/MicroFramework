@@ -10,27 +10,8 @@ use Krzysztofzylka\MicroFramework\Extension\Html\Trait\Form;
  * Html helper
  * @package Extension
  */
-class Html {
-
-    /**
-     * Form validations
-     * @var array
-     * @ignore
-     */
-    private array $formValidation;
-
-    /**
-     * Add form validations
-     * @param array $formValidation
-     * @return Html
-     */
-    public function setFormValidation(array $formValidation) : Html {
-        $this->formValidation = $formValidation;
-
-        return $this;
-    }
-
-    use Form;
+class Html
+{
 
     /**
      * Treść która zostanie zwrócona
@@ -38,16 +19,67 @@ class Html {
      * @ignore
      */
     protected string $htmlString = '';
+    /**
+     * Form validations
+     * @var array
+     * @ignore
+     */
+    private array $formValidation;
+
+    use Form;
+
+    /**
+     * Add form validations
+     * @param array $formValidation
+     * @return Html
+     */
+    public function setFormValidation(array $formValidation): Html
+    {
+        $this->formValidation = $formValidation;
+
+        return $this;
+    }
 
     /**
      * Zwracanie treści
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         $htmlString = $this->htmlString;
         $this->htmlString = '';
 
         return $htmlString;
+    }
+
+    /**
+     * Rows
+     * @param string $data
+     * @param array $attributes
+     * @return $this
+     * @throws MicroFrameworkException
+     */
+    public function row(string $data, array $attributes = []): Html
+    {
+        $attributes = ['class' => 'row', ...$attributes ?? []];
+
+        return $this->tag('div', $data, $attributes);
+    }
+
+    /**
+     * Generowanie tag'a
+     * @param string $name nazwa
+     * @param ?string $content Zawartość
+     * @param ?array $attributes Tablica z atrybutami np. ['id' => 'abc']
+     * @return Html
+     * @throws MicroFrameworkException
+     */
+    public function tag(string $name, ?string $content, ?array $attributes = null): Html
+    {
+        $this->htmlString .= '<' . $name . self::generateAttributes($attributes)
+            . (is_null($content) ? '/>' : ('>' . $content . '</' . $name . '>'));
+
+        return $this;
     }
 
     /**
@@ -56,7 +88,8 @@ class Html {
      * @return string
      * @throws MicroFrameworkException
      */
-    public static function generateAttributes(?array ...$attributes) : string {
+    public static function generateAttributes(?array ...$attributes): string
+    {
         try {
             if (is_null($attributes[0])) {
                 return '';
@@ -90,53 +123,14 @@ class Html {
     }
 
     /**
-     * Generowanie tag'a
-     * @param string $name nazwa
-     * @param ?string $content Zawartość
-     * @param ?array $attributes Tablica z atrybutami np. ['id' => 'abc']
-     * @return Html
-     * @throws MicroFrameworkException
-     */
-    public function tag(string $name, ?string $content, ?array $attributes = null) : Html {
-        $this->htmlString .= '<' . $name . self::generateAttributes($attributes)
-            . (is_null($content) ? '/>' : ( '>' . $content . '</' . $name . '>'));
-
-        return $this;
-    }
-
-    /**
-     * Generowanie taba bez wzglęgu na aktualną instancję
-     * @param string $name nazwa
-     * @param ?string $content zawartość
-     * @param ?array $attributes tablica z atrybutami np. ['id' => 'abc']
-     * @return Html
-     * @throws MicroFrameworkException
-     */
-    public function clearTag(string $name, ?string $content = null, ?array $attributes = null) : Html {
-        return (new Html())->tag($name, $content, $attributes);
-    }
-
-    /**
-     * Rows
-     * @param string $data
-     * @param array $attributes
-     * @return $this
-     * @throws MicroFrameworkException
-     */
-    public function row(string $data, array $attributes = []) : Html {
-        $attributes = ['class' => 'row', ...$attributes ?? []];
-
-        return $this->tag('div', $data, $attributes);
-    }
-
-    /**
      * Cols
      * @param ?string $data
      * @param ?array $attributes
      * @return $this
      * @throws MicroFrameworkException
      */
-    public function col(?string $data, ?array $attributes = null) : Html {
+    public function col(?string $data, ?array $attributes = null): Html
+    {
         $attributes = ['class' => 'col', ...$attributes ?? []];
 
         return $this->tag('div', $data, $attributes);
@@ -153,7 +147,8 @@ class Html {
      * @return $this
      * @throws MicroFrameworkException
      */
-    public function colBlock(string $data, ?string $href = null, string $bg = 'primary', string $textColor = 'white', bool $ajaxLink = false, array $attributes = []) : Html {
+    public function colBlock(string $data, ?string $href = null, string $bg = 'primary', string $textColor = 'white', bool $ajaxLink = false, array $attributes = []): Html
+    {
         $attributes['container'] = ['class' => 'col text-decoration-none', ...$attributes['container'] ?? []];
         $attributes['col'] = ['class' => 'shadow p-2 mb-3 bg-' . $bg . ' text-' . $textColor . ' rounded text-black', ...$attributes['col'] ?? []];
 
@@ -171,6 +166,19 @@ class Html {
     }
 
     /**
+     * Generowanie taba bez wzglęgu na aktualną instancję
+     * @param string $name nazwa
+     * @param ?string $content zawartość
+     * @param ?array $attributes tablica z atrybutami np. ['id' => 'abc']
+     * @return Html
+     * @throws MicroFrameworkException
+     */
+    public function clearTag(string $name, ?string $content = null, ?array $attributes = null): Html
+    {
+        return (new Html())->tag($name, $content, $attributes);
+    }
+
+    /**
      * Cols z nagłówkiem tylko do odczytu
      * @param string $title
      * @param mixed $message
@@ -179,7 +187,8 @@ class Html {
      * @return $this
      * @throws MicroFrameworkException
      */
-    public function colInfo(string $title = '', mixed $message = '', array $attribute = [], ?int $col = 4) : Html {
+    public function colInfo(string $title = '', mixed $message = '', array $attribute = [], ?int $col = 4): Html
+    {
         $title = $this->clearTag('h6', $title, ['class' => 'p-0 m-0 user-select-none fw-bold']);
         $message = $this->clearTag('p', $message, ['class' => 'p-0 m-0 mb-2', ...$attribute]);
 
@@ -202,7 +211,8 @@ class Html {
      * @return string
      * @throws MicroFrameworkException
      */
-    public function icon(string $icon, ?string $title = null, ?string $color = null, array $attributes = [], bool $show = true) : string {
+    public function icon(string $icon, ?string $title = null, ?string $color = null, array $attributes = [], bool $show = true): string
+    {
         if (!$show) {
             return '';
         }

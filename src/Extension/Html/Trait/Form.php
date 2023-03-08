@@ -9,7 +9,8 @@ use Krzysztofzylka\MicroFramework\Kernel;
 /**
  * Html helper - forms
  */
-trait Form {
+trait Form
+{
 
     /**
      * Create form tag
@@ -17,7 +18,8 @@ trait Form {
      * @return Html
      * @throws MicroFrameworkException
      */
-    public function form(string $content) : Html {
+    public function form(string $content): Html
+    {
         return $this->tag('form', $content, ['method' => 'post']);
     }
 
@@ -29,7 +31,8 @@ trait Form {
      * @return Html
      * @throws MicroFrameworkException
      */
-    public function input(string $name, ?string $title = null, array $attributes = []) : Html {
+    public function input(string $name, ?string $title = null, array $attributes = []): Html
+    {
         $invalidText = $this->getInvalidText($name);
 
         $params = [
@@ -50,6 +53,129 @@ trait Form {
     }
 
     /**
+     * Ger invalid text
+     * @param string $name
+     * @return string|false
+     */
+    private function getInvalidText(string $name): string|false
+    {
+        if (!isset($this->formValidation)) {
+            return false;
+        }
+
+        $validation = $this->formValidation;
+
+        foreach (explode('/', $name) as $explodeName) {
+            if (!isset($validation[$explodeName])) {
+                return false;
+            }
+
+            $validation = $validation[$explodeName];
+        }
+
+        return $validation;
+    }
+
+    /**
+     * Generowanie nazwy dla elementów formularza
+     * @param mixed $name nazwa elementu formularza w formacie abc/def...
+     * @param string $preffix preffix
+     * @return string
+     */
+    private static function formName(string $name, string $preffix = ''): string
+    {
+        $core = str_starts_with($name, '/');
+
+        if ($core) {
+            $name = substr($name, 1);
+            $preffix .= '/';
+        }
+
+        $explode = explode('/', $name, 2);
+
+        return $preffix . $explode[0] . (isset($explode[1]) ? ('[' . implode('][', explode('/', $explode[1])) . ']') : '');
+    }
+
+    /**
+     * Generowanie id dla elementów formularza
+     * @param string $name nazwa elementu formularza w formacie abc/def...
+     * @return string
+     */
+    private static function formId(string $name): string
+    {
+        $return = '';
+        $explode = explode('/', $name);
+
+        foreach ($explode as $value) {
+            $value = mb_strtolower($value);
+            $return .= empty($return) ? $value : ucfirst($value);
+        }
+
+        return $return;
+    }
+
+    /**
+     * Pobieranie danych z formularza za pomocą nazwy
+     * @param string $name nazwa pola formularza w formacie abc/def...
+     * @param ?array $params parametry
+     * @param array $attributes atrybuty
+     * @return ?string
+     * @ignore
+     */
+    private function getData(string $name, ?array &$params = null, array &$attributes = []): mixed
+    {
+        $generatedArray = '["' . implode('"]["', explode('/', $name)) . '"]';
+
+        if ($generatedArray === '[""]') {
+            return null;
+        }
+
+        $data = Kernel::getData();
+        $generatedArray = str_replace('[""]', '', $generatedArray);
+        $dataString = @eval('return $data' . $generatedArray . ';');
+
+        if ($dataString && !is_null($params)) {
+            unset($attributes['value']);
+
+            $params = [...$params, 'value' => $dataString];
+        }
+
+        return $dataString;
+    }
+
+    /**
+     * Generate invalid feedback tag
+     * @param string|false $invalidText
+     * @return string
+     * @throws MicroFrameworkException
+     */
+    private function generateInvalidDiv(string|false $invalidText): string
+    {
+        if ($invalidText) {
+            return $this->clearTag('div', $invalidText, ['id' => 'fieldError', 'class' => 'invalid-feedback'])->__toString();
+        }
+
+        return '';
+    }
+
+    /**
+     * Generowanie tytułu formularza
+     * @param ?string $title
+     * @param array $params
+     * @return string
+     * @throws MicroFrameworkException
+     * @ignore
+     */
+    private function generateTitle(?string $title, array $params): string
+    {
+        if (is_null($title)) {
+            return '';
+        }
+
+        return $this->clearTag('label', $title, ['for' => $params['id'], 'class' => 'form-label'])->__toString();
+    }
+
+    /**
      * Input wgrywania pliku
      * @param string $name
      * @param ?string $title
@@ -57,7 +183,8 @@ trait Form {
      * @return Html
      * @throws MicroFrameworkException
      */
-    public function file(string $name, ?string $title = null, array $attributes = []) : Html {
+    public function file(string $name, ?string $title = null, array $attributes = []): Html
+    {
         $params = [
             'class' => 'form-control',
             'type' => 'file',
@@ -81,7 +208,8 @@ trait Form {
      * @return Html
      * @throws MicroFrameworkException
      */
-    public function select(string $name, array $options, ?string $selected = null, ?string $title = null, array $attributes = []) : Html {
+    public function select(string $name, array $options, ?string $selected = null, ?string $title = null, array $attributes = []): Html
+    {
         $invalidText = $this->getInvalidText($name);
 
         $params = [
@@ -129,7 +257,8 @@ trait Form {
      * @return Html
      * @throws MicroFrameworkException
      */
-    public function select2(string $name, array $options, string|array $selected = null, ?string $title = null, array $attributes = [], array $select2attr = []) : Html {
+    public function select2(string $name, array $options, string|array $selected = null, ?string $title = null, array $attributes = [], array $select2attr = []): Html
+    {
         $invalidText = $this->getInvalidText($name);
 
         $params = [
@@ -188,7 +317,8 @@ trait Form {
      * @return string
      * @ignore
      */
-    private function generateSelect2Options($options) : string {
+    private function generateSelect2Options($options): string
+    {
         $data = '';
 
         foreach ($options as $key => $value) {
@@ -214,7 +344,8 @@ trait Form {
      * @return Html
      * @throws MicroFrameworkException
      */
-    public function checkbox(string $name, ?string $title = null, array $attributes = []) : Html {
+    public function checkbox(string $name, ?string $title = null, array $attributes = []): Html
+    {
         $params = [
             'class' => 'form-check-input',
             'type' => 'checkbox',
@@ -256,7 +387,8 @@ trait Form {
      * @return Html
      * @throws MicroFrameworkException
      */
-    public function hidden(string $name, array $attributes = []) : Html {
+    public function hidden(string $name, array $attributes = []): Html
+    {
         $params = [
             'class' => 'd-none',
             'type' => 'text',
@@ -278,7 +410,8 @@ trait Form {
      * @return Html
      * @throws MicroFrameworkException
      */
-    public function textarea(string $name, ?string $title = null, array $attributes = [], ?string $value = null) : Html {
+    public function textarea(string $name, ?string $title = null, array $attributes = [], ?string $value = null): Html
+    {
         $invalidText = $this->getInvalidText($name);
 
         $params = [
@@ -298,25 +431,6 @@ trait Form {
     }
 
     /**
-     * Textarea ukryta
-     * @param string $name nazwa elementu w formacie abc/def...
-     * @param ?string $value
-     * @return Html
-     * @throws MicroFrameworkException
-     */
-    public function textareaHidden(string $name, ?string $value = null) : Html {
-        $params = [
-            'name' => $this->formName($name),
-            'id' => $this->formId($name),
-            'style' => 'display:none'
-        ];
-
-        $data = $value ?? $this->getData($name);
-
-        return $this->tag('textarea', $data ?? '', $params);
-    }
-
-    /**
      * Przycisk (input submit)
      * @param string $value treść przycisku
      * @param ?string $name nazwa przycisku w formacie abc/def...
@@ -324,7 +438,8 @@ trait Form {
      * @return Html
      * @throws MicroFrameworkException
      */
-    public function button(string $value, ?string $name = null, array $attributes = []) : Html {
+    public function button(string $value, ?string $name = null, array $attributes = []): Html
+    {
         $params = [
             'class' => 'form-control btn btn-primary',
             'type' => 'submit',
@@ -351,7 +466,8 @@ trait Form {
      * @return Html
      * @throws MicroFrameworkException
      */
-    public function quillEditor(string $name, ?string $title = null, array $attributes = [], ?string $value = null) : Html {
+    public function quillEditor(string $name, ?string $title = null, array $attributes = [], ?string $value = null): Html
+    {
         $id = 'quill' . $this->formId($name);
         $textareaId = $this->formId($name);
         $jsScript = "html.quillRender('" . $id . "', '" . $textareaId . "')";
@@ -370,121 +486,23 @@ trait Form {
     }
 
     /**
-     * Pobieranie danych z formularza za pomocą nazwy
-     * @param string $name nazwa pola formularza w formacie abc/def...
-     * @param ?array $params parametry
-     * @param array $attributes atrybuty
-     * @return ?string
-     * @ignore
-     */
-    private function getData(string $name, ?array &$params = null, array &$attributes = []) : mixed {
-        $generatedArray = '["' . implode('"]["', explode('/', $name)) . '"]';
-
-        if ($generatedArray === '[""]') {
-            return null;
-        }
-
-        $data = Kernel::getData();
-        $generatedArray = str_replace('[""]', '', $generatedArray);
-        $dataString = @eval('return $data' . $generatedArray . ';');
-
-        if ($dataString && !is_null($params)) {
-            unset($attributes['value']);
-
-            $params = [...$params, 'value' => $dataString];
-        }
-
-        return $dataString;
-    }
-
-    /**
-     * Generowanie tytułu formularza
-     * @param ?string $title
-     * @param array $params
-     * @return string
-     * @throws MicroFrameworkException
-     * @ignore
-     */
-    private function generateTitle(?string $title, array $params) : string {
-        if (is_null($title)) {
-            return '';
-        }
-
-        return $this->clearTag('label', $title, ['for' => $params['id'], 'class' => 'form-label'])->__toString();
-    }
-
-
-    /**
-     * Generowanie nazwy dla elementów formularza
-     * @param mixed $name nazwa elementu formularza w formacie abc/def...
-     * @param string $preffix preffix
-     * @return string
-     */
-    private static function formName(string $name, string $preffix = '') : string {
-        $core = str_starts_with($name, '/');
-
-        if ($core) {
-            $name = substr($name, 1);
-            $preffix .= '/';
-        }
-
-        $explode = explode('/', $name, 2);
-
-        return $preffix . $explode[0] . (isset($explode[1]) ? ('[' . implode('][', explode('/', $explode[1])) . ']') : '');
-    }
-
-    /**
-     * Generowanie id dla elementów formularza
-     * @param string $name nazwa elementu formularza w formacie abc/def...
-     * @return string
-     */
-    private static function formId(string $name) : string {
-        $return = '';
-        $explode = explode('/', $name);
-
-        foreach ($explode as $value) {
-            $value = mb_strtolower($value);
-            $return .= empty($return) ? $value : ucfirst($value);
-        }
-
-        return $return;
-    }
-
-    /**
-     * Ger invalid text
-     * @param string $name
-     * @return string|false
-     */
-    private function getInvalidText(string $name) : string|false {
-        if (!isset($this->formValidation)) {
-            return false;
-        }
-
-        $validation = $this->formValidation;
-
-        foreach (explode('/', $name) as $explodeName) {
-            if (!isset($validation[$explodeName])) {
-                return false;
-            }
-
-            $validation = $validation[$explodeName];
-        }
-
-        return $validation;
-    }
-
-    /**
-     * Generate invalid feedback tag
-     * @param string|false $invalidText
-     * @return string
+     * Textarea ukryta
+     * @param string $name nazwa elementu w formacie abc/def...
+     * @param ?string $value
+     * @return Html
      * @throws MicroFrameworkException
      */
-    private function generateInvalidDiv(string|false $invalidText) : string {
-        if ($invalidText) {
-            return $this->clearTag('div', $invalidText, ['id' => 'fieldError', 'class' => 'invalid-feedback'])->__toString();
-        }
+    public function textareaHidden(string $name, ?string $value = null): Html
+    {
+        $params = [
+            'name' => $this->formName($name),
+            'id' => $this->formId($name),
+            'style' => 'display:none'
+        ];
 
-        return '';
+        $data = $value ?? $this->getData($name);
+
+        return $this->tag('textarea', $data ?? '', $params);
     }
 
 }

@@ -6,5 +6,6 @@ namespace Krzysztofzylka\MicroFramework\Exception;
  * View exception
  * @package Exception
  */
-class ViewException extends MicroFrameworkException {
+class ViewException extends MicroFrameworkException
+{
 }

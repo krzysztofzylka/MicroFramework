@@ -3,11 +3,11 @@
 namespace Krzysztofzylka\MicroFramework;
 
 use Exception;
-use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
+use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use Krzysztofzylka\MicroFramework\Trait\Log;
@@ -17,7 +17,8 @@ use krzysztofzylka\SimpleLibraries\Library\Redirect;
  * Controller
  * @package Controller
  */
-class Controller {
+class Controller
+{
 
     use Log;
 
@@ -75,7 +76,8 @@ class Controller {
      * @return Model
      * @throws NotFoundException
      */
-    public function loadModel(string ...$name) : Model {
+    public function loadModel(string ...$name): Model
+    {
         if (count($name) > 1) {
             foreach ($name as $singleName) {
                 $lastModel = $this->loadModel($singleName);
@@ -123,7 +125,8 @@ class Controller {
      * @return void
      * @throws ViewException
      */
-    public function loadView(array $variables = [], ?string $name = null) : void {
+    public function loadView(array $variables = [], ?string $name = null): void
+    {
         $view = new View();
         $view->setController($this);
 
@@ -135,7 +138,8 @@ class Controller {
      * @param string $name
      * @return mixed|Model
      */
-    public function __get(string $name) : mixed {
+    public function __get(string $name): mixed
+    {
         if (in_array($name, array_keys($this->models))) {
             return $this->models[$name];
         }
@@ -148,12 +152,13 @@ class Controller {
      * @param string $url
      * @return never
      */
-    public function redirect(string $url) : never {
+    public function redirect(string $url): never
+    {
         if (str_starts_with($url, '/')) {
             Redirect::redirect(Kernel::getConfig()->pageUrl . substr($url, 1));
-        } else {
-            Redirect::redirect($url);
         }
+
+        Redirect::redirect($url);
     }
 
 }

@@ -13,7 +13,8 @@ use Krzysztofzylka\MicroFramework\Extension\Database\Enum\UpdateStatus;
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 
-class DatabaseUpdater {
+class DatabaseUpdater
+{
 
     use Log;
 
@@ -28,7 +29,8 @@ class DatabaseUpdater {
      * Init updater
      * @throws CreateTableException
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->updateTable = (new Table())->setName('database_updater');
 
         if (!$this->updateTable->exists()) {
@@ -58,7 +60,8 @@ class DatabaseUpdater {
      * Run script
      * @return void
      */
-    public function run() : void {
+    public function run(): void
+    {
         try {
             $updateFiles = glob(__DIR__ . '/../Extension/Database/Updater/*.php');
             $updateFiles = array_merge($updateFiles, glob(Kernel::getPath('database_updater') . '/*.php'));

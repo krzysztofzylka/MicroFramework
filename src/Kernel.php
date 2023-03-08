@@ -13,6 +13,7 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
+use Krzysztofzylka\MicroFramework\Extension\Table\Table;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use krzysztofzylka\SimpleLibraries\Library\File;
 use krzysztofzylka\SimpleLibraries\Library\Request;
@@ -282,6 +283,7 @@ class Kernel
             $controller->data = self::getData();
             $controller->htmlGenerator = new Html();
             $controller->params = $params;
+            $controller->table = new Table();
 
             if (!method_exists($controller, $method)) {
                 throw new Exception('Method ' . $method . ' not exists in controller ' . $name);

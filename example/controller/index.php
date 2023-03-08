@@ -14,4 +14,25 @@ class index extends Controller {
     public function index() : void {
         $this->loadView();
     }
+
+    public function table(): void
+    {
+        $this->table->model = $this->loadModel('account');
+        $this->table->columns = [
+            'account.username' => [
+                'title' => 'Username'
+            ],
+            'account.password' => [
+                'title' => 'Password'
+            ],
+            'account.date_created' => [
+                'title' => 'Created'
+            ],
+            'account.date_modify' => [
+                'title' => 'Modify'
+            ]
+        ];
+
+        $this->loadView(['table' => $this->table->render()]);
+    }
 }

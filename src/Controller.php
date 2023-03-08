@@ -9,6 +9,7 @@ use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
+use Krzysztofzylka\MicroFramework\Extension\Table\Table as TableExtension;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use krzysztofzylka\SimpleLibraries\Library\Redirect;
@@ -69,6 +70,12 @@ class Controller
      * @var array
      */
     public array $params = [];
+
+    /**
+     * Table method
+     * @var TableExtension
+     */
+    public TableExtension $table;
 
     /**
      * Load model

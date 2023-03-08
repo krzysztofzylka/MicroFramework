@@ -24,7 +24,8 @@ class ObjectNameGenerator
      * @param string $controllerName
      * @return string
      */
-    public static function controllerPa(string $controllerName) : string {
+    public static function controllerPa(string $controllerName): string
+    {
         return '\Krzysztofzylka\MicroFramework\AdminPanel\controller\\' . $controllerName;
     }
 
@@ -53,7 +54,8 @@ class ObjectNameGenerator
      * @param string $modelName
      * @return string
      */
-    public static function modelPa(string $modelName) : string {
+    public static function modelPa(string $modelName): string
+    {
         $modelName = lcfirst(substr($modelName, 2));
 
         return '\Krzysztofzylka\MicroFramework\AdminPanel\model\\' . $modelName;

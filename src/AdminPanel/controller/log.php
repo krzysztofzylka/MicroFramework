@@ -4,13 +4,14 @@ namespace Krzysztofzylka\MicroFramework\AdminPanel\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
 
-class log extends Controller {
+class log extends Controller
+{
 
-    public function index() {
+    public function index()
+    {
         $logs = [];
 
         $logLimit = 1000;
-
 
 
         foreach (array_reverse($this->loadModel('paLog')->getList()) as $log) {

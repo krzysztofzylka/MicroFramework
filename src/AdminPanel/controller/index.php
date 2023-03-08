@@ -4,9 +4,11 @@ namespace Krzysztofzylka\MicroFramework\AdminPanel\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
 
-class index extends Controller {
+class index extends Controller
+{
 
-    public function index() {
+    public function index()
+    {
         $this->loadView();
     }
 

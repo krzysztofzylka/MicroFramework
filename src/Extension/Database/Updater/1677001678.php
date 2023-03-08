@@ -5,7 +5,8 @@ use Krzysztofzylka\MicroFramework\Extension\Database\Updater;
 
 return (new class extends Updater {
 
-    public function run() : void {
+    public function run(): void
+    {
         (new CreateTable())
             ->setName('account')
             ->addIdColumn()

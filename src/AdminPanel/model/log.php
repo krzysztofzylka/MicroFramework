@@ -6,14 +6,16 @@ use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Model;
 use krzysztofzylka\SimpleLibraries\Library\File;
 
-class log extends Model {
+class log extends Model
+{
 
     /**
      * Get log list
      * @return array
      * [['path' => '', 'fileName' => '', 'logName' => ''], ...]
      */
-    public static function getList() : array {
+    public static function getList(): array
+    {
         $path = File::repairPath(Kernel::getPath('logs'));
         $list = [];
 
@@ -35,7 +37,8 @@ class log extends Model {
      * @param $path
      * @return array
      */
-    public function fileRead($path) : array {
+    public function fileRead($path): array
+    {
         $return = [];
         $contents = file_get_contents($path);
 

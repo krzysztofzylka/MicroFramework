@@ -17,7 +17,8 @@ class MicroFrameworkException extends Exception
      */
     private mixed $hiddenMessage;
 
-    public function __construct(string $message = 'Server error', ?int $code = 500) {
+    public function __construct(string $message = 'Server error', ?int $code = 500)
+    {
         parent::__construct($message, $code);
     }
 
@@ -25,7 +26,8 @@ class MicroFrameworkException extends Exception
      * Get hidden message
      * @return string
      */
-    public function getHiddenMessage() : string {
+    public function getHiddenMessage(): string
+    {
         return $this->hiddenMessage ?? '';
     }
 
@@ -34,7 +36,8 @@ class MicroFrameworkException extends Exception
      * @param mixed $message
      * @return void
      */
-    public function setHiddenMessage(mixed $message) : void {
+    public function setHiddenMessage(mixed $message): void
+    {
         $this->hiddenMessage = $message;
     }
 

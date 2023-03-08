@@ -4,7 +4,6 @@ namespace Krzysztofzylka\MicroFramework;
 
 use Krzysztofzylka\MicroFramework\Extension\Account\Enum\AuthControlAction;
 use Krzysztofzylka\MicroFramework\Extension\Email\Enum\PredefinedConfig;
-use PHPMailer\PHPMailer\PHPMailer;
 
 class ConfigDefault
 {

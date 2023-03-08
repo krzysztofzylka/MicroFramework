@@ -5,7 +5,8 @@ namespace Krzysztofzylka\MicroFramework;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use krzysztofzylka\SimpleLibraries\Library\File;
 
-class Autoload {
+class Autoload
+{
 
     /**
      * Project path
@@ -18,7 +19,8 @@ class Autoload {
      * @param string $projectPath
      * @throws NotFoundException
      */
-    public function __construct(string $projectPath) {
+    public function __construct(string $projectPath)
+    {
         $this->projectPath = $projectPath;
 
         spl_autoload_register(function ($className) {
@@ -42,8 +44,9 @@ class Autoload {
      * @param $className
      * @return string
      */
-    private function generatePath($className) : string {
-        return File::repairPath($this->projectPath . DIRECTORY_SEPARATOR . $className . '.php');
+    private function generatePaPath($className): string
+    {
+        return File::repairPath(__DIR__ . '/AdminPanel' . DIRECTORY_SEPARATOR . $className . '.php');
     }
 
     /**
@@ -51,8 +54,9 @@ class Autoload {
      * @param $className
      * @return string
      */
-    private function generatePaPath($className) : string {
-        return File::repairPath(__DIR__ . '/AdminPanel' . DIRECTORY_SEPARATOR . $className . '.php');
+    private function generatePath($className): string
+    {
+        return File::repairPath($this->projectPath . DIRECTORY_SEPARATOR . $className . '.php');
     }
 
 }

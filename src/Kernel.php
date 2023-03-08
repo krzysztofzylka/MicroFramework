@@ -85,36 +85,6 @@ class Kernel
     }
 
     /**
-     * Init framework
-     * @param ?string $controllerName
-     * @param string $controllerMethod
-     * @param array $controllerArguments
-     * @param array $params additional init params
-     * @return void
-     * @throws MicroFrameworkException
-     * @throws NotFoundException
-     * @throws LoaderError
-     */
-    public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = [], array $params = []) : void {
-        if (!self::$projectPath) {
-            throw new MicroFrameworkException('Project is not defined', 500);
-        }
-
-        self::initViewVariables();
-
-        if (!is_null($controllerName)) {
-            $isAdminPanel = false;
-
-            if (str_starts_with($controllerName, 'pa')) {
-                $isAdminPanel = true;
-                $controllerName = lcfirst(substr($controllerName, 2));
-            }
-
-            self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false, 'isAdminPanel' => $isAdminPanel]);
-        }
-    }
-
-    /**
      * Run framework
      * @return void
      * @throws ConnectException
@@ -208,6 +178,37 @@ class Kernel
     }
 
     /**
+     * Init framework
+     * @param ?string $controllerName
+     * @param string $controllerMethod
+     * @param array $controllerArguments
+     * @param array $params additional init params
+     * @return void
+     * @throws MicroFrameworkException
+     * @throws NotFoundException
+     * @throws LoaderError
+     */
+    public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = [], array $params = []): void
+    {
+        if (!self::$projectPath) {
+            throw new MicroFrameworkException('Project is not defined', 500);
+        }
+
+        self::initViewVariables();
+
+        if (!is_null($controllerName)) {
+            $isAdminPanel = false;
+
+            if (str_starts_with($controllerName, 'pa')) {
+                $isAdminPanel = true;
+                $controllerName = lcfirst(substr($controllerName, 2));
+            }
+
+            self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false, 'isAdminPanel' => $isAdminPanel]);
+        }
+    }
+
+    /**
      * init view variables
      * @throws LoaderError
      */
@@ -245,7 +246,8 @@ class Kernel
      * @throws NoAuthException
      * @throws MicroFrameworkException
      */
-    public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []) : Controller {
+    public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []): Controller
+    {
         if (isset($params['isAdminPanel']) && $params['isAdminPanel']) {
             if (!self::getConfig()->adminPanel) {
                 throw new NotFoundException('Admin panel is disabled');

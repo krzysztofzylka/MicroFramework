@@ -3,11 +3,12 @@
 namespace Krzysztofzylka\MicroFramework\AdminPanel\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
+use Krzysztofzylka\MicroFramework\Kernel;
 
 class account extends Controller
 {
 
-    public function index()
+    public function index(): void
     {
         $this->table->model = $this->loadModel('paAccount');
         $this->table->columns = [
@@ -29,6 +30,13 @@ class account extends Controller
         ];
 
         $this->loadView(['table' => $this->table->render()]);
+    }
+
+    public function logout(): void
+    {
+        $account = new \Krzysztofzylka\MicroFramework\Extension\Account\Account();
+        $account->logout();
+        $this->redirect('/' . Kernel::getConfig()->defaultPage);
     }
 
 }

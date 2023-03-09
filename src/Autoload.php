@@ -32,7 +32,7 @@ class Autoload
             }
 
             if (!file_exists($path)) {
-                throw new NotFoundException('Autoloader not found object: ' . $className . '(' . $path . ')');
+                return;
             }
 
             include($path);

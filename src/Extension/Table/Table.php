@@ -5,15 +5,17 @@ namespace Krzysztofzylka\MicroFramework\Extension\Table;
 use krzysztofzylka\DatabaseManager\Condition;
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
-use Krzysztofzylka\MicroFramework\Extension\Table\Extra\Cell;
+use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Render;
+use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Session;
 use Krzysztofzylka\MicroFramework\Model;
 use Krzysztofzylka\MicroFramework\Trait\Log;
-use krzysztofzylka\SimpleLibraries\Library\Session;
 
 class Table
 {
 
     use Log;
+    use Session;
+    use Render;
 
     /**
      * Table ID
@@ -41,9 +43,9 @@ class Table
 
     /**
      * Conditions
-     * @var Condition
+     * @var ?Condition
      */
-    private Condition $conditions;
+    private ?Condition $conditions = null;
 
     /**
      * Have conditions
@@ -80,7 +82,7 @@ class Table
     public string $search = '';
 
     /**
-     * Active search
+     * Enable search
      * @var bool
      */
     public bool $activeSearch = true;
@@ -98,6 +100,36 @@ class Table
     private mixed $session = null;
 
     /**
+     * Enable pagination
+     * @var bool
+     */
+    public bool $activePagination = true;
+
+    /**
+     * Elements per page
+     * @var int
+     */
+    public int $paginationLimit = 20;
+
+    /**
+     * Actual page
+     * @var int
+     */
+    public int $page = 1;
+
+    /**
+     * SQL limit
+     * @var ?string
+     */
+    private ?string $limit = null;
+
+    /**
+     * Pages
+     * @var ?int
+     */
+    public ?int $pages = null;
+
+    /**
      * Render table
      * @return string
      * @throws DatabaseException
@@ -110,15 +142,14 @@ class Table
 
         $this->html .= '<div class="tableRender" id="' . $this->id . '">';
         $this->renderAction();
+        $this->html .= '<table class="table table-sm">';
         $this->renderHeaders();
-
         $this->renderBody();
-
+        $this->html .= '</table>';
+        $this->renderFooter();
         $this->html .= '</div>';
 
-        $html = '<table class="table table-sm">' . $this->html . '</table>';
-
-        return $html;
+        return $this->html;
     }
 
     /**
@@ -129,70 +160,6 @@ class Table
     public function setId(string $id): void
     {
         $this->id = $id;
-    }
-
-    /**
-     * Render headers
-     * @return void
-     */
-    private function renderHeaders(): void
-    {
-        $this->html .= '<thead><tr>';
-
-        foreach ($this->columns as $column) {
-            $this->html .= '<th>' . ($column['title'] ?? '') . '</th>';
-        }
-
-        $this->html .= '</tr></thead>';
-    }
-
-    /**
-     * Render body
-     * @return void
-     */
-    private function renderBody(): void
-    {
-        $this->html .= '<tbody>';
-
-        foreach ($this->results as $result) {
-            $this->html .= '<tr>';
-
-            foreach ($this->columns as $columnKey => $column) {
-                $cell = new Cell();
-                $cell->val = $this->getArrayData($columnKey, $result);
-                $cell->data = $result;
-                $this->html .= '<td>';
-
-                if (isset($column['value']) && is_string($column['value'])) {
-                    $this->html .= $column['value'];
-                } elseif (isset($column['value']) && is_object($column['value'])) {
-                    $this->html .= $column['value']($cell);
-                } else {
-                    $this->html .= $cell->val;
-                }
-
-                $this->html .= '</td>';
-            }
-
-            $this->html .= '</tr>';
-        }
-
-        $this->html .= '</tbody>';
-    }
-
-    /**
-     * Render actions
-     * @return void
-     */
-    private function renderAction(): void
-    {
-        $this->html .= '<div class="actions float-end">';
-
-        if ($this->activeSearch) {
-            $this->html .= '<form method="POST"><input type="hidden" name="table_id" value="' . $this->id . '" /><input name="search" class="form-control" placeholder="Search..." value="' . $this->search . '" /></form>';
-        }
-
-        $this->html .= '</div>';
     }
 
     /**
@@ -230,12 +197,17 @@ class Table
     /**
      * Query
      * @return void
+     * @throws DatabaseException
      */
     private function query(): void
     {
         $this->getSession();
 
-        $this->search = (isset($this->session['search']) && !isset($this->data['search'])) ? $this->session['search'] : $this->data['search'];
+        if (isset($this->session['search']) || isset($this->data['search'])) {
+            $this->search = !is_null($this->session) && isset($this->session['search']) && !isset($this->data['search'])
+                ? $this->session['search']
+                : $this->data['search'] ?? '';
+        }
 
         if ($this->activeSearch && $this->search) {
             $this->haveCondition = true;
@@ -246,6 +218,41 @@ class Table
             }
 
             $this->conditions->orWhere($orCondition);
+        }
+
+        if (isset($this->session['page'])) {
+            $this->page = (int)$this->session['page'];
+        }
+
+        $conditions = $this->haveCondition ? $this->conditions : null;
+        $this->pages = floor($this->model->findCount($conditions) / $this->paginationLimit);
+
+        if ($this->activePagination) {
+            if (isset($this->session['page']) || isset($this->data['page'])) {
+                if (isset($this->data['page'])) {
+                    if ($this->data['page'] === "«") {
+                        $this->page--;
+                    } elseif ($this->data['page'] === "»") {
+                        $this->page++;
+                    } else {
+                        $this->page = $this->data['page'];
+                    }
+                }
+            }
+
+            if ($this->page < 1) {
+                $this->page = 1;
+            } elseif ($this->page > $this->pages) {
+                $this->page = $this->pages;
+            }
+
+            $page = ($this->page - 1);
+
+            if ($this->page < 1) {
+                $page = 0;
+            }
+
+            $this->limit = ($page * $this->paginationLimit) . ',' . $this->paginationLimit;
         }
 
         $this->saveQuery();
@@ -259,11 +266,11 @@ class Table
     private function getResults(): void
     {
         if (empty($this->results) && isset($this->model)) {
-            if ($this->haveCondition) {
-                $this->results = $this->model->findAll($this->conditions);
-            } else {
-                $this->results = $this->model->findAll();
+            if (!$this->haveCondition) {
+                $this->conditions = null;
             }
+
+            $this->results = $this->model->findAll($this->conditions, null, $this->limit);
         }
     }
 
@@ -278,31 +285,9 @@ class Table
         }
 
         $this->saveSession([
-            'search' => $this->data['search'] ?? null
+            'search' => $this->data['search'] ?? $this->session['search'] ?? null,
+            'page' => $this->page ?? 0
         ]);
-    }
-
-    /**
-     * Get saved session
-     * @return mixed
-     */
-    private function getSession(): mixed
-    {
-        if (!$this->session) {
-            $this->session = Session::get('table_' . $this->id . '_parameters');
-        }
-
-        return $this->session;
-    }
-
-    /**
-     * Save session data
-     * @param array $data
-     * @return void
-     */
-    private function saveSession(array $data): void
-    {
-        Session::set('table_' . $this->id . '_parameters', $data);
     }
 
 }

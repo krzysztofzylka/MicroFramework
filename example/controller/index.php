@@ -40,4 +40,28 @@ class index extends Controller {
 
         $this->loadView(['table' => $this->table->render()]);
     }
+
+    public function table2(): void
+    {
+        $this->table->model = $this->loadModel('example');
+        $this->table->columns = [
+            'example.name' => [
+                'title' => 'Name'
+            ],
+            'example.status' => [
+                'title' => 'Status'
+            ],
+            'example.date_created' => [
+                'title' => 'Created',
+                'value' => function ($cell) {
+                    return 'Modify - ' . $cell->val;
+                }
+            ],
+            'example.date_modify' => [
+                'title' => 'Modify'
+            ]
+        ];
+
+        $this->loadView(['table' => $this->table->render()], 'table');
+    }
 }

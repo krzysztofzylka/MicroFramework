@@ -6,6 +6,7 @@ ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
 use config\Config;
+use krzysztofzylka\DatabaseManager\Debug;
 use Krzysztofzylka\MicroFramework\Autoload;
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\View;
@@ -21,4 +22,8 @@ try {
     $view = new View();
 
     echo $view->renderError($exception->getCode() ?? 500, $exception);
+}
+
+if (Kernel::getConfig()->debug) {
+    Debug::showDebugModal();
 }

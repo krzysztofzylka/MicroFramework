@@ -8,7 +8,7 @@ final class KernelTest extends TestCase
 {
 
     public function testKernelCreate() {
-        Kernel::create(__DIR__, false);
+        Kernel::create(__DIR__);
         $this->assertEquals(__DIR__, Kernel::getProjectPath());
     }
 

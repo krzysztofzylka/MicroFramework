@@ -57,9 +57,10 @@ class Kernel
     /**
      * Init project
      * @param string $projectPath
+     * @param bool $createDirectories
      * @return void
      */
-    public static function create(string $projectPath): void
+    public static function create(string $projectPath, bool $createDirectories = true): void
     {
         self::$projectPath = $projectPath;
         self::$paths['public'] = realpath($projectPath . '/public');
@@ -71,14 +72,16 @@ class Kernel
         self::$paths['logs'] = self::$paths['storage'] . '/logs';
         self::$paths['database_updater'] = $projectPath . '/database_updater';
 
-        foreach (self::$paths as $name => $path) {
-            self::$paths[$name] = File::repairPath($path);
+        if ($createDirectories) {
+            foreach (self::$paths as $name => $path) {
+                self::$paths[$name] = File::repairPath($path);
 
-            File::mkdir($path);
-        }
+                File::mkdir($path);
+            }
 
-        if (!file_exists(self::$paths['public'] . '/.htaccess')) {
-            copy(__DIR__ . '/Init/.htaccess', self::$paths['public'] . '/.htaccess');
+            if (!file_exists(self::$paths['public'] . '/.htaccess')) {
+                copy(__DIR__ . '/Init/.htaccess', self::$paths['public'] . '/.htaccess');
+            }
         }
     }
 

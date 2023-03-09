@@ -173,6 +173,10 @@ class Table
      */
     private function query(): void
     {
+        if (!isset($this->model)) {
+            return;
+        }
+
         $this->getSession();
 
         if (isset($this->session['search']) || isset($this->data['search'])) {
@@ -207,7 +211,7 @@ class Table
                     } elseif ($this->data['page'] === "»") {
                         $this->page++;
                     } else {
-                        $this->page = $this->data['page'];
+                        $this->page = (int)$this->data['page'];
                     }
                 }
             }

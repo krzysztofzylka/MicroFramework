@@ -2,6 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+include (__DIR__ . '/Extra/Functions.php');
+
 use Exception;
 use krzysztofzylka\DatabaseManager\DatabaseConnect;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
@@ -285,6 +287,7 @@ class Kernel
             $controller->params = $params;
             $controller->table = new Table();
             $controller->table->controller = $controller;
+            $controller->table->data = $controller->data;
 
             if (!method_exists($controller, $method)) {
                 throw new Exception('Method ' . $method . ' not exists in controller ' . $name);

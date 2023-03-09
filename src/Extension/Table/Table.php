@@ -8,6 +8,7 @@ use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Extension\Table\Extra\Cell;
 use Krzysztofzylka\MicroFramework\Model;
 use Krzysztofzylka\MicroFramework\Trait\Log;
+use krzysztofzylka\SimpleLibraries\Library\Session;
 
 class Table
 {
@@ -71,6 +72,30 @@ class Table
      * @var array
      */
     public array $results = [];
+
+    /**
+     * Search string
+     * @var string
+     */
+    public string $search = '';
+
+    /**
+     * Active search
+     * @var bool
+     */
+    public bool $activeSearch = true;
+
+    /**
+     * Post data
+     * @var ?array
+     */
+    public ?array $data = null;
+
+    /**
+     * Session
+     * @var mixed
+     */
+    private mixed $session = null;
 
     /**
      * Render table
@@ -162,7 +187,11 @@ class Table
     private function renderAction(): void
     {
         $this->html .= '<div class="actions float-end">';
-        $this->html .= '<form method="POST"><input type="hidden" name="table_id" value="' . $this->id . '" /><input name="search" class="form-control" placeholder="Search..." /></form>';
+
+        if ($this->activeSearch) {
+            $this->html .= '<form method="POST"><input type="hidden" name="table_id" value="' . $this->id . '" /><input name="search" class="form-control" placeholder="Search..." value="' . $this->search . '" /></form>';
+        }
+
         $this->html .= '</div>';
     }
 
@@ -204,17 +233,22 @@ class Table
      */
     private function query(): void
     {
-        $data = $this->controller->data;
+        $this->getSession();
 
-        if (!$data || !$data['table_id'] || $data['table_id'] !== $this->id) {
-            return;
-        }
+        $this->search = (isset($this->session['search']) && !isset($this->data['search'])) ? $this->session['search'] : $this->data['search'];
 
-        if ($data['search']) {
+        if ($this->activeSearch && $this->search) {
             $this->haveCondition = true;
-            //$table = new Table();
-            $this->conditions->where('account.username', $data['search']);
+            $orCondition = new Condition();
+
+            foreach (array_keys($this->columns) as $field) {
+                $orCondition->where($field, '%' . $this->search . '%', 'LIKE');
+            }
+
+            $this->conditions->orWhere($orCondition);
         }
+
+        $this->saveQuery();
     }
 
     /**
@@ -231,6 +265,44 @@ class Table
                 $this->results = $this->model->findAll();
             }
         }
+    }
+
+    /**
+     * Save query
+     * @return void
+     */
+    private function saveQuery(): void
+    {
+        if (!isset($this->data['table_id']) || $this->data['table_id'] !== $this->id) {
+            return;
+        }
+
+        $this->saveSession([
+            'search' => $this->data['search'] ?? null
+        ]);
+    }
+
+    /**
+     * Get saved session
+     * @return mixed
+     */
+    private function getSession(): mixed
+    {
+        if (!$this->session) {
+            $this->session = Session::get('table_' . $this->id . '_parameters');
+        }
+
+        return $this->session;
+    }
+
+    /**
+     * Save session data
+     * @param array $data
+     * @return void
+     */
+    private function saveSession(array $data): void
+    {
+        Session::set('table_' . $this->id . '_parameters', $data);
     }
 
 }

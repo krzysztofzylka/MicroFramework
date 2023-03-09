@@ -58,6 +58,7 @@ class Table
      * [
      *   'key' => [ //key to database data in model eg. id for $result['id'] or user.name for $result['user']['name']
      *     'title' => 'Column title', //column title
+     *     'width' => 200, //column width
      *     'value' => '', //custom value
      *     'value' => function ($cell) {
      *       return $cell->val;

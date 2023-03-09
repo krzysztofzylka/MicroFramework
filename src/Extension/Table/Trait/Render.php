@@ -33,10 +33,16 @@ trait Render {
             $this->html .= '<tr>';
 
             foreach ($this->columns as $columnKey => $column) {
+                $style = '';
                 $cell = new Cell();
                 $cell->val = $this->getArrayData($columnKey, $result);
                 $cell->data = $result;
-                $this->html .= '<td>';
+
+                if (isset($column['width'])) {
+                    $style .= 'width:' . (int)$column['width'] . 'px;';
+                }
+
+                $this->html .= '<td style="' . $style . '">';
 
                 if (isset($column['value']) && is_string($column['value'])) {
                     $this->html .= $column['value'];

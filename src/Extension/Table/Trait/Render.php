@@ -87,6 +87,10 @@ trait Render {
             $this->html .= '<li class="page-item' . ($this->page === $from + $i ? ' active' : '') . '"><input type="submit" name="page" class="page-link" value="' . ($from + $i) . '" /></li>';
         }
 
+        if ((int)$this->pages === 0) {
+            $this->html .= '<li class="page-item active"><input type="submit" name="page" class="page-link" value="1" /></li>';
+        }
+
         $this->html .= '<li class="page-item"><input type="submit" name="page" class="page-link" value="&#187;" /></li>';
         $this->html .= '</ul></nav>';
         $this->html .= '</form>';

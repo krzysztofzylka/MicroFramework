@@ -2,7 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Table\Extra;
 
-class Cell {
+class Cell
+{
 
     /**
      * Column value

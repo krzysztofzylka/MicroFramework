@@ -4,7 +4,35 @@ namespace Krzysztofzylka\MicroFramework\Extension\Table\Trait;
 
 use Krzysztofzylka\MicroFramework\Extension\Table\Extra\Cell;
 
-trait Render {
+trait Render
+{
+
+    public function renderFooter(): void
+    {
+        $this->html .= '<div class="footer float-end">';
+        $this->html .= '<form method="POST">';
+        $this->html .= '<input type="hidden" name="table_id" value="' . $this->id . '" />';
+        $this->html .= '<nav aria-label="navigation"><ul class="pagination">';
+        $this->html .= '<li class="page-item"><input type="submit" name="page" class="page-link" value="&#171;" /></li>';
+        $from = $this->page - 3;
+
+        for ($i = 0; $i < 7; $i++) {
+            if ($from + $i < 1 || $from + $i > $this->pages) {
+                continue;
+            }
+
+            $this->html .= '<li class="page-item' . ($this->page === $from + $i ? ' active' : '') . '"><input type="submit" name="page" class="page-link" value="' . ($from + $i) . '" /></li>';
+        }
+
+        if ((int)$this->pages === 0) {
+            $this->html .= '<li class="page-item active"><input type="submit" name="page" class="page-link" value="1" /></li>';
+        }
+
+        $this->html .= '<li class="page-item"><input type="submit" name="page" class="page-link" value="&#187;" /></li>';
+        $this->html .= '</ul></nav>';
+        $this->html .= '</form>';
+        $this->html .= '</div>';
+    }
 
     /**
      * Render headers
@@ -73,33 +101,6 @@ trait Render {
             $this->html .= '<form method="POST"><input type="hidden" name="table_id" value="' . $this->id . '" /><input name="search" class="form-control" placeholder="Search..." value="' . $this->search . '" /></form>';
         }
 
-        $this->html .= '</div>';
-    }
-
-    public function renderFooter(): void
-    {
-        $this->html .= '<div class="footer float-end">';
-        $this->html .= '<form method="POST">';
-        $this->html .= '<input type="hidden" name="table_id" value="' . $this->id . '" />';
-        $this->html .= '<nav aria-label="navigation"><ul class="pagination">';
-        $this->html .= '<li class="page-item"><input type="submit" name="page" class="page-link" value="&#171;" /></li>';
-        $from = $this->page - 3;
-
-        for ($i = 0; $i < 7; $i++) {
-            if ($from + $i < 1 || $from + $i > $this->pages) {
-                continue;
-            }
-
-            $this->html .= '<li class="page-item' . ($this->page === $from + $i ? ' active' : '') . '"><input type="submit" name="page" class="page-link" value="' . ($from + $i) . '" /></li>';
-        }
-
-        if ((int)$this->pages === 0) {
-            $this->html .= '<li class="page-item active"><input type="submit" name="page" class="page-link" value="1" /></li>';
-        }
-
-        $this->html .= '<li class="page-item"><input type="submit" name="page" class="page-link" value="&#187;" /></li>';
-        $this->html .= '</ul></nav>';
-        $this->html .= '</form>';
         $this->html .= '</div>';
     }
 

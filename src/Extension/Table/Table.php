@@ -18,41 +18,15 @@ class Table
     use Render;
 
     /**
-     * Table ID
-     * @var string
-     */
-    private string $id = '';
-
-    /**
-     * Html table
-     * @var string
-     */
-    private string $html = '';
-
-    /**
      * Model to get data
      * @var ?Model
      */
     public ?Model $model = null;
-
     /**
      * Controller
      * @var Controller
      */
     public Controller $controller;
-
-    /**
-     * Conditions
-     * @var ?Condition
-     */
-    private ?Condition $conditions = null;
-
-    /**
-     * Have conditions
-     * @var bool
-     */
-    private bool $haveCondition = false;
-
     /**
      * Table columns:
      * [
@@ -69,66 +43,76 @@ class Table
      * @var array
      */
     public array $columns = [];
-
     /**
      * Data results for body
      * @var array
      */
     public array $results = [];
-
     /**
      * Search string
      * @var string
      */
     public string $search = '';
-
     /**
      * Enable search
      * @var bool
      */
     public bool $activeSearch = true;
-
     /**
      * Post data
      * @var ?array
      */
     public ?array $data = null;
-
-    /**
-     * Session
-     * @var mixed
-     */
-    private mixed $session = null;
-
     /**
      * Enable pagination
      * @var bool
      */
     public bool $activePagination = true;
-
     /**
      * Elements per page
      * @var int
      */
     public int $paginationLimit = 20;
-
     /**
      * Actual page
      * @var int
      */
     public int $page = 1;
-
-    /**
-     * SQL limit
-     * @var ?string
-     */
-    private ?string $limit = null;
-
     /**
      * Pages
      * @var ?int
      */
     public ?int $pages = null;
+    /**
+     * Table ID
+     * @var string
+     */
+    private string $id = '';
+    /**
+     * Html table
+     * @var string
+     */
+    private string $html = '';
+    /**
+     * Conditions
+     * @var ?Condition
+     */
+    private ?Condition $conditions = null;
+    /**
+     * Have conditions
+     * @var bool
+     */
+    private bool $haveCondition = false;
+    /**
+     * Session
+     * @var mixed
+     */
+    private mixed $session = null;
+    /**
+     * SQL limit
+     * @var ?string
+     */
+    private ?string $limit = null;
 
     /**
      * Render table
@@ -154,29 +138,6 @@ class Table
     }
 
     /**
-     * Set table ID
-     * @param string $id
-     * @return void
-     */
-    public function setId(string $id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * Get data from array
-     * @param string $name
-     * @param array $data
-     * @return mixed
-     */
-    private function getArrayData(string $name, array $data): mixed
-    {
-        $arrayData = '$data[\'' . implode('\'][\'', explode('.', $name)) . '\']';
-
-        return @eval("return $arrayData;");
-    }
-
-    /**
      * Generate default data
      * @return void
      */
@@ -186,13 +147,23 @@ class Table
             $id = $this->controller->name . '-' . $this->controller->method;
 
             if (!empty($this->controller->arguments)) {
-                $id .= '-' . implode('-', $this->controller->arguments );
+                $id .= '-' . implode('-', $this->controller->arguments);
             }
 
             $this->setId($id);
         }
 
         $this->conditions = new Condition();
+    }
+
+    /**
+     * Set table ID
+     * @param string $id
+     * @return void
+     */
+    public function setId(string $id): void
+    {
+        $this->id = $id;
     }
 
     /**
@@ -260,6 +231,22 @@ class Table
     }
 
     /**
+     * Save query
+     * @return void
+     */
+    private function saveQuery(): void
+    {
+        if (!isset($this->data['table_id']) || $this->data['table_id'] !== $this->id) {
+            return;
+        }
+
+        $this->saveSession([
+            'search' => $this->data['search'] ?? $this->session['search'] ?? null,
+            'page' => $this->page ?? 0
+        ]);
+    }
+
+    /**
      * Generate results
      * @return void
      * @throws DatabaseException
@@ -276,19 +263,16 @@ class Table
     }
 
     /**
-     * Save query
-     * @return void
+     * Get data from array
+     * @param string $name
+     * @param array $data
+     * @return mixed
      */
-    private function saveQuery(): void
+    private function getArrayData(string $name, array $data): mixed
     {
-        if (!isset($this->data['table_id']) || $this->data['table_id'] !== $this->id) {
-            return;
-        }
+        $arrayData = '$data[\'' . implode('\'][\'', explode('.', $name)) . '\']';
 
-        $this->saveSession([
-            'search' => $this->data['search'] ?? $this->session['search'] ?? null,
-            'page' => $this->page ?? 0
-        ]);
+        return @eval("return $arrayData;");
     }
 
 }

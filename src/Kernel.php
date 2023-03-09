@@ -2,7 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
-include (__DIR__ . '/Extra/Functions.php');
+include(__DIR__ . '/Extra/Functions.php');
 
 use Exception;
 use krzysztofzylka\DatabaseManager\DatabaseConnect;

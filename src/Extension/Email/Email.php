@@ -24,7 +24,7 @@ class Email
      * @param string $address
      * @param string $subject
      * @param string $content
-     * @param ?string $layout
+     * @param string $layout
      * @param string $header
      * @param string $footer
      * @return bool

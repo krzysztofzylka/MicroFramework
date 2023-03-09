@@ -2,7 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Table\Trait;
 
-trait Session {
+trait Session
+{
 
 
     /**

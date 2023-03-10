@@ -47,6 +47,7 @@ class Kernel
         'api_controller' => null,
         'model' => null,
         'view' => null,
+        'pa_view' => null,
         'storage' => null,
         'logs' => null,
         'database_updater' => null
@@ -69,8 +70,10 @@ class Kernel
         self::$paths['public'] = realpath($projectPath . '/public');
         self::$paths['controller'] = $projectPath . '/controller';
         self::$paths['api_controller'] = $projectPath . '/api_controller';
+        self::$paths['pa_controller'] = $projectPath . '/pa_controller';
         self::$paths['model'] = $projectPath . '/model';
         self::$paths['view'] = $projectPath . '/view';
+        self::$paths['pa_view'] = $projectPath . '/pa_view';
         self::$paths['storage'] = $projectPath . '/storage';
         self::$paths['logs'] = self::$paths['storage'] . '/logs';
         self::$paths['database_updater'] = $projectPath . '/database_updater';
@@ -267,7 +270,11 @@ class Kernel
                 throw new NotFoundException('You not have permission to admin panel');
             }
 
-            $class = ObjectNameGenerator::controllerPa($name);
+            $class = ObjectNameGenerator::controllerPaLocal($name);
+
+            if (!class_exists($class)) {
+                $class = ObjectNameGenerator::controllerPa($name);
+            }
         } elseif (isset($params['api']) && $params['api']) {
             $class = ObjectNameGenerator::controllerApi($name);
         } else {

@@ -20,13 +20,23 @@ class ObjectNameGenerator
     }
 
     /**
-     * Generate controller class name
+     * Generate admin panel controller class name
      * @param string $controllerName
      * @return string
      */
     public static function controllerPa(string $controllerName): string
     {
         return '\Krzysztofzylka\MicroFramework\AdminPanel\controller\\' . $controllerName;
+    }
+
+    /**
+     * Generate local admin panel controller class name
+     * @param string $controllerName
+     * @return string
+     */
+    public static function controllerPaLocal(string $controllerName): string
+    {
+        return '\pa_controller\\' . $controllerName;
     }
 
     /**

@@ -85,6 +85,7 @@ class View
             $globalVariables['name'] = end($nameExplode);
 
             if (isset($this->controller->params['isAdminPanel']) && $this->controller->params['isAdminPanel']) {
+                View::$filesystemLoader->prependPath(Kernel::getPath('pa_view'));
                 View::$filesystemLoader->prependPath(__DIR__ . '/AdminPanel/view');
             }
 

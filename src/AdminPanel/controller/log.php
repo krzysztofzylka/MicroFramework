@@ -34,9 +34,29 @@ class log extends Controller
             return strtotime($b['log']['datetime']) - strtotime($a['log']['datetime']);
         });
 
-        $this->loadView([
-            'logs' => $logs
-        ]);
+        $this->table->activeSearch = false;
+        $this->table->activePagination = false;
+        $this->table->results = $logs;
+        $this->table->columns = [
+            'log.logLineNumber' => [
+                'title' => 'Lp.',
+                'width' => 180
+            ],
+            'log.datetime' => [
+                'title' => 'Date',
+                'width' => 220
+            ],
+            'log.level' => [
+                'title' => 'Level',
+                'width' => 30
+            ],
+            'log.message' => [
+                'title' => 'Message'
+            ]
+        ];
+        $this->loadView(['table' => $this->table->render()]);
+
+//        dump($logs);
     }
 
 }

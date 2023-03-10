@@ -32,7 +32,7 @@
             Integrations
         </a>
     </li>
-    {% block navbar_links %}{% endblock %}
+    {{ block("navbar_links", "layout.twig") }}
 </ul>
 {% endblock %}
 {% extends "mf_dashboard/layout.twig" %}

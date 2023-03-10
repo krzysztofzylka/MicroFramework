@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework\AdminPanel\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
+use Krzysztofzylka\MicroFramework\Extension\Table\Extra\Cell;
 use Krzysztofzylka\MicroFramework\Kernel;
 
 class account extends Controller
@@ -18,6 +19,13 @@ class account extends Controller
             ],
             'account.username' => [
                 'title' => 'Username'
+            ],
+            'account.admin' => [
+                'title' => 'Is admin',
+                'width' => 80,
+                'value' => function (Cell $cell) {
+                    return $cell->val ? 'Yes' : 'No';
+                }
             ],
             'account.date_created' => [
                 'title' => 'Created',

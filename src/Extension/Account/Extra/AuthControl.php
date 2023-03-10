@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework\Extension\Account\Extra;
 
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\ControllerApi;
+use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NoAuthException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
@@ -23,14 +24,15 @@ class AuthControl
      * Start check authorization
      * @throws NotFoundException
      * @throws NoAuthException
+     * @throws MicroFrameworkException
      */
     public static function run(string $class, string $method, bool $isApi): void
     {
         if (Kernel::getConfig()->authControl) {
             try {
                 $checkAuthorization = self::checkAuthorization($class, $method);
-            } catch (SimpleLibraryException) {
-                throw new NotFoundException();
+            } catch (SimpleLibraryException $exception) {
+                throw new MicroFrameworkException($exception);
             }
 
             if (!$checkAuthorization) {

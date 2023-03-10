@@ -4,7 +4,6 @@ namespace Krzysztofzylka\MicroFramework;
 
 use Krzysztofzylka\MicroFramework\Extension\Account\Enum\AuthControlAction;
 use Krzysztofzylka\MicroFramework\Extension\Email\Enum\PredefinedConfig;
-use PHPMailer\PHPMailer\PHPMailer;
 
 class ConfigDefault
 {
@@ -26,6 +25,12 @@ class ConfigDefault
      * @var string
      */
     public string $defaultMethod = 'index';
+
+    /**
+     * Admin panel
+     * @var bool
+     */
+    public bool $adminPanel = false;
 
     /** API */
 

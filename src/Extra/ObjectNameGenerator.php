@@ -20,6 +20,26 @@ class ObjectNameGenerator
     }
 
     /**
+     * Generate admin panel controller class name
+     * @param string $controllerName
+     * @return string
+     */
+    public static function controllerPa(string $controllerName): string
+    {
+        return '\Krzysztofzylka\MicroFramework\AdminPanel\controller\\' . $controllerName;
+    }
+
+    /**
+     * Generate local admin panel controller class name
+     * @param string $controllerName
+     * @return string
+     */
+    public static function controllerPaLocal(string $controllerName): string
+    {
+        return '\pa_controller\\' . $controllerName;
+    }
+
+    /**
      * Generate api controller class name
      * @param string $controllerName
      * @return string
@@ -37,6 +57,18 @@ class ObjectNameGenerator
     public static function model(string $modelName): string
     {
         return '\model\\' . $modelName;
+    }
+
+    /**
+     * Generate model class name
+     * @param string $modelName
+     * @return string
+     */
+    public static function modelPa(string $modelName): string
+    {
+        $modelName = lcfirst(substr($modelName, 2));
+
+        return '\Krzysztofzylka\MicroFramework\AdminPanel\model\\' . $modelName;
     }
 
     /**

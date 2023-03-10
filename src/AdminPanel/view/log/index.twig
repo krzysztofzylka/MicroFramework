@@ -1,0 +1,36 @@
+{% extends "mf_dashboard/paLayout.twig" %}
+
+{% block contentTitle %}
+Logs
+{% endblock %}
+
+{% block content %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th width="200px">ID</th>
+                <th width="300px">Time</th>
+                <th width="100px">Level</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+                <tr>
+                    <td>{{ log.log.logLineNumber }}</td>
+                    <td>{{ log.log.datetime }}</td>
+                    <td>{{ log.log.level }}</td>
+                    <td>{{ log.log.message }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready( function () {
+            $('.table').DataTable({
+                "ordering": false
+            });
+        } );
+    </script>
+{% endblock %}

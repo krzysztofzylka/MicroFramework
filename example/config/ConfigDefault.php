@@ -15,4 +15,10 @@ class ConfigDefault extends \Krzysztofzylka\MicroFramework\ConfigDefault {
 
     public bool $authControlDefaultRequireAuth = false;
 
+    public string $defaultPage = '/index/index';
+
+    public string $pageUrl = 'http://micro.local/';
+
+    public bool $adminPanel = true;
+
 }

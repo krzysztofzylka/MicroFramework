@@ -2,6 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+include(__DIR__ . '/Extra/Functions.php');
+
 use Exception;
 use krzysztofzylka\DatabaseManager\DatabaseConnect;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
@@ -13,6 +15,7 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
+use Krzysztofzylka\MicroFramework\Extension\Table\Table;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use krzysztofzylka\SimpleLibraries\Library\File;
 use krzysztofzylka\SimpleLibraries\Library\Request;
@@ -39,10 +42,12 @@ class Kernel
      */
     private static array $paths = [
         'public' => null,
+        'assets' => null,
         'controller' => null,
         'api_controller' => null,
         'model' => null,
         'view' => null,
+        'pa_view' => null,
         'storage' => null,
         'logs' => null,
         'database_updater' => null
@@ -65,16 +70,19 @@ class Kernel
         self::$paths['public'] = realpath($projectPath . '/public');
         self::$paths['controller'] = $projectPath . '/controller';
         self::$paths['api_controller'] = $projectPath . '/api_controller';
+        self::$paths['pa_controller'] = $projectPath . '/pa_controller';
         self::$paths['model'] = $projectPath . '/model';
         self::$paths['view'] = $projectPath . '/view';
+        self::$paths['pa_view'] = $projectPath . '/pa_view';
         self::$paths['storage'] = $projectPath . '/storage';
         self::$paths['logs'] = self::$paths['storage'] . '/logs';
         self::$paths['database_updater'] = $projectPath . '/database_updater';
+        self::$paths['assets'] = self::$paths['public'] . '/assets';
 
         foreach (self::$paths as $name => $path) {
             self::$paths[$name] = File::repairPath($path);
 
-            File::mkdir($path);
+            File::mkdir($path, 0755);
         }
 
         if (!file_exists(self::$paths['public'] . '/.htaccess')) {
@@ -106,6 +114,11 @@ class Kernel
 
         $url = $_GET['url'] ?? self::getConfig()->defaultPage;
         $explode = explode('/', $url);
+
+        if (empty($explode[0])) {
+            unset($explode[0]);
+            $explode = array_values($explode);
+        }
 
         $controller = $explode[0];
 
@@ -195,7 +208,14 @@ class Kernel
         self::initViewVariables();
 
         if (!is_null($controllerName)) {
-            self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false]);
+            $isAdminPanel = false;
+
+            if (str_starts_with($controllerName, 'pa')) {
+                $isAdminPanel = true;
+                $controllerName = lcfirst(substr($controllerName, 2));
+            }
+
+            self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false, 'isAdminPanel' => $isAdminPanel]);
         }
     }
 
@@ -228,17 +248,34 @@ class Kernel
 
     /**
      * Load controller
-     * @param string $name
-     * @param string $method
-     * @param array $arguments
+     * @param string $name controller name
+     * @param string $method method
+     * @param array $arguments method arguments
      * @param array $params additional params for loader
      * @return Controller
      * @throws NotFoundException
      * @throws NoAuthException
+     * @throws MicroFrameworkException
      */
     public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []): Controller
     {
-        if (isset($params['api']) && $params['api']) {
+        if (isset($params['isAdminPanel']) && $params['isAdminPanel']) {
+            if (!self::getConfig()->adminPanel) {
+                throw new NotFoundException('Admin panel is disabled');
+            } elseif (!self::getConfig()->authControl) {
+                throw new NotFoundException('Account control is disabled');
+            } elseif (!Account::isLogged()) {
+                throw new NotFoundException('You not logged');
+            } elseif (!Account::$account['account']['admin']) {
+                throw new NotFoundException('You not have permission to admin panel');
+            }
+
+            $class = ObjectNameGenerator::controllerPaLocal($name);
+
+            if (!class_exists($class)) {
+                $class = ObjectNameGenerator::controllerPa($name);
+            }
+        } elseif (isset($params['api']) && $params['api']) {
             $class = ObjectNameGenerator::controllerApi($name);
         } else {
             $class = ObjectNameGenerator::controller($name);
@@ -254,12 +291,18 @@ class Kernel
             $controller->arguments = $arguments;
             $controller->data = self::getData();
             $controller->htmlGenerator = new Html();
+            $controller->params = $params;
+            $controller->table = new Table();
+            $controller->table->controller = $controller;
+            $controller->table->data = $controller->data;
 
             if (!method_exists($controller, $method)) {
-                throw new Exception();
+                throw new Exception('Method ' . $method . ' not exists in controller ' . $name);
             }
-        } catch (Exception) {
-            throw new NotFoundException();
+        } catch (NotFoundException $exception) {
+            throw new NotFoundException($exception->getHiddenMessage());
+        } catch (Exception $exception) {
+            throw new MicroFrameworkException($exception->getMessage(), $exception->getCode());
         }
 
         call_user_func_array([$controller, $method], $arguments);

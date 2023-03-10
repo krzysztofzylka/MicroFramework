@@ -38,6 +38,24 @@ class View
         $this->controller = $controller;
     }
 
+    public function renderError(int $code, Exception $exception, string $name = 'mf_error'): string
+    {
+        $hiddenMessage = false;
+
+        if (method_exists($exception, 'getHiddenMessage')) {
+            $hiddenMessage = $exception->getHiddenMessage();
+        }
+
+        return $this->render(
+            $name,
+            [
+                'code' => $code ?? 500,
+                'debug' => Kernel::getConfig()->debug ? var_export($exception, true) : false,
+                'hiddenMessage' => $hiddenMessage
+            ]
+        );
+    }
+
     /**
      * Load view
      * @param string $name
@@ -65,6 +83,11 @@ class View
 
             $nameExplode = explode('/', $name);
             $globalVariables['name'] = end($nameExplode);
+
+            if (isset($this->controller->params['isAdminPanel']) && $this->controller->params['isAdminPanel']) {
+                View::$filesystemLoader->prependPath(Kernel::getPath('pa_view'));
+                View::$filesystemLoader->prependPath(__DIR__ . '/AdminPanel/view');
+            }
 
             if (!isset(View::$environment) || !isset(View::$filesystemLoader)) {
                 Kernel::initViewVariables();

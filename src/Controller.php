@@ -9,6 +9,7 @@ use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
+use Krzysztofzylka\MicroFramework\Extension\Table\Table as TableExtension;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use krzysztofzylka\SimpleLibraries\Library\Redirect;
@@ -65,6 +66,18 @@ class Controller
     public bool $isApi = false;
 
     /**
+     * Params
+     * @var array
+     */
+    public array $params = [];
+
+    /**
+     * Table method
+     * @var TableExtension
+     */
+    public TableExtension $table;
+
+    /**
      * Load model
      * @param string ...$name
      * @return Model
@@ -82,7 +95,13 @@ class Controller
             $name = $name[0];
         }
 
-        $class = ObjectNameGenerator::model($name);
+        $startName = $name;
+
+        if (str_starts_with($name, 'pa')) {
+            $class = ObjectNameGenerator::modelPa($name);
+        } else {
+            $class = ObjectNameGenerator::model($name);
+        }
 
         try {
             /** @var Model $model */
@@ -92,16 +111,16 @@ class Controller
             $model->data = $this->data;
 
             if ($model->useTable && isset(DatabaseManager::$connection)) {
-                $model->tableInstance = new Table($model->tableName ?? $name);
+                $model->tableInstance = new Table($model->tableName ?? $startName);
                 $model->transactionInstance = new Transaction();
             }
         } catch (Exception $exception) {
-            $this->log('Fail load model', 'ERR', ['exception' => $exception]);
+            $this->log('Fail load model ' . $name, 'ERR', ['name' => $startName, 'class' => $class, 'exception' => $exception]);
 
-            throw new NotFoundException();
+            throw new NotFoundException('Not found model ' . $startName);
         }
 
-        $this->models[str_replace('_', '', ucwords($name, '_'))] = $model;
+        $this->models[str_replace('_', '', ucwords($startName, '_'))] = $model;
 
         return $model;
     }

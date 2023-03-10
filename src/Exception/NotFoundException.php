@@ -11,7 +11,9 @@ class NotFoundException extends MicroFrameworkException
 
     public function __construct(string $message = 'Object not found.')
     {
-        parent::__construct($message, 404);
+        $this->setHiddenMessage($message);
+
+        parent::__construct('Object not found.', 404);
     }
 
 }

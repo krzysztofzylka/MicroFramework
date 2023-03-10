@@ -3,9 +3,11 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Account;
 
 use Exception;
+use krzysztofzylka\DatabaseManager\Column;
 use krzysztofzylka\DatabaseManager\Condition;
 use krzysztofzylka\DatabaseManager\CreateTable;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
+use krzysztofzylka\DatabaseManager\Enum\ColumnType;
 use krzysztofzylka\DatabaseManager\Enum\DatabaseType;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Exception\UpdateException;
@@ -77,12 +79,18 @@ class Account
         }
 
         try {
+            $adminColumn = new Column();
+            $adminColumn->setName('admin');
+            $adminColumn->setType(ColumnType::tinyint, 1);
+            $adminColumn->setDefault(0);
+
             (new CreateTable())
                 ->setName('account')
                 ->addIdColumn()
                 ->addUsernameColumn()
                 ->addPasswordColumn()
                 ->addEmailColumn()
+                ->addColumn($adminColumn)
                 ->addDateCreatedColumn()
                 ->addDateModifyColumn()
                 ->execute();

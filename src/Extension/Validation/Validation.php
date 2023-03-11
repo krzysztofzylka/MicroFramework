@@ -6,7 +6,8 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Exception\ValidationException;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 
-class Validation {
+class Validation
+{
 
     private array $validation;
 
@@ -14,7 +15,8 @@ class Validation {
      * Set array validation
      * @param array $validation
      */
-    public function setValidation(array $validation) : void {
+    public function setValidation(array $validation): void
+    {
         $this->validation = $validation;
     }
 
@@ -23,7 +25,8 @@ class Validation {
      * @param ?array $data
      * @return array
      */
-    public function validate(?array $data) : array {
+    public function validate(?array $data): array
+    {
         $errors = [];
 
         foreach ($data ?? [] as $model => $modelData) {
@@ -56,7 +59,8 @@ class Validation {
      * @param array $elementValidations
      * @return ?string
      */
-    private function _validateElement(string $name, $value, array $elementValidations) : ?string {
+    private function _validateElement(string $name, $value, array $elementValidations): ?string
+    {
         foreach ($elementValidations as $elementValidationKey => $elementValidation) {
             if (is_object($elementValidation)) {
                 try {

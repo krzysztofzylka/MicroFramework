@@ -7,7 +7,8 @@ use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-class View {
+class View
+{
 
     /**
      * Twig FileSystemLoader
@@ -32,8 +33,27 @@ class View {
      * @param Controller $controller
      * @return void
      */
-    public function setController(Controller $controller) : void {
+    public function setController(Controller $controller): void
+    {
         $this->controller = $controller;
+    }
+
+    public function renderError(int $code, Exception $exception, string $name = 'mf_error'): string
+    {
+        $hiddenMessage = false;
+
+        if (method_exists($exception, 'getHiddenMessage')) {
+            $hiddenMessage = $exception->getHiddenMessage();
+        }
+
+        return $this->render(
+            $name,
+            [
+                'code' => $code ?? 500,
+                'debug' => Kernel::getConfig()->debug ? var_export($exception, true) : false,
+                'hiddenMessage' => $hiddenMessage
+            ]
+        );
     }
 
     /**
@@ -43,7 +63,8 @@ class View {
      * @return string
      * @throws ViewException
      */
-    public function render(string $name, array $variables = []) : string {
+    public function render(string $name, array $variables = []): string
+    {
         try {
             $globalVariables = [
                 'view' => $this,
@@ -51,12 +72,22 @@ class View {
             ];
 
             if (isset($this->controller)) {
-                $name = $this->controller->name . DIRECTORY_SEPARATOR . $name;
+                if (!str_starts_with($name, '/')) {
+                    $name = $this->controller->name . DIRECTORY_SEPARATOR . $name;
+                } else {
+                    $name = substr($name, 1);
+                }
+
                 $globalVariables['controller'] = $this->controller;
             }
 
             $nameExplode = explode('/', $name);
             $globalVariables['name'] = end($nameExplode);
+
+            if (isset($this->controller->params['isAdminPanel']) && $this->controller->params['isAdminPanel']) {
+                View::$filesystemLoader->prependPath(Kernel::getPath('pa_view'));
+                View::$filesystemLoader->prependPath(__DIR__ . '/AdminPanel/view');
+            }
 
             if (!isset(View::$environment) || !isset(View::$filesystemLoader)) {
                 Kernel::initViewVariables();

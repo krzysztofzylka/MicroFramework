@@ -3,9 +3,11 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Account;
 
 use Exception;
+use krzysztofzylka\DatabaseManager\Column;
 use krzysztofzylka\DatabaseManager\Condition;
 use krzysztofzylka\DatabaseManager\CreateTable;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
+use krzysztofzylka\DatabaseManager\Enum\ColumnType;
 use krzysztofzylka\DatabaseManager\Enum\DatabaseType;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Exception\UpdateException;
@@ -22,33 +24,32 @@ use krzysztofzylka\SimpleLibraries\Library\Session;
  * Account extension
  * @package Extension
  */
-class Account {
-
-    private static Table $tableInstance;
+class Account
+{
 
     /**
      * Session name
      * @var string
      */
     public static string $sessionName = 'accountId';
-
     /**
      * Account id
      * @var ?int
      */
     public static ?int $accountId = null;
-
     /**
      * Account data
      * @var ?array
      */
     public static ?array $account = null;
+    private static Table $tableInstance;
 
     /**
      * Constructor
      * @throws DatabaseException
      */
-    public function __construct() {
+    public function __construct()
+    {
         if (!isset(self::$tableInstance)) {
             self::$tableInstance = (new Table())->setName('account');
         }
@@ -67,43 +68,29 @@ class Account {
     }
 
     /**
-     * User is logged
-     * @return bool
-     */
-    public static function isLogged() : bool {
-        return Session::exists(self::$sessionName) && is_int(Session::get(self::$sessionName));
-    }
-
-    /**
-     * Get account data
-     * @param int $id
-     * @return array
-     */
-    public static function getAccountData(int $id) : array {
-        try {
-            return self::$tableInstance->find((new Condition())->where('id', $id));
-        } catch (Exception) {
-            return [];
-        }
-    }
-
-    /**
      * Install extension
      * @return bool
      * @throws DatabaseException
      */
-    public function install() : bool {
+    public function install(): bool
+    {
         if (!isset(DatabaseManager::$connection)) {
             return false;
         }
 
         try {
+            $adminColumn = new Column();
+            $adminColumn->setName('admin');
+            $adminColumn->setType(ColumnType::tinyint, 1);
+            $adminColumn->setDefault(0);
+
             (new CreateTable())
                 ->setName('account')
                 ->addIdColumn()
                 ->addUsernameColumn()
                 ->addPasswordColumn()
                 ->addEmailColumn()
+                ->addColumn($adminColumn)
                 ->addDateCreatedColumn()
                 ->addDateModifyColumn()
                 ->execute();
@@ -117,6 +104,29 @@ class Account {
     }
 
     /**
+     * User is logged
+     * @return bool
+     */
+    public static function isLogged(): bool
+    {
+        return Session::exists(self::$sessionName) && is_int(Session::get(self::$sessionName));
+    }
+
+    /**
+     * Get account data
+     * @param int $id
+     * @return array
+     */
+    public static function getAccountData(int $id): array
+    {
+        try {
+            return self::$tableInstance->find((new Condition())->where('id', $id));
+        } catch (Exception) {
+            return [];
+        }
+    }
+
+    /**
      * @param string $username
      * @param string $password
      * @param ?string $email
@@ -125,7 +135,8 @@ class Account {
      * @throws DatabaseException
      * @throws MicroFrameworkException
      */
-    public function registerUser(string $username, string $password, ?string $email = null) : bool {
+    public function registerUser(string $username, string $password, ?string $email = null): bool
+    {
         if (!isset(DatabaseManager::$connection)) {
             return false;
         }
@@ -155,7 +166,8 @@ class Account {
      * @throws DatabaseException
      * @throws MicroFrameworkException
      */
-    public function changePassword(string $accountId, string $newPassword) : bool {
+    public function changePassword(string $accountId, string $newPassword): bool
+    {
         if (!isset(DatabaseManager::$connection)) {
             return false;
         }
@@ -178,7 +190,8 @@ class Account {
      * @throws DatabaseException
      * @throws MicroFrameworkException
      */
-    public function login(string $username, string $password) : bool {
+    public function login(string $username, string $password): bool
+    {
         if (!isset(DatabaseManager::$connection)) {
             return false;
         }
@@ -214,7 +227,8 @@ class Account {
      * Logout user
      * @return void
      */
-    public function logout() : void {
+    public function logout(): void
+    {
         Session::delete(self::$sessionName);
 
         self::$accountId = null;

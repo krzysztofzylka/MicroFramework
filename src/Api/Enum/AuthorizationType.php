@@ -6,7 +6,8 @@ namespace Krzysztofzylka\MicroFramework\Api\Enum;
  * Api authorization types
  * @package Api
  */
-enum AuthorizationType {
+enum AuthorizationType
+{
 
     /**
      * Basic auth

@@ -13,8 +13,14 @@ class email extends Controller
     {
         try {
             $email = new \Krzysztofzylka\MicroFramework\Extension\Email\Email();
+
             /** @var SendEmail $newEmail */
             $newEmail = $email->newEmail();
+
+            if (!$newEmail) {
+                throw new Exception('EMail extension is disabled');
+            }
+
             $newEmail->addAddress('address@email', 'email');
 
             if ($newEmail->send('test', 'testmail')) {
@@ -23,7 +29,7 @@ class email extends Controller
                 echo 'fail';
             }
         } catch (Exception $exception) {
-            var_dump($exception);
+            echo $exception->getMessage();
         }
     }
 

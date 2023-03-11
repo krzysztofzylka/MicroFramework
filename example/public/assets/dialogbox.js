@@ -151,21 +151,21 @@ $.fn.ajaxlink = function (event, data = null) {
                     } else {
                         let viewConfig = $(this).ajaxlink('_getConfig', result);
 
-                        if (typeof viewConfig !== 'object') {
-                            VanillaToasts.create({
-                                text: 'Wystąpił błąd podczas pobrania konfiguracji (objekt)',
-                                type: 'error',
-                                title: 'Błąd',
-                                timeout: 3000
-                            });
-                        } else if (!('layout' in viewConfig)) {
-                            VanillaToasts.create({
-                                text: 'Wystąpił błąd podczas pobrania konfiguracji (szablon)',
-                                type: 'error',
-                                title: 'Błąd',
-                                timeout: 3000
-                            });
-                        }
+                        // if (typeof viewConfig !== 'object') {
+                        //     VanillaToasts.create({
+                        //         text: 'Wystąpił błąd podczas pobrania konfiguracji (objekt)',
+                        //         type: 'error',
+                        //         title: 'Błąd',
+                        //         timeout: 3000
+                        //     });
+                        // } else if (!('layout' in viewConfig)) {
+                        //     VanillaToasts.create({
+                        //         text: 'Wystąpił błąd podczas pobrania konfiguracji (szablon)',
+                        //         type: 'error',
+                        //         title: 'Błąd',
+                        //         timeout: 3000
+                        //     });
+                        // }
 
                         switch (viewConfig.layout) {
                             case 'ajax':
@@ -176,6 +176,7 @@ $.fn.ajaxlink = function (event, data = null) {
                                 }
 
                                 return;
+                            default:
                             case 'dialogbox':
                                 $(document).dialogbox({
                                     content: result,
@@ -397,15 +398,14 @@ $(document).ready(function () {
     $(document).on('click', '.ajaxlink', function (e) {
         e.preventDefault();
 
-        let path = $('html').attr('data-path'),
-            url = $(this).attr('href');
+        let path = $(this).attr('href');
 
-        if (typeof url === "undefined") {
+        if (typeof path === "undefined") {
             return false;
         }
 
 
-        $(this).ajaxlink('main', {href: (path + url).replace('//', '/'), ajaxSelector: $(this).attr('data-ajaxSelector')});
+        $(this).ajaxlink('main', {href: path.replace('//', '/'), ajaxSelector: $(this).attr('data-ajaxSelector')});
     });
 
     $(document).on('click', 'a:not(.ajaxlink):not([href="#"]):not([href=""])', function (e) {

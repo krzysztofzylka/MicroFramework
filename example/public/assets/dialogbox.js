@@ -408,23 +408,6 @@ $(document).ready(function () {
         $(this).ajaxlink('main', {href: path.replace('//', '/'), ajaxSelector: $(this).attr('data-ajaxSelector')});
     });
 
-    $(document).on('click', 'a:not(.ajaxlink):not([href="#"]):not([href=""])', function (e) {
-        e.preventDefault();
-
-        let path = $('html').attr('data-path'),
-            url = $(this).attr('href');
-
-        if (typeof url === "undefined") {
-            return false;
-        } else if (url[0] !== '/') {
-            window.location.href = url;
-
-            return false;
-        }
-
-        window.location.href = (path + url).replace('//', '/');
-    });
-
     $(document).on('submit', 'form[action]:not(.disableAjax)', function (event) {
         event.preventDefault();
         event.stopImmediatePropagation();

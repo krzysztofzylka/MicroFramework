@@ -1,6 +1,6 @@
 <?php
 
-namespace controller;
+namespace app\controller;
 
 use Exception;
 use Krzysztofzylka\MicroFramework\Controller;

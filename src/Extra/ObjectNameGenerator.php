@@ -16,7 +16,7 @@ class ObjectNameGenerator
      */
     public static function controller(string $controllerName): string
     {
-        return '\controller\\' . $controllerName;
+        return '\app\controller\\' . $controllerName;
     }
 
     /**
@@ -36,7 +36,7 @@ class ObjectNameGenerator
      */
     public static function controllerPaLocal(string $controllerName): string
     {
-        return '\pa_controller\\' . $controllerName;
+        return '\admin_panel\controller\\' . $controllerName;
     }
 
     /**
@@ -46,7 +46,7 @@ class ObjectNameGenerator
      */
     public static function controllerApi(string $controllerName): string
     {
-        return '\api_controller\\' . $controllerName;
+        return '\api\controller\\' . $controllerName;
     }
 
     /**
@@ -56,7 +56,7 @@ class ObjectNameGenerator
      */
     public static function model(string $modelName): string
     {
-        return '\model\\' . $modelName;
+        return '\app\model\\' . $modelName;
     }
 
     /**
@@ -66,9 +66,17 @@ class ObjectNameGenerator
      */
     public static function modelPa(string $modelName): string
     {
-        $modelName = lcfirst(substr($modelName, 2));
-
         return '\Krzysztofzylka\MicroFramework\AdminPanel\model\\' . $modelName;
+    }
+
+    /**
+     * Generate admin panel local model class name
+     * @param string $modelName
+     * @return string
+     */
+    public static function modelPaLocal(string $modelName): string
+    {
+        return '\admin_panel\model\\' . $modelName;
     }
 
     /**

@@ -11,7 +11,7 @@ class account extends Controller
 
     public function index(): void
     {
-        $this->table->model = $this->loadModel('paAccount');
+        $this->table->model = $this->loadModel('account');
         $this->table->columns = [
             'account.id' => [
                 'title' => 'ID',

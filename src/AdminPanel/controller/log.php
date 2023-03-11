@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework\AdminPanel\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
+use Krzysztofzylka\MicroFramework\Extension\Table\Extra\Cell;
 
 class log extends Controller
 {
@@ -11,7 +12,7 @@ class log extends Controller
     {
         $logs = [];
 
-        $logLimit = 1000;
+        $logLimit = 200;
 
 
         foreach (array_reverse($this->loadModel('paLog')->getList()) as $log) {
@@ -40,7 +41,7 @@ class log extends Controller
         $this->table->columns = [
             'log.logLineNumber' => [
                 'title' => 'Lp.',
-                'width' => 180
+                'width' => 150
             ],
             'log.datetime' => [
                 'title' => 'Date',
@@ -55,8 +56,6 @@ class log extends Controller
             ]
         ];
         $this->loadView(['table' => $this->table->render()]);
-
-//        dump($logs);
     }
 
 }

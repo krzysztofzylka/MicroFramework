@@ -173,10 +173,6 @@ class Table
      */
     private function query(): void
     {
-        if (!isset($this->model)) {
-            return;
-        }
-
         $this->getSession();
 
         if (isset($this->session['search']) || isset($this->data['search'])) {
@@ -185,7 +181,7 @@ class Table
                 : $this->data['search'] ?? '';
         }
 
-        if ($this->activeSearch && $this->search) {
+        if (isset($this->model) && $this->activeSearch && $this->search) {
             $this->haveCondition = true;
             $orCondition = new Condition();
 
@@ -200,35 +196,37 @@ class Table
             $this->page = (int)$this->session['page'];
         }
 
-        $conditions = $this->haveCondition ? $this->conditions : null;
-        $this->pages = floor($this->model->findCount($conditions) / $this->paginationLimit);
+        if (isset($this->model)) {
+            $conditions = $this->haveCondition ? $this->conditions : null;
+            $this->pages = floor($this->model->findCount($conditions) / $this->paginationLimit);
 
-        if ($this->activePagination) {
-            if (isset($this->session['page']) || isset($this->data['page'])) {
-                if (isset($this->data['page'])) {
-                    if ($this->data['page'] === "«") {
-                        $this->page--;
-                    } elseif ($this->data['page'] === "»") {
-                        $this->page++;
-                    } else {
-                        $this->page = (int)$this->data['page'];
+            if ($this->activePagination) {
+                if (isset($this->session['page']) || isset($this->data['page'])) {
+                    if (isset($this->data['page'])) {
+                        if ($this->data['page'] === "«") {
+                            $this->page--;
+                        } elseif ($this->data['page'] === "»") {
+                            $this->page++;
+                        } else {
+                            $this->page = (int)$this->data['page'];
+                        }
                     }
                 }
+
+                if ($this->page < 1) {
+                    $this->page = 1;
+                } elseif ($this->page > $this->pages) {
+                    $this->page = $this->pages;
+                }
+
+                $page = ($this->page - 1);
+
+                if ($this->page < 1) {
+                    $page = 0;
+                }
+
+                $this->limit = ($page * $this->paginationLimit) . ',' . $this->paginationLimit;
             }
-
-            if ($this->page < 1) {
-                $this->page = 1;
-            } elseif ($this->page > $this->pages) {
-                $this->page = $this->pages;
-            }
-
-            $page = ($this->page - 1);
-
-            if ($this->page < 1) {
-                $page = 0;
-            }
-
-            $this->limit = ($page * $this->paginationLimit) . ',' . $this->paginationLimit;
         }
 
         $this->saveQuery();

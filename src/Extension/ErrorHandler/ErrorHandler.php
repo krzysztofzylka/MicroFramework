@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework\Extension\ErrorHandler;
 
 use DateTime;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
+use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\Client;
 
@@ -34,7 +35,7 @@ class ErrorHandler
         }
 
         if (!str_starts_with($file['file'] ?? $file, 'xdebug:/')) {
-            self::log(
+            Log::log(
                 $message,
                 'E_ERROR',
                 [
@@ -50,40 +51,6 @@ class ErrorHandler
         if (Kernel::getConfig()->debug) {
             echo $message;
         }
-    }
-
-    /**
-     * Write log
-     * @param string $message
-     * @param string $level log level, default INFO
-     * @param array $content
-     * @return void
-     */
-    private static function log(string $message, string $level = 'INFO', array $content = []): void
-    {
-        $backtrace = debug_backtrace()[0];
-        $logPath = Kernel::getPath('logs') . '/' . date('Y_m_d') . '.log.json';
-        $logContent = [
-            'datetime' => DateTime::createFromFormat('U.u', sprintf('%.f', microtime(true)))->format('Y-m-d H:i:s.u'),
-            'level' => $level,
-            'message' => $message,
-            'content' => $content,
-            'ip' => Client::getIP(),
-            'file' => $backtrace['file'],
-            'class' => $backtrace['class'],
-            'function' => $backtrace['function'],
-            'line' => $backtrace['line'],
-            'accountId' => Account::$accountId,
-            'get' => $_GET
-        ];
-
-        $jsonLogData = json_encode($logContent);
-
-        if (empty(trim($jsonLogData))) {
-            return;
-        }
-
-        file_put_contents($logPath, $jsonLogData . PHP_EOL, FILE_APPEND);
     }
 
     /**
@@ -111,7 +78,7 @@ class ErrorHandler
         ob_end_clean();
 
         if (!str_starts_with($lastError['file'], 'xdebug:/')) {
-            self::log(
+            Log::log(
                 $lastError['message'],
                 'E_ERROR',
                 [

@@ -17,12 +17,10 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
+use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\File;
 use krzysztofzylka\SimpleLibraries\Library\Request;
-use Twig\Environment;
 use Twig\Error\LoaderError;
-use Twig\Extension\DebugExtension;
-use Twig\Loader\FilesystemLoader;
 
 /**
  * Kernel
@@ -63,6 +61,7 @@ class Kernel
      * Init project
      * @param string $projectPath
      * @return void
+     * @throws SimpleLibraryException
      */
     public static function create(string $projectPath): void
     {
@@ -203,15 +202,12 @@ class Kernel
      * @return void
      * @throws MicroFrameworkException
      * @throws NotFoundException
-     * @throws LoaderError
      */
     public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = [], array $params = []): void
     {
         if (!self::$projectPath) {
             throw new MicroFrameworkException('Project is not defined', 500);
         }
-
-        self::initViewVariables();
 
         if (!is_null($controllerName)) {
             self::loadController(
@@ -224,19 +220,6 @@ class Kernel
                 ]
             );
         }
-    }
-
-    /**
-     * init view variables
-     * @throws LoaderError
-     */
-    public static function initViewVariables(): void
-    {
-        View::$filesystemLoader = new FilesystemLoader(self::getPath('view'));
-        View::$filesystemLoader->addPath(__DIR__ . '/Twig/template');
-        View::$filesystemLoader->addPath(__DIR__ . '/Twig/email_template');
-        View::$environment = new Environment(View::$filesystemLoader, ['debug' => true]);
-        View::$environment->addExtension(new DebugExtension());
     }
 
     /**

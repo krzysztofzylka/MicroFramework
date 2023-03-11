@@ -137,7 +137,7 @@ class Controller
         $view = new View();
         $view->setController($this);
 
-        echo $view->render($name ?? $this->method, $variables);
+        echo $view->render($variables, $name ?? $this->method);
     }
 
     /**

@@ -196,4 +196,12 @@ class ConfigDefault
      */
     public string $emailFromName = '';
 
+    /** View */
+
+    /**
+     * Disable view cache
+     * @var bool
+     */
+    public bool $viewDisableCache = true;
+
 }

@@ -2,11 +2,6 @@
 
 namespace Krzysztofzylka\MicroFramework\Trait;
 
-use DateTime;
-use Krzysztofzylka\MicroFramework\Extension\Account\Account;
-use Krzysztofzylka\MicroFramework\Kernel;
-use krzysztofzylka\SimpleLibraries\Library\Client;
-
 /**
  * Logs
  * @package Trait

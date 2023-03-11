@@ -2,11 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\ErrorHandler;
 
-use DateTime;
-use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Kernel;
-use krzysztofzylka\SimpleLibraries\Library\Client;
 
 class ErrorHandler
 {

@@ -77,7 +77,13 @@ class ErrorHandler
             'get' => $_GET
         ];
 
-        file_put_contents($logPath, json_encode($logContent) . PHP_EOL, FILE_APPEND);
+        $jsonLogData = json_encode($logContent);
+
+        if (empty(trim($jsonLogData))) {
+            return;
+        }
+
+        file_put_contents($logPath, $jsonLogData . PHP_EOL, FILE_APPEND);
     }
 
     /**

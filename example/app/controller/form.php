@@ -1,6 +1,6 @@
 <?php
 
-namespace controller;
+namespace app\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\ValidationException;

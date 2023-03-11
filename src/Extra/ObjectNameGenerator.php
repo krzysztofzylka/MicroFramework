@@ -16,7 +16,7 @@ class ObjectNameGenerator
      */
     public static function controller(string $controllerName): string
     {
-        return '\controller\\' . $controllerName;
+        return '\app\controller\\' . $controllerName;
     }
 
     /**
@@ -36,7 +36,7 @@ class ObjectNameGenerator
      */
     public static function controllerPaLocal(string $controllerName): string
     {
-        return '\pa_controller\\' . $controllerName;
+        return '\admin_panel\controller\\' . $controllerName;
     }
 
     /**
@@ -46,7 +46,7 @@ class ObjectNameGenerator
      */
     public static function controllerApi(string $controllerName): string
     {
-        return '\api_controller\\' . $controllerName;
+        return '\api\controller\\' . $controllerName;
     }
 
     /**
@@ -56,7 +56,7 @@ class ObjectNameGenerator
      */
     public static function model(string $modelName): string
     {
-        return '\model\\' . $modelName;
+        return '\app\model\\' . $modelName;
     }
 
     /**

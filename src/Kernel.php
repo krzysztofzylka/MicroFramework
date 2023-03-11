@@ -68,12 +68,12 @@ class Kernel
     {
         self::$projectPath = $projectPath;
         self::$paths['public'] = realpath($projectPath . '/public');
-        self::$paths['controller'] = $projectPath . '/controller';
-        self::$paths['api_controller'] = $projectPath . '/api_controller';
-        self::$paths['pa_controller'] = $projectPath . '/pa_controller';
-        self::$paths['model'] = $projectPath . '/model';
-        self::$paths['view'] = $projectPath . '/view';
-        self::$paths['pa_view'] = $projectPath . '/pa_view';
+        self::$paths['controller'] = $projectPath . '/app/controller';
+        self::$paths['model'] = $projectPath . '/app/model';
+        self::$paths['view'] = $projectPath . '/app/view';
+        self::$paths['api_controller'] = $projectPath . '/api/controller';
+        self::$paths['pa_view'] = $projectPath . '/admin_panel/view';
+        self::$paths['pa_controller'] = $projectPath . '/admin_panel/controller';
         self::$paths['storage'] = $projectPath . '/storage';
         self::$paths['logs'] = self::$paths['storage'] . '/logs';
         self::$paths['database_updater'] = $projectPath . '/database_updater';
@@ -128,6 +128,12 @@ class Kernel
             $arguments = array_slice($explode, 3);
 
             self::init($controller, $method, $arguments, ['api' => true]);
+        } elseif (self::$config->api && $controller === self::$config->adminPanelUri) {
+            $controller = $explode[1];
+            $method = $explode[2] ?? self::getConfig()->defaultMethod;
+            $arguments = array_slice($explode, 3);
+
+            self::init($controller, $method, $arguments, ['admin_panel' => true]);
         } else {
             $method = $explode[1] ?? self::getConfig()->defaultMethod;
             $arguments = array_slice($explode, 2);
@@ -175,7 +181,7 @@ class Kernel
      */
     public static function getConfig(): object
     {
-        return self::$config;
+        return self::$config ?? new ConfigDefault();
     }
 
     /**
@@ -208,14 +214,15 @@ class Kernel
         self::initViewVariables();
 
         if (!is_null($controllerName)) {
-            $isAdminPanel = false;
-
-            if (str_starts_with($controllerName, 'pa')) {
-                $isAdminPanel = true;
-                $controllerName = lcfirst(substr($controllerName, 2));
-            }
-
-            self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false, 'isAdminPanel' => $isAdminPanel]);
+            self::loadController(
+                $controllerName,
+                $controllerMethod,
+                $controllerArguments,
+                [
+                    'api' => $params['api'] ?? false,
+                    'admin_panel' => $params['admin_panel'] ?? false
+                ]
+            );
         }
     }
 
@@ -259,7 +266,7 @@ class Kernel
      */
     public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []): Controller
     {
-        if (isset($params['isAdminPanel']) && $params['isAdminPanel']) {
+        if (isset($params['admin_panel']) && $params['admin_panel']) {
             if (!self::getConfig()->adminPanel) {
                 throw new NotFoundException('Admin panel is disabled');
             } elseif (!self::getConfig()->authControl) {

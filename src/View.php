@@ -68,7 +68,8 @@ class View
         try {
             $globalVariables = [
                 'view' => $this,
-                'variables' => $variables
+                'variables' => $variables,
+                'config' => (array)Kernel::getConfig()
             ];
 
             if (isset($this->controller)) {
@@ -84,7 +85,7 @@ class View
             $nameExplode = explode('/', $name);
             $globalVariables['name'] = end($nameExplode);
 
-            if (isset($this->controller->params['isAdminPanel']) && $this->controller->params['isAdminPanel']) {
+            if (isset($this->controller->params['admin_panel']) && $this->controller->params['admin_panel']) {
                 View::$filesystemLoader->prependPath(Kernel::getPath('pa_view'));
                 View::$filesystemLoader->prependPath(__DIR__ . '/AdminPanel/view');
             }

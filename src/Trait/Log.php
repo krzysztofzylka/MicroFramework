@@ -38,8 +38,13 @@ trait Log
             'accountId' => Account::$accountId,
             'get' => $_GET
         ];
+        $jsonLogData = json_encode($logContent);
 
-        return (bool)file_put_contents($logPath, json_encode($logContent) . PHP_EOL, FILE_APPEND);
+        if (empty(trim($jsonLogData))) {
+            return false;
+        }
+
+        return (bool)file_put_contents($logPath, $jsonLogData . PHP_EOL, FILE_APPEND);
     }
 
 }

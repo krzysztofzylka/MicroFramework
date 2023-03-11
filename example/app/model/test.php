@@ -1,8 +1,8 @@
 <?php
 
-namespace model;
+namespace app\model;
 
 use Krzysztofzylka\MicroFramework\Model;
 
-class example extends Model {
+class test extends Model {
 }

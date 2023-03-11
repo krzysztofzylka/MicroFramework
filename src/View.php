@@ -42,16 +42,6 @@ class View
     private string $name;
 
     /**
-     * Set controller object
-     * @param Controller $controller
-     * @return void
-     */
-    public function setController(Controller $controller): void
-    {
-        $this->controller = $controller;
-    }
-
-    /**
      * Init view
      * @throws ViewException
      */
@@ -68,24 +58,43 @@ class View
         }
     }
 
-//    public function renderError(int $code, Exception $exception, string $name = 'mf_error'): string
-//    {
-//        $hiddenMessage = false;
-//
-//        if (method_exists($exception, 'getHiddenMessage')) {
-//            $hiddenMessage = $exception->getHiddenMessage();
-//        }
-//
-//        return $this->render(
-//            $name,
-//            [
-//                'code' => $code ?? 500,
-//                'debug' => Kernel::getConfig()->debug ? var_export($exception, true) : false,
-//                'hiddenMessage' => $hiddenMessage
-//            ]
-//        );
-//    }
-//
+    /**
+     * Set controller object
+     * @param Controller $controller
+     * @return void
+     */
+    public function setController(Controller $controller): void
+    {
+        $this->controller = $controller;
+    }
+
+    /**
+     * Render error
+     * @param int $code
+     * @param Exception $exception
+     * @param string $name
+     * @return string
+     * @throws ViewException
+     */
+    public function renderError(int $code, Exception $exception, string $name = 'mf_error'): string
+    {
+        $hiddenMessage = false;
+
+        if (method_exists($exception, 'getHiddenMessage')) {
+            $hiddenMessage = $exception->getHiddenMessage();
+        }
+
+        return $this->render(
+            [
+                'code' => $code ?? 500,
+                'debug' => Kernel::getConfig()->debug ? var_export($exception, true) : false,
+                'hiddenMessage' => $hiddenMessage
+            ],
+            $name
+        );
+    }
+
+
     /**
      * Load view
      * @param array $variables

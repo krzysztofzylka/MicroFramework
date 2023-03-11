@@ -223,20 +223,6 @@ class Kernel
     }
 
     /**
-     * Get path
-     * @param string $name controller / model / view
-     * @return string|false
-     */
-    public static function getPath(string $name): string|false
-    {
-        if (!in_array($name, array_keys(self::$paths))) {
-            return false;
-        }
-
-        return self::$paths[$name];
-    }
-
-    /**
      * Load controller
      * @param string $name controller name
      * @param string $method method
@@ -311,6 +297,20 @@ class Kernel
         }
 
         return Request::getAllPostEscapeData();
+    }
+
+    /**
+     * Get path
+     * @param string $name controller / model / view
+     * @return string|false
+     */
+    public static function getPath(string $name): string|false
+    {
+        if (!in_array($name, array_keys(self::$paths))) {
+            return false;
+        }
+
+        return self::$paths[$name];
     }
 
     /**

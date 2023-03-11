@@ -41,9 +41,11 @@ class Kernel
         'public' => null,
         'assets' => null,
         'controller' => null,
-        'api_controller' => null,
         'model' => null,
         'view' => null,
+        'api_controller' => null,
+        'pa_controller' => null,
+        'pa_model' => null,
         'pa_view' => null,
         'storage' => null,
         'logs' => null,
@@ -72,6 +74,7 @@ class Kernel
         self::$paths['api_controller'] = $projectPath . '/api/controller';
         self::$paths['pa_view'] = $projectPath . '/admin_panel/view';
         self::$paths['pa_controller'] = $projectPath . '/admin_panel/controller';
+        self::$paths['pa_model'] = $projectPath . '/admin_panel/model';
         self::$paths['storage'] = $projectPath . '/storage';
         self::$paths['logs'] = self::$paths['storage'] . '/logs';
         self::$paths['database_updater'] = $projectPath . '/database_updater';

@@ -27,19 +27,19 @@ class View
      * Controller
      * @var ?Controller
      */
-    private ?Controller $controller;
+    private ?Controller $controller = null;
 
     /**
      * Variables
      * @var array
      */
-    private array $variables;
+    private array $variables = [];
 
     /**
      * Variable name
-     * @var string
+     * @var ?string
      */
-    private string $name;
+    private ?string $name = null;
 
     /**
      * Init view

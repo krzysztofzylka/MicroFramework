@@ -97,7 +97,7 @@ class Controller
 
         $startName = $name;
 
-        if (str_starts_with($name, 'pa')) {
+        if (isset($this->params['admin_panel']) && $this->params['admin_panel']) {
             $class = ObjectNameGenerator::modelPa($name);
         } else {
             $class = ObjectNameGenerator::model($name);

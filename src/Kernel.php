@@ -93,7 +93,6 @@ class Kernel
      * Run framework
      * @return void
      * @throws ConnectException
-     * @throws LoaderError
      * @throws MicroFrameworkException
      * @throws NotFoundException
      */
@@ -255,6 +254,10 @@ class Kernel
             $class = ObjectNameGenerator::controllerApi($name);
         } else {
             $class = ObjectNameGenerator::controller($name);
+        }
+
+        if (!class_exists($class)) {
+            throw new NotFoundException('Controller ' . $name . ' not exists');
         }
 
         AuthControl::run($class, $method, isset($params['api']) && $params['api']);

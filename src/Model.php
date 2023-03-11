@@ -2,9 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
-use Exception;
 use krzysztofzylka\DatabaseManager\Condition;
-use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Enum\BindType;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Table;
@@ -12,13 +10,13 @@ use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Validation\Validation;
-use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 
 class Model
 {
 
     use Log;
+    use Trait\Model;
 
     /**
      * Use table
@@ -63,22 +61,10 @@ class Model
     public ?array $data = null;
 
     /**
-     * Models
-     * @var array
-     */
-    public array $models = [];
-
-    /**
      * Validation errors
      * @var ?array
      */
     public ?array $validationErrors = [];
-
-    /**
-     * Parent model
-     * @var ?Model
-     */
-    public ?Model $parentModel = null;
 
     /**
      * Set ID
@@ -468,55 +454,6 @@ class Model
     public function validations(): array
     {
         return [];
-    }
-
-    /**
-     * Load model
-     * @param string ...$name
-     * @return Model
-     * @throws NotFoundException
-     */
-    public function loadModel(string ...$name): Model
-    {
-        if (count($name) > 1) {
-            foreach ($name as $singleName) {
-                $lastModel = $this->loadModel($singleName);
-            }
-
-            return $lastModel;
-        } else {
-            $name = $name[0];
-        }
-
-        $startName = $name;
-
-        if (str_starts_with($name, 'pa')) {
-            $class = ObjectNameGenerator::modelPa($name);
-        } else {
-            $class = ObjectNameGenerator::model($name);
-        }
-
-        try {
-            /** @var Model $model */
-            $model = new $class();
-            $model->name = $name;
-            $model->controller = $this->controller;
-            $model->data = $this->data;
-            $model->parentModel = $this;
-
-            if ($model->useTable && isset(DatabaseManager::$connection)) {
-                $model->tableInstance = new Table($model->tableName ?? $startName);
-                $model->transactionInstance = new Transaction();
-            }
-        } catch (Exception $exception) {
-            $this->log('Fail load model ' . $name, 'ERR', ['name' => $startName, 'class' => $class, 'exception' => $exception]);
-
-            throw new NotFoundException('Not found model ' . $startName);
-        }
-
-        $this->models[str_replace('_', '', ucwords($startName, '_'))] = $model;
-
-        return $model;
     }
 
     /**

@@ -66,9 +66,17 @@ class ObjectNameGenerator
      */
     public static function modelPa(string $modelName): string
     {
-        $modelName = lcfirst(substr($modelName, 2));
-
         return '\Krzysztofzylka\MicroFramework\AdminPanel\model\\' . $modelName;
+    }
+
+    /**
+     * Generate admin panel local model class name
+     * @param string $modelName
+     * @return string
+     */
+    public static function modelPaLocal(string $modelName): string
+    {
+        return '\admin_panel\model\\' . $modelName;
     }
 
     /**

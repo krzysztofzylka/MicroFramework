@@ -156,6 +156,7 @@ class Kernel
      * Connect to database
      * @return void
      * @throws ConnectException
+     * @throws DatabaseException
      */
     public static function configDatabaseConnect(): void
     {
@@ -170,8 +171,12 @@ class Kernel
                 $databaseConnect->setDebug(true);
             }
 
-            $databaseManager = new DatabaseManager();
-            $databaseManager->connect($databaseConnect);
+            try {
+                $databaseManager = new DatabaseManager();
+                $databaseManager->connect($databaseConnect);
+            } catch (ConnectException $exception) {
+                throw new DatabaseException($exception->getHiddenMessage());
+            }
         }
     }
 

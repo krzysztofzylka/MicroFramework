@@ -22,6 +22,7 @@ try {
     $view = new View();
 
     echo $view->renderError($exception->getCode() ?? 500, $exception);
+    exit;
 }
 
 if (Kernel::getConfig()->debug) {

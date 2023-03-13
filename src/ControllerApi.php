@@ -26,7 +26,7 @@ class ControllerApi extends Controller
      * Authorization
      * @var bool
      */
-    public bool $auth = false;
+    public bool $auth = true;
 
     /**
      * Authorization type

@@ -6,7 +6,8 @@ use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Exception\AccountException;
 
-class AccountRememberField {
+class AccountRememberField
+{
 
     /**
      * Database table
@@ -54,6 +55,21 @@ class AccountRememberField {
     }
 
     /**
+     * Get table instance
+     * @return Table
+     */
+    private function getTable(): Table
+    {
+        if (isset($this->table)) {
+            return $this->table;
+        }
+
+        $this->table = new Table('account_remember_field');
+
+        return $this->table;
+    }
+
+    /**
      * Get remember fields
      * @param string $name name
      * @return false|string
@@ -79,21 +95,6 @@ class AccountRememberField {
         } catch (DatabaseManagerException $exception) {
             throw new AccountException('Fail get remember fields: ' . $exception->getHiddenMessage());
         }
-    }
-
-    /**
-     * Get table instance
-     * @return Table
-     */
-    private function getTable(): Table
-    {
-        if (isset($this->table)) {
-            return $this->table;
-        }
-
-        $this->table = new Table('account_remember_field');
-
-        return $this->table;
     }
 
 }

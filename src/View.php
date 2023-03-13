@@ -49,8 +49,7 @@ class View
     {
         try {
             $this->filesystemLoader = new FilesystemLoader(Kernel::getPath('view'));
-            $this->filesystemLoader->addPath(__DIR__ . '/Twig/template');
-            $this->filesystemLoader->addPath(__DIR__ . '/Twig/email_template');
+            $this->filesystemLoader->addPath(__DIR__ . '/Extension/Twig/TwigFiles');
             $this->environment = new Environment($this->filesystemLoader, ['debug' => Kernel::getConfig()->debug]);
             $this->environment->addExtension(new DebugExtension());
         } catch (Exception $exception) {
@@ -76,7 +75,7 @@ class View
      * @return string
      * @throws ViewException
      */
-    public function renderError(int $code, Exception $exception, string $name = 'mf_error'): string
+    public function renderError(int $code, Exception $exception, string $name = 'MicroFramework/Layout/error'): string
     {
         $hiddenMessage = false;
 

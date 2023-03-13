@@ -92,21 +92,6 @@ class Kernel
     }
 
     /**
-     * init view variables
-     * @throws LoaderError
-     */
-    public static function initViewVariables(): void
-    {
-        View::$filesystemLoader = new FilesystemLoader(self::getPath('view'));
-        View::$filesystemLoader->addPath(__DIR__ . '/Twig/template');
-        View::$filesystemLoader->addPath(__DIR__ . '/Twig/email_template');
-        View::$filesystemLoader->addPath(__DIR__ . '/Extension/Twig/Macros');
-        View::$environment = new Environment(View::$filesystemLoader, ['debug' => true]);
-        View::$environment->addExtension(new DebugExtension());
-        View::$environment->setCache(false);
-    }
-
-    /**
      * Run framework
      * @return void
      * @throws ConnectException
@@ -336,20 +321,6 @@ class Kernel
         }
 
         return Request::getAllPostEscapeData();
-    }
-
-    /**
-     * Get path
-     * @param string $name controller / model / view
-     * @return string|false
-     */
-    public static function getPath(string $name): string|false
-    {
-        if (!in_array($name, array_keys(self::$paths))) {
-            return false;
-        }
-
-        return self::$paths[$name];
     }
 
     /**

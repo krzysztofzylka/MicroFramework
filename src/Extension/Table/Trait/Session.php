@@ -2,6 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Table\Trait;
 
+use Krzysztofzylka\MicroFramework\Extension\Account\Account;
+
 trait Session
 {
 
@@ -12,8 +14,14 @@ trait Session
      */
     private function getSession(): mixed
     {
+        $name = 'Session::Table::' . $this->id;
+
         if (!$this->session) {
-            $this->session = \krzysztofzylka\SimpleLibraries\Library\Session::get('table_' . $this->id . '_parameters');
+            $this->session = \krzysztofzylka\SimpleLibraries\Library\Session::get($name);
+
+            if (!$this->session) {
+                $this->session = json_decode(Account::$accountRememberField->get($name), true);
+            }
         }
 
         return $this->session;
@@ -26,7 +34,10 @@ trait Session
      */
     private function saveSession(array $data): void
     {
-        \krzysztofzylka\SimpleLibraries\Library\Session::set('table_' . $this->id . '_parameters', $data);
+        $name = 'Session::Table::' . $this->id;
+
+        \krzysztofzylka\SimpleLibraries\Library\Session::set($name, $data);
+        Account::$accountRememberField->set($name, json_encode($data));
     }
 
 }

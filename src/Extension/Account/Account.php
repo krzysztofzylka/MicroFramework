@@ -32,16 +32,29 @@ class Account
      * @var string
      */
     public static string $sessionName = 'accountId';
+
     /**
      * Account id
      * @var ?int
      */
     public static ?int $accountId = null;
+
     /**
      * Account data
      * @var ?array
      */
     public static ?array $account = null;
+
+    /**
+     * Account remember fields
+     * @var AccountRememberField
+     */
+    public static AccountRememberField $accountRememberField;
+
+    /**
+     * Table instance
+     * @var Table
+     */
     private static Table $tableInstance;
 
     /**
@@ -64,6 +77,7 @@ class Account
         if (self::isLogged()) {
             self::$accountId = (int)Session::get(self::$sessionName);
             self::$account = self::getAccountData(self::$accountId);
+            self::$accountRememberField = new AccountRememberField();
         }
     }
 

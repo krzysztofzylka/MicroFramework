@@ -19,7 +19,7 @@ trait Session
         if (!$this->session) {
             $this->session = \krzysztofzylka\SimpleLibraries\Library\Session::get($name);
 
-            if (!$this->session) {
+            if (!$this->session && isset(Account::$accountRememberField)) {
                 $this->session = json_decode(Account::$accountRememberField->get($name), true);
             }
         }
@@ -37,7 +37,10 @@ trait Session
         $name = 'Session::Table::' . $this->id;
 
         \krzysztofzylka\SimpleLibraries\Library\Session::set($name, $data);
-        Account::$accountRememberField->set($name, json_encode($data));
+
+        if (isset(Account::$accountRememberField)) {
+            Account::$accountRememberField->set($name, json_encode($data));
+        }
     }
 
 }

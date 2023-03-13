@@ -1,3 +1,4 @@
+{% extends "MicroFramework/Layout/dashboard/layout.twig" %}
 {% set navbar_brand = 'Admin panel' %}
 {% block title %}Admin panel{% endblock %}
 {% block navbar %}
@@ -35,4 +36,3 @@
     {{ block("navbar_links", "layout.twig") }}
 </ul>
 {% endblock %}
-{% extends "mf_dashboard/layout.twig" %}

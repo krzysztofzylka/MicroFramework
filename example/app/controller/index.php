@@ -16,6 +16,14 @@ class index extends Controller {
         $this->loadView();
     }
 
+    public function dialogbox(): void
+    {
+        $this->layout = 'dialogbox';
+        $this->title = 'Test dialogbox';
+        $this->dialogboxWidth = 500;
+        $this->loadView();
+    }
+
     public function table(): void
     {
         $this->table->model = $this->loadModel('account');

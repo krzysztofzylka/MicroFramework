@@ -1,4 +1,4 @@
-{% import "mf_dashboard/macro/nav.twig" as nav %}
+{% import "MicroFramework/Layout/dashboard/macro/nav.twig" as nav %}
 {% set _blockContentTitle = block('contentTitle') %}
 {% set _blockContentButton = block('contentButton') %}
 
@@ -15,11 +15,11 @@
         <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap5.min.js"></script>
         <meta name="theme-color" content="#7952b3">
-        <style>{% include 'mf_dashboard/style.css' %}</style>
+        <style>{% include 'MicroFramework/Layout/dashboard/style.css' %}</style>
         {% block head %}{% endblock %}
     </head>
     <body>
-        {% include 'mf_dashboard/header.twig' %}
+        {% include 'MicroFramework/Layout/dashboard/header.twig' %}
 
         <div class="container-fluid">
             <div class="row">

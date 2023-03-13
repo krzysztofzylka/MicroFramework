@@ -24,12 +24,7 @@ class Autoload
         $this->projectPath = $projectPath;
 
         spl_autoload_register(function ($className) {
-            if (str_starts_with($className, 'controller\\pa')) {
-                $fileName = str_replace('controller\\pa', '', $className);
-                $path = $this->generatePaPath('controller\\' . lcfirst($fileName));
-            } else {
-                $path = $this->generatePath($className);
-            }
+            $path = $this->generatePath($className);
 
             if (!file_exists($path)) {
                 return;
@@ -37,16 +32,6 @@ class Autoload
 
             include($path);
         });
-    }
-
-    /**
-     * Generate path
-     * @param $className
-     * @return string
-     */
-    private function generatePaPath($className): string
-    {
-        return File::repairPath(__DIR__ . '/AdminPanel' . DIRECTORY_SEPARATOR . $className . '.php');
     }
 
     /**

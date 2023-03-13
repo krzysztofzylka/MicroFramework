@@ -62,6 +62,18 @@ class Controller
     public ?string $layout = null;
 
     /**
+     * Page title (for dialogbox)
+     * @var string
+     */
+    public string $title = '';
+
+    /**
+     * Dialogbox width
+     * @var int
+     */
+    public int $dialogboxWidth = 500;
+
+    /**
      * Params
      * @var array
      */

@@ -10,6 +10,7 @@ use krzysztofzylka\DatabaseManager\Debug;
 use Krzysztofzylka\MicroFramework\Autoload;
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\View;
+use krzysztofzylka\SimpleLibraries\Library\Request;
 
 include('../../vendor/autoload.php');
 
@@ -25,6 +26,6 @@ try {
     exit;
 }
 
-if (Kernel::getConfig()->debug) {
+if (Kernel::getConfig()->debug && !Request::isAjaxRequest()) {
     Debug::showDebugModal();
 }

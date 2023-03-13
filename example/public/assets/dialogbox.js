@@ -277,7 +277,6 @@ $.fn.ajaxlink = function (event, data = null) {
         case 'response':
             if (data.type === 'formValidatorErrorResponse') {
                 $.each(data.list, function (name, value) {
-                    //console.log(name, value);
                     let $element = $(data.formElement).find('[name="' + name + '"]');
 
                     if (!value[0]) {
@@ -324,7 +323,6 @@ $.fn.ajaxlink = function (event, data = null) {
 
 
             if (data.ajaxLoaderConfig.dialog.close) {
-                //console.log('close', $(this));
                 $(this).closest('.ui-dialog-content').dialogbox('destroy');
             } else if (data.ajaxLoaderConfig.dialog.reload) {
                 $(this).closest('.ui-dialog-content').dialogbox('reload');

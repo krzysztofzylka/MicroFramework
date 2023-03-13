@@ -136,13 +136,24 @@ class View
      */
     private function getGlobalVariables(): array
     {
-        return [
+        $config = [
             'name' => $this->name,
             'view' => $this,
             'variables' => $this->variables,
             'config' => (array)Kernel::getConfig(),
-            'controller' => $this->controller
+            'controller' => $this->controller,
+            'dialogboxConfig' => '[]'
         ];
+
+        if ($this->controller->layout === 'dialogbox') {
+            $config['dialogboxConfig'] = json_encode([
+                'dialogboxWidth' => $this->controller->dialogboxWidth,
+                'layout' => 'dialogbox',
+                'title' => $this->controller->title
+            ]);
+        }
+
+        return $config;
     }
 
 }

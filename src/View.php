@@ -5,31 +5,61 @@ namespace Krzysztofzylka\MicroFramework;
 use Exception;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Twig\Environment;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 
 class View
 {
 
     /**
-     * Twig FileSystemLoader
+     * Twig filesystem loader
      * @var FilesystemLoader
      */
-    public static FilesystemLoader $filesystemLoader;
+    private FilesystemLoader $filesystemLoader;
 
     /**
-     * Twig Environment
+     * Twig environment
      * @var Environment
      */
-    public static Environment $environment;
+    private Environment $environment;
 
     /**
      * Controller
-     * @var Controller
+     * @var ?Controller
      */
-    private Controller $controller;
+    private ?Controller $controller = null;
 
     /**
-     * Set controller
+     * Variables
+     * @var array
+     */
+    private array $variables = [];
+
+    /**
+     * Variable name
+     * @var ?string
+     */
+    private ?string $name = null;
+
+    /**
+     * Init view
+     * @throws ViewException
+     */
+    public function __construct()
+    {
+        try {
+            $this->filesystemLoader = new FilesystemLoader(Kernel::getPath('view'));
+            $this->filesystemLoader->addPath(__DIR__ . '/Twig/template');
+            $this->filesystemLoader->addPath(__DIR__ . '/Twig/email_template');
+            $this->environment = new Environment($this->filesystemLoader, ['debug' => Kernel::getConfig()->debug]);
+            $this->environment->addExtension(new DebugExtension());
+        } catch (Exception $exception) {
+            throw new ViewException($exception->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Set controller object
      * @param Controller $controller
      * @return void
      */
@@ -38,6 +68,14 @@ class View
         $this->controller = $controller;
     }
 
+    /**
+     * Render error
+     * @param int $code
+     * @param Exception $exception
+     * @param string $name
+     * @return string
+     * @throws ViewException
+     */
     public function renderError(int $code, Exception $exception, string $name = 'mf_error'): string
     {
         $hiddenMessage = false;
@@ -47,61 +85,65 @@ class View
         }
 
         return $this->render(
-            $name,
             [
                 'code' => $code ?? 500,
                 'debug' => Kernel::getConfig()->debug ? var_export($exception, true) : false,
                 'hiddenMessage' => $hiddenMessage
-            ]
+            ],
+            $name
         );
     }
 
+
     /**
      * Load view
-     * @param string $name
      * @param array $variables
+     * @param ?string $name
      * @return string
      * @throws ViewException
      */
-    public function render(string $name, array $variables = []): string
+    public function render(array $variables = [], ?string $name = null): string
     {
         try {
-            $globalVariables = [
-                'view' => $this,
-                'variables' => $variables
-            ];
+            $this->variables = $variables;
 
             if (isset($this->controller)) {
-                if (!str_starts_with($name, '/')) {
-                    $name = $this->controller->name . DIRECTORY_SEPARATOR . $name;
-                } else {
-                    $name = substr($name, 1);
-                }
-
-                $globalVariables['controller'] = $this->controller;
+                $name = !str_starts_with($name, '/') ? ($this->controller->name . DIRECTORY_SEPARATOR . $name) : substr($name, 1);
             }
 
             $nameExplode = explode('/', $name);
-            $globalVariables['name'] = end($nameExplode);
+            $this->name = end($nameExplode);
 
-            if (isset($this->controller->params['isAdminPanel']) && $this->controller->params['isAdminPanel']) {
-                View::$filesystemLoader->prependPath(Kernel::getPath('pa_view'));
-                View::$filesystemLoader->prependPath(__DIR__ . '/AdminPanel/view');
+            if (isset($this->controller->params['admin_panel']) && $this->controller->params['admin_panel']) {
+                $this->filesystemLoader->prependPath(Kernel::getPath('pa_view'));
+                $this->filesystemLoader->prependPath(__DIR__ . '/AdminPanel/view');
             }
 
-            if (!isset(View::$environment) || !isset(View::$filesystemLoader)) {
-                Kernel::initViewVariables();
+            $this->environment->addGlobal('app', $this->getGlobalVariables());
+
+            if (Kernel::getConfig()->viewDisableCache) {
+                $this->environment->setCache(false);
             }
 
-            View::$environment->addGlobal('app', $globalVariables);
-            View::$environment->setCache(false);
-            $environment = self::$environment;
-            $environment->addGlobal('app', $globalVariables);
-
-            return $environment->render($name . '.twig', $variables);
+            return $this->environment->render($name . '.twig', $variables);
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage());
         }
+    }
+
+    /**
+     * Generate global variables
+     * @return array
+     */
+    private function getGlobalVariables(): array
+    {
+        return [
+            'name' => $this->name,
+            'view' => $this,
+            'variables' => $this->variables,
+            'config' => (array)Kernel::getConfig(),
+            'controller' => $this->controller
+        ];
     }
 
 }

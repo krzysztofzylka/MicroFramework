@@ -32,6 +32,12 @@ class ConfigDefault
      */
     public bool $adminPanel = false;
 
+    /**
+     * Admin panel URI e.g. http://url.site/admin_panel
+     * @var ?string
+     */
+    public ?string $adminPanelUri = 'admin_panel';
+
     /** API */
 
     /**
@@ -41,7 +47,7 @@ class ConfigDefault
     public bool $api = false;
 
     /**
-     * Api URI e.g. http://url.site/api for api
+     * Api URI e.g. http://url.site/api
      * @var ?string
      */
     public ?string $apiUri = 'api';
@@ -189,5 +195,13 @@ class ConfigDefault
      * @var string
      */
     public string $emailFromName = '';
+
+    /** View */
+
+    /**
+     * Disable view cache
+     * @var bool
+     */
+    public bool $viewDisableCache = true;
 
 }

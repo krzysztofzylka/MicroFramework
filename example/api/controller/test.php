@@ -1,6 +1,6 @@
 <?php
 
-namespace api_controller;
+namespace api\controller;
 
 use Exception;
 use Krzysztofzylka\MicroFramework\ControllerApi;

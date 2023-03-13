@@ -17,12 +17,9 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
+use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\File;
 use krzysztofzylka\SimpleLibraries\Library\Request;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Extension\DebugExtension;
-use Twig\Loader\FilesystemLoader;
 
 /**
  * Kernel
@@ -44,9 +41,11 @@ class Kernel
         'public' => null,
         'assets' => null,
         'controller' => null,
-        'api_controller' => null,
         'model' => null,
         'view' => null,
+        'api_controller' => null,
+        'pa_controller' => null,
+        'pa_model' => null,
         'pa_view' => null,
         'storage' => null,
         'logs' => null,
@@ -63,17 +62,19 @@ class Kernel
      * Init project
      * @param string $projectPath
      * @return void
+     * @throws SimpleLibraryException
      */
     public static function create(string $projectPath): void
     {
         self::$projectPath = $projectPath;
         self::$paths['public'] = realpath($projectPath . '/public');
-        self::$paths['controller'] = $projectPath . '/controller';
-        self::$paths['api_controller'] = $projectPath . '/api_controller';
-        self::$paths['pa_controller'] = $projectPath . '/pa_controller';
-        self::$paths['model'] = $projectPath . '/model';
-        self::$paths['view'] = $projectPath . '/view';
-        self::$paths['pa_view'] = $projectPath . '/pa_view';
+        self::$paths['controller'] = $projectPath . '/app/controller';
+        self::$paths['model'] = $projectPath . '/app/model';
+        self::$paths['view'] = $projectPath . '/app/view';
+        self::$paths['api_controller'] = $projectPath . '/api/controller';
+        self::$paths['pa_view'] = $projectPath . '/admin_panel/view';
+        self::$paths['pa_controller'] = $projectPath . '/admin_panel/controller';
+        self::$paths['pa_model'] = $projectPath . '/admin_panel/model';
         self::$paths['storage'] = $projectPath . '/storage';
         self::$paths['logs'] = self::$paths['storage'] . '/logs';
         self::$paths['database_updater'] = $projectPath . '/database_updater';
@@ -109,7 +110,6 @@ class Kernel
      * Run framework
      * @return void
      * @throws ConnectException
-     * @throws LoaderError
      * @throws MicroFrameworkException
      * @throws NotFoundException
      */
@@ -143,6 +143,12 @@ class Kernel
             $arguments = array_slice($explode, 3);
 
             self::init($controller, $method, $arguments, ['api' => true]);
+        } elseif (self::$config->api && $controller === self::$config->adminPanelUri) {
+            $controller = $explode[1];
+            $method = $explode[2] ?? self::getConfig()->defaultMethod;
+            $arguments = array_slice($explode, 3);
+
+            self::init($controller, $method, $arguments, ['admin_panel' => true]);
         } else {
             $method = $explode[1] ?? self::getConfig()->defaultMethod;
             $arguments = array_slice($explode, 2);
@@ -165,6 +171,7 @@ class Kernel
      * Connect to database
      * @return void
      * @throws ConnectException
+     * @throws DatabaseException
      */
     public static function configDatabaseConnect(): void
     {
@@ -179,8 +186,12 @@ class Kernel
                 $databaseConnect->setDebug(true);
             }
 
-            $databaseManager = new DatabaseManager();
-            $databaseManager->connect($databaseConnect);
+            try {
+                $databaseManager = new DatabaseManager();
+                $databaseManager->connect($databaseConnect);
+            } catch (ConnectException $exception) {
+                throw new DatabaseException($exception->getHiddenMessage());
+            }
         }
     }
 
@@ -190,7 +201,7 @@ class Kernel
      */
     public static function getConfig(): object
     {
-        return self::$config;
+        return self::$config ?? new ConfigDefault();
     }
 
     /**
@@ -212,7 +223,6 @@ class Kernel
      * @return void
      * @throws MicroFrameworkException
      * @throws NotFoundException
-     * @throws LoaderError
      */
     public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = [], array $params = []): void
     {
@@ -220,17 +230,16 @@ class Kernel
             throw new MicroFrameworkException('Project is not defined', 500);
         }
 
-        self::initViewVariables();
-
         if (!is_null($controllerName)) {
-            $isAdminPanel = false;
-
-            if (str_starts_with($controllerName, 'pa')) {
-                $isAdminPanel = true;
-                $controllerName = lcfirst(substr($controllerName, 2));
-            }
-
-            self::loadController($controllerName, $controllerMethod, $controllerArguments, ['api' => $params['api'] ?? false, 'isAdminPanel' => $isAdminPanel]);
+            self::loadController(
+                $controllerName,
+                $controllerMethod,
+                $controllerArguments,
+                [
+                    'api' => $params['api'] ?? false,
+                    'admin_panel' => $params['admin_panel'] ?? false
+                ]
+            );
         }
     }
 
@@ -261,7 +270,7 @@ class Kernel
      */
     public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []): Controller
     {
-        if (isset($params['isAdminPanel']) && $params['isAdminPanel']) {
+        if (isset($params['admin_panel']) && $params['admin_panel']) {
             if (!self::getConfig()->adminPanel) {
                 throw new NotFoundException('Admin panel is disabled');
             } elseif (!self::getConfig()->authControl) {
@@ -281,6 +290,10 @@ class Kernel
             $class = ObjectNameGenerator::controllerApi($name);
         } else {
             $class = ObjectNameGenerator::controller($name);
+        }
+
+        if (!class_exists($class)) {
+            throw new NotFoundException('Controller ' . $name . ' not exists');
         }
 
         AuthControl::run($class, $method, isset($params['api']) && $params['api']);
@@ -323,6 +336,20 @@ class Kernel
         }
 
         return Request::getAllPostEscapeData();
+    }
+
+    /**
+     * Get path
+     * @param string $name controller / model / view
+     * @return string|false
+     */
+    public static function getPath(string $name): string|false
+    {
+        if (!in_array($name, array_keys(self::$paths))) {
+            return false;
+        }
+
+        return self::$paths[$name];
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace Krzysztofzylka\MicroFramework\AdminPanel\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
-use Krzysztofzylka\MicroFramework\Extension\Table\Extra\Cell;
 
 class log extends Controller
 {
@@ -15,8 +14,8 @@ class log extends Controller
         $logLimit = 200;
 
 
-        foreach (array_reverse($this->loadModel('paLog')->getList()) as $log) {
-            $logArray = $this->PaLog->fileRead($log['path']);
+        foreach (array_reverse($this->loadModel('log')->getList()) as $log) {
+            $logArray = $this->Log->fileRead($log['path']);
 
             if ($logLimit > 0) {
                 if (count($logArray) > $logLimit) {

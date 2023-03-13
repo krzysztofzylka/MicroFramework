@@ -1,6 +1,6 @@
 <?php
 
-namespace pa_controller;
+namespace admin_panel\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
 

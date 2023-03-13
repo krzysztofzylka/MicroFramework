@@ -86,9 +86,7 @@ class Kernel
             File::mkdir($path, 0755);
         }
 
-        if (!file_exists(self::$paths['public'] . '/.htaccess')) {
-            copy(__DIR__ . '/Init/.htaccess', self::$paths['public'] . '/.htaccess');
-        }
+        self::copyFiles();
     }
 
     /**
@@ -363,6 +361,22 @@ class Kernel
             $databaseManager->connect($databaseConnect);
         } catch (ConnectException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
+        }
+    }
+
+    private static function copyFiles(): void
+    {
+        self::copyIfNotExists(__DIR__ . '/Init/.htaccess', self::$paths['public'] . '/.htaccess');
+        self::copyIfNotExists(__DIR__ . '/Init/assets/dialogbox.css', self::$paths['assets'] . '/dialogbox.css');
+        self::copyIfNotExists(__DIR__ . '/Init/assets/dialogbox.js', self::$paths['assets'] . '/dialogbox.js');
+        self::copyIfNotExists(__DIR__ . '/Init/assets/spinner.css', self::$paths['assets'] . '/spinner.css');
+        self::copyIfNotExists(__DIR__ . '/Init/assets/spinner.js', self::$paths['assets'] . '/spinner.js');
+    }
+
+    private static function copyIfNotExists($from, $to): void
+    {
+        if (!file_exists($to)) {
+            copy($from, $to);
         }
     }
 

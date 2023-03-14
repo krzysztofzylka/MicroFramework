@@ -5,6 +5,7 @@ namespace Krzysztofzylka\MicroFramework;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table as TableExtension;
+use Krzysztofzylka\MicroFramework\Trait\Alerts;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use krzysztofzylka\SimpleLibraries\Library\Redirect;
 
@@ -17,6 +18,7 @@ class Controller
 
     use Log;
     use \Krzysztofzylka\MicroFramework\Trait\Model;
+    use Alerts;
 
     /**
      * Controller name

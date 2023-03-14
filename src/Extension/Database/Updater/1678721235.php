@@ -8,7 +8,7 @@ use Krzysztofzylka\MicroFramework\Extension\Database\Updater;
 
 return (new class extends Updater {
 
-    public function run(): void
+    public function run()
     {
         (new CreateTable())
             ->setName('account_remember_field')
@@ -27,8 +27,6 @@ return (new class extends Updater {
             ->addDateCreatedColumn()
             ->addDateModifyColumn()
             ->execute();
-
-        return;
     }
 
 });

@@ -72,4 +72,12 @@ class index extends Controller {
 
         $this->loadView(['table' => $this->table->render()], 'table');
     }
+
+    public function alert() {
+        $this->responseAlert('alert');
+    }
+
+    public function alert2() {
+        $this->responseAlert('alert', 'ERR');
+    }
 }

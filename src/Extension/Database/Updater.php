@@ -34,7 +34,7 @@ class Updater
      * Run script
      * @return void
      */
-    public function run(): void
+    public function run()
     {
     }
 

@@ -14,13 +14,11 @@ trait Session
      */
     private function getSession(): mixed
     {
-        $name = 'Session::Table::' . $this->id;
-
         if (!$this->session) {
-            $this->session = \krzysztofzylka\SimpleLibraries\Library\Session::get($name);
+            $this->session = \krzysztofzylka\SimpleLibraries\Library\Session::get($this->getSessionName());
 
             if (!$this->session && isset(Account::$accountRememberField)) {
-                $this->session = json_decode(Account::$accountRememberField->get($name), true);
+                $this->session = json_decode(Account::$accountRememberField->get($this->getSessionName()), true);
             }
         }
 
@@ -34,13 +32,20 @@ trait Session
      */
     private function saveSession(array $data): void
     {
-        $name = 'Session::Table::' . $this->id;
-
-        \krzysztofzylka\SimpleLibraries\Library\Session::set($name, $data);
+        \krzysztofzylka\SimpleLibraries\Library\Session::set($this->getSessionName(), $data);
 
         if (isset(Account::$accountRememberField)) {
-            Account::$accountRememberField->set($name, json_encode($data));
+            Account::$accountRememberField->set($this->getSessionName(), json_encode($data));
         }
+    }
+
+    /**
+     * Get session name
+     * @return string
+     */
+    private function getSessionName(): string
+    {
+        return 'Session::Table::' . ($this->controller->params['admin_panel'] ? '1' : '0') . '::' . $this->controller->name . '::' . $this->controller->method . '::' . $this->id;
     }
 
 }

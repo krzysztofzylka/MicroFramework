@@ -122,7 +122,7 @@ class Table
     public function render(): string
     {
         $this->generateDefaultData();
-        $this->query();
+        $this->session();
         $this->getResults();
 
         $this->html .= '<div class="tableRender" id="' . $this->id . '">';
@@ -171,7 +171,7 @@ class Table
      * @return void
      * @throws DatabaseException
      */
-    private function query(): void
+    private function session(): void
     {
         $this->getSession();
 
@@ -229,23 +229,12 @@ class Table
             }
         }
 
-        $this->saveQuery();
-    }
-
-    /**
-     * Save query
-     * @return void
-     */
-    private function saveQuery(): void
-    {
-        if (!isset($this->data['table_id']) || $this->data['table_id'] !== $this->id) {
-            return;
+        if (isset($this->data['table_id']) || $this->data['table_id'] === $this->id) {
+            $this->saveSession([
+                'search' => $this->data['search'] ?? $this->session['search'] ?? null,
+                'page' => $this->page ?? 0
+            ]);
         }
-
-        $this->saveSession([
-            'search' => $this->data['search'] ?? $this->session['search'] ?? null,
-            'page' => $this->page ?? 0
-        ]);
     }
 
     /**

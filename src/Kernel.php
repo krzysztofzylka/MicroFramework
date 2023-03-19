@@ -111,6 +111,15 @@ class Kernel
         }
 
         $url = $_GET['url'] ?? self::getConfig()->defaultPage;
+        $extension = pathinfo($url, PATHINFO_EXTENSION);
+
+        if (!empty($extension)) {
+            if (!file_exists($url)) {
+                http_response_code(404);
+                exit;
+            }
+        }
+
         $explode = explode('/', $url);
 
         if (empty($explode[0])) {

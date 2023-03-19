@@ -83,6 +83,8 @@ class View
             $hiddenMessage = $exception->getHiddenMessage();
         }
 
+        http_response_code($code);
+
         return $this->render(
             [
                 'code' => $code ?? 500,

@@ -224,7 +224,7 @@ class Table
             }
         }
 
-        if (isset($this->data['table_id']) || $this->data['table_id'] === $this->id) {
+        if (isset($this->data['table_id']) && $this->data['table_id'] === $this->id) {
             $this->saveSession([
                 'search' => $this->data['search'] ?? $this->session['search'] ?? null,
                 'page' => $this->page ?? 0

@@ -40,7 +40,7 @@ class ErrorHandler
                     'type' => $errorType,
                     'file' => $file,
                     'line' => $line,
-                    'backtrace' => array_reverse(debug_backtrace())
+                    'backtrace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)
                 ]
             );
         }

@@ -134,7 +134,7 @@ class Account
     public static function getAccountData(int $id): array
     {
         try {
-            return self::$tableInstance->find((new Condition())->where('id', $id));
+            return self::$tableInstance->find(['id' => $id]);
         } catch (Exception) {
             return [];
         }
@@ -156,7 +156,7 @@ class Account
         }
 
         try {
-            if (self::$tableInstance->findIsset((new Condition())->where('username', $username))) {
+            if (self::$tableInstance->findIsset(['username' => $username])) {
                 throw new AccountException('User is already isset');
             }
 
@@ -211,7 +211,7 @@ class Account
         }
 
         try {
-            $find = self::$tableInstance->find((new Condition())->where('username', $username));
+            $find = self::$tableInstance->find(['username' => $username]);
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }

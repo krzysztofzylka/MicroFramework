@@ -69,7 +69,7 @@ class DatabaseUpdater
             foreach ($updateFiles as $filePath) {
                 $name = str_replace('.' . pathinfo($filePath, PATHINFO_EXTENSION), '', basename($filePath));
 
-                if (!$this->updateTable->findIsset((new Condition())->where('name', $name))) {
+                if (!$this->updateTable->findIsset(['name' => $name])) {
                     $this->updateTable->insert(['name' => $name]);
 
                     echo '[' . date('Y-m-d H:i:s') . '] Run database updater: ' . $name . PHP_EOL;

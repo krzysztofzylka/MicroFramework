@@ -13,7 +13,6 @@ class log extends Controller
 
         $logLimit = 200;
 
-
         foreach (array_reverse($this->loadModel('log')->getList()) as $log) {
             $logArray = $this->Log->fileRead($log['path']);
 
@@ -34,12 +33,14 @@ class log extends Controller
             return strtotime($b['log']['datetime']) - strtotime($a['log']['datetime']);
         });
 
+        $this->table->paginationLimit = 50;
+        $this->table->pages = floor(count($logs) / $this->table->paginationLimit);
+        $this->table->init();
         $this->table->activeSearch = false;
-        $this->table->activePagination = false;
-        $this->table->results = $logs;
+        $this->table->results = array_slice($logs, ($this->table->page - 1) * $this->table->paginationLimit, $this->table->paginationLimit);
         $this->table->columns = [
             'log.logLineNumber' => [
-                'title' => 'Lp.',
+                'title' => 'Lp. ' . $this->table->page,
                 'width' => 150
             ],
             'log.datetime' => [

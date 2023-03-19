@@ -82,7 +82,7 @@ class Table
      * Pages
      * @var ?int
      */
-    public ?int $pages = null;
+    public int $pages = 1;
     /**
      * Table ID
      * @var string
@@ -114,6 +114,13 @@ class Table
      */
     private ?string $limit = null;
 
+    public function init(): void
+    {
+        $this->conditions = [];
+        $this->generateDefaultData();
+        $this->session();
+    }
+
     /**
      * Render table
      * @return string
@@ -121,8 +128,6 @@ class Table
      */
     public function render(): string
     {
-        $this->generateDefaultData();
-        $this->session();
         $this->getResults();
 
         $this->html .= '<div class="tableRender" id="' . $this->id . '">';
@@ -191,37 +196,38 @@ class Table
             $this->page = (int)$this->session['page'];
         }
 
-        if (isset($this->model)) {
-            $conditions = $this->haveCondition ? $this->conditions : null;
-            $this->pages = floor($this->model->findCount($conditions) / $this->paginationLimit);
+        $conditions = $this->haveCondition ? $this->conditions : null;
 
-            if ($this->activePagination) {
-                if (isset($this->session['page']) || isset($this->data['page'])) {
-                    if (isset($this->data['page'])) {
-                        if ($this->data['page'] === "«") {
-                            $this->page--;
-                        } elseif ($this->data['page'] === "»") {
-                            $this->page++;
-                        } else {
-                            $this->page = (int)$this->data['page'];
-                        }
+        if (isset($this->model)) {
+            $this->pages = floor($this->model->findCount($conditions) / $this->paginationLimit);
+        }
+
+        if ($this->activePagination) {
+            if (isset($this->session['page']) || isset($this->data['page'])) {
+                if (isset($this->data['page'])) {
+                    if ($this->data['page'] === "«") {
+                        $this->page--;
+                    } elseif ($this->data['page'] === "»") {
+                        $this->page++;
+                    } else {
+                        $this->page = (int)$this->data['page'];
                     }
                 }
-
-                if ($this->page < 1) {
-                    $this->page = 1;
-                } elseif ($this->page > $this->pages) {
-                    $this->page = $this->pages;
-                }
-
-                $page = ($this->page - 1);
-
-                if ($this->page < 1) {
-                    $page = 0;
-                }
-
-                $this->limit = ($page * $this->paginationLimit) . ',' . $this->paginationLimit;
             }
+
+            if ($this->page < 1) {
+                $this->page = 1;
+            } elseif ($this->page > $this->pages) {
+                $this->page = $this->pages;
+            }
+
+            $page = ($this->page - 1);
+
+            if ($this->page < 1) {
+                $page = 0;
+            }
+
+            $this->limit = ($page * $this->paginationLimit) . ',' . $this->paginationLimit;
         }
 
         if (isset($this->data['table_id']) && $this->data['table_id'] === $this->id) {
@@ -239,7 +245,11 @@ class Table
      */
     private function getResults(): void
     {
-        if (empty($this->results) && isset($this->model)) {
+        if (!isset($this->model)) {
+            return;
+        }
+
+        if (empty($this->results)) {
             if (!$this->haveCondition) {
                 $this->conditions = null;
             }

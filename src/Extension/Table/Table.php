@@ -97,7 +97,7 @@ class Table
      * Conditions
      * @var ?Condition
      */
-    private ?Condition $conditions = null;
+    private ?array $conditions = [];
     /**
      * Have conditions
      * @var bool
@@ -122,7 +122,7 @@ class Table
     public function render(): string
     {
         $this->generateDefaultData();
-        $this->query();
+        $this->session();
         $this->getResults();
 
         $this->html .= '<div class="tableRender" id="' . $this->id . '">';
@@ -152,8 +152,6 @@ class Table
 
             $this->setId($id);
         }
-
-        $this->conditions = new Condition();
     }
 
     /**
@@ -167,11 +165,11 @@ class Table
     }
 
     /**
-     * Query
+     * Session
      * @return void
      * @throws DatabaseException
      */
-    private function query(): void
+    private function session(): void
     {
         $this->getSession();
 
@@ -183,13 +181,10 @@ class Table
 
         if (isset($this->model) && $this->activeSearch && $this->search) {
             $this->haveCondition = true;
-            $orCondition = new Condition();
 
             foreach (array_keys($this->columns) as $field) {
-                $orCondition->where($field, '%' . $this->search . '%', 'LIKE');
+                $this->conditions['OR'][] = new Condition($field, 'LIKE', '%' . $this->search . '%');
             }
-
-            $this->conditions->orWhere($orCondition);
         }
 
         if (isset($this->session['page'])) {
@@ -229,23 +224,12 @@ class Table
             }
         }
 
-        $this->saveQuery();
-    }
-
-    /**
-     * Save query
-     * @return void
-     */
-    private function saveQuery(): void
-    {
-        if (!isset($this->data['table_id']) || $this->data['table_id'] !== $this->id) {
-            return;
+        if (isset($this->data['table_id']) || $this->data['table_id'] === $this->id) {
+            $this->saveSession([
+                'search' => $this->data['search'] ?? $this->session['search'] ?? null,
+                'page' => $this->page ?? 0
+            ]);
         }
-
-        $this->saveSession([
-            'search' => $this->data['search'] ?? $this->session['search'] ?? null,
-            'page' => $this->page ?? 0
-        ]);
     }
 
     /**
@@ -275,6 +259,21 @@ class Table
         $arrayData = '$data[\'' . implode('\'][\'', explode('.', $name)) . '\']';
 
         return @eval("return $arrayData;");
+    }
+
+    /**
+     * Add custom query
+     * @param array $conditions
+     * @return void
+     */
+    public function query(array $conditions): void
+    {
+        if (empty($conditions)) {
+            return;
+        }
+
+        $this->haveCondition = true;
+        $this->conditions = array_merge($this->conditions, $conditions);
     }
 
 }

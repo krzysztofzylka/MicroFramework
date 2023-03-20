@@ -46,6 +46,17 @@ class ErrorHandler
         }
 
         if (Kernel::getConfig()->debug) {
+            if (Kernel::getConfig()->showAllErrors) {
+                ob_end_clean();
+                dumpe([
+                    'type' => $errorType,
+                    'message' => $message,
+                    'file' => $file,
+                    'line' => $line,
+                    'backtrace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)
+                ]);
+            }
+
             echo $message;
         }
     }
@@ -90,10 +101,9 @@ class ErrorHandler
         }
 
         if (Kernel::getConfig()->debug) {
-            header('Content-Type: text/html; charset=utf-8');
-
             ob_end_clean();
-            die(json_encode($lastError));
+
+            dumpe($lastError);
         } else {
             die('Error');
         }

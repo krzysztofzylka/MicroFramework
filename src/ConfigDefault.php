@@ -15,6 +15,12 @@ class ConfigDefault
     public bool $debug = false;
 
     /**
+     * Show all errors
+     * @var bool
+     */
+    public bool $showAllErrors = true;
+
+    /**
      * Default page
      * @var string
      */

@@ -147,7 +147,7 @@ class View
             'dialogboxConfig' => '[]'
         ];
 
-        if ($this->controller->layout === 'dialogbox') {
+        if (isset($this->controller->layout) && $this->controller->layout === 'dialogbox') {
             $config['dialogboxConfig'] = json_encode([
                 'dialogboxWidth' => $this->controller->dialogboxWidth,
                 'layout' => 'dialogbox',

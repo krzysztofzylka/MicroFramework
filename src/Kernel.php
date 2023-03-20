@@ -288,6 +288,7 @@ class Kernel
             $controller->table = new Table();
             $controller->table->controller = $controller;
             $controller->table->data = $controller->data;
+            $controller->table->init();
 
             if (!method_exists($controller, $method)) {
                 throw new Exception('Method ' . $method . ' not exists in controller ' . $name);

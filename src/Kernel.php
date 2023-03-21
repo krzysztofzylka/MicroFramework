@@ -65,7 +65,7 @@ class Kernel
      * @return void
      * @throws SimpleLibraryException
      */
-    public static function create(string $projectPath): void
+    public static function initPaths(string $projectPath): void
     {
         self::$projectPath = $projectPath;
         self::$paths['public'] = realpath($projectPath . '/public');
@@ -86,8 +86,6 @@ class Kernel
 
             File::mkdir($path, 0755);
         }
-
-        self::copyFiles();
     }
 
     /**
@@ -373,19 +371,6 @@ class Kernel
         } catch (ConnectException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
-    }
-
-    /**
-     * Copy file to public directory
-     * @return void
-     */
-    private static function copyFiles(): void
-    {
-        File::copy(__DIR__ . '/Init/.htaccess', self::$paths['public'] . '/.htaccess');
-        File::copy(__DIR__ . '/Init/assets/dialogbox.css', self::$paths['assets'] . '/dialogbox.css');
-        File::copy(__DIR__ . '/Init/assets/dialogbox.js', self::$paths['assets'] . '/dialogbox.js');
-        File::copy(__DIR__ . '/Init/assets/spinner.css', self::$paths['assets'] . '/spinner.css');
-        File::copy(__DIR__ . '/Init/assets/spinner.js', self::$paths['assets'] . '/spinner.js');
     }
 
 }

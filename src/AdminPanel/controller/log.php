@@ -55,10 +55,11 @@ class log extends Controller
             ],
             'log.level' => [
                 'title' => 'Level',
-                'width' => 30
+                'width' => 100
             ],
             'log.message' => [
-                'title' => 'Message'
+                'title' => 'Message',
+                'maxChar' => 100
             ]
         ];
         $this->loadView(['table' => $this->table->render()]);

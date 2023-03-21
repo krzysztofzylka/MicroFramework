@@ -83,8 +83,6 @@ class ErrorHandler
             }
         }
 
-        ob_end_clean();
-
         if (!str_starts_with($lastError['file'], 'xdebug:/')) {
             Log::log(
                 $lastError['message'],

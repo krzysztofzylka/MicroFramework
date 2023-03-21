@@ -77,12 +77,20 @@ trait Render
                 $this->html .= '<td style="' . $style . '">';
 
                 if (isset($column['value']) && is_string($column['value'])) {
-                    $this->html .= $column['value'];
+                    $value = $column['value'];
                 } elseif (isset($column['value']) && is_object($column['value'])) {
-                    $this->html .= $column['value']($cell);
+                    $value = $column['value']($cell);
                 } else {
-                    $this->html .= $cell->val;
+                    $value = $cell->val;
                 }
+
+                if (isset($column['maxChar']) && is_int($column['maxChar'])) {
+                    if (mb_strlen($value) > $column['maxChar']) {
+                        $value = mb_strimwidth(str_replace(["\n", "\r", '<br />', '<br>'], '', $value), 0, $column['maxChar'], '...', 'UTF-8');
+                    }
+                }
+
+                $this->html .= $value;
 
                 $this->html .= '</td>';
             }

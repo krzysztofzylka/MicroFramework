@@ -27,11 +27,11 @@ class Log
             'message' => $message,
             'content' => $content,
             'ip' => Client::getIP(),
-            'file' => $backtrace['file'],
-            'class' => $backtrace['class'],
-            'function' => $backtrace['function'],
-            'line' => $backtrace['line'],
-            'accountId' => Account::$accountId,
+            'file' => $backtrace['file'] ?? null,
+            'class' => $backtrace['class'] ?? null,
+            'function' => $backtrace['function'] ?? null,
+            'line' => $backtrace['line'] ?? null,
+            'accountId' => Account::$accountId ?? null,
             'get' => $_GET
         ];
         $jsonLogData = json_encode($logContent);

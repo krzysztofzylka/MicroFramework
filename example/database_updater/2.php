@@ -7,7 +7,7 @@ use Krzysztofzylka\MicroFramework\Extension\Database\Updater;
 
 return (new class extends Updater {
 
-    public function run() : void {
+    public function run() {
         $this->table->setName('example');
 
         try {
@@ -19,13 +19,8 @@ return (new class extends Updater {
                     'status' => $faker->randomElement(['Init', 'Success', 'Fail'])
                 ]);
             }
-        } catch (Exception $exception) {
-            var_dump($exception);
-
-            throw new Exception($exception->getMessage(), $exception->getCode());
+        } catch (Exception) {
         }
-
-        return;
     }
 
 });

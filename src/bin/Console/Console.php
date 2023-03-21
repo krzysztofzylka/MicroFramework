@@ -3,8 +3,10 @@
 namespace Krzysztofzylka\MicroFramework\bin\Console;
 
 use Krzysztofzylka\MicroFramework\bin\Trait\Prints;
+use krzysztofzylka\SimpleLibraries\Library\Strings;
 
-class Console {
+class Console
+{
 
     use Prints;
 
@@ -36,7 +38,7 @@ class Console {
     {
         $this->getArguments($argv);
 
-        $class = '\Krzysztofzylka\MicroFramework\bin\Action\\' . ucwords($this->action);
+        $class = '\Krzysztofzylka\MicroFramework\bin\Action\\' . Strings::camelizeString($this->action, '_');
 
         if (!class_exists($class)) {
             $this->dprint('Action not exists.');

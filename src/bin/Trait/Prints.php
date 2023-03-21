@@ -4,7 +4,8 @@ namespace Krzysztofzylka\MicroFramework\bin\Trait;
 
 use krzysztofzylka\SimpleLibraries\Library\Date;
 
-trait Prints {
+trait Prints
+{
 
     /**
      * Print data

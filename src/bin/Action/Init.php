@@ -7,7 +7,8 @@ use Krzysztofzylka\MicroFramework\bin\Console\Console;
 use Krzysztofzylka\MicroFramework\bin\Trait\Prints;
 use krzysztofzylka\SimpleLibraries\Library\File;
 
-class Init {
+class Init
+{
 
     use Prints;
 
@@ -21,7 +22,8 @@ class Init {
      * Init project
      * @param Console $console
      */
-    public function __construct(Console $console) {
+    public function __construct(Console $console)
+    {
         $this->console = $console;
 
         $this->tprint('Init project in path "' . $this->console->path . '"');

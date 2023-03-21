@@ -374,6 +374,10 @@ class Kernel
         }
     }
 
+    /**
+     * Copy file to public directory
+     * @return void
+     */
     private static function copyFiles(): void
     {
         self::copyIfNotExists(__DIR__ . '/Init/.htaccess', self::$paths['public'] . '/.htaccess');
@@ -383,10 +387,16 @@ class Kernel
         self::copyIfNotExists(__DIR__ . '/Init/assets/spinner.js', self::$paths['assets'] . '/spinner.js');
     }
 
-    private static function copyIfNotExists($from, $to): void
+    /**
+     * Copu file if file in destination not exists
+     * @param $source
+     * @param $destination
+     * @return void
+     */
+    private static function copyIfNotExists($source, $destination): void
     {
-        if (!file_exists($to)) {
-            copy($from, $to);
+        if (!file_exists($destination)) {
+            copy($source, $destination);
         }
     }
 

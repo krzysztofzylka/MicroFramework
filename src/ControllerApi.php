@@ -5,6 +5,7 @@ namespace Krzysztofzylka\MicroFramework;
 use Krzysztofzylka\MicroFramework\Api\Authorization;
 use Krzysztofzylka\MicroFramework\Api\Enum\AuthorizationType;
 use Krzysztofzylka\MicroFramework\Trait\Log;
+use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 
 /**
@@ -125,7 +126,7 @@ class ControllerApi extends Controller
      */
     public function getBodyContent(): false|string
     {
-        return file_get_contents('php://input');
+        return Request::getInputContents();
     }
 
     /**

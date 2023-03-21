@@ -18,6 +18,7 @@ use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
+use krzysztofzylka\SimpleLibraries\Library\_Array;
 use krzysztofzylka\SimpleLibraries\Library\File;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 
@@ -111,7 +112,7 @@ class Kernel
         }
 
         $url = $_GET['url'] ?? self::getConfig()->defaultPage;
-        $extension = pathinfo($url, PATHINFO_EXTENSION);
+        $extension = File::getExtension($url);
 
         if (!empty($extension)) {
             if (!file_exists($url)) {
@@ -324,7 +325,7 @@ class Kernel
      */
     public static function getPath(string $name): string|false
     {
-        if (!in_array($name, array_keys(self::$paths))) {
+        if (!_Array::inArrayKeys($name, self::$paths)) {
             return false;
         }
 
@@ -380,24 +381,11 @@ class Kernel
      */
     private static function copyFiles(): void
     {
-        self::copyIfNotExists(__DIR__ . '/Init/.htaccess', self::$paths['public'] . '/.htaccess');
-        self::copyIfNotExists(__DIR__ . '/Init/assets/dialogbox.css', self::$paths['assets'] . '/dialogbox.css');
-        self::copyIfNotExists(__DIR__ . '/Init/assets/dialogbox.js', self::$paths['assets'] . '/dialogbox.js');
-        self::copyIfNotExists(__DIR__ . '/Init/assets/spinner.css', self::$paths['assets'] . '/spinner.css');
-        self::copyIfNotExists(__DIR__ . '/Init/assets/spinner.js', self::$paths['assets'] . '/spinner.js');
-    }
-
-    /**
-     * Copu file if file in destination not exists
-     * @param $source
-     * @param $destination
-     * @return void
-     */
-    private static function copyIfNotExists($source, $destination): void
-    {
-        if (!file_exists($destination)) {
-            copy($source, $destination);
-        }
+        File::copy(__DIR__ . '/Init/.htaccess', self::$paths['public'] . '/.htaccess');
+        File::copy(__DIR__ . '/Init/assets/dialogbox.css', self::$paths['assets'] . '/dialogbox.css');
+        File::copy(__DIR__ . '/Init/assets/dialogbox.js', self::$paths['assets'] . '/dialogbox.js');
+        File::copy(__DIR__ . '/Init/assets/spinner.css', self::$paths['assets'] . '/spinner.css');
+        File::copy(__DIR__ . '/Init/assets/spinner.js', self::$paths['assets'] . '/spinner.js');
     }
 
 }

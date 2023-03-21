@@ -50,12 +50,12 @@ class Email
 
         $view = new View();
         $htmlContent = $view->render(
-            $layout,
             [
                 'content' => $content,
                 'header' => $header,
                 'footer' => $footer
-            ]
+            ],
+            $layout
         );
 
         return $newEmail->send($subject, $htmlContent);

@@ -3,6 +3,8 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Table\Trait;
 
 use Krzysztofzylka\MicroFramework\Extension\Table\Extra\Cell;
+use krzysztofzylka\SimpleLibraries\Library\_Array;
+use krzysztofzylka\SimpleLibraries\Library\Strings;
 
 trait Render
 {
@@ -67,7 +69,7 @@ trait Render
             foreach ($this->columns as $columnKey => $column) {
                 $style = '';
                 $cell = new Cell();
-                $cell->val = $this->getArrayData($columnKey, $result);
+                $cell->val = _Array::getFromArrayUsingString($columnKey, $result);
                 $cell->data = $result;
 
                 if (isset($column['width'])) {
@@ -86,7 +88,7 @@ trait Render
 
                 if (isset($column['maxChar']) && is_int($column['maxChar'])) {
                     if (mb_strlen($value) > $column['maxChar']) {
-                        $value = mb_strimwidth(str_replace(["\n", "\r", '<br />', '<br>'], '', $value), 0, $column['maxChar'], '...', 'UTF-8');
+                        $value = mb_strimwidth(Strings::removeLineBreaks($value), 0, $column['maxChar'], '...', 'UTF-8');
                     }
                 }
 

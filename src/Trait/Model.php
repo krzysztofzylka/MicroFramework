@@ -10,6 +10,7 @@ use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use Krzysztofzylka\MicroFramework\Model as ModelClass;
+use krzysztofzylka\SimpleLibraries\Library\Strings;
 
 trait Model
 {
@@ -79,7 +80,7 @@ trait Model
             throw new NotFoundException('Not found model ' . $startName);
         }
 
-        $this->models[str_replace('_', '', ucwords($startName, '_'))] = $model;
+        $this->models[Strings::camelizeString($startName, '_')] = $model;
 
         return $model;
     }

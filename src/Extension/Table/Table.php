@@ -260,19 +260,6 @@ class Table
     }
 
     /**
-     * Get data from array
-     * @param string $name
-     * @param array $data
-     * @return mixed
-     */
-    private function getArrayData(string $name, array $data): mixed
-    {
-        $arrayData = '$data[\'' . implode('\'][\'', explode('.', $name)) . '\']';
-
-        return @eval("return $arrayData;");
-    }
-
-    /**
      * Add custom query
      * @param array $conditions
      * @return void

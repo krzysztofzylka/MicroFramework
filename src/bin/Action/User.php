@@ -2,12 +2,16 @@
 
 namespace Krzysztofzylka\MicroFramework\bin\Action;
 
+use Exception;
 use Krzysztofzylka\MicroFramework\bin\Console\Console;
 use Krzysztofzylka\MicroFramework\bin\Trait\Database;
 use Krzysztofzylka\MicroFramework\bin\Trait\Prints;
+use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
+use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 
-class User {
+class User
+{
 
     use Prints;
     use Database;
@@ -35,10 +39,11 @@ class User {
     /**
      * Create user
      * @return void
-     * @throws \Krzysztofzylka\MicroFramework\Exception\NotFoundException
-     * @throws \krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException
+     * @throws NotFoundException
+     * @throws SimpleLibraryException
      */
-    private function create() {
+    private function create()
+    {
         if (!isset($this->console->arg[3]) || !isset($this->console->arg[4])) {
             $this->dprint('Login and password is required');
 
@@ -56,7 +61,7 @@ class User {
                 Account::$tableInstance->updateValue('admin', 5);
                 $this->print('User has admin permission!');
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->dprint('Fail: ' . $exception->getMessage());
 
             exit;

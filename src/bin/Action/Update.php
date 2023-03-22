@@ -22,7 +22,7 @@ class Update {
         $this->tprint('Update directory and files');
         new Init($this->console);
         $this->tprint('Update database');
-        new DatabaseUpdate($this->console);
+        new Database($this->console, 'update');
         Console::$disableDiePrint = false;
         $this->dtprint('End update');
 

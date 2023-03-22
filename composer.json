@@ -21,6 +21,7 @@
         "twig/twig": "^3.0",
         "krzysztofzylka/database-manager": "v1.0.17",
         "phpmailer/phpmailer": "^6.8",
-        "fakerphp/faker": "^v1.21.0"
+        "fakerphp/faker": "^v1.21.0",
+        "jc21/clitable": "^1.2"
     }
 }

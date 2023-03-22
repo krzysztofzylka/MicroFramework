@@ -17,7 +17,7 @@ class Help {
         $this->print('Help');
         $this->print('init                                          - Initialize project');
         $this->print('update                                        - Update project');
-        $this->print('database_update                               - Update database');
+        $this->print('database update                               - Update database');
         $this->print('user create <login> <password> <is admin>     - Create user');
     }
 

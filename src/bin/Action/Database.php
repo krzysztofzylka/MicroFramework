@@ -3,22 +3,26 @@
 namespace Krzysztofzylka\MicroFramework\bin\Action;
 
 use Exception;
+use jc21\CliTable;
 use krzysztofzylka\DatabaseManager\Column;
 use krzysztofzylka\DatabaseManager\CreateTable;
 use krzysztofzylka\DatabaseManager\Enum\ColumnType;
+use krzysztofzylka\DatabaseManager\Exception\ConditionException;
 use krzysztofzylka\DatabaseManager\Exception\InsertException;
+use krzysztofzylka\DatabaseManager\Exception\SelectException;
 use krzysztofzylka\DatabaseManager\Exception\UpdateException;
 use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\bin\Console\Console;
-use Krzysztofzylka\MicroFramework\bin\Trait\Database;
 use Krzysztofzylka\MicroFramework\bin\Trait\Prints;
+use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Database\Enum\UpdateStatus;
+use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 
-class DatabaseUpdate
+class Database
 {
 
     use Prints;
-    use Database;
+    use \Krzysztofzylka\MicroFramework\bin\Trait\Database;
 
     /**
      * Console object
@@ -43,16 +47,52 @@ class DatabaseUpdate
      * Init project
      * @param Console $console
      */
-    public function __construct(Console $console)
+    public function __construct(Console $console, ?string $action = null)
     {
         $this->console = $console;
+        $this->databaseConnect($this->console->path);
+        $this->updateTable = (new Table())->setName('database_updater');
+
+        switch ($action ?? $console->arg[2] ?? false) {
+            case 'update':
+                $this->update();
+
+                break;
+            case 'update_info':
+                $table = new CliTable();
+                $table->setTableColor('blue');
+                $table->setHeaderColor('cyan');
+                $table->addField('Id', 'id');
+                $table->addField('Name', 'name');
+                $table->addField('Status',  'status', false, 'green');
+                $table->addField('Created',  'date_created', false, 'blue');
+                $table->addField('Modify',  'date_modify', false, 'yellow');
+                $table->injectData(array_column($this->updateTable->findAll(), 'database_updater'));
+                $table->display();
+
+                break;
+            default:
+                $this->dprint('Action not found');
+
+                break;
+        }
+    }
+
+    /**
+     * Update database
+     * @return void
+     * @throws InsertException
+     * @throws UpdateException
+     * @throws NotFoundException
+     * @throws ConditionException
+     * @throws SelectException
+     * @throws SimpleLibraryException
+     */
+    public function update(): void
+    {
         $this->databaseUpdaterPath = $this->console->path . '/database_updater';
 
         $this->tprint('Start update database');
-
-        $this->databaseConnect($console->path);
-        $this->updateTable = (new Table())->setName('database_updater');
-
         $this->tprint('Init update table');
         $this->initUpdateTable();
         $this->tprint('Scan directory "' . $this->databaseUpdaterPath . '"');

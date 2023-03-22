@@ -63,7 +63,35 @@ class Init
             $this->dtprint('Failed copy file: ' . $exception->getMessage());
         }
 
+        $this->tprint('Set files contents');
+
+        try {
+            $indexContent = file_get_contents($this->console->path . '/public/index.php');
+            $indexContent = str_replace('{{vendorPath}}', self::getVendorPath($this->console->path) . '/autoload.php', $indexContent);
+            file_put_contents($this->console->path . '/public/index.php', $indexContent);
+        } catch (Exception $exception) {
+            $this->dtprint('Failed set files contents: ' . $exception->getMessage());
+        }
+
         $this->dtprint('End init');
+    }
+
+    /**
+     * Get vendor path
+     * @param $path $console->path
+     * @return string
+     */
+    public static function getVendorPath($path): ?string
+    {
+        for ($i = 0; $i<=15; $i++) {
+            $path = realpath($path . '/../');
+
+            if (file_exists($path . '/vendor')) {
+                return realpath($path . '/vendor');
+            }
+        }
+
+        return '';
     }
 
 }

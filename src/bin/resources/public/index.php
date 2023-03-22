@@ -12,7 +12,7 @@ use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\View;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 
-include('../../vendor/autoload.php');
+include('{{vendorPath}}');
 
 try {
     Kernel::initPaths(__DIR__ . '/../');

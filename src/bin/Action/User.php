@@ -19,26 +19,40 @@ class User {
     public function __construct(Console $console)
     {
         $this->console = $console;
-        $userAction = $console->arg[2];
 
-        if (!in_array($userAction, ['create'])) {
-            $this->dprint('Action not found');
+        switch ($console->arg[2] ?? false) {
+            case 'create':
+                $this->create();
 
-            exit;
-        } elseif (!isset($console->arg[3]) || !isset($console->arg[4])) {
+                break;
+            default:
+                $this->dprint('Action not found');
+
+                break;
+        }
+    }
+
+    /**
+     * Create user
+     * @return void
+     * @throws \Krzysztofzylka\MicroFramework\Exception\NotFoundException
+     * @throws \krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException
+     */
+    private function create() {
+        if (!isset($this->console->arg[3]) || !isset($this->console->arg[4])) {
             $this->dprint('Login and password is required');
 
             exit;
         }
 
-        $this->databaseConnect($console->path);
+        $this->databaseConnect($this->console->path);
 
         $account = new Account();
 
         try {
-            $account->registerUser($console->arg[3], $console->arg[4]);
+            $account->registerUser($this->console->arg[3], $this->console->arg[4]);
 
-            if (isset($console->arg[5]) && $console->arg[5]) {
+            if (isset($this->console->arg[5]) && $this->console->arg[5]) {
                 Account::$tableInstance->updateValue('admin', 5);
                 $this->print('User has admin permission!');
             }

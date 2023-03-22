@@ -15,7 +15,7 @@ use krzysztofzylka\SimpleLibraries\Library\Request;
 include('../../vendor/autoload.php');
 
 try {
-    Kernel::create(__DIR__ . '/../');
+    Kernel::initPaths(__DIR__ . '/../');
     new Autoload(Kernel::getProjectPath());
     Kernel::setConfig(new Config());
     Kernel::run();

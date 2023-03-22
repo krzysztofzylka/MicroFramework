@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework\bin\Trait;
 
+use Krzysztofzylka\MicroFramework\bin\Console\Console;
 use krzysztofzylka\SimpleLibraries\Library\Date;
 
 trait Prints
@@ -22,8 +23,14 @@ trait Prints
      * @param string $value
      * @return never
      */
-    private function dprint(string $value): never
+    private function dprint(string $value): void
     {
+        if (Console::$disableDiePrint) {
+            $this->print($value);
+
+            return;
+        }
+
         die($value . PHP_EOL);
     }
 
@@ -44,6 +51,12 @@ trait Prints
      */
     private function dtprint(string $value): void
     {
+        if (Console::$disableDiePrint) {
+            $this->tprint($value);
+
+            return;
+        }
+
         $this->dprint('[' . Date::getSimpleDate() . '] ' . $value);
     }
 

@@ -62,6 +62,8 @@ class Init
         } catch (Exception $exception) {
             $this->dtprint('Failed copy file: ' . $exception->getMessage());
         }
+
+        $this->dtprint('End init');
     }
 
 }

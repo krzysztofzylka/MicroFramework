@@ -29,6 +29,12 @@ class Console
     public string $path;
 
     /**
+     * Disable die in print methods
+     * @var bool
+     */
+    public static bool $disableDiePrint = false;
+
+    /**
      * Resources path
      * @var string
      */

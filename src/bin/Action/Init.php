@@ -83,6 +83,10 @@ class Init
      */
     public static function getVendorPath($path): ?string
     {
+        if (file_exists($path . '/vendor')) {
+            return $path . '/vendor';
+        }
+
         for ($i = 0; $i<=15; $i++) {
             $path = realpath($path . '/../');
 

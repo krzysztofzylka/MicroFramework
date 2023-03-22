@@ -55,7 +55,7 @@ class Account
      * Table instance
      * @var Table
      */
-    private static Table $tableInstance;
+    public static Table $tableInstance;
 
     /**
      * Constructor

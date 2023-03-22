@@ -3,24 +3,22 @@
 namespace Krzysztofzylka\MicroFramework\bin\Action;
 
 use Exception;
-use config\Config;
 use krzysztofzylka\DatabaseManager\Column;
 use krzysztofzylka\DatabaseManager\CreateTable;
 use krzysztofzylka\DatabaseManager\Enum\ColumnType;
-use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Exception\InsertException;
 use krzysztofzylka\DatabaseManager\Exception\UpdateException;
 use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\bin\Console\Console;
+use Krzysztofzylka\MicroFramework\bin\Trait\Database;
 use Krzysztofzylka\MicroFramework\bin\Trait\Prints;
-use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Extension\Database\Enum\UpdateStatus;
-use Krzysztofzylka\MicroFramework\Kernel;
 
 class DatabaseUpdate
 {
 
     use Prints;
+    use Database;
 
     /**
      * Console object
@@ -52,19 +50,8 @@ class DatabaseUpdate
 
         $this->tprint('Start update database');
 
-        try {
-            Kernel::initPaths($this->console->path);
-            Kernel::autoload();
-            Kernel::setConfig(new Config());
-            Kernel::configDatabaseConnect();
-            $this->updateTable = (new Table())->setName('database_updater');
-        } catch (DatabaseManagerException $exception) {
-            $this->dtprint('Database fail: ' . $exception->getHiddenMessage());
-        } catch (DatabaseException $exception) {
-            $this->dtprint('Database fail: ' . $exception->getHiddenMessage());
-        } catch (Exception $exception) {
-            $this->dtprint('Database fail: ' . $exception->getMessage());
-        }
+        $this->databaseConnect($console->path);
+        $this->updateTable = (new Table())->setName('database_updater');
 
         $this->tprint('Init update table');
         $this->initUpdateTable();

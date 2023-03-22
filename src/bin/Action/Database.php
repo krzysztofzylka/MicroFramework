@@ -60,8 +60,6 @@ class Database
                 break;
             case 'update_info':
                 $table = new CliTable();
-                $table->setTableColor('blue');
-                $table->setHeaderColor('cyan');
                 $table->addField('Id', 'id');
                 $table->addField('Name', 'name');
                 $table->addField('Status',  'status', false, 'green');

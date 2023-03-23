@@ -137,7 +137,7 @@ class Kernel
             $arguments = array_slice($explode, 3);
 
             self::init($controller, $method, $arguments, ['api' => true]);
-        } elseif (self::$config->api && $controller === self::$config->adminPanelUri) {
+        } elseif (self::$config->adminPanel && $controller === self::$config->adminPanelUri) {
             $controller = $explode[1];
             $method = $explode[2] ?? self::getConfig()->defaultMethod;
             $arguments = array_slice($explode, 3);

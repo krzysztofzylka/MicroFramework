@@ -19,7 +19,7 @@
         "ext-mbstring": "*",
         "krzysztofzylka/simple-libraries": "1.0.9",
         "twig/twig": "^3.0",
-        "krzysztofzylka/database-manager": "v1.0.17",
+        "krzysztofzylka/database-manager": "v1.0.18",
         "phpmailer/phpmailer": "^6.8",
         "fakerphp/faker": "^v1.21.0",
         "jc21/clitable": "^1.2"

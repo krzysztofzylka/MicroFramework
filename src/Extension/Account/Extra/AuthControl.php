@@ -55,6 +55,12 @@ class AuthControl
      */
     public static function checkAuthorization(string $class, string $method): bool
     {
+        if (!class_exists($class)) {
+            throw new NotFoundException('Not found class ' . $class);
+        } elseif (!method_exists($class, $method)) {
+            throw new NotFoundException('Not found method ' . $method . ' in class ' . $class);
+        }
+
         try {
             $requireAuth = PHPDoc::getClassMethodComment($class, $method, 'auth')[0] ?? Kernel::getConfig()->authControlDefaultRequireAuth;
 

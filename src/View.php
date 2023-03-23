@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework;
 
 use Exception;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
+use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
@@ -144,7 +145,9 @@ class View
             'variables' => $this->variables,
             'config' => (array)Kernel::getConfig(),
             'controller' => $this->controller,
-            'dialogboxConfig' => '[]'
+            'dialogboxConfig' => '[]',
+            'accountId' => Account::$accountId,
+            'account' => Account::$account
         ];
 
         if (isset($this->controller->layout) && $this->controller->layout === 'dialogbox') {

@@ -44,6 +44,12 @@ class ConfigDefault
      */
     public ?string $adminPanelUri = 'admin_panel';
 
+    /**
+     * Statistics
+     * @var bool
+     */
+    public bool $statistics = false;
+
     /** API */
 
     /**

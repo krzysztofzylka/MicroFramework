@@ -15,6 +15,7 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
+use Krzysztofzylka\MicroFramework\Extension\Statistic\Statistic;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
@@ -111,6 +112,8 @@ class Kernel
 
         $url = $_GET['url'] ?? self::getConfig()->defaultPage;
         $extension = File::getExtension($url);
+
+        new Statistic();
 
         if (!empty($extension)) {
             if (!file_exists($url)) {

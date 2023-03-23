@@ -1,0 +1,27 @@
+{% extends "MicroFramework/Layout/dashboard/paLayout.twig" %}
+
+{% block contentTitle %}
+    Statistic
+{% endblock %}
+
+{% block content %}
+    <canvas id="myChart" style="width:100%;max-width:100%"></canvas>
+
+    <script>
+        new Chart("myChart", {
+            type: "line",
+            data: {
+                labels: {{ labels|raw }},
+                datasets: [{
+                    borderColor: "blue",
+                    data: {{ visits|raw }},
+                    label: "Visits"
+                },{
+                    borderColor: "yellow",
+                    data: {{ unique|raw }},
+                    label: "Unique"
+                }]
+            }
+        });
+    </script>
+{% endblock %}

@@ -57,6 +57,10 @@ trait Model
             $class = ObjectNameGenerator::model($name);
         }
 
+        if (!class_exists($class)) {
+            throw new NotFoundException('Not found model ' . $startName);
+        }
+
         try {
             /** @var ModelClass $model */
             $model = new $class();

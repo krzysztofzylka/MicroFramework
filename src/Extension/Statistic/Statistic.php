@@ -25,10 +25,6 @@ class Statistic {
 
             $ip = Client::getIP();
 
-            if ($ip === '127.0.0.1') {
-                return;
-            }
-
             $data = $this->geoplugin($ip);
 
             $this->statisticInstance = new Table('statistic');

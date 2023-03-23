@@ -129,6 +129,7 @@ class Table
      */
     public function render(): string
     {
+        $this->session();
         $this->getResults();
 
         $this->html .= '<div class="tableRender" id="' . $this->id . '">';
@@ -175,7 +176,7 @@ class Table
      * @return void
      * @throws DatabaseException
      */
-    private function session(): void
+    public function session(): void
     {
         $this->getSession();
 

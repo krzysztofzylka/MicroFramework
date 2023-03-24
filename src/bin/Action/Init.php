@@ -59,6 +59,7 @@ class Init
             File::copy($this->console->resourcesPath . '/public/assets/dialogbox.js', $this->console->path . '/public/assets/dialogbox.js');
             File::copy($this->console->resourcesPath . '/public/assets/spinner.css', $this->console->path . '/public/assets/spinner.css');
             File::copy($this->console->resourcesPath . '/public/assets/spinner.js', $this->console->path . '/public/assets/spinner.js');
+            File::copy($this->console->resourcesPath . '/admin_panel/view/layout.twig', $this->console->path . '/admin_panel/view/layout.twig');
         } catch (Exception $exception) {
             $this->dtprint('Failed copy file: ' . $exception->getMessage());
         }

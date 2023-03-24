@@ -109,12 +109,32 @@ trait Render
      */
     private function renderAction(): void
     {
-        $this->html .= '<div class="actions float-end">';
+        $this->html .= '<div class="actions">';
+        $this->html .= '<div class="row">';
+        $this->html .= '<div class="col">';
 
+        foreach ($this->actions as $action) {
+            $type = $action['type'] ?? 'primary';
+            $value = $action['value'] ?? '';
+            $href = $action['href'] ?? '#';
+            $class = $action['class'] ?? '';
+            $dialogbox = $action['dialogbox'] ?? true;
+
+            if ($dialogbox) {
+                $class .= ' ajaxlink';
+            }
+
+            $this->html .= '<a class="btn btn-' . $type . ' me-2 ' . $class . '" href="' . $href . '">' . $value . '</a>';
+        }
+
+        $this->html .= '</div>';
+        $this->html .= '<div class="col-3 float-end">';
         if ($this->activeSearch) {
             $this->html .= '<form method="POST"><input type="hidden" name="table_id" value="' . $this->id . '" /><input name="search" class="form-control" placeholder="Search..." value="' . $this->search . '" /></form>';
         }
 
+        $this->html .= '</div>';
+        $this->html .= '</div>';
         $this->html .= '</div>';
     }
 

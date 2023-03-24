@@ -5,6 +5,7 @@ namespace Krzysztofzylka\MicroFramework\Extension\Table;
 use krzysztofzylka\DatabaseManager\Condition;
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
+use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Render;
 use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Session;
 use Krzysztofzylka\MicroFramework\Model;
@@ -22,11 +23,13 @@ class Table
      * @var ?Model
      */
     public ?Model $model = null;
+
     /**
      * Controller
      * @var Controller
      */
     public Controller $controller;
+
     /**
      * Table columns:
      * [
@@ -44,71 +47,100 @@ class Table
      * @var array
      */
     public array $columns = [];
+
     /**
      * Data results for body
      * @var array
      */
     public array $results = [];
+
     /**
      * Search string
      * @var string
      */
     public string $search = '';
+
     /**
      * Enable search
      * @var bool
      */
     public bool $activeSearch = true;
+
     /**
      * Post data
      * @var ?array
      */
     public ?array $data = null;
+
     /**
      * Enable pagination
      * @var bool
      */
     public bool $activePagination = true;
+
     /**
      * Elements per page
      * @var int
      */
     public int $paginationLimit = 20;
+
     /**
      * Actual page
      * @var int
      */
     public int $page = 1;
+
     /**
      * Pages
      * @var ?int
      */
     public int $pages = 1;
+
+    /**
+     * Actions
+     * [
+     *   [
+     *     'value' => '', //button value
+     *     'type' => 'primary', //button type
+     *     'href' => '#', //button url
+     *     'class' => '', //additional classes
+     *     'dialogbox' => true, //add ajaxlink class
+     *   ]
+     * ]
+     * @var array
+     */
+    public array $actions = [];
+
     /**
      * Table ID
      * @var string
      */
     private string $id = '';
+
     /**
      * Html table
      * @var string
      */
     private string $html = '';
+
     /**
      * Conditions
      * @var ?Condition
      */
     private ?array $conditions = [];
+
     /**
      * Have conditions
      * @var bool
      */
     private bool $haveCondition = false;
+
     /**
      * Session
      * @var mixed
      */
     private mixed $session = null;
+
     /**
      * SQL limit
      * @var ?string
@@ -129,9 +161,12 @@ class Table
      */
     public function render(): string
     {
+        if (empty($this->columns)) {
+            return '<div class="alert alert-danger">Table column is empty</div>';
+        }
+
         $this->session();
         $this->getResults();
-
         $this->html .= '<div class="tableRender" id="' . $this->id . '">';
         $this->renderAction();
         $this->html .= '<table class="table table-sm">';
@@ -273,6 +308,21 @@ class Table
 
         $this->haveCondition = true;
         $this->conditions = array_merge($this->conditions, $conditions);
+    }
+
+    /**
+     * Set model
+     * @param string|Model|null $model
+     * @return void
+     * @throws NotFoundException
+     */
+    public function setModel(string|Model|null $model): void
+    {
+        if (is_string($model)) {
+            $model = $this->controller->loadModel($model);
+        }
+
+        $this->model = $model;
     }
 
 }

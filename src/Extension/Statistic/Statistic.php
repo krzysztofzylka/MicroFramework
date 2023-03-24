@@ -16,7 +16,9 @@ class Statistic {
     private Table $statisticIpInstance;
     private Table $statisticVisitsInstance;
 
-    //save statistics
+    /**
+     * Save statistics
+     */
     public function __construct() {
         try {
             if (!Kernel::getConfig()->statistics || !Kernel::getConfig()->database) {
@@ -76,6 +78,11 @@ class Statistic {
         }
     }
 
+    /**
+     * Get data from geoplugin
+     * @param string $ip
+     * @return array
+     */
     private function geoplugin(string $ip) {
         try {
             $url = 'http://www.geoplugin.net/php.gp?ip=' . $ip;

@@ -124,19 +124,20 @@ class Model
 
     /**
      * Select
-     * @param null|array|Condition $condition
+     * @param ?array $condition
+     * @param ?array $columns
      * @param ?string $orderBy
      * @return array|false
      * @throws DatabaseException
      */
-    public function find(null|array|Condition $condition = null, ?string $orderBy = null): array|false
+    public function find(?array $condition = null, ?array $columns = null, ?string $orderBy = null): array|false
     {
         if (!isset($this->tableInstance)) {
             return false;
         }
 
         try {
-            return $this->tableInstance->find($condition, $orderBy);
+            return $this->tableInstance->find($condition, $columns, $orderBy);
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
@@ -144,21 +145,22 @@ class Model
 
     /**
      * Find all
-     * @param null|array|Condition $condition
+     * @param ?array $condition
+     * @param ?array $columns
      * @param ?string $orderBy
      * @param ?string $limit
      * @param ?string $groupBy
      * @return array|false
      * @throws DatabaseException
      */
-    public function findAll(null|array|Condition $condition = null, ?string $orderBy = null, ?string $limit = null, ?string $groupBy = null): array|false
+    public function findAll(?array $condition = null, ?array $columns = null, ?string $orderBy = null, ?string $limit = null, ?string $groupBy = null): array|false
     {
         if (!isset($this->tableInstance)) {
             return false;
         }
 
         try {
-            return $this->tableInstance->findAll($condition, $orderBy, $limit, $groupBy);
+            return $this->tableInstance->findAll($condition, $columns, $orderBy, $limit, $groupBy);
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
@@ -211,12 +213,12 @@ class Model
 
     /**
      * Find count
-     * @param null|array|Condition $condition
+     * @param ?array $condition
      * @param ?string $groupBy
      * @return int
      * @throws DatabaseException
      */
-    public function findCount(null|array|Condition $condition = null, ?string $groupBy = null): int
+    public function findCount(?array $condition = null, ?string $groupBy = null): int
     {
         if (!isset($this->tableInstance)) {
             return false;
@@ -231,11 +233,11 @@ class Model
 
     /**
      * Find isset
-     * @param null|array|Condition $condition
+     * @param ?array $condition
      * @return bool
      * @throws DatabaseException
      */
-    public function findIsset(null|array|Condition $condition = null): bool
+    public function findIsset(?array $condition = null): bool
     {
         if (!isset($this->tableInstance)) {
             return false;

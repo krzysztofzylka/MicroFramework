@@ -17,7 +17,7 @@ class statistic extends Controller
 
         $statistics = (new Table('statistic'))->findAll([
             new Condition('statistic.date', '>=', date('Y-m-d', strtotime('-1 month')))
-        ], 'statistic.date ASC');
+        ], ['date', 'unique', 'visits'], 'statistic.date ASC');
 
         foreach ($statistics as $statistic) {
             $labels[] = $statistic['statistic']['date'];

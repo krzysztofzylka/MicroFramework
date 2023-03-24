@@ -31,7 +31,7 @@ class Statistic {
             $this->statisticIpInstance = new Table('statistic_ip');
             $this->statisticVisitsInstance = new Table('statistic_visits');
 
-            $statisticIp = $this->statisticIpInstance->find(['date' => date('Y-m-d'), 'ip' => $ip]);
+            $statisticIp = $this->statisticIpInstance->find(['date' => date('Y-m-d'), 'ip' => $ip], ['id', 'visits']);
             $unique = false;
 
             if (!$statisticIp) {
@@ -42,12 +42,12 @@ class Statistic {
                     'visits' => 1
                 ]);
 
-                $statisticIp = $this->statisticIpInstance->find(['date' => date('Y-m-d'), 'ip' => $ip]);
+                $statisticIp = $this->statisticIpInstance->find(['date' => date('Y-m-d'), 'ip' => $ip], ['id', 'visits']);
             } else {
                 $this->statisticIpInstance->setId($statisticIp['statistic_ip']['id'])->updateValue('visits', $statisticIp['statistic_ip']['visits'] + 1);
             }
 
-            $statistic = $this->statisticInstance->find(['date' => date('Y-m-d')]);
+            $statistic = $this->statisticInstance->find(['date' => date('Y-m-d')], ['id', 'visits', 'unique']);
 
             if (!$statistic) {
                 $this->statisticInstance->insert([

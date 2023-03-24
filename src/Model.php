@@ -103,14 +103,14 @@ class Model
      * @throws DatabaseException
      * @throws NotFoundException
      */
-    public function findRequired(null|array|Condition $condition = null, ?string $orderBy = null): array|false
+    public function findRequired(?array $condition = null, ?array $columns = null, ?string $orderBy = null): array|false
     {
         if (!isset($this->tableInstance)) {
             return false;
         }
 
         try {
-            $find = $this->find($condition, $orderBy);
+            $find = $this->find($condition, $columns, $orderBy);
 
             if (!$find) {
                 throw new NotFoundException();

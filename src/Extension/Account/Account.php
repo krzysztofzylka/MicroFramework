@@ -211,7 +211,7 @@ class Account
         }
 
         try {
-            $find = self::$tableInstance->find(['username' => $username]);
+            $find = self::$tableInstance->find(['username' => $username], ['id', 'password']);
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }

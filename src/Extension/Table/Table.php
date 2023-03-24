@@ -256,7 +256,7 @@ class Table
                 $this->conditions = null;
             }
 
-            $this->results = $this->model->findAll($this->conditions, null, $this->limit);
+            $this->results = $this->model->findAll($this->conditions, null, null, $this->limit);
         }
     }
 

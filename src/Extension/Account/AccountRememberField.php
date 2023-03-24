@@ -34,7 +34,7 @@ class AccountRememberField
             $find = $table->find([
                 'account_id' => Account::$accountId,
                 'name' => $name
-            ]);
+            ], ['id']);
 
             if ($find) {
                 return $table->setId($find['account_remember_field']['id'])->update([
@@ -85,7 +85,7 @@ class AccountRememberField
             $find = $this->getTable()->find([
                 'account_id' => Account::$accountId,
                 'name' => $name
-            ]);
+            ], ['value']);
 
             if (!$find) {
                 return false;

@@ -11,7 +11,6 @@ use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Trait\Log;
-use krzysztofzylka\SimpleLibraries\Library\Strings;
 
 class Cron {
 

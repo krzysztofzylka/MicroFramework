@@ -44,7 +44,7 @@ class Email
         $newEmail->addAddress($address);
 
         $layout = match ($layout) {
-            'default' => 'mf_email_default',
+            'default' => 'MicroFramework/EmailLayout/default',
             default => $layout
         };
 

@@ -20,6 +20,7 @@ class Help {
         $this->print('database update                               - Update database');
         $this->print('database update_info                          - Update database - info');
         $this->print('user create <login> <password> <is admin>     - Create user');
+        $this->print('debug                                         - Debug');
     }
 
 }

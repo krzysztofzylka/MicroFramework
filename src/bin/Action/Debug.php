@@ -5,6 +5,7 @@ namespace Krzysztofzylka\MicroFramework\bin\Action;
 use jc21\CliTable;
 use Krzysztofzylka\MicroFramework\bin\Console\Console;
 use Krzysztofzylka\MicroFramework\bin\Trait\Prints;
+use Krzysztofzylka\MicroFramework\Kernel;
 
 class Debug
 {
@@ -24,7 +25,9 @@ class Debug
             ['name' => 'disableDiePrint', 'value' => Console::$disableDiePrint ? 'TRUE' : 'FALSE'],
             ['name' => 'path', 'value' => $console->path],
             ['name' => 'resourcePath', 'value' => $console->resourcesPath],
-            ['name' => 'vendorPath', 'value' => Init::getVendorPath($console->path)]
+            ['name' => 'vendorPath', 'value' => Init::getVendorPath($console->path)],
+            ['name' => 'cronPath', 'value' => $console->cronPath],
+            ['name' => 'config - database', 'value' => Kernel::getConfig()->database ? 'TRUE' : 'FALSE']
         ];
 
         $table = new CliTable();

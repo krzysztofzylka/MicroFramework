@@ -5,6 +5,10 @@ namespace Krzysztofzylka\MicroFramework\Extension\ErrorHandler;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Kernel;
 
+/**
+ * Error handlers
+ * @package Extension\ErrorHandler
+ */
 class ErrorHandler
 {
 

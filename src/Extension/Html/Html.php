@@ -8,7 +8,7 @@ use Krzysztofzylka\MicroFramework\Extension\Html\Trait\Form;
 
 /**
  * Html helper
- * @package Extension
+ * @package Extension\Html
  */
 class Html
 {

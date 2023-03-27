@@ -5,6 +5,10 @@ namespace Krzysztofzylka\MicroFramework\Extension\Database;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Table;
 
+/**
+ * Database updater
+ * @package Extension\Database
+ */
 class Updater
 {
 

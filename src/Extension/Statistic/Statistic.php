@@ -8,6 +8,11 @@ use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use krzysztofzylka\SimpleLibraries\Library\Client;
 
+
+/**
+ * Statistics
+ * @package Extension\Statistic
+ */
 class Statistic {
 
     use Log;

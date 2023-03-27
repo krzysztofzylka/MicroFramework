@@ -7,6 +7,10 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\Client;
 
+/**
+ * Logs
+ * @package Extension\Log
+ */
 class Log
 {
 

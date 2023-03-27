@@ -4,7 +4,7 @@ namespace Krzysztofzylka\MicroFramework\Api\Enum;
 
 /**
  * Api authorization types
- * @package Api
+ * @package Api\Enum
  */
 enum AuthorizationType
 {

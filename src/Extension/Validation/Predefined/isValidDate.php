@@ -6,7 +6,7 @@ use Krzysztofzylka\MicroFramework\Exception\ValidationException;
 
 /**
  * Check date
- * @package Validation
+ * @package Extension\Validation\Predefined
  */
 class isValidDate
 {

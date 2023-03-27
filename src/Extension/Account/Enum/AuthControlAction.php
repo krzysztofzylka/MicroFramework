@@ -2,10 +2,6 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Account\Enum;
 
-/**
- * Auth control action
- * @package Extension
- */
 enum AuthControlAction
 {
 

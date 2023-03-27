@@ -6,7 +6,7 @@ use Krzysztofzylka\MicroFramework\Exception\ValidationException;
 
 /**
  * Required content
- * @package Validation
+ * @package Extension\Validation\Predefined
  */
 class required
 {

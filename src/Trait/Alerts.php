@@ -5,6 +5,10 @@ namespace Krzysztofzylka\MicroFramework\Trait;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 
+/**
+ * Alerts
+ * @package Trait
+ */
 trait Alerts {
 
     /**

@@ -22,7 +22,7 @@ use krzysztofzylka\SimpleLibraries\Library\Session;
 
 /**
  * Account extension
- * @package Extension
+ * @package Extension\Account
  */
 class Account
 {

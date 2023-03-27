@@ -12,6 +12,10 @@ use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use Krzysztofzylka\MicroFramework\Model as ModelClass;
 use krzysztofzylka\SimpleLibraries\Library\Strings;
 
+/**
+ * Model
+ * @package Trait
+ */
 trait Model
 {
 

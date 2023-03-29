@@ -86,16 +86,10 @@ class View
 
         http_response_code($code);
 
-        try {
-            $varExport = var_export($exception, true);
-        } catch (Exception $exception) {
-            $varExport = $exception->getMessage();
-        }
-
         return $this->render(
             [
                 'code' => $code ?? 500,
-                'debug' => Kernel::getConfig()->debug ? $varExport : false,
+                'debug' => Kernel::getConfig()->debug ? json_encode($exception) : false,
                 'hiddenMessage' => $hiddenMessage
             ],
             $name

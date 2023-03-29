@@ -27,6 +27,12 @@ class ConfigDefault
     public string $defaultPage = '/index/index';
 
     /**
+     * Default controller
+     * @var string
+     */
+    public string $defaultController = 'index';
+
+    /**
      * Default controller method
      * @var string
      */

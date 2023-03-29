@@ -24,7 +24,13 @@ class ConfigDefault
      * Default page
      * @var string
      */
-    public string $defaultPage = 'index/index';
+    public string $defaultPage = '/index/index';
+
+    /**
+     * Default controller
+     * @var string
+     */
+    public string $defaultController = 'index';
 
     /**
      * Default controller method

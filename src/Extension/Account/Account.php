@@ -78,6 +78,7 @@ class Account
             self::$accountId = (int)Session::get(self::$sessionName);
             self::$account = self::getAccountData(self::$accountId);
             self::$accountRememberField = new AccountRememberField();
+            self::$tableInstance->setId(self::$accountId);
         }
     }
 

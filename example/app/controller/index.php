@@ -27,6 +27,7 @@ class index extends Controller {
     public function table(): void
     {
         $this->table->model = $this->loadModel('account');
+        $this->table->orderBy = 'account.id DESC';
         $this->table->columns = [
             'account.username' => [
                 'title' => 'Username'

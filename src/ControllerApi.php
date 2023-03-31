@@ -63,14 +63,26 @@ class ControllerApi extends Controller
      * Response JSON error
      * @param string $message
      * @param int $code
+     * @param ?string $detail
      * @return never
      */
-    public function responseError(string $message, int $code = 500): never
+    public function responseError(string $message, int $code = 500, ?string $detail = null): never
     {
+        $data = [
+            'error' => [
+                'message' => $message,
+                'code' => $code
+            ]
+        ];
+
+        if ($detail) {
+            $data['error']['detail'] = $detail;
+        }
+
         http_response_code($code);
 
         $response = new Response();
-        $response->json(['error' => ['message' => $message, 'code' => $code]]);
+        $response->json($data);
     }
 
     /**
@@ -93,8 +105,16 @@ class ControllerApi extends Controller
     {
         $method = is_string($method) ? [$method] : $method;
 
-        if (!in_array($this->getRequestMethod(), $method)) {
-            $this->responseError('Bad request', 400);
+        foreach ($method as $key => $methodValue) {
+            $method[$key] = strtolower($methodValue);
+        }
+
+        if (!in_array(strtolower($this->getRequestMethod()), $method)) {
+            $this->responseError(
+                'Invalid method',
+                400,
+                'Accepted method: ' . strtoupper(implode(',', $method))
+            );
         }
     }
 
@@ -116,7 +136,11 @@ class ControllerApi extends Controller
         json_decode($this->getBodyContent());
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->responseError('Bad request', 400);
+            $this->responseError(
+                'Bad request',
+                400,
+                'Body is not json'
+            );
         }
     }
 
@@ -141,7 +165,11 @@ class ControllerApi extends Controller
 
         foreach ($keyList as $key) {
             if (!in_array($key, $contentBodyKeys)) {
-                $this->responseError('Invalid input data', 400);
+                $this->responseError(
+                    'Invalid input data',
+                    400,
+                    'Require ' . $key
+                );
             }
         }
     }

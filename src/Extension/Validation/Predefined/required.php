@@ -18,7 +18,7 @@ class required
     public function __construct($value)
     {
         if (empty($value)) {
-            throw new ValidationException('This field is required');
+            throw new ValidationException(__('micro-framework.validation.predefined.required'));
         }
     }
 

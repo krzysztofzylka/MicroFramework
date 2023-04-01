@@ -17,6 +17,7 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Statistic\Statistic;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
+use Krzysztofzylka\MicroFramework\Extension\Translation\Translation;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\_Array;
@@ -101,6 +102,8 @@ class Kernel
         if (!isset(self::$config)) {
             self::$config = new ConfigDefault();
         }
+
+        Translation::getTranslationFile(__DIR__ . '/Translations/' . self::getConfig()->translation . '.yaml');
 
         self::errorHandler();
 

@@ -158,7 +158,7 @@ class Account
 
         try {
             if (self::$tableInstance->findIsset(['username' => $username])) {
-                throw new AccountException('User is already isset');
+                throw new AccountException(__('micro-framework.account.account_isset'));
             }
 
             return self::$tableInstance->insert([
@@ -218,7 +218,7 @@ class Account
         }
 
         if (!$find) {
-            throw new AccountException('User not found', 404);
+            throw new AccountException(__('micro-framework.account.user_not-found'), 404);
         }
 
         try {
@@ -228,7 +228,7 @@ class Account
         }
 
         if (!$checkHash) {
-            throw new AccountException('Authentication failed', 401);
+            throw new AccountException(__('micro-framework.account.auth_failed'), 401);
         }
 
         self::$accountId = (int)$find['account']['id'];

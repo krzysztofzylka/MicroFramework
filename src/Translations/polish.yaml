@@ -1,0 +1,27 @@
+micro-framework:
+  name: Polski
+  view:
+    error:
+      error: Błąd
+      not_found: Nie znaleziono
+      page_not_found: Strona nie została znaleziona
+      unauthorized: Brak autoryzacji
+      auth_fail: Nie posiadasz autoryzacji
+      server_error: Błąd serwera
+      unexpected_error: Nieznany błąd serwera
+  table:
+    search: Szukaj ...
+  account:
+    account_isset: Użytkownik już istnieje
+    user_not_found: Nie znaleziono użytkownika
+    auth_failed: Błąd autoryzacji
+    fail_get_remember_field: Błąd pobierania zapisanych danych użytkownika
+    fail_set_remember_field: Błąd zapisywania danych użytkownika
+  validation:
+    predefined:
+      is_email: Nieprawidłowy adres e-mail
+      is_valid_date: Data jest nieprawidłowa
+      required: Pole jest wymagane
+      length:
+        min: Pole nie może posiadać mniej znaków niż
+        max: Pole nie może posiadać więcej znaków niż

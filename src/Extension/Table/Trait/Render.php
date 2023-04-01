@@ -112,7 +112,7 @@ trait Render
         $this->html .= '<div class="actions float-end">';
 
         if ($this->activeSearch) {
-            $this->html .= '<form method="POST"><input type="hidden" name="table_id" value="' . $this->id . '" /><input name="search" class="form-control" placeholder="Search..." value="' . $this->search . '" /></form>';
+            $this->html .= '<form method="POST"><input type="hidden" name="table_id" value="' . $this->id . '" /><input name="search" class="form-control" placeholder="' . __('micro-framework.table.search') . '" value="' . $this->search . '" /></form>';
         }
 
         $this->html .= '</div>';

@@ -8,6 +8,7 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
+use Twig\TwigFunction;
 
 class View
 {
@@ -53,6 +54,10 @@ class View
             $this->filesystemLoader->addPath(__DIR__ . '/Extension/Twig/TwigFiles');
             $this->environment = new Environment($this->filesystemLoader, ['debug' => Kernel::getConfig()->debug]);
             $this->environment->addExtension(new DebugExtension());
+            $translationFunction = new TwigFunction('__', function (string $name) {
+                return __($name);
+            });
+            $this->environment->addFunction($translationFunction);
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
         }

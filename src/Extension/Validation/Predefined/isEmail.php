@@ -18,7 +18,7 @@ class isEmail
     public function __construct($value)
     {
         if (!empty($value) && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            throw new ValidationException('Invalid email format');
+            throw new ValidationException(__('micro-framework.validation.predefined.is_email'));
         }
     }
 

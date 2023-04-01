@@ -18,7 +18,7 @@ class Translation {
      */
     public static function getTranslationFile(string $path): void
     {
-        self::$translation = array_merge(self::$translation, yaml_parse(file_get_contents($path)));
+        self::$translation = \Symfony\Component\Yaml\Yaml::parse(file_get_contents($path));
     }
 
     /**

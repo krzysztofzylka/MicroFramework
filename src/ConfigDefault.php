@@ -56,6 +56,12 @@ class ConfigDefault
      */
     public bool $statistics = false;
 
+    /**
+     * Translaction
+     * @var string
+     */
+    public string $translation = 'english';
+
     /** API */
 
     /**

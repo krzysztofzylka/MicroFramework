@@ -24,3 +24,12 @@ function dumpe(...$data): void
     echo '</pre>';
     exit;
 }
+
+/**
+ * Translation
+ * @param string $name
+ * @return mixed
+ */
+function __(string $name) : mixed {
+    return \Krzysztofzylka\MicroFramework\Extension\Translation\Translation::get($name) ?? '{' . $name . '}';
+}

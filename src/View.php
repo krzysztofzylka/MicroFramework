@@ -5,6 +5,7 @@ namespace Krzysztofzylka\MicroFramework;
 use Exception;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
+use krzysztofzylka\SimpleLibraries\Library\Response;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
@@ -90,6 +91,22 @@ class View
         }
 
         http_response_code($code);
+
+        if (isset(Kernel::$controllerParams['api']) && Kernel::$controllerParams['api']) {
+            $data = [
+                'error' => [
+                    'message' => $exception->getMessage(),
+                    'code' => $code
+                ]
+            ];
+
+            if (Kernel::getConfig()->debug) {
+                $data['error']['hiddenMessage'] = $hiddenMessage;
+            }
+
+            $response = new Response();
+            $response->json($data);
+        }
 
         return $this->render(
             [

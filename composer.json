@@ -25,6 +25,6 @@
         "fakerphp/faker": "^v1.21.0",
         "jc21/clitable": "^1.2",
         "mtdowling/cron-expression": "^1.2",
-        "symfony/yaml": "^6.2",
+        "symfony/yaml": "^6.2"
     }
 }

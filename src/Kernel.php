@@ -62,6 +62,12 @@ class Kernel
     private static object $config;
 
     /**
+     * Parametry kontrolera
+     * @var array
+     */
+    public static array $controllerParams;
+
+    /**
      * Init project
      * @param string $projectPath
      * @return void
@@ -223,6 +229,8 @@ class Kernel
      */
     public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = [], array $params = []): void
     {
+        self::$controllerParams = $params;
+
         if (!self::$projectPath) {
             throw new MicroFrameworkException('Project is not defined', 500);
         }

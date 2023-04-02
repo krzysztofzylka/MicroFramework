@@ -239,6 +239,37 @@ class Account
     }
 
     /**
+     * Login to account by apikey
+     * @param string $apiKey
+     * @return bool
+     * @throws AccountException
+     * @throws DatabaseException
+     * @throws MicroFrameworkException
+     */
+    public function loginApikey(string $apiKey): bool
+    {
+        if (!isset(DatabaseManager::$connection)) {
+            return false;
+        }
+
+        try {
+            $find = self::$tableInstance->find(['api_key' => $apiKey], ['id']);
+        } catch (DatabaseManagerException $exception) {
+            throw new DatabaseException($exception->getHiddenMessage());
+        }
+
+        if (!$find) {
+            throw new AccountException(__('micro-framework.account.user_not-found'), 404);
+        }
+
+        self::$accountId = (int)$find['account']['id'];
+        self::$account = self::getAccountData(self::$accountId);
+        Session::set(self::$sessionName, (int)$find['account']['id']);
+
+        return true;
+    }
+
+    /**
      * Logout user
      * @return void
      */

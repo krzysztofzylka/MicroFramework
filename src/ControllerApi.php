@@ -2,11 +2,13 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Api\Authorization;
-use Krzysztofzylka\MicroFramework\Api\Enum\AuthorizationType;
+use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Response;
+use krzysztofzylka\SimpleLibraries\Library\Strings;
 
 /**
  * Api controller
@@ -30,19 +32,13 @@ class ControllerApi extends Controller
     public bool $auth = true;
 
     /**
-     * Authorization type
-     * @var AuthorizationType
-     */
-    public AuthorizationType $authorizationType = AuthorizationType::basic;
-
-    /**
      * Constructor
      * - Automatic api authorization
      */
     public function __construct()
     {
         if ($this->auth) {
-            if ($this->authorizationType === AuthorizationType::basic) {
+            if (isset($_SERVER['PHP_AUTH_USER']) || isset($_SERVER['PHP_AUTH_PW'])) {
                 $username = isset($_SERVER['PHP_AUTH_USER']) ? htmlspecialchars($_SERVER['PHP_AUTH_USER']) : false;
                 $password = isset($_SERVER['PHP_AUTH_PW']) ? htmlspecialchars($_SERVER['PHP_AUTH_PW']) : false;
                 $auth = false;
@@ -52,9 +48,32 @@ class ControllerApi extends Controller
                 }
 
                 if (!$auth) {
-                    $this->log('Authorization failed', 'WARNING', ['username' => $username, 'authorizationType' => $this->authorizationType->name]);
-                    $this->responseError('Not authorized', 401);
+                    $this->log('Authorization failed', 'WARNING', ['username' => $username]);
+                    $this->responseError('Not authorized', 401, 'Basic auth fail');
                 }
+            } elseif (isset($_SERVER['HTTP_APIKEY'])) {
+                $apikey = Strings::escape($_SERVER['HTTP_APIKEY']);
+
+                if (empty($apikey) || strlen($apikey) < 10) {
+                    $this->responseError('Not authorized', 401, 'ApiKey: ' . $apikey);
+                }
+
+                $account = (new Table('account'))->find(['api_key' => $apikey]);
+
+                if ($account) {
+                    $auth = (new Authorization())->apikey($apikey);
+
+                    if (!$auth) {
+                        $this->log('Authorization failed', 'WARNING', ['apikey' => $apikey]);
+                        $this->responseError('Not authorized', 401, 'Apikey auth fail');
+                    }
+                } else {
+                    $this->log('Authorization failed', 'WARNING', ['apikey' => $apikey]);
+                    $this->responseError('Not authorized', 401, 'Apikey auth fail');
+                }
+            } else {
+                $this->log('Authorization failed', 'WARNING', ['Failed authorization type']);
+                $this->responseError('Not authorized', 401, 'Failed authorization type');
             }
         }
     }

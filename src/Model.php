@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework;
 
 use krzysztofzylka\DatabaseManager\Condition;
+use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Enum\BindType;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Table;
@@ -11,6 +12,7 @@ use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Validation\Validation;
 use Krzysztofzylka\MicroFramework\Trait\Log;
+use PDOStatement;
 
 class Model
 {
@@ -97,7 +99,8 @@ class Model
 
     /**
      * Select required
-     * @param null|array|Condition $condition
+     * @param array|null $condition
+     * @param array|null $columns
      * @param ?string $orderBy
      * @return array|false
      * @throws DatabaseException
@@ -456,6 +459,18 @@ class Model
     public function validations(): array
     {
         return [];
+    }
+
+    /**
+     * Query
+     * @param string $sql
+     * @return false|PDOStatement
+     */
+    public function query(string $sql): bool|PDOStatement
+    {
+        $pdo = DatabaseManager::$connection->getConnection();
+
+        return $pdo->query($sql);
     }
 
     /**

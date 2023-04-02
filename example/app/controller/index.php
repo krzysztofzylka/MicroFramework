@@ -14,9 +14,6 @@ class index extends Controller {
      */
     public function index(): void
     {
-        $account = new Account();
-        var_dump($account->generateApikey());
-
         $this->loadView();
     }
 

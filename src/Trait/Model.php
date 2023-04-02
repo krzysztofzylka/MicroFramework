@@ -47,7 +47,7 @@ trait Model
 
         $startName = $name;
 
-        if (isset($this->params['admin_panel']) && $this->params['admin_panel']) {
+        if (isset($this->controller->params['admin_panel']) && $this->controller->params['admin_panel']) {
             $class = ObjectNameGenerator::modelPaLocal($name);
 
             if (!class_exists($class)) {

@@ -5,9 +5,11 @@ namespace Krzysztofzylka\MicroFramework;
 use Exception;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
+use krzysztofzylka\SimpleLibraries\Library\Response;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
+use Twig\TwigFunction;
 
 class View
 {
@@ -53,6 +55,10 @@ class View
             $this->filesystemLoader->addPath(__DIR__ . '/Extension/Twig/TwigFiles');
             $this->environment = new Environment($this->filesystemLoader, ['debug' => Kernel::getConfig()->debug]);
             $this->environment->addExtension(new DebugExtension());
+            $translationFunction = new TwigFunction('__', function (string $name) {
+                return __($name);
+            });
+            $this->environment->addFunction($translationFunction);
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
         }
@@ -86,10 +92,26 @@ class View
 
         http_response_code($code);
 
+        if (isset(Kernel::$controllerParams['api']) && Kernel::$controllerParams['api']) {
+            $data = [
+                'error' => [
+                    'message' => $exception->getMessage(),
+                    'code' => $code
+                ]
+            ];
+
+            if (Kernel::getConfig()->debug) {
+                $data['error']['hiddenMessage'] = $hiddenMessage;
+            }
+
+            $response = new Response();
+            $response->json($data);
+        }
+
         return $this->render(
             [
                 'code' => $code ?? 500,
-                'debug' => Kernel::getConfig()->debug ? var_export($exception, true) : false,
+                'debug' => Kernel::getConfig()->debug ? json_encode($exception) : false,
                 'hiddenMessage' => $hiddenMessage
             ],
             $name

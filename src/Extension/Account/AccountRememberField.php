@@ -54,7 +54,7 @@ class AccountRememberField
                 ]);
             }
         } catch (DatabaseManagerException $exception) {
-            throw new AccountException('Fail set remember fields: ' . $exception->getHiddenMessage());
+            throw new AccountException(__('micro-framework.account.fail_set_remember_field') . ': ' . $exception->getHiddenMessage());
         }
     }
 
@@ -97,7 +97,7 @@ class AccountRememberField
 
             return $find['account_remember_field']['value'];
         } catch (DatabaseManagerException $exception) {
-            throw new AccountException('Fail get remember fields: ' . $exception->getHiddenMessage());
+            throw new AccountException(__('micro-framework.account.fail_get_remember_field') . ': ' . $exception->getHiddenMessage());
         }
     }
 

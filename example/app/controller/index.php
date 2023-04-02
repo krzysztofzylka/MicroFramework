@@ -4,6 +4,7 @@ namespace app\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
+use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 
 class index extends Controller {
 
@@ -27,6 +28,7 @@ class index extends Controller {
     public function table(): void
     {
         $this->table->model = $this->loadModel('account');
+        $this->table->orderBy = 'account.id DESC';
         $this->table->columns = [
             'account.username' => [
                 'title' => 'Username'

@@ -1,0 +1,27 @@
+micro-framework:
+  name: English
+  view:
+    error:
+      error: Error
+      not_found: Not found
+      page_not_found: Page not found
+      unauthorized: Unauthorized
+      auth_fail: You authorization failed
+      server_error: Server error
+      unexpected_error: Unexpected error
+  table:
+    search: Search ...
+  account:
+    account_isset: User is already isset
+    user_not_found: User not found
+    auth_failed: Authentication failed
+    fail_get_remember_field: Fail get remember fields
+    fail_set_remember_field: Fail set remember fields
+  validation:
+    predefined:
+      is_email: Invalid email format
+      is_valid_date: Invalid date format
+      required: This field is required,
+      length:
+        min: Value must be more or equal to
+        max: Value must be less or equal to

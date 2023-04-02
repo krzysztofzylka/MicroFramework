@@ -17,6 +17,7 @@ use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
+use krzysztofzylka\SimpleLibraries\Library\Generator;
 use krzysztofzylka\SimpleLibraries\Library\Hash;
 use krzysztofzylka\SimpleLibraries\Library\Session;
 
@@ -78,6 +79,7 @@ class Account
             self::$accountId = (int)Session::get(self::$sessionName);
             self::$account = self::getAccountData(self::$accountId);
             self::$accountRememberField = new AccountRememberField();
+            self::$tableInstance->setId(self::$accountId);
         }
     }
 
@@ -157,7 +159,7 @@ class Account
 
         try {
             if (self::$tableInstance->findIsset(['username' => $username])) {
-                throw new AccountException('User is already isset');
+                throw new AccountException(__('micro-framework.account.account_isset'));
             }
 
             return self::$tableInstance->insert([
@@ -217,7 +219,7 @@ class Account
         }
 
         if (!$find) {
-            throw new AccountException('User not found', 404);
+            throw new AccountException(__('micro-framework.account.user_not-found'), 404);
         }
 
         try {
@@ -227,7 +229,38 @@ class Account
         }
 
         if (!$checkHash) {
-            throw new AccountException('Authentication failed', 401);
+            throw new AccountException(__('micro-framework.account.auth_failed'), 401);
+        }
+
+        self::$accountId = (int)$find['account']['id'];
+        self::$account = self::getAccountData(self::$accountId);
+        Session::set(self::$sessionName, (int)$find['account']['id']);
+
+        return true;
+    }
+
+    /**
+     * Login to account by apikey
+     * @param string $apiKey
+     * @return bool
+     * @throws AccountException
+     * @throws DatabaseException
+     * @throws MicroFrameworkException
+     */
+    public function loginApikey(string $apiKey): bool
+    {
+        if (!isset(DatabaseManager::$connection)) {
+            return false;
+        }
+
+        try {
+            $find = self::$tableInstance->find(['api_key' => $apiKey], ['id']);
+        } catch (DatabaseManagerException $exception) {
+            throw new DatabaseException($exception->getHiddenMessage());
+        }
+
+        if (!$find) {
+            throw new AccountException(__('micro-framework.account.user_not-found'), 404);
         }
 
         self::$accountId = (int)$find['account']['id'];
@@ -247,6 +280,25 @@ class Account
 
         self::$accountId = null;
         self::$account = null;
+    }
+
+    /**
+     * Generate api_key
+     * @return string|false
+     * @throws UpdateException
+     */
+    public function generateApikey(): string|false
+    {
+        if (!isset(DatabaseManager::$connection) || !Account::$accountId) {
+            return false;
+        }
+
+        $apikey = Account::$accountId . Generator::uniqId() . Account::$account['account']['password'];
+        $apikey = hash('xxh128', $apikey) . Generator::uniqId(5);
+
+        self::$tableInstance->updateValue('api_key', $apikey);
+
+        return $apikey;
     }
 
 }

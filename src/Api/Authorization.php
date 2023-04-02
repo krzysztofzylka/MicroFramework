@@ -27,4 +27,18 @@ class Authorization
         }
     }
 
+    /**
+     * Apikey auth
+     * @param string $apikey
+     * @return bool
+     */
+    public function apikey(string $apikey): bool
+    {
+        try {
+            return (new Account())->loginApikey($apikey);
+        } catch (Exception) {
+            return false;
+        }
+    }
+
 }

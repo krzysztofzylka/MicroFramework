@@ -17,6 +17,7 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Statistic\Statistic;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
+use Krzysztofzylka\MicroFramework\Extension\Translation\Translation;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\_Array;
@@ -61,6 +62,12 @@ class Kernel
     private static object $config;
 
     /**
+     * Parametry kontrolera
+     * @var array
+     */
+    public static array $controllerParams;
+
+    /**
      * Init project
      * @param string $projectPath
      * @return void
@@ -102,6 +109,8 @@ class Kernel
             self::$config = new ConfigDefault();
         }
 
+        Translation::getTranslationFile(__DIR__ . '/Translations/' . self::getConfig()->translation . '.yaml');
+
         self::errorHandler();
 
         self::configDatabaseConnect();
@@ -138,7 +147,7 @@ class Kernel
 
             self::init($controller, $method, $arguments, ['api' => true]);
         } elseif (self::$config->adminPanel && $controller === self::$config->adminPanelUri) {
-            $controller = $explode[1];
+            $controller = $explode[1] ?? self::getConfig()->defaultController;
             $method = $explode[2] ?? self::getConfig()->defaultMethod;
             $arguments = array_slice($explode, 3);
 
@@ -220,6 +229,8 @@ class Kernel
      */
     public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = [], array $params = []): void
     {
+        self::$controllerParams = $params;
+
         if (!self::$projectPath) {
             throw new MicroFrameworkException('Project is not defined', 500);
         }

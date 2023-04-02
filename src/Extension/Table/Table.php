@@ -119,6 +119,12 @@ class Table
      */
     private ?string $limit = null;
 
+    /**
+     * Default order by
+     * @var ?string
+     */
+    public ?string $orderBy = null;
+
     public function init(): void
     {
         $this->conditions = [];
@@ -260,7 +266,7 @@ class Table
                 $this->conditions = null;
             }
 
-            $this->results = $this->model->findAll($this->conditions, null, null, $this->limit);
+            $this->results = $this->model->findAll($this->conditions, null, $this->orderBy, $this->limit);
         }
     }
 
@@ -271,12 +277,10 @@ class Table
      */
     public function query(array $conditions): void
     {
-        if (empty($conditions)) {
-            return;
+        if (!empty($conditions)) {
+            $this->haveCondition = true;
+            $this->conditions = array_merge($this->conditions, $conditions);
         }
-
-        $this->haveCondition = true;
-        $this->conditions = array_merge($this->conditions, $conditions);
     }
 
 }

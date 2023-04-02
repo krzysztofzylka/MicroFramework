@@ -59,7 +59,11 @@ class Console
             $this->cronPath = false;
         }
 
-        if (!class_exists($class)) {
+        try {
+            if (!class_exists($class)) {
+                $this->dprint('Action not exists.');
+            }
+        } catch (\Exception) {
             $this->dprint('Action not exists.');
         }
 
@@ -75,7 +79,13 @@ class Console
     {
         $this->path = getcwd();
         $this->arg = $argv;
+
+        if (!isset($argv[1])) {
+            $argv[1] = 'help';
+        }
+
         $this->action = $argv[1];
+
         $this->resourcesPath = realpath(__DIR__ . '/../resources/');
 
         Kernel::initPaths($this->path);

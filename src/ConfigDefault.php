@@ -5,6 +5,10 @@ namespace Krzysztofzylka\MicroFramework;
 use Krzysztofzylka\MicroFramework\Extension\Account\Enum\AuthControlAction;
 use Krzysztofzylka\MicroFramework\Extension\Email\Enum\PredefinedConfig;
 
+/**
+ * Default config
+ * @package Config
+ */
 class ConfigDefault
 {
 

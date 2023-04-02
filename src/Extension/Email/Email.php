@@ -14,6 +14,11 @@ use Krzysztofzylka\MicroFramework\View;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
+
+/**
+ * Email extension
+ * @package Extension\Email
+ */
 class Email
 {
 

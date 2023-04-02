@@ -6,7 +6,7 @@ use Krzysztofzylka\MicroFramework\Exception\ValidationException;
 
 /**
  * Length checker
- * @package Validation
+ * @package Extension\Validation\Predefined
  */
 class length
 {

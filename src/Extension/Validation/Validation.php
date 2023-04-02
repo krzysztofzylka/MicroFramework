@@ -6,6 +6,11 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Exception\ValidationException;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 
+
+/**
+ * Validations
+ * @package Extension\Validation
+ */
 class Validation
 {
 

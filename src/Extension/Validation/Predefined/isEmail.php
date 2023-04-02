@@ -6,7 +6,7 @@ use Krzysztofzylka\MicroFramework\Exception\ValidationException;
 
 /**
  * Check e-mail
- * @package Validation
+ * @package Extension\Validation\Predefined
  */
 class isEmail
 {

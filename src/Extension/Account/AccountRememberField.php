@@ -6,6 +6,10 @@ use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Exception\AccountException;
 
+/**
+ * Account remember fields
+ * @package Extension\Account
+ */
 class AccountRememberField
 {
 

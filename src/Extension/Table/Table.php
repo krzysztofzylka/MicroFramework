@@ -10,6 +10,10 @@ use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Session;
 use Krzysztofzylka\MicroFramework\Model;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 
+/**
+ * Table generator
+ * @package Extension\Table
+ */
 class Table
 {
 

@@ -4,10 +4,12 @@ namespace Krzysztofzylka\MicroFramework\bin\Action;
 
 use Exception;
 use jc21\CliTable;
+use krzysztofzylka\DatabaseManager\AlterTable;
 use krzysztofzylka\DatabaseManager\Column;
 use krzysztofzylka\DatabaseManager\CreateTable;
 use krzysztofzylka\DatabaseManager\Enum\ColumnType;
 use krzysztofzylka\DatabaseManager\Exception\ConditionException;
+use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Exception\InsertException;
 use krzysztofzylka\DatabaseManager\Exception\SelectException;
 use krzysztofzylka\DatabaseManager\Exception\UpdateException;
@@ -132,6 +134,15 @@ class Database
         } else {
             $this->tprint('Table already exists');
         }
+
+        $columns = array_column((new Table('database_updater'))->columnList(), 'Field');
+
+        if (!in_array('error', $columns)) {
+            (new AlterTable('database_updater'))->addColumn(
+                (new Column('error'))->setType(ColumnType::text),
+                'status'
+            )->execute();
+        }
     }
 
     /**
@@ -170,8 +181,14 @@ class Database
             include($databaseFile['path']);
 
             $this->updateTable->updateValue('status', UpdateStatus::Success->value);
-        } catch (Exception) {
+        } catch (DatabaseManagerException $exception) {
             $this->updateTable->updateValue('status', UpdateStatus::Fail->value);
+            $this->updateTable->updateValue('error', $exception->getHiddenMessage());
+
+            $this->dtprint('Fail update file: ' . $databaseFile['path']);
+        } catch (Exception $exception) {
+            $this->updateTable->updateValue('status', UpdateStatus::Fail->value);
+            $this->updateTable->updateValue('error', $exception->getMessage());
 
             $this->dtprint('Fail update file: ' . $databaseFile['path']);
         }

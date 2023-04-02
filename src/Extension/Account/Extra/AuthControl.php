@@ -29,18 +29,18 @@ class AuthControl
     public static function run(string $class, string $method, bool $isApi): void
     {
         if (Kernel::getConfig()->authControl) {
+            if ($isApi) {
+                return;
+            }
+
             $checkAuthorization = self::checkAuthorization($class, $method);
 
             if (!$checkAuthorization) {
-                if ($isApi) {
-                    (new ControllerApi())->responseError('Not authorized', 401);
-                } else {
-                    switch (Kernel::getConfig()->authControlAction) {
-                        case AuthControlAction::redirect:
-                            (new Controller())->redirect(Kernel::getConfig()->authControlRedirect);
-                        case AuthControlAction::exception:
-                            throw new NoAuthException();
-                    }
+                switch (Kernel::getConfig()->authControlAction) {
+                    case AuthControlAction::redirect:
+                        (new Controller())->redirect(Kernel::getConfig()->authControlRedirect);
+                    case AuthControlAction::exception:
+                        throw new NoAuthException();
                 }
             }
         }

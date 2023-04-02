@@ -17,6 +17,7 @@ use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
+use krzysztofzylka\SimpleLibraries\Library\Generator;
 use krzysztofzylka\SimpleLibraries\Library\Hash;
 use krzysztofzylka\SimpleLibraries\Library\Session;
 
@@ -279,6 +280,25 @@ class Account
 
         self::$accountId = null;
         self::$account = null;
+    }
+
+    /**
+     * Generate api_key
+     * @return string|false
+     * @throws UpdateException
+     */
+    public function generateApikey(): string|false
+    {
+        if (!isset(DatabaseManager::$connection) || !Account::$accountId) {
+            return false;
+        }
+
+        $apikey = Account::$accountId . Generator::uniqId() . Account::$account['account']['password'];
+        $apikey = hash('xxh128', $apikey) . Generator::uniqId(5);
+
+        self::$tableInstance->updateValue('api_key', $apikey);
+
+        return $apikey;
     }
 
 }

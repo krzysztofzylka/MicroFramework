@@ -4,6 +4,7 @@ namespace app\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
+use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 
 class index extends Controller {
 
@@ -13,6 +14,9 @@ class index extends Controller {
      */
     public function index(): void
     {
+        $account = new Account();
+        var_dump($account->generateApikey());
+
         $this->loadView();
     }
 

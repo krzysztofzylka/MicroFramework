@@ -6,6 +6,7 @@ use krzysztofzylka\SimpleLibraries\Library\_Array;
 
 /**
  * Translation
+ * @package Extension\Translation
  */
 class Translation {
 

@@ -54,6 +54,7 @@ class form extends Controller {
                 ->input('validTest/text2', 'required')
                 ->textarea('validTest/textarea', 'required, min length 10')
                 ->select('validTest/select', ['' => '', 'a' => '1', 'b' => '2'])
+                ->select('validTest/select2', ['' => '', 1 => 'a', 2 => 'b', 3 => 'c'], 2, 'Select 2')
                 ->input('validTest/date', 'isDate', ['type' => 'date'])
                 ->input('validTest/date2', 'isDate')
                 ->input('validTest/email', 'isEmail')

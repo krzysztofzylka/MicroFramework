@@ -230,11 +230,7 @@ trait Form
             $htmlOption = new Html();
             $optionAttributes = ['value' => $name];
 
-            if ($data) {
-                if ($data === $name) {
-                    $optionAttributes['selected'] = 'selected';
-                }
-            } elseif ($name === $selected) {
+            if (($data ? (string)$data : (string)$selected) === (string)$name) {
                 $optionAttributes['selected'] = 'selected';
             }
 
@@ -288,7 +284,7 @@ trait Form
             $optionAttributes = ['value' => $name];
 
             if ($data) {
-                if ($data === $name || (is_array($data) && in_array($name, $data))) {
+                if ((string)$data === (string)$name || (is_array($data) && in_array($name, $data))) {
                     $optionAttributes['selected'] = 'selected';
                 }
             } elseif (in_array($name, $selected)) {

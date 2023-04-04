@@ -2,7 +2,6 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
-use krzysztofzylka\DatabaseManager\Condition;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Enum\BindType;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
@@ -10,8 +9,8 @@ use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
-use Krzysztofzylka\MicroFramework\Extension\Validation\Validation;
 use Krzysztofzylka\MicroFramework\Trait\Log;
+use Krzysztofzylka\MicroFramework\Trait\ModelValidation;
 use PDOStatement;
 
 class Model
@@ -19,6 +18,7 @@ class Model
 
     use Log;
     use Trait\Model;
+    use ModelValidation;
 
     /**
      * Use table
@@ -61,12 +61,6 @@ class Model
      * @var ?array
      */
     public ?array $data = null;
-
-    /**
-     * Validation errors
-     * @var ?array
-     */
-    public ?array $validationErrors = [];
 
     /**
      * Set ID
@@ -426,39 +420,6 @@ class Model
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
-    }
-
-    /**
-     * Validate data
-     * @param ?array $data
-     * @return bool
-     */
-    public function validate(?array $data = null): bool
-    {
-        $data = $data ?? $this->data;
-
-        $validation = new Validation();
-        $validation->setValidation($this->validations());
-        $this->validationErrors = $validation->validate($data);
-
-        if (empty($this->validationErrors)) {
-            return true;
-        }
-
-        if (Kernel::getConfig()->debug) {
-            $this->log('Validation fail', 'WARNING', $this->validationErrors);
-        }
-
-        return false;
-    }
-
-    /**
-     * Validation list
-     * @return array
-     */
-    public function validations(): array
-    {
-        return [];
     }
 
     /**

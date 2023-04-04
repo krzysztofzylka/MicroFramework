@@ -5,6 +5,7 @@ namespace Krzysztofzylka\MicroFramework\Extension\Html;
 use Exception;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Extension\Html\Trait\Form;
+use Krzysztofzylka\MicroFramework\Model;
 
 /**
  * Html helper
@@ -36,6 +37,18 @@ class Html
     public function setFormValidation(array $formValidation): Html
     {
         $this->formValidation = $formValidation;
+
+        return $this;
+    }
+
+    /**
+     * Validate by model
+     * @param Model $model
+     * @return Html
+     */
+    public function validateModel(Model $model): Html
+    {
+        $this->formValidation = $model->validationErrors;
 
         return $this;
     }

@@ -20,7 +20,7 @@
         "ext-pdo": "*",
         "krzysztofzylka/simple-libraries": "1.0.9",
         "twig/twig": "^3.0",
-        "krzysztofzylka/database-manager": "v1.0.21",
+        "krzysztofzylka/database-manager": "v1.0.22",
         "phpmailer/phpmailer": "^6.8",
         "fakerphp/faker": "^v1.21.0",
         "jc21/clitable": "^1.2",

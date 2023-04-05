@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework\bin\Console;
 
 use config\Config;
+use Exception;
 use Krzysztofzylka\MicroFramework\bin\Trait\Prints;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\Strings;
@@ -63,7 +64,7 @@ class Console
             if (!class_exists($class)) {
                 $this->dprint('Action not exists.');
             }
-        } catch (\Exception) {
+        } catch (Exception) {
             $this->dprint('Action not exists.');
         }
 
@@ -88,10 +89,13 @@ class Console
 
         $this->resourcesPath = realpath(__DIR__ . '/../resources/');
 
-        Kernel::initPaths($this->path);
-        Kernel::autoload();
-        Kernel::setConfig(new Config());
-        Kernel::configDatabaseConnect();
+        try {
+            Kernel::initPaths($this->path);
+            Kernel::autoload();
+            Kernel::setConfig(new Config());
+            Kernel::configDatabaseConnect();
+        } catch (Exception) {
+        }
     }
 
 }

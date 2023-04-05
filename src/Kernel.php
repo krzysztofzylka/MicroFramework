@@ -76,7 +76,7 @@ class Kernel
     public static function initPaths(string $projectPath): void
     {
         self::$projectPath = $projectPath;
-        self::$paths['public'] = realpath($projectPath . '/public');
+        self::$paths['public'] = $projectPath . '/public';
         self::$paths['controller'] = $projectPath . '/app/controller';
         self::$paths['model'] = $projectPath . '/app/model';
         self::$paths['view'] = $projectPath . '/app/view';

@@ -82,4 +82,10 @@ class index extends Controller {
     public function alert2() {
         $this->responseAlert('alert', 'ERR');
     }
+
+    public function testLog() {
+        $this->log('test log');
+        $this->responseAlert('Create log success');
+    }
+
 }

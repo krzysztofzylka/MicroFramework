@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Log;
 
 use DateTime;
+use Krzysztofzylka\Logger\Logger;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\Client;
@@ -42,6 +43,18 @@ class Log
 
         if (empty(trim($jsonLogData))) {
             return false;
+        }
+
+        if (Kernel::getConfig()->logger) {
+            $loggerContent = $logContent;
+            unset($loggerContent['level'], $loggerContent['message']);
+            Logger::$url = Kernel::getConfig()->loggerUrl;
+            Logger::$api_key = Kernel::getConfig()->loggerApiKey;
+            Logger::$site_key = Kernel::getConfig()->loggerSiteKey;
+            Logger::$username = Kernel::getConfig()->loggerUsername;
+            Logger::$password = Kernel::getConfig()->loggerPassword;
+
+            Logger::log($logContent['message'], $logContent['level'], $loggerContent);
         }
 
         return (bool)file_put_contents($logPath, $jsonLogData . PHP_EOL, FILE_APPEND);

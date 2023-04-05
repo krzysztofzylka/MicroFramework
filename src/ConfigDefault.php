@@ -232,4 +232,42 @@ class ConfigDefault
      */
     public bool $viewDisableCache = true;
 
+    /** Logger */
+
+    /**
+     * Active logger
+     * @var bool
+     */
+    public bool $logger = false;
+
+    /**
+     * Logger url
+     * @var string
+     */
+    public string $loggerUrl = '';
+
+    /**
+     * Logger ApiKey
+     * @var string
+     */
+    public string $loggerApiKey = '';
+
+    /**
+     * Logger SiteKey
+     * @var string
+     */
+    public string $loggerSiteKey = '';
+
+    /**
+     * Logger username (for basic auth)
+     * @var string
+     */
+    public string $loggerUsername = '';
+
+    /**
+     * Logger password  (for basic auth)
+     * @var string
+     */
+    public string $loggerPassword = '';
+
 }

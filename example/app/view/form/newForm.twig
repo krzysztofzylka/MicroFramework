@@ -1,5 +1,11 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-    {{ (form().input('test/input', 'Title') ~ form().date('test/date', 'Date'))|raw }}
+    {{ (
+        form().input('test/input', 'Title')
+            ~ form().date('test/date', 'Date')
+            ~ form().select('test/select', {a: 'aa', b: 'bb'}, 'b', 'Select')
+            ~ form().checkbox('test/checkbox', 'testing')
+            ~ form().textarea('test/textarea', 'tytuł')
+    )|raw }}
 {% endblock %}

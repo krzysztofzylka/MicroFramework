@@ -34,7 +34,8 @@ class form extends Controller {
     public function newForm() {
         $this->data = [
             'test' => [
-                'input' => ''
+                'input' => '',
+                'select' => 'a'
             ]
         ];
 

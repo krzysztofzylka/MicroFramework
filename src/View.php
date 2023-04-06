@@ -112,7 +112,7 @@ class View
         return $this->render(
             [
                 'code' => $code ?? 500,
-                'debug' => Kernel::getConfig()->debug ? json_encode($exception) : false,
+                'debug' => Kernel::getConfig()->debug ? $exception : false,
                 'hiddenMessage' => $hiddenMessage
             ],
             $name

@@ -41,6 +41,11 @@ class form extends Model
                 ],
                 'email' => [
                     'isEmail'
+                ],
+            ],
+            'test' => [
+                'input' => [
+                    'required'
                 ]
             ]
         ];

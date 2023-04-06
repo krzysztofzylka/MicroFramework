@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Html\Trait;
 
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
+use Krzysztofzylka\MicroFramework\Extension\Form\Helper\FormHelper;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Kernel;
 
@@ -38,8 +39,8 @@ trait Form
         $params = [
             'class' => 'form-control',
             'type' => 'text',
-            'name' => $this->formName($name),
-            'id' => $this->formId($name)
+            'name' => FormHelper::generateName($name),
+            'id' => FormHelper::generateId($name)
         ];
 
         if ($invalidText) {
@@ -53,7 +54,7 @@ trait Form
     }
 
     /**
-     * Ger invalid text
+     * Get invalid text
      * @param string $name
      * @return string|false
      */
@@ -74,44 +75,6 @@ trait Form
         }
 
         return $validation;
-    }
-
-    /**
-     * Generowanie nazwy dla elementów formularza
-     * @param mixed $name nazwa elementu formularza w formacie abc/def...
-     * @param string $preffix preffix
-     * @return string
-     */
-    private static function formName(string $name, string $preffix = ''): string
-    {
-        $core = str_starts_with($name, '/');
-
-        if ($core) {
-            $name = substr($name, 1);
-            $preffix .= '/';
-        }
-
-        $explode = explode('/', $name, 2);
-
-        return $preffix . $explode[0] . (isset($explode[1]) ? ('[' . implode('][', explode('/', $explode[1])) . ']') : '');
-    }
-
-    /**
-     * Generowanie id dla elementów formularza
-     * @param string $name nazwa elementu formularza w formacie abc/def...
-     * @return string
-     */
-    private static function formId(string $name): string
-    {
-        $return = '';
-        $explode = explode('/', $name);
-
-        foreach ($explode as $value) {
-            $value = mb_strtolower($value);
-            $return .= empty($return) ? $value : ucfirst($value);
-        }
-
-        return $return;
     }
 
     /**
@@ -188,8 +151,8 @@ trait Form
         $params = [
             'class' => 'form-control',
             'type' => 'file',
-            'name' => $this->formName($name),
-            'id' => $this->formId($name)
+            'name' => FormHelper::generateName($name),
+            'id' => FormHelper::generateId($name)
         ];
 
         $this->getData($name, $params, $attributes);
@@ -214,8 +177,8 @@ trait Form
 
         $params = [
             'class' => 'form-select',
-            'name' => $this->formName($name),
-            'id' => $this->formId($name)
+            'name' => FormHelper::generateName($name),
+            'id' => FormHelper::generateId($name)
         ];
 
         if ($invalidText) {
@@ -259,8 +222,8 @@ trait Form
 
         $params = [
             'class' => 'form-select',
-            'name' => $this->formName($name),
-            'id' => $this->formId($name)
+            'name' => FormHelper::generateName($name),
+            'id' => FormHelper::generateId($name)
         ];
 
         if ($invalidText) {
@@ -345,8 +308,8 @@ trait Form
         $params = [
             'class' => 'form-check-input',
             'type' => 'checkbox',
-            'name' => $this->formName($name),
-            'id' => $this->formId($name),
+            'name' => FormHelper::generateName($name),
+            'id' => FormHelper::generateId($name),
             'onclick' => "$(this).parent().find(\"input:last\").attr(\"value\", $(this).is(\":checked\") ? \"1\" : \"0\")",
         ];
 
@@ -388,8 +351,8 @@ trait Form
         $params = [
             'class' => 'd-none',
             'type' => 'text',
-            'name' => $this->formName($name),
-            'id' => $this->formId($name)
+            'name' => FormHelper::generateName($name),
+            'id' => FormHelper::generateId($name)
         ];
 
         $this->getData($name, $params, $attributes);
@@ -412,8 +375,8 @@ trait Form
 
         $params = [
             'class' => 'form-control',
-            'name' => $this->formName($name),
-            'id' => $this->formId($name)
+            'name' => FormHelper::generateName($name),
+            'id' => FormHelper::generateId($name)
         ];
 
         if ($invalidText) {
@@ -444,8 +407,8 @@ trait Form
 
         if ($name) {
             $params = [
-                'name' => $this->formName($name),
-                'id' => $this->formId($name),
+                'name' => FormHelper::generateName($name),
+                'id' => FormHelper::generateId($name),
                 ...$params
             ];
         }
@@ -464,8 +427,8 @@ trait Form
      */
     public function quillEditor(string $name, ?string $title = null, array $attributes = [], ?string $value = null): Html
     {
-        $id = 'quill' . $this->formId($name);
-        $textareaId = $this->formId($name);
+        $id = 'quill' . FormHelper::generateId($name);
+        $textareaId = FormHelper::generateId($name);
         $jsScript = "html.quillRender('" . $id . "', '" . $textareaId . "')";
         $data = stripslashes($value ?? $this->getData($name));
         $content = $this->tag('div', $data ?? '', ['id' => $id])->tag('script', $jsScript)->textareaHidden($name);
@@ -491,8 +454,8 @@ trait Form
     public function textareaHidden(string $name, ?string $value = null): Html
     {
         $params = [
-            'name' => $this->formName($name),
-            'id' => $this->formId($name),
+            'name' => FormHelper::generateName($name),
+            'id' => FormHelper::generateId($name),
             'style' => 'display:none'
         ];
 

@@ -60,10 +60,6 @@ class View
                 return __($name);
             });
             $this->environment->addFunction($translationFunction);
-            $formFunction = new TwigFunction('form', function () {
-                return new Form();
-            });
-            $this->environment->addFunction($formFunction);
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
         }
@@ -149,6 +145,12 @@ class View
             }
 
             $this->environment->addGlobal('app', $this->getGlobalVariables());
+
+            $controller = $this->controller;
+            $formFunction = new TwigFunction('form', function () use ($controller) {
+                return new Form($controller);
+            });
+            $this->environment->addFunction($formFunction);
 
             if (Kernel::getConfig()->viewDisableCache) {
                 $this->environment->setCache(false);

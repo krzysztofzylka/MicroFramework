@@ -1,1 +1,5 @@
-{{ form().test('b') }}
+{% extends "layout.twig" %}
+
+{% block content %}
+    {{ (form().input('test/input', 'Title') ~ form().date('test/date', 'Date'))|raw }}
+{% endblock %}

@@ -3,9 +3,7 @@
 namespace app\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
-use Krzysztofzylka\MicroFramework\Exception\ValidationException;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
-use Krzysztofzylka\MicroFramework\Extension\Validation\Validation;
 
 class form extends Controller {
 
@@ -34,6 +32,14 @@ class form extends Controller {
     }
 
     public function newForm() {
+        $this->data = [
+            'test' => [
+                'input' => ''
+            ]
+        ];
+
+        $this->loadModel('form')->validate($this->data);
+
         $this->loadView([
             'form' => 'a'
         ]);

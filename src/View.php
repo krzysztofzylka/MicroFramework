@@ -5,6 +5,7 @@ namespace Krzysztofzylka\MicroFramework;
 use Exception;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
+use Krzysztofzylka\MicroFramework\Extension\Form\Form;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
@@ -111,7 +112,7 @@ class View
         return $this->render(
             [
                 'code' => $code ?? 500,
-                'debug' => Kernel::getConfig()->debug ? json_encode($exception) : false,
+                'debug' => Kernel::getConfig()->debug ? $exception : false,
                 'hiddenMessage' => $hiddenMessage
             ],
             $name
@@ -144,6 +145,12 @@ class View
             }
 
             $this->environment->addGlobal('app', $this->getGlobalVariables());
+
+            $controller = $this->controller;
+            $formFunction = new TwigFunction('form', function () use ($controller) {
+                return new Form($controller);
+            });
+            $this->environment->addFunction($formFunction);
 
             if (Kernel::getConfig()->viewDisableCache) {
                 $this->environment->setCache(false);

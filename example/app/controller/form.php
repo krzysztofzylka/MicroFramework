@@ -33,4 +33,11 @@ class form extends Controller {
         $this->loadView(['form1' => $form1]);
     }
 
+    public function newForm() {
+        $this->loadView([
+            'form' => 'a'
+        ]);
+        exit;
+    }
+
 }

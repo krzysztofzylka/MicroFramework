@@ -5,6 +5,7 @@ namespace Krzysztofzylka\MicroFramework;
 use Exception;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
+use Krzysztofzylka\MicroFramework\Extension\Form\Form;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
@@ -59,6 +60,10 @@ class View
                 return __($name);
             });
             $this->environment->addFunction($translationFunction);
+            $formFunction = new TwigFunction('form', function () {
+                return new Form();
+            });
+            $this->environment->addFunction($formFunction);
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
         }

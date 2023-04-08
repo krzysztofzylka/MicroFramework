@@ -4,6 +4,8 @@ namespace Krzysztofzylka\MicroFramework\Trait;
 
 use Krzysztofzylka\MicroFramework\Extension\Validation\Validation;
 use Krzysztofzylka\MicroFramework\Kernel;
+use krzysztofzylka\SimpleLibraries\Library\Request;
+use krzysztofzylka\SimpleLibraries\Library\Response;
 
 trait ModelValidation {
 
@@ -24,9 +26,10 @@ trait ModelValidation {
     /**
      * Validate form
      * @param ?array $data
+     * @param bool $responseAjax
      * @return bool
      */
-    public function validate(?array $data = null): bool
+    public function validate(?array $data = null, bool $responseAjax = true): bool
     {
         $validationData = $this->loadValidation();
 
@@ -40,6 +43,22 @@ trait ModelValidation {
 
         if (!empty($this->validationErrors) && Kernel::getConfig()->debug) {
             $this->log('Validation fail', 'WARNING', $this->validationErrors);
+        }
+
+        if (Request::isAjaxRequest() && !empty($this->validationErrors)) {
+            $errorList = [];
+
+            foreach ($this->validationErrors as $validationKey => $validationErrors) {
+                foreach ($validationErrors as $validationErrorKey => $validationError) {
+                    $errorList[$validationKey . "[$validationErrorKey]"] = $validationError;
+                }
+            }
+
+            $response = new Response();
+            $response->json([
+                'type' => 'formValidatorErrorResponse',
+                'list' => $errorList
+            ]);
         }
 
         return empty($this->validationErrors);

@@ -286,15 +286,13 @@ $.fn.ajaxlink = function (event, data = null) {
                     } else {
                         $element.addClass('is-invalid');
 
-                        if (typeof value[1] === 'string') {
-                            if ($element.parent().find('.invalid-feedback').length === 0) {
-                                $element.parent().append('<div class="invalid-feedback">' + value[1] + '</div>');
-                            } else {
-                                $element.parent().find('.invalid-feedback').html(value[1]);
-                            }
-
-                            $element.parent().find('.text-muted').addClass('d-none');
+                        if ($element.parent().find('.invalid-feedback').length === 0) {
+                            $element.parent().append('<div class="invalid-feedback">' + value + '</div>');
+                        } else {
+                            $element.parent().find('.invalid-feedback').html(value);
                         }
+
+                        $element.parent().find('.text-muted').addClass('d-none');
                     }
                 });
 

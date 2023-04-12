@@ -19,7 +19,7 @@ trait Alerts {
      * @return never
      * @throws MicroFrameworkException
      */
-    public function responseAlert(string $message, string $type = 'OK', string $title = ''): never
+    public function responseAlert(string $message, string $type = 'OK', string $title = '', array $params = []): never
     {
         $type = strtoupper($type);
 
@@ -36,7 +36,7 @@ trait Alerts {
                     'close' => false
                 ],
                 'layout' => 'toast',
-                'pageReload' => false,
+                'pageReload' => $params['pageReload'] ?? false,
                 'reloadForm' => false,
                 'redirect' => false
             ]

@@ -176,7 +176,9 @@ class View
             'controller' => $this->controller,
             'dialogboxConfig' => '[]',
             'accountId' => Account::$accountId,
-            'account' => Account::$account
+            'account' => Account::$account,
+            'here' => Kernel::$url,
+            'isDialogbox' => isset($_GET['dialogbox']) ? (bool)$_GET['dialogbox'] : false
         ];
 
         if (isset($this->controller->layout) && $this->controller->layout === 'dialogbox') {

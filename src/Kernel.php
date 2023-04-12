@@ -67,6 +67,8 @@ class Kernel
      */
     public static array $controllerParams;
 
+    public static string $url;
+
     /**
      * Init project
      * @param string $projectPath
@@ -119,7 +121,7 @@ class Kernel
             new Account();
         }
 
-        $url = $_GET['url'] ?? self::getConfig()->defaultPage;
+        $url = self::$url = isset($_GET['url']) ? ('/' . $_GET['url']) : self::getConfig()->defaultPage;
         $extension = File::getExtension($url);
 
         new Statistic();

@@ -76,7 +76,7 @@ class index extends Controller {
     }
 
     public function alert() {
-        $this->responseAlert('alert');
+        $this->responseAlert('alert', 'OK', '', ['pageReload' => true]);
     }
 
     public function alert2() {

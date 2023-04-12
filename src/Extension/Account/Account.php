@@ -219,7 +219,7 @@ class Account
         }
 
         if (!$find) {
-            throw new AccountException(__('micro-framework.account.user_not-found'), 404);
+            throw new AccountException(__('micro-framework.account.user_not_found'), 404);
         }
 
         try {
@@ -260,7 +260,7 @@ class Account
         }
 
         if (!$find) {
-            throw new AccountException(__('micro-framework.account.user_not-found'), 404);
+            throw new AccountException(__('micro-framework.account.user_not_found'), 404);
         }
 
         self::$accountId = (int)$find['account']['id'];

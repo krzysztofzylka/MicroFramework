@@ -78,8 +78,9 @@ class auth extends Controller {
         $validation->setValidation(
             [
                 'auth' => [
-                    'login' => [
+                    'email' => [
                         'required',
+                        'isEmail',
                         function () {
                             if (empty($this->data['auth']['password'])) {
                                 throw new ValidationException('Password is required');
@@ -88,16 +89,17 @@ class auth extends Controller {
                         function () {
                             try {
                                 $account = new Account();
-                                $account->registerUser($this->data['auth']['login'], $this->data['auth']['password']);
+                                $account->registerUser(null, $this->data['auth']['password'], $this->data['auth']['email']);
 
                                 $this->redirect(Kernel::getConfig()->defaultPage);
-                            } catch (Exception) {
-                                throw new ValidationException('Register failed');
+                            } catch (Exception $exception) {
+                                throw new ValidationException($exception->getMessage());
                             }
                         }
                     ],
                     'password' => [
-                        'required'
+                        'required',
+                        'length' => ['min' => 6]
                     ]
                 ]
             ]
@@ -111,7 +113,7 @@ class auth extends Controller {
         $form = (new Html())->form(
             (new Html())
                 ->setFormValidation($validationData)
-                ->input('auth/login', 'Login')
+                ->input('auth/email', 'E-Mail')
                 ->input('auth/password', 'Password', ['type' => 'password'])
                 ->button('Register')
         );

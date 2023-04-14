@@ -138,6 +138,12 @@ class ConfigDefault
      */
     public string $authControlRedirect = '';
 
+    /**
+     * Authorization with email
+     * @var bool
+     */
+    public bool $authEmail = false;
+
     /** Extension E-Mail */
 
     /**

@@ -21,4 +21,6 @@ class ConfigDefault extends \Krzysztofzylka\MicroFramework\ConfigDefault {
 
     public bool $adminPanel = true;
 
+    public bool $authEmail = true;
+
 }

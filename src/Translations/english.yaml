@@ -19,6 +19,7 @@ micro-framework:
     auth_failed: Authentication failed
     fail_get_remember_field: Fail get remember fields
     fail_set_remember_field: Fail set remember fields
+    email_required: E-mail address is required
   validation:
     predefined:
       is_email: Invalid email format

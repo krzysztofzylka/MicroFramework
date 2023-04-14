@@ -89,6 +89,18 @@ class Controller
     public TableExtension $table;
 
     /**
+     * View is loaded
+     * @var bool
+     */
+    public bool $viewLoaded = false;
+
+    /**
+     * View variables
+     * @var array
+     */
+    public array $viewVariables = [];
+
+    /**
      * Load view
      * @param array $variables
      * @param ?string $name
@@ -99,8 +111,20 @@ class Controller
     {
         $view = new View();
         $view->setController($this);
+        $this->viewLoaded = true;
 
-        echo $view->render($variables, $name ?? $this->method);
+        echo $view->render(array_merge($this->viewVariables, $variables), $name ?? $this->method);
+    }
+
+    /**
+     * Set view variable
+     * @param string $name
+     * @param mixed $value
+     * @return void
+     */
+    public function set(string $name, mixed $value): void
+    {
+        $this->viewVariables[$name] = $value;
     }
 
     /**

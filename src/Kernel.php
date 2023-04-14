@@ -321,6 +321,10 @@ class Kernel
 
         call_user_func_array([$controller, $method], $arguments);
 
+        if (!$controller->viewLoaded && (!isset($controller->params['api']) || $controller->params['api'] !== true)) {
+            $controller->loadView();
+        }
+
         return $controller;
     }
 

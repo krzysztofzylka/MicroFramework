@@ -11,6 +11,7 @@ use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use Krzysztofzylka\MicroFramework\Trait\ModelValidation;
+use krzysztofzylka\SimpleLibraries\Library\_Array;
 use PDOStatement;
 
 /**
@@ -71,7 +72,7 @@ class Model
      * @param ?int $id
      * @return bool
      */
-    public function setId(?int $id = null): bool
+    public function setId(?int $id = null): self|false
     {
         if (!isset($this->tableInstance)) {
             return false;
@@ -79,7 +80,7 @@ class Model
 
         $this->tableInstance->setId($id);
 
-        return true;
+        return $this;
     }
 
     /**
@@ -439,20 +440,29 @@ class Model
     }
 
     /**
-     * Save with validate
+     * Save (insert or update (if isset id)) with validate
      * @param array $data
      * @param bool $validate
+     * @param ?array $protected
      * @return bool
      * @throws DatabaseException
      * @throws NotFoundException
      */
-    public function save(array $data, bool $validate = true): bool
+    public function save(array $data, bool $validate = true, ?array $protected = null): bool
     {
         $isValid = $validate ? $this->validate($data) : true;
 
         if ($isValid) {
             foreach ($data as $model => $insertData) {
-                $this->loadModel($model)->insert($insertData);
+                if (!is_null($protected)) {
+                    $insertData = array_intersect_key($insertData, array_flip($protected));
+                }
+
+                if (is_int($this->getId())) {
+                    $this->loadModel($model)->setId($this->getId())->update($insertData);
+                } else {
+                    $this->loadModel($model)->insert($insertData);
+                }
             }
 
             return true;

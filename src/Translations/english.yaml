@@ -33,3 +33,4 @@ micro-framework:
     databaseConfig: SQL
     config: Micro framework configuration
     translation: Translations
+    kernel: Kernel

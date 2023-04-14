@@ -48,6 +48,8 @@ class Debug
             $this->generateSqlTable();
             $this->generateConfigTable();
             $this->generateTranslationTable();
+            $this->generateKernelTable();
+            self::$variables['site_load']['end'] = number_format(microtime(true) - self::$variables['site_load']['start'], 4);
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
         }
@@ -71,15 +73,9 @@ class Debug
      */
     private function generateSqlTable(): void
     {
-        $table = '<table class="table table-sm table-striped table-hover"><tr><th>#</th><th>SQL</th></tr>';
-
-        foreach (array_reverse(\krzysztofzylka\DatabaseManager\Debug::getSql()) as $id => $sql) {
-            $table .= '<tr><td>' . $id . '</td><td>' . nl2br($sql) . '</td></tr>';
-        }
-
-        $table .= '</table>';
-
-        self::$variables['sqlListTable'] = $table;
+        ob_start();
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r(array_reverse(\krzysztofzylka\DatabaseManager\Debug::getSql()));
+        self::$variables['sqlListTable'] = ob_get_clean();
     }
 
     /**
@@ -102,6 +98,24 @@ class Debug
         ob_start();
         \krzysztofzylka\SimpleLibraries\Library\Debug::print_r(Translation::$translation);
         self::$variables['translationTable'] = ob_get_clean();
+    }
+
+    /**
+     * Kernel table
+     * @return void
+     */
+    private function generateKernelTable(): void
+    {
+        $data = [
+            'projectPath' => Kernel::getProjectPath(),
+            'url' => Kernel::$url,
+            'data' => Kernel::getData(),
+            'paths' => Kernel::getPath(null)
+        ];
+
+        ob_start();
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($data);
+        self::$variables['kernelTable'] = ob_get_clean();
     }
 
 }

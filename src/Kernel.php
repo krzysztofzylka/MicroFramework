@@ -14,6 +14,7 @@ use Krzysztofzylka\MicroFramework\Exception\NoAuthException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
+use Krzysztofzylka\MicroFramework\Extension\Debug\Debug;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Statistic\Statistic;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
@@ -109,6 +110,10 @@ class Kernel
     {
         if (!isset(self::$config)) {
             self::$config = new ConfigDefault();
+        }
+
+        if (self::getConfig()->debug) {
+            Debug::$variables['site_load']['start'] = microtime(true);
         }
 
         Translation::getTranslationFile(__DIR__ . '/Translations/' . self::getConfig()->translation . '.yaml');
@@ -343,11 +348,15 @@ class Kernel
 
     /**
      * Get path
-     * @param string $name controller / model / view
-     * @return string|false
+     * @param string|null $name controller / model / view
+     * @return string|array|false
      */
-    public static function getPath(string $name): string|false
+    public static function getPath(?string $name): string|array|false
     {
+        if (is_null($name)) {
+            return self::$paths;
+        }
+
         if (!_Array::inArrayKeys($name, self::$paths)) {
             return false;
         }

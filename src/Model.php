@@ -11,7 +11,6 @@ use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use Krzysztofzylka\MicroFramework\Trait\ModelValidation;
-use krzysztofzylka\SimpleLibraries\Library\_Array;
 use PDOStatement;
 
 /**

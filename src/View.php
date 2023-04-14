@@ -166,7 +166,7 @@ class View
      * Generate global variables
      * @return array
      */
-    private function getGlobalVariables(): array
+    public function getGlobalVariables(): array
     {
         $config = [
             'name' => $this->name,

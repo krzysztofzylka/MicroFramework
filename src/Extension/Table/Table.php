@@ -5,8 +5,10 @@ namespace Krzysztofzylka\MicroFramework\Extension\Table;
 use krzysztofzylka\DatabaseManager\Condition;
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
+use Krzysztofzylka\MicroFramework\Extension\Debug\Debug;
 use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Render;
 use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Session;
+use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Model;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 
@@ -141,6 +143,26 @@ class Table
     {
         $this->session();
         $this->getResults();
+
+        if (Kernel::getConfig()->debug) {
+            Debug::$variables['table'][] = [
+                'model' => $this->model->name ?? null,
+                'controller' => $this->controller->name ?? null,
+                'columns' => json_decode(json_encode($this->columns), true),
+                'search' => $this->search,
+                'activeSearch' => $this->activeSearch,
+                'page' => $this->page,
+                'pages' => $this->pages,
+                'activePagination' => $this->activePagination,
+                'paginationLimit' => $this->paginationLimit,
+                'id' => $this->id,
+                'conditions' => json_decode(json_encode($this->conditions), true),
+                'haveCondition' => $this->haveCondition,
+                'session' => $this->session,
+                'limit' => $this->limit,
+                'orderBy' => $this->orderBy
+            ];
+        }
 
         $this->html .= '<div class="tableRender" id="' . $this->id . '">';
         $this->renderAction();

@@ -49,6 +49,7 @@ class Debug
             $this->generateConfigTable();
             $this->generateTranslationTable();
             $this->generateKernelTable();
+            $this->generateTablesTable();
             self::$variables['site_load']['end'] = number_format(microtime(true) - self::$variables['site_load']['start'], 4);
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
@@ -98,6 +99,17 @@ class Debug
         ob_start();
         \krzysztofzylka\SimpleLibraries\Library\Debug::print_r(Translation::$translation);
         self::$variables['translationTable'] = ob_get_clean();
+    }
+
+    /**
+     * Tables table
+     * @return void
+     */
+    private function generateTablesTable(): void
+    {
+        ob_start();
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r(self::$variables['table'] ?? []);
+        self::$variables['tablesTable'] = ob_get_clean();
     }
 
     /**

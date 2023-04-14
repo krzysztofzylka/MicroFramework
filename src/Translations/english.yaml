@@ -34,3 +34,4 @@ micro-framework:
     config: Micro framework configuration
     translation: Translations
     kernel: Kernel
+    table: Tables

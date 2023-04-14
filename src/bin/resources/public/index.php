@@ -20,9 +20,8 @@ try {
     $view = new View();
 
     echo $view->renderError($exception->getCode() ?? 500, $exception);
-    exit;
 }
 
-if (Kernel::getConfig()->database && Kernel::getConfig()->debug && !Request::isAjaxRequest()) {
-    Debug::showDebugModal();
+if (Kernel::getConfig()->debug) {
+    echo (new \Krzysztofzylka\MicroFramework\Extension\Debug\Debug())->render();
 }

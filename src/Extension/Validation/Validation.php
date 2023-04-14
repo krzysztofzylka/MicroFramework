@@ -54,6 +54,14 @@ class Validation
             }
         }
 
+        foreach ($this->validation as $model => $modelData) {
+            foreach ($modelData as $name => $value) {
+                if (($value === 'required' || in_array('required', $value)) && !isset($data[$model][$name])) {
+                    $errors[$model][$name] = __('micro-framework.validation.predefined.required');
+                }
+            }
+        }
+
         return $errors;
     }
 

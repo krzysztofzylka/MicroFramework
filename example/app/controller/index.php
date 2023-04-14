@@ -88,4 +88,8 @@ class index extends Controller {
         $this->responseAlert('Create log success');
     }
 
+    public function modalSave() {
+        $this->loadModel('example')->save($this->data);
+    }
+
 }

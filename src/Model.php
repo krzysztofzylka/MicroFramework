@@ -439,6 +439,29 @@ class Model
     }
 
     /**
+     * Save with validate
+     * @param array $data
+     * @param bool $validate
+     * @return bool
+     * @throws DatabaseException
+     * @throws NotFoundException
+     */
+    public function save(array $data, bool $validate = true): bool
+    {
+        $isValid = $validate ? $this->validate($data) : true;
+
+        if ($isValid) {
+            foreach ($data as $model => $insertData) {
+                $this->loadModel($model)->insert($insertData);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Magic __get
      * @param string $name
      * @return mixed|Model

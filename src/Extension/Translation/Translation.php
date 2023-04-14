@@ -12,7 +12,7 @@ use Symfony\Component\Yaml\Yaml;
 class Translation
 {
 
-    static private array $translation = [];
+    static public array $translation = [];
 
     /**
      * Read translation file

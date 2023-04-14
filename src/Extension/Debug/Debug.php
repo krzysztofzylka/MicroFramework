@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework\Extension\Debug;
 
 use Exception;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
+use Krzysztofzylka\MicroFramework\Extension\Translation\Translation;
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\View;
 use Twig\Environment;
@@ -46,6 +47,7 @@ class Debug
             self::$variables['app'] = $view->getGlobalVariables();
             $this->generateSqlTable();
             $this->generateConfigTable();
+            $this->generateTranslationTable();
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
         }
@@ -69,7 +71,7 @@ class Debug
      */
     private function generateSqlTable(): void
     {
-        $table = '<table class="table table-sm"><tr><th>#</th><th>SQL</th></tr>';
+        $table = '<table class="table table-sm table-striped table-hover"><tr><th>#</th><th>SQL</th></tr>';
 
         foreach (array_reverse(\krzysztofzylka\DatabaseManager\Debug::getSql()) as $id => $sql) {
             $table .= '<tr><td>' . $id . '</td><td>' . nl2br($sql) . '</td></tr>';
@@ -89,6 +91,17 @@ class Debug
         ob_start();
         \krzysztofzylka\SimpleLibraries\Library\Debug::print_r((array)Kernel::getConfig());
         self::$variables['configTable'] = ob_get_clean();
+    }
+
+    /**
+     * Translation table
+     * @return void
+     */
+    private function generateTranslationTable(): void
+    {
+        ob_start();
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r(Translation::$translation);
+        self::$variables['translationTable'] = ob_get_clean();
     }
 
 }

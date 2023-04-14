@@ -8,6 +8,9 @@
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#configmodal">{{ __('micro-framework.debug.configTable') }}</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#translationmodal">{{ __('micro-framework.debug.translation') }}</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -39,6 +42,23 @@
             </div>
             <div class="modal-body">
                 {{ configTable|raw }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('micro-framework.modal.close') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="translationmodal" tabindex="-1" aria-labelledby="translationmodallabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-lg-down">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="translationmodallabel">{{ __('micro-framework.debug.translation') }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ translationTable|raw }}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('micro-framework.modal.close') }}</button>

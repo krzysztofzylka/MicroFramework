@@ -32,3 +32,4 @@ micro-framework:
     configTable: Konfiguracja
     databaseConfig: SQL
     config: Konfiguracja micro framework
+    translation: Translacje

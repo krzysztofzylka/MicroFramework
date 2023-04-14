@@ -349,19 +349,19 @@ class Model
 
     /**
      * Bind table
-     * @param BindType $bindType
-     * @param string $tableName
+     * @param BindType|array $bind
+     * @param ?string $tableName
      * @param ?string $primaryKey
      * @param ?string $foreignKey
      * @return $this
      */
-    public function bind(BindType $bindType, string $tableName, ?string $primaryKey = null, ?string $foreignKey = null): self
+    public function bind(BindType|array $bind, string $tableName = null, ?string $primaryKey = null, ?string $foreignKey = null): self
     {
         if (!isset($this->tableInstance)) {
             return $this;
         }
 
-        $this->tableInstance->bind($bindType, $tableName, $primaryKey, $foreignKey);
+        $this->tableInstance->bind($bind, $tableName, $primaryKey, $foreignKey);
 
         return $this;
     }

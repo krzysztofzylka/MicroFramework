@@ -153,6 +153,11 @@ class Kernel
             $method = $explode[2] ?? self::getConfig()->defaultMethod;
             $arguments = array_slice($explode, 3);
 
+            if (empty($controller)) {
+                $controller = $method;
+                $method = self::getConfig()->defaultMethod;
+            }
+
             self::init($controller, $method, $arguments, ['admin_panel' => true]);
         } else {
             $method = $explode[1] ?? self::getConfig()->defaultMethod;

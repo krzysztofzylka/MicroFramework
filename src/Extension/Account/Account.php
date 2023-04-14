@@ -142,7 +142,7 @@ class Account
     }
 
     /**
-     * @param string $username
+     * @param ?string $username
      * @param string $password
      * @param ?string $email
      * @return bool
@@ -150,15 +150,27 @@ class Account
      * @throws DatabaseException
      * @throws MicroFrameworkException
      */
-    public function registerUser(string $username, string $password, ?string $email = null): bool
+    public function registerUser(?string $username, string $password, ?string $email = null): bool
     {
         if (!isset(DatabaseManager::$connection)) {
             return false;
         }
 
         try {
-            if (self::$tableInstance->findIsset(['username' => $username])) {
-                throw new AccountException(__('micro-framework.account.account_isset'));
+            if (Kernel::getConfig()->authEmail) {
+                if (is_null($email) || empty($email)) {
+                    throw new AccountException(__('micro-framework.account.email_required'));
+                }
+
+                $username = $email;
+
+                if (self::$tableInstance->findIsset(['email' => $email])) {
+                    throw new AccountException(__('micro-framework.account.account_isset'));
+                }
+            } else {
+                if (self::$tableInstance->findIsset(['username' => $username])) {
+                    throw new AccountException(__('micro-framework.account.account_isset'));
+                }
             }
 
             return self::$tableInstance->insert([

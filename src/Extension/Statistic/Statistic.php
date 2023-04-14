@@ -89,6 +89,10 @@ class Statistic {
      * @return array
      */
     private function geoplugin(string $ip) {
+        if (!Kernel::getConfig()->statisticsAnalyzeIp) {
+            return [];
+        }
+
         try {
             $url = 'http://www.geoplugin.net/php.gp?ip=' . $ip;
             $data = unserialize(file_get_contents($url));

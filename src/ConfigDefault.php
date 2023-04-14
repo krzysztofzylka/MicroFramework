@@ -55,12 +55,6 @@ class ConfigDefault
     public ?string $adminPanelUri = 'admin_panel';
 
     /**
-     * Statistics
-     * @var bool
-     */
-    public bool $statistics = false;
-
-    /**
      * Translaction
      * @var string
      */
@@ -223,6 +217,22 @@ class ConfigDefault
      * @var string
      */
     public string $emailFromName = '';
+
+    /**
+     * Extension Statistics
+     */
+
+    /**
+     * Statistics
+     * @var bool
+     */
+    public bool $statistics = false;
+
+    /**
+     * Analyze IP in statistics
+     * @var bool
+     */
+    public bool $statisticsAnalyzeIp = true;
 
     /** View */
 

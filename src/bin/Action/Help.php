@@ -16,6 +16,7 @@ class Help
     {
         $this->print('Help');
         $this->print('init                                          - Initialize project');
+        $this->print('rebuild                                          - Rebuild project');
         $this->print('update                                        - Update project');
 
         $this->print('database update                               - Update database');

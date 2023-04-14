@@ -85,8 +85,11 @@ class Debug
      */
     private function generateConfigTable(): void
     {
+        $config = (array)Kernel::getConfig();
+        ksort($config);
+
         ob_start();
-        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r((array)Kernel::getConfig());
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($config);
         self::$variables['configTable'] = ob_get_clean();
     }
 

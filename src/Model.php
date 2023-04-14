@@ -13,6 +13,10 @@ use Krzysztofzylka\MicroFramework\Trait\Log;
 use Krzysztofzylka\MicroFramework\Trait\ModelValidation;
 use PDOStatement;
 
+/**
+ * Model
+ * @package Model
+ */
 class Model
 {
 

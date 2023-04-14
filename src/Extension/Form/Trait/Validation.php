@@ -5,7 +5,8 @@ namespace Krzysztofzylka\MicroFramework\Extension\Form\Trait;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 
-trait Validation {
+trait Validation
+{
 
     /**
      * Get validation error

@@ -32,7 +32,7 @@ class Debug
 
         $table = new CliTable();
         $table->addField('Name', 'name', false, 'blue');
-        $table->addField('Value',  'value', false, 'green');
+        $table->addField('Value', 'value', false, 'green');
         $table->injectData($data);
         $table->display();
     }

@@ -5,7 +5,8 @@ namespace Krzysztofzylka\MicroFramework\bin\Action;
 use Krzysztofzylka\MicroFramework\bin\Console\Console;
 use Krzysztofzylka\MicroFramework\bin\Trait\Prints;
 
-class Update {
+class Update
+{
 
     use Prints;
 

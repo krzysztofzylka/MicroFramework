@@ -4,7 +4,6 @@ namespace Krzysztofzylka\MicroFramework;
 
 use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Api\Authorization;
-use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Response;

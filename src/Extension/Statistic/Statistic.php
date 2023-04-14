@@ -13,7 +13,8 @@ use krzysztofzylka\SimpleLibraries\Library\Client;
  * Statistics
  * @package Extension\Statistic
  */
-class Statistic {
+class Statistic
+{
 
     use Log;
 
@@ -24,7 +25,8 @@ class Statistic {
     /**
      * Save statistics
      */
-    public function __construct() {
+    public function __construct()
+    {
         try {
             if (!Kernel::getConfig()->statistics || !Kernel::getConfig()->database) {
                 return;
@@ -88,7 +90,8 @@ class Statistic {
      * @param string $ip
      * @return array
      */
-    private function geoplugin(string $ip) {
+    private function geoplugin(string $ip)
+    {
         if (!Kernel::getConfig()->statisticsAnalyzeIp) {
             return [];
         }

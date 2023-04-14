@@ -1,5 +1,7 @@
 <?php
 
+use Krzysztofzylka\MicroFramework\Extension\Translation\Translation;
+
 /**
  * Better var_dump
  * @param $data
@@ -30,6 +32,7 @@ function dumpe(...$data): void
  * @param string $name
  * @return mixed
  */
-function __(string $name) : mixed {
-    return \Krzysztofzylka\MicroFramework\Extension\Translation\Translation::get($name) ?? '{' . $name . '}';
+function __(string $name): mixed
+{
+    return Translation::get($name) ?? '{' . $name . '}';
 }

@@ -4,7 +4,6 @@ namespace Krzysztofzylka\MicroFramework\Extension\Account;
 
 use Exception;
 use krzysztofzylka\DatabaseManager\Column;
-use krzysztofzylka\DatabaseManager\Condition;
 use krzysztofzylka\DatabaseManager\CreateTable;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Enum\ColumnType;

@@ -9,7 +9,8 @@ use krzysztofzylka\SimpleLibraries\Library\Response;
  * Alerts
  * @package Trait
  */
-trait Alerts {
+trait Alerts
+{
 
     /**
      * Response alert

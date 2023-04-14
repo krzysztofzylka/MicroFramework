@@ -65,7 +65,8 @@ class log extends Controller
         $this->loadView(['table' => $this->table->render()]);
     }
 
-    public function detail(string $id) {
+    public function detail(string $id)
+    {
         $this->layout = 'dialogbox';
         $this->title = 'Log detail ' . $id;
         $this->dialogboxWidth = 1000;
@@ -75,7 +76,7 @@ class log extends Controller
         $result = null;
         $count = 0;
 
-        foreach(file($filePath) as $line) {
+        foreach (file($filePath) as $line) {
             $count += 1;
 
             if ($count !== (int)$lineNumber) {

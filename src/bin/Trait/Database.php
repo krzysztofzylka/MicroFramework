@@ -10,7 +10,8 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 
-trait Database {
+trait Database
+{
 
     /**
      * @param $path
@@ -18,7 +19,8 @@ trait Database {
      * @throws NotFoundException
      * @throws SimpleLibraryException
      */
-    private function databaseConnect($path) {
+    private function databaseConnect($path)
+    {
         try {
             Kernel::initPaths($path);
             Kernel::autoload();

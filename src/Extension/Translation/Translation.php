@@ -3,12 +3,14 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Translation;
 
 use krzysztofzylka\SimpleLibraries\Library\_Array;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Translation
  * @package Extension\Translation
  */
-class Translation {
+class Translation
+{
 
     static private array $translation = [];
 
@@ -19,7 +21,7 @@ class Translation {
      */
     public static function getTranslationFile(string $path): void
     {
-        self::$translation = array_merge(self::$translation, \Symfony\Component\Yaml\Yaml::parse(file_get_contents($path)));
+        self::$translation = array_merge(self::$translation, Yaml::parse(file_get_contents($path)));
     }
 
     /**
@@ -27,7 +29,8 @@ class Translation {
      * @param string $name
      * @return mixed
      */
-    public static function get(string $name) : mixed {
+    public static function get(string $name): mixed
+    {
         return _Array::getFromArrayUsingString($name, self::$translation);
     }
 

@@ -12,7 +12,8 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 
-class Cron {
+class Cron
+{
 
     use Prints;
 
@@ -104,7 +105,8 @@ class Cron {
         }
     }
 
-    private function prepareSite() {
+    private function prepareSite()
+    {
         Account::$accountId = -1;
     }
 

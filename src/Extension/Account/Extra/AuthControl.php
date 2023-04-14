@@ -4,7 +4,6 @@ namespace Krzysztofzylka\MicroFramework\Extension\Account\Extra;
 
 use Exception;
 use Krzysztofzylka\MicroFramework\Controller;
-use Krzysztofzylka\MicroFramework\ControllerApi;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NoAuthException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;

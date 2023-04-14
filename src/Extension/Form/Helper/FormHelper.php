@@ -8,7 +8,8 @@ use Krzysztofzylka\MicroFramework\Kernel;
  * Form helper
  * @package Extension\Form
  */
-class FormHelper {
+class FormHelper
+{
 
     /**
      * Generate form name

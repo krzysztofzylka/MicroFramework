@@ -2,5 +2,6 @@
 
 namespace config;
 
-class Config extends \Krzysztofzylka\MicroFramework\ConfigDefault {
+class Config extends \Krzysztofzylka\MicroFramework\ConfigDefault
+{
 }

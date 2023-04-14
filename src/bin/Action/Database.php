@@ -64,9 +64,9 @@ class Database
                 $table = new CliTable();
                 $table->addField('Id', 'id');
                 $table->addField('Name', 'name');
-                $table->addField('Status',  'status', false, 'green');
-                $table->addField('Created',  'date_created', false, 'blue');
-                $table->addField('Modify',  'date_modify', false, 'yellow');
+                $table->addField('Status', 'status', false, 'green');
+                $table->addField('Created', 'date_created', false, 'blue');
+                $table->addField('Modify', 'date_modify', false, 'yellow');
                 $table->injectData(array_column($this->updateTable->findAll(), 'database_updater'));
                 $table->display();
 

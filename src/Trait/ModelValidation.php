@@ -7,7 +7,8 @@ use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 
-trait ModelValidation {
+trait ModelValidation
+{
 
     /**
      * Validation errors

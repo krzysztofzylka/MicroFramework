@@ -88,7 +88,7 @@ class Init
             return $path . '/vendor';
         }
 
-        for ($i = 0; $i<=15; $i++) {
+        for ($i = 0; $i <= 15; $i++) {
             $path = realpath($path . '/../');
 
             if (file_exists($path . '/vendor')) {

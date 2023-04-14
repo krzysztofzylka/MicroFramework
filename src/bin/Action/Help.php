@@ -2,10 +2,10 @@
 
 namespace Krzysztofzylka\MicroFramework\bin\Action;
 
-use Krzysztofzylka\MicroFramework\bin\Console\Console;
 use Krzysztofzylka\MicroFramework\bin\Trait\Prints;
 
-class Help {
+class Help
+{
 
     use Prints;
 

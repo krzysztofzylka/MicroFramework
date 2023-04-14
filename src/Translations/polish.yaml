@@ -1,5 +1,7 @@
 micro-framework:
   name: Polski
+  modal:
+    close: Zamknij
   view:
     error:
       error: Błąd
@@ -25,3 +27,8 @@ micro-framework:
       length:
         min: Pole nie może posiadać mniej znaków niż
         max: Pole nie może posiadać więcej znaków niż
+  debug:
+    sqlTable: SQL
+    configTable: Konfiguracja
+    databaseConfig: SQL
+    config: Konfiguracja micro framework

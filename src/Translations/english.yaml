@@ -1,5 +1,7 @@
 micro-framework:
   name: English
+  modal:
+    close: Close
   view:
     error:
       error: Error
@@ -25,3 +27,8 @@ micro-framework:
       length:
         min: Value must be more or equal to
         max: Value must be less or equal to
+  debug:
+    sqlTable: SQL
+    configTable: Configuration
+    databaseConfig: SQL
+    config: Micro framework configuration

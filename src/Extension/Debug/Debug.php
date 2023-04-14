@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework\Extension\Debug;
 
 use Exception;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
+use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\View;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -43,6 +44,8 @@ class Debug
             $this->environment->setCache(false);
             $view = new View();
             self::$variables['app'] = $view->getGlobalVariables();
+            $this->generateSqlTable();
+            $this->generateConfigTable();
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
         }
@@ -58,6 +61,34 @@ class Debug
     public function render(): string
     {
         return $this->environment->render('MicroFramework/Layout/debug.twig', self::$variables);
+    }
+
+    /**
+     * SQL list table
+     * @return void
+     */
+    private function generateSqlTable(): void
+    {
+        $table = '<table class="table table-sm"><tr><th>#</th><th>SQL</th></tr>';
+
+        foreach (array_reverse(\krzysztofzylka\DatabaseManager\Debug::getSql()) as $id => $sql) {
+            $table .= '<tr><td>' . $id . '</td><td>' . nl2br($sql) . '</td></tr>';
+        }
+
+        $table .= '</table>';
+
+        self::$variables['sqlListTable'] = $table;
+    }
+
+    /**
+     * Configuration table
+     * @return void
+     */
+    private function generateConfigTable(): void
+    {
+        ob_start();
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r((array)Kernel::getConfig());
+        self::$variables['configTable'] = ob_get_clean();
     }
 
 }

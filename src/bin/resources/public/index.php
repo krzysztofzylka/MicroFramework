@@ -23,6 +23,6 @@ try {
     exit;
 }
 
-if (Kernel::getConfig()->debug && !Request::isAjaxRequest()) {
+if (Kernel::getConfig()->database && Kernel::getConfig()->debug && !Request::isAjaxRequest()) {
     Debug::showDebugModal();
 }

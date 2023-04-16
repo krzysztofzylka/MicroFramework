@@ -67,7 +67,7 @@ trait Model
         }
 
         if (!class_exists($class)) {
-            throw new NotFoundException('Not found model ' . $startName);
+            throw new NotFoundException(__('micro-framework.model.not_found', ['name' => $startName]));
         }
 
         try {
@@ -88,9 +88,9 @@ trait Model
                 $model->transactionInstance = new Transaction();
             }
         } catch (Exception $exception) {
-            $this->log('Fail load model ' . $name, 'ERR', ['name' => $startName, 'class' => $class, 'exception' => $exception]);
+            $this->log(__('micro-framework.model.fail_load', ['name' => $name]), 'ERR', ['name' => $startName, 'class' => $class, 'exception' => $exception]);
 
-            throw new NotFoundException('Not found model ' . $startName);
+            throw new NotFoundException(__('micro-framework.model.not_found', ['name' => $startName]));
         }
 
         $this->models[Strings::camelizeString($startName, '_')] = $model;

@@ -30,9 +30,16 @@ function dumpe(...$data): void
 /**
  * Translation
  * @param string $name
+ * @param array $variables
  * @return mixed
  */
-function __(string $name): mixed
+function __(string $name, array $variables = []): mixed
 {
-    return Translation::get($name) ?? '{' . $name . '}';
+    $translation = Translation::get($name) ?? '{' . $name . '}';
+
+    foreach ($variables as $key => $variable) {
+        $translation = str_replace('{' . $key . '}', $variable, $translation);
+    }
+
+    return $translation;
 }

@@ -481,7 +481,7 @@ class Model
             return $this->models[$name];
         }
 
-        return trigger_error('Undefined property ' . $name, E_USER_WARNING);
+        return trigger_error(__('micro-framework.model.undefined_property', ['name' => $name]), E_USER_WARNING);
     }
 
 }

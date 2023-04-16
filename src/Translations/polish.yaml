@@ -41,3 +41,12 @@ micro-framework:
     authcontrol_disabled: Kontrola użytkowników jest wyłączona
     not_have_permission: Nie masz uprawnień do panelu administracyjnego
     not_logged: Nie jesteś zalogowany
+    controller_not_exists: Kontroler {controllerName} nie istnieje
+    method_is_controller_not_exists: Metoda {methodName} nie istnieje w kontrolerze {controllerName}
+    project_not_defined: Projekt nie został zdefiniowany
+  model:
+    undefined_property: Nie znaleziono zmiennej {name}
+    not_found: Nie znaleziono modelu {name}
+    fail_load: Błąd ładowania modelu {name}
+  controller:
+    undefined_property: Nie znaleziono zmiennej {name}

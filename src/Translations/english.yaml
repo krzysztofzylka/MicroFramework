@@ -41,3 +41,12 @@ micro-framework:
     authcontrol_disabled: Account control is disabled
     not_have_permission: You not have permission to admin panel
     not_logged: You not logged
+    controller_not_exists: Controller {controllerName} not exists
+    method_is_controller_not_exists: Method {methodName} not exists in controller {controllerName}
+    project_not_defined: Project is not defined
+  model:
+    undefined_property: Undefined property {name}
+    not_found: Not found model {name}
+    fail_load: Fail load model {name}
+  controller:
+    undefined_property: Undefined property {name}

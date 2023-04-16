@@ -244,7 +244,7 @@ class Kernel
         self::$controllerParams = $params;
 
         if (!self::$projectPath) {
-            throw new MicroFrameworkException('Project is not defined', 500);
+            throw new MicroFrameworkException(__('micro-framework.kernel.project_not_defined'), 500);
         }
 
         if (!is_null($controllerName)) {
@@ -296,7 +296,7 @@ class Kernel
         }
 
         if (!class_exists($class)) {
-            throw new NotFoundException('Controller ' . $name . ' not exists');
+            throw new NotFoundException(__('micro-framework.kernel.controller_not_exists', ['controllerName' => $name]));
         }
 
         AuthControl::run($class, $method, isset($params['api']) && $params['api']);
@@ -316,7 +316,7 @@ class Kernel
             $controller->table->init();
 
             if (!method_exists($controller, $method)) {
-                throw new Exception('Method ' . $method . ' not exists in controller ' . $name);
+                throw new Exception(__('micro-framework.kernel.method_is_controller_not_exists', ['methodName' => $method, 'controllerName' => $name]));
             }
         } catch (NotFoundException $exception) {
             throw new NotFoundException($exception->getHiddenMessage());

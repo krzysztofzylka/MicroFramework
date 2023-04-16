@@ -71,6 +71,10 @@ class Database
                 $table->display();
 
                 break;
+            case 'debug_list':
+                $this->debug_list();
+
+                break;
             default:
                 $this->dprint('Action not found');
 
@@ -151,18 +155,8 @@ class Database
      */
     private function globPath(): array
     {
-        $return = [];
-        $updateFiles = glob(__DIR__ . '/../../Extension/Database/Updater/*.php');
-        $updateFiles = array_merge($updateFiles, glob($this->databaseUpdaterPath . '/*.php'));
-
-        foreach ($updateFiles as $path) {
-            $return[] = [
-                'path' => realpath($path),
-                'name' => str_replace('.' . pathinfo($path, PATHINFO_EXTENSION), '', basename($path))
-            ];
-        }
-
-        return $return;
+        $return = $this->globDirectory(__DIR__ . '/../../Extension/Database/Updater/');
+        return array_merge($return, $this->globDirectory($this->databaseUpdaterPath));
     }
 
     /**
@@ -192,6 +186,46 @@ class Database
 
             $this->dtprint('Fail update file: ' . $databaseFile['path']);
         }
+    }
+
+    /**
+     * Debug list
+     * @return void
+     */
+    private function debug_list(): void
+    {
+        $this->databaseUpdaterPath = $this->console->path . '/database_updater';
+
+        $table = new CliTable();
+        $table->addField('Name', 'name');
+        $table->addField('Path', 'path', false, 'green');
+        $table->injectData($this->globPath());
+        $table->display();
+    }
+
+    /**
+     * Glob directory with subdirectory
+     * @param string $directoryPath
+     * @return array
+     */
+    private function globDirectory(string $directoryPath): array
+    {
+        $return = [];
+
+        $arrays = glob($directoryPath . '/{*,*/*,*/*/*,*/*/*/*}.php', GLOB_BRACE);
+
+        foreach ($arrays as $path) {
+            $name = str_replace('.' . pathinfo($path, PATHINFO_EXTENSION), '', basename($path));
+
+            $return[$name] = [
+                'path' => realpath($path),
+                'name' => $name
+            ];
+        }
+
+        array_multisort(array_column($return, "name"), SORT_ASC, $return);
+
+        return $return;
     }
 
 }

@@ -275,13 +275,13 @@ class Kernel
     {
         if (isset($params['admin_panel']) && $params['admin_panel']) {
             if (!self::getConfig()->adminPanel) {
-                throw new NotFoundException('Admin panel is disabled');
+                throw new NotFoundException(__('micr-framework.kernel.adminpanel_disabled'));
             } elseif (!self::getConfig()->authControl) {
-                throw new NotFoundException('Account control is disabled');
+                throw new NotFoundException(__('micr-framework.kernel.authcontrol_disabled'));
             } elseif (!Account::isLogged()) {
-                throw new NotFoundException('You not logged');
+                throw new NotFoundException(__('micr-framework.kernel.not_logged'));
             } elseif (!Account::$account['account']['admin']) {
-                throw new NotFoundException('You not have permission to admin panel');
+                throw new NotFoundException(__('micr-framework.admin_panel.not_have_permission'));
             }
 
             $class = ObjectNameGenerator::controllerPaLocal($name);

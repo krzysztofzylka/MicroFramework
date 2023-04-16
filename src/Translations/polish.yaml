@@ -36,3 +36,8 @@ micro-framework:
     translation: Translacje
     kernel: Kernel
     table: Tabele
+  kernel:
+    adminpanel_disabled: Panel administracyjny jest wyłączony
+    authcontrol_disabled: Kontrola użytkowników jest wyłączona
+    not_have_permission: Nie masz uprawnień do panelu administracyjnego
+    not_logged: Nie jesteś zalogowany

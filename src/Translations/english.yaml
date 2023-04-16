@@ -36,3 +36,8 @@ micro-framework:
     translation: Translations
     kernel: Kernel
     table: Tables
+  kernel:
+    adminpanel_disabled: Admin panel is disabled
+    authcontrol_disabled: Account control is disabled
+    not_have_permission: You not have permission to admin panel
+    not_logged: You not logged

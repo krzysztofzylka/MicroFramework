@@ -172,7 +172,12 @@ class Database
         $this->updateTable->insert(['name' => $databaseFile['name']]);
 
         try {
-            include($databaseFile['path']);
+            if ($databaseFile['type'] === 'php') {
+                include($databaseFile['path']);
+            } elseif ($databaseFile['type'] === 'sql') {
+                $sql = file_get_contents($databaseFile['path']);
+                $this->updateTable->query($sql);
+            }
 
             $this->updateTable->updateValue('status', UpdateStatus::Success->value);
         } catch (DatabaseManagerException $exception) {
@@ -198,6 +203,7 @@ class Database
 
         $table = new CliTable();
         $table->addField('Name', 'name');
+        $table->addField('Type', 'type');
         $table->addField('Path', 'path', false, 'green');
         $table->injectData($this->globPath());
         $table->display();
@@ -212,14 +218,15 @@ class Database
     {
         $return = [];
 
-        $arrays = glob($directoryPath . '/{*,*/*,*/*/*,*/*/*/*}.php', GLOB_BRACE);
+        $arrays = glob($directoryPath . '/{*,*/*,*/*/*,*/*/*/*}.{php,sql}', GLOB_BRACE);
 
         foreach ($arrays as $path) {
             $name = str_replace('.' . pathinfo($path, PATHINFO_EXTENSION), '', basename($path));
 
             $return[$name] = [
                 'path' => realpath($path),
-                'name' => $name
+                'name' => $name,
+                'type' => pathinfo($path, PATHINFO_EXTENSION)
             ];
         }
 

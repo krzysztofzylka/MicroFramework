@@ -1,0 +1,1 @@
+update example set name = 'news' where id = 1;

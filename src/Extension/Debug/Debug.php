@@ -3,7 +3,9 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Debug;
 
 use Exception;
+use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
+use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Translation\Translation;
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\View;
@@ -50,6 +52,7 @@ class Debug
             $this->generateTranslationTable();
             $this->generateKernelTable();
             $this->generateTablesTable();
+            $this->generateAccountTable();
             self::$variables['site_load']['end'] = number_format(microtime(true) - self::$variables['site_load']['start'], 4);
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
@@ -116,21 +119,39 @@ class Debug
     }
 
     /**
+     * Tables table
+     * @return void
+     */
+    private function generateAccountTable(): void
+    {
+        ob_start();
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r(self::$variables['table'] ?? []);
+        self::$variables['tablesTable'] = ob_get_clean();
+    }
+
+    /**
      * Kernel table
      * @return void
      */
     private function generateKernelTable(): void
     {
+        if (!Account::isLogged()) {
+            return;
+        }
+
+        $accountData = Account::$account;
+        $accountData['account']['password'] = '******';
+
         $data = [
-            'projectPath' => Kernel::getProjectPath(),
-            'url' => Kernel::$url,
-            'data' => Kernel::getData(),
-            'paths' => Kernel::getPath(null)
+            'id' => Account::$accountId,
+            'sessionName' => Account::$sessionName,
+            'account' => $accountData,
+            'rememberFields' => array_column((new Table('account_remember_field'))->findAll(['account_remember_field.account_id' => Account::$accountId]), 'account_remember_field')
         ];
 
         ob_start();
         \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($data);
-        self::$variables['kernelTable'] = ob_get_clean();
+        self::$variables['accountTable'] = ob_get_clean();
     }
 
 }

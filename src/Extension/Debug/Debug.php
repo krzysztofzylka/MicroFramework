@@ -119,21 +119,10 @@ class Debug
     }
 
     /**
-     * Tables table
-     * @return void
-     */
-    private function generateAccountTable(): void
-    {
-        ob_start();
-        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r(self::$variables['table'] ?? []);
-        self::$variables['tablesTable'] = ob_get_clean();
-    }
-
-    /**
      * Kernel table
      * @return void
      */
-    private function generateKernelTable(): void
+    private function generateAccountTable(): void
     {
         if (!Account::isLogged()) {
             return;
@@ -152,6 +141,24 @@ class Debug
         ob_start();
         \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($data);
         self::$variables['accountTable'] = ob_get_clean();
+    }
+
+    /**
+     * Kernel table
+     * @return void
+     */
+    private function generateKernelTable(): void
+    {
+        $data = [
+            'projectPath' => Kernel::getProjectPath(),
+            'url' => Kernel::$url,
+            'data' => Kernel::getData(),
+            'paths' => Kernel::getPath(null)
+        ];
+
+        ob_start();
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($data);
+        self::$variables['kernelTable'] = ob_get_clean();
     }
 
 }

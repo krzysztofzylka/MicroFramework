@@ -53,3 +53,8 @@ micro-framework:
     fail_load: Fail load model {name}
   controller:
     undefined_property: Undefined property {name}
+  exceptions:
+    not_found:
+      object_not_found: Object not found
+    database:
+      error: Database error

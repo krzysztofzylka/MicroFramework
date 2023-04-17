@@ -53,3 +53,8 @@ micro-framework:
     fail_load: Błąd ładowania modelu {name}
   controller:
     undefined_property: Nie znaleziono zmiennej {name}
+  exceptions:
+    not_found:
+      object_not_found: Obiekt nie został znaleziony
+    database:
+      error: Błąd bazy danych

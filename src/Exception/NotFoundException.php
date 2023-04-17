@@ -13,7 +13,7 @@ class NotFoundException extends MicroFrameworkException
     {
         $this->setHiddenMessage($message);
 
-        parent::__construct('Object not found.', 404);
+        parent::__construct(__('micro-framework.exceptions.not_found.object_not_found'), 404);
     }
 
 }

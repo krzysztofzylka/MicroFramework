@@ -21,10 +21,6 @@ class Cron
 
     private Console $console;
 
-    private array $scheduled;
-
-    private Table $cronScheduledInstance;
-
     /**
      * Cron
      */
@@ -57,11 +53,6 @@ class Cron
                 $this->dprint('Action not found');
                 break;
         }
-    }
-
-    private function prepareSite(): void
-    {
-//        Account::$accountId = -1;
     }
 
 }

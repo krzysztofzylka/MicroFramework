@@ -14,7 +14,7 @@ use krzysztofzylka\SimpleLibraries\Library\PHPDoc;
 
 /**
  * Auth control
- * @package Extension
+ * @package Extension\Account\Extra
  */
 class AuthControl
 {

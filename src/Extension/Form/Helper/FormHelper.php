@@ -6,7 +6,7 @@ use Krzysztofzylka\MicroFramework\Kernel;
 
 /**
  * Form helper
- * @package Extension\Form
+ * @package Extension\Form\Helper
  */
 class FormHelper
 {

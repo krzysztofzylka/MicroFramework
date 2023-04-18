@@ -2,6 +2,10 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Table\Extra;
 
+/**
+ * Cell
+ * @package Extension\Table\Extra
+ */
 class Cell
 {
 

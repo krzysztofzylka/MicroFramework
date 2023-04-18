@@ -6,6 +6,10 @@ use Krzysztofzylka\MicroFramework\Extension\Table\Extra\Cell;
 use krzysztofzylka\SimpleLibraries\Library\_Array;
 use krzysztofzylka\SimpleLibraries\Library\Strings;
 
+/**
+ * Renders
+ * @package Extension\Table\Trait
+ */
 trait Render
 {
 

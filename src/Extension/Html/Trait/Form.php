@@ -9,6 +9,7 @@ use Krzysztofzylka\MicroFramework\Kernel;
 
 /**
  * Html helper - forms
+ * @package Extension\Html\Trait
  */
 trait Form
 {

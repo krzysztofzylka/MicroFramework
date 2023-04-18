@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework\Extension\Database\Enum;
 
 /**
  * Update status
+ * @package Extension\Database\Enum
  */
 enum UpdateStatus: string
 {

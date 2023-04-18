@@ -5,6 +5,10 @@ namespace Krzysztofzylka\MicroFramework\Extension\Form\Trait;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 
+/**
+ * Form validation
+ * @package Extension\Form\Trait
+ */
 trait Validation
 {
 

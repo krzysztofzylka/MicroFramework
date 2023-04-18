@@ -4,6 +4,10 @@ namespace Krzysztofzylka\MicroFramework\Extension\Table\Trait;
 
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 
+/**
+ * Session
+ * @package Extension\Table\Trait
+ */
 trait Session
 {
 

@@ -2,6 +2,10 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Email\PredefinedConfig;
 
+/**
+ * Gmail config
+ * @package Extension\Email\PredefinedConfig
+ */
 class Gmail
 {
 

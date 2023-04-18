@@ -32,82 +32,36 @@ class Cron
     {
         $this->console = $console;
 
-        if (!$console->cronPath) {
-            $this->dtprint('Cron is disabled');
-        } elseif (!Kernel::getConfig()->database) {
-            $this->dprint('Database is disabled');
-        }
+        $cron = new \Krzysztofzylka\MicroFramework\Extension\Cron\Cron();
 
-        $this->prepareSite();
-        $this->cronScheduledInstance = new Table('cron_scheduled');
+        if (!$cron->isActive()) {
+            $this->dtprint('Cron is disabled');
+        }
 
         switch ($console->arg[2] ?? false) {
             case 'scheduled':
                 $this->tprint('Start cron scheduled');
-                $this->tprint('Load scheduled');
-                $this->scheduled = require($console->cronPath);
 
-                $this->tprint('Search tasks to run');
+                $count = $cron->runCronScheduled();
 
-                foreach ($this->scheduled as $schedule) {
-                    $cronFactory = CronExpression::factory($schedule['time']);
-
-                    if ($cronFactory->isDue()) {
-                        $this->tprint('Add task');
-                        $this->cronScheduledInstance->insert([
-                            'time' => $schedule['time'],
-                            'model' => $schedule['model'],
-                            'method' => $schedule['method'],
-                            'args' => json_encode($schedule['args'])
-                        ]);
-                    }
-                }
-
+                $this->tprint('End cron scheduled, add ' . $count . ' tasks');
                 break;
             case 'runTasks':
-                $this->tprint('Run cron tasks');
-                $this->tprint('Get tasts from database');
-                $scheduled = $this->cronScheduledInstance->findAll(null, null, 'id ASC');
+                $this->tprint('Start run tasks');
 
-                if (!$scheduled) {
-                    $this->dtprint('Tasks not found');
-                }
+                $count = $cron->runTasks();
 
-                $this->tprint('Tasks: ' . count($scheduled));
-
-                foreach ($scheduled as $id => $schedule) {
-                    $schedule = $schedule['cron_scheduled'];
-                    $this->tprint('Run task ' . $id + 1);
-
-                    if (empty($schedule['model']) || empty($schedule['method'])) {
-                        $this->tprint('Fail, model or/and method is empty');
-                        $this->cronScheduledInstance->delete($schedule['id']);
-
-                        continue;
-                    }
-
-                    try {
-                        $controller = new Controller();
-                        $model = $controller->loadModel($schedule['model']);
-                        call_user_func_array([$model, $schedule['method']], json_decode($schedule['args'], true));
-                    } catch (Exception $exception) {
-                        $this->tprint('Cron failed');
-                        $this->log('Cron fail', 'ERR', ['exception' => $exception, 'schedule' => $schedule]);
-                    }
-
-                    $this->cronScheduledInstance->delete($schedule['id']);
-                }
+                $this->tprint('End run tasks, execute ' . $count . ' tasks');
                 break;
             default:
                 $this->dprint('Action not found');
-
                 break;
         }
     }
 
-    private function prepareSite()
+    private function prepareSite(): void
     {
-        Account::$accountId = -1;
+//        Account::$accountId = -1;
     }
 
 }

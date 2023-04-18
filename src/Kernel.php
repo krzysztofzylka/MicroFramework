@@ -53,7 +53,8 @@ class Kernel
         'pa_view' => null,
         'storage' => null,
         'logs' => null,
-        'database_updater' => null
+        'database_updater' => null,
+        'config' => null
     ];
 
     /**
@@ -91,6 +92,7 @@ class Kernel
         self::$paths['logs'] = self::$paths['storage'] . '/logs';
         self::$paths['database_updater'] = $projectPath . '/database_updater';
         self::$paths['assets'] = self::$paths['public'] . '/assets';
+        self::$paths['config'] = $projectPath . '/config';
 
         foreach (self::$paths as $name => $path) {
             self::$paths[$name] = File::repairPath($path);

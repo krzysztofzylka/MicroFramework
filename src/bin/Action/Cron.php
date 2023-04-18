@@ -2,14 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework\bin\Action;
 
-use Cron\CronExpression;
-use Exception;
-use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\bin\Console\Console;
 use Krzysztofzylka\MicroFramework\bin\Trait\Prints;
-use Krzysztofzylka\MicroFramework\Controller;
-use Krzysztofzylka\MicroFramework\Extension\Account\Account;
-use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 
 class Cron

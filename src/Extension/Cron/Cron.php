@@ -130,7 +130,7 @@ class Cron
         //todo cronlock for schedule task
         $count = 0;
 
-        foreach($this->getCronScheduledTasks() as $scheduledTask) {
+        foreach ($this->getCronScheduledTasks() as $scheduledTask) {
             try {
                 if (empty($scheduledTask['cron_scheduled']['model']) || empty($scheduledTask['cron_scheduled']['method'])) {
                     throw new Exception('Empty model or method');

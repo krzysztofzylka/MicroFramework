@@ -11,9 +11,9 @@ return (new class extends Updater {
     {
         (new AlterTable('account'))
             ->addColumn((new Column())
-                    ->setName('api_key')
-                    ->setType(ColumnType::varchar, 256)
-                    ->setNull(true),
+                ->setName('api_key')
+                ->setType(ColumnType::varchar, 256)
+                ->setNull(true),
                 'admin'
             )->execute();
     }

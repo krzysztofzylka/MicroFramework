@@ -9,6 +9,7 @@ use krzysztofzylka\DatabaseManager\Exception\InsertException;
 use krzysztofzylka\DatabaseManager\Exception\SelectException;
 use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Controller;
+use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 
@@ -135,6 +136,7 @@ class Cron
                     throw new Exception('Empty model or method');
                 }
 
+                $this->cleanData();
                 $controller = new Controller();
                 $model = $controller->loadModel($scheduledTask['cron_scheduled']['model']);
                 call_user_func_array([$model, $scheduledTask['cron_scheduled']['method']], json_decode($scheduledTask['cron_scheduled']['args'], true));
@@ -179,6 +181,16 @@ class Cron
     public function deleteCronScheduledTask(int $id): bool
     {
         return $this->cronScheduledInstance->delete($id);
+    }
+
+    /**
+     * Clean data
+     * @return void
+     */
+    public function cleanData(): void
+    {
+        Account::$accountId = -1;
+        Account::$account = null;
     }
 
 }

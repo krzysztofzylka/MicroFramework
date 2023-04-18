@@ -26,7 +26,7 @@ class Cron
     private Table $cronScheduledInstance;
 
     /**
-     * help
+     * Cron
      */
     public function __construct(Console $console)
     {

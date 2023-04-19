@@ -93,7 +93,7 @@ trait Model
             throw new NotFoundException(__('micro-framework.model.not_found', ['name' => $startName]));
         }
 
-        $this->models[Strings::camelizeString($startName, '_')] = $model;
+        $this->models[Strings::camelizeString(str_replace('\\', '_', $startName), '_')] = $model;
 
         return $model;
     }

@@ -2,10 +2,10 @@
 
 namespace Krzysztofzylka\MicroFramework\bin\Action;
 
-use jc21\CliTable;
 use Krzysztofzylka\MicroFramework\bin\Console\Console;
 use Krzysztofzylka\MicroFramework\bin\Trait\Prints;
 use Krzysztofzylka\MicroFramework\Kernel;
+use krzysztofzylka\SimpleLibraries\Library\Console\Generator\Table;
 
 class Debug
 {
@@ -30,11 +30,11 @@ class Debug
             ['name' => 'config - database', 'value' => Kernel::getConfig()->database ? 'TRUE' : 'FALSE']
         ];
 
-        $table = new CliTable();
-        $table->addField('Name', 'name', false, 'blue');
-        $table->addField('Value', 'value', false, 'green');
-        $table->injectData($data);
-        $table->display();
+        $table = new Table();
+        $table->addColumn('Name', 'name');
+        $table->addColumn('Value', 'value');
+        $table->setData($data);
+        $table->render();
     }
 
 }

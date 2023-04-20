@@ -15,7 +15,7 @@ trait Prints
      */
     private function print(string $value): void
     {
-        echo $value . PHP_EOL;
+        \krzysztofzylka\SimpleLibraries\Library\Console\Prints::print($value);
     }
 
     /**
@@ -25,13 +25,7 @@ trait Prints
      */
     private function dprint(string $value): void
     {
-        if (Console::$disableDiePrint) {
-            $this->print($value);
-
-            return;
-        }
-
-        die($value . PHP_EOL);
+        \krzysztofzylka\SimpleLibraries\Library\Console\Prints::print($value, false, true);
     }
 
     /**
@@ -41,7 +35,7 @@ trait Prints
      */
     private function tprint(string $value): void
     {
-        $this->print('[' . Date::getSimpleDate() . '] ' . $value);
+        \krzysztofzylka\SimpleLibraries\Library\Console\Prints::print($value, true);
     }
 
     /**
@@ -51,13 +45,7 @@ trait Prints
      */
     private function dtprint(string $value): void
     {
-        if (Console::$disableDiePrint) {
-            $this->tprint($value);
-
-            return;
-        }
-
-        $this->dprint('[' . Date::getSimpleDate() . '] ' . $value);
+        \krzysztofzylka\SimpleLibraries\Library\Console\Prints::print($value, true, true);
     }
 
 }

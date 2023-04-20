@@ -3,7 +3,6 @@
 namespace Krzysztofzylka\MicroFramework\bin\Action;
 
 use Exception;
-use jc21\CliTable;
 use krzysztofzylka\DatabaseManager\AlterTable;
 use krzysztofzylka\DatabaseManager\Column;
 use krzysztofzylka\DatabaseManager\CreateTable;
@@ -61,14 +60,14 @@ class Database
 
                 break;
             case 'update_info':
-                $table = new CliTable();
-                $table->addField('Id', 'id');
-                $table->addField('Name', 'name');
-                $table->addField('Status', 'status', false, 'green');
-                $table->addField('Created', 'date_created', false, 'blue');
-                $table->addField('Modify', 'date_modify', false, 'yellow');
-                $table->injectData(array_column($this->updateTable->findAll(), 'database_updater'));
-                $table->display();
+                $table = new \krzysztofzylka\SimpleLibraries\Library\Console\Generator\Table();
+                $table->addColumn('Id', 'id');
+                $table->addColumn('Name', 'name');
+                $table->addColumn('Status', 'status');
+                $table->addColumn('Created', 'date_created');
+                $table->addColumn('Modify', 'date_modify');
+                $table->setData(array_column($this->updateTable->findAll(), 'database_updater'));
+                $table->render();
 
                 break;
             case 'debug_list':
@@ -201,12 +200,12 @@ class Database
     {
         $this->databaseUpdaterPath = $this->console->path . '/database_updater';
 
-        $table = new CliTable();
-        $table->addField('Name', 'name');
-        $table->addField('Type', 'type');
-        $table->addField('Path', 'path', false, 'green');
-        $table->injectData($this->globPath());
-        $table->display();
+        $table = new \krzysztofzylka\SimpleLibraries\Library\Console\Generator\Table();
+        $table->addColumn('Name', 'name');
+        $table->addColumn('Type', 'type');
+        $table->addColumn('Path', 'path');
+        $table->setData($this->globPath());
+        $table->render();
     }
 
     /**

@@ -2,32 +2,29 @@
 
 namespace Krzysztofzylka\MicroFramework\bin\Action;
 
-use Krzysztofzylka\MicroFramework\bin\Trait\Prints;
+use krzysztofzylka\SimpleLibraries\Library\Console\Generator\Help as HelpGenerator;
+use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
 
 class Help
 {
-
-    use Prints;
 
     /**
      * help
      */
     public function __construct()
     {
-        $this->print('Help');
-        $this->print('init                                          - Initialize project');
-        $this->print('rebuild                                          - Rebuild project');
-        $this->print('update                                        - Update project');
-
-        $this->print('database update                               - Update database');
-        $this->print('database update_info                          - Update database - info');
-
-        $this->print('user create <login> <password> <is admin>     - Create user');
-
-        $this->print('cron scheduled                                - Generate tasks');
-        $this->print('cron runTasks                                 - Run cron tasks');
-
-        $this->print('debug                                         - Debug');
+        Prints::print('Help');
+        $help = new HelpGenerator();
+        $help->addHelp('init', 'Initialize project');
+        $help->addHelp('rebuild', 'Rebuild project');
+        $help->addHelp('update', 'Update project');
+        $help->addHelp('database update', 'Update database');
+        $help->addHelp('database update_info', 'Update database info');
+        $help->addHelp('user create <login> <password> <is admin>', 'Create user');
+        $help->addHelp('cron scheduled', 'Generate tasks');
+        $help->addHelp('cron runTasks', 'Run cron tasks');
+        $help->addHelp('debug', 'Debug');
+        $help->render();
     }
 
 }

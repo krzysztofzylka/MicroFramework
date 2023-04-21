@@ -42,7 +42,7 @@ class User
      * @throws NotFoundException
      * @throws SimpleLibraryException
      */
-    private function create()
+    private function create() : void
     {
         if (!isset($this->console->arg[3]) || !isset($this->console->arg[4])) {
             $this->dprint('Login and password is required');

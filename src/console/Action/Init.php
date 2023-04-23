@@ -1,33 +1,30 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\bin\Action;
+namespace Krzysztofzylka\MicroFramework\console\Action;
 
 use Exception;
-use Krzysztofzylka\MicroFramework\bin\Console\Console;
-use Krzysztofzylka\MicroFramework\bin\Trait\Prints;
+use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
 use krzysztofzylka\SimpleLibraries\Library\File;
 
-class Rebuild
+class Init
 {
-
-    use Prints;
 
     /**
      * Console object
-     * @var Console
      */
-    private Console $console;
+    private $console;
 
     /**
      * Init project
-     * @param Console $console
+     * @param $console
      */
-    public function __construct(Console $console)
+    public function __construct($console)
     {
         $this->console = $console;
+        $this->console->initKernel();
 
-        $this->tprint('Rebuild project in path "' . $this->console->path . '"');
-        $this->tprint('Create directories');
+        Prints::print('Init project in path "' . $this->console->path . '"', true);
+        Prints::print('Create directories', true);
 
         try {
             File::mkdir($this->console->path . '/public', 0755);
@@ -45,34 +42,36 @@ class Rebuild
             File::mkdir($this->console->path . '/database_updater', 0755);
             File::mkdir($this->console->path . '/config', 0755);
         } catch (Exception $exception) {
-            $this->dtprint('Failed create directory: ' . $exception->getMessage());
+            Prints::print('Failed create directory: ' . $exception->getMessage(), true, true);
         }
 
-        $this->tprint('Copy files');
+        Prints::print('Copy files', true);
 
         try {
             File::copy($this->console->resourcesPath . '/public/index.php', $this->console->path . '/public/index.php');
             File::copy($this->console->resourcesPath . '/public/.htaccess', $this->console->path . '/public/.htaccess');
+            File::copy($this->console->resourcesPath . '/config/Config.php', $this->console->path . '/config/Config.php');
             File::copy($this->console->resourcesPath . '/config/.gitignore', $this->console->path . '/config/.gitignore');
             File::copy($this->console->resourcesPath . '/public/assets/dialogbox.css', $this->console->path . '/public/assets/dialogbox.css');
             File::copy($this->console->resourcesPath . '/public/assets/dialogbox.js', $this->console->path . '/public/assets/dialogbox.js');
             File::copy($this->console->resourcesPath . '/public/assets/spinner.css', $this->console->path . '/public/assets/spinner.css');
             File::copy($this->console->resourcesPath . '/public/assets/spinner.js', $this->console->path . '/public/assets/spinner.js');
+            File::copy($this->console->resourcesPath . '/admin_panel/view/layout.twig', $this->console->path . '/admin_panel/view/layout.twig');
         } catch (Exception $exception) {
-            $this->dtprint('Failed copy file: ' . $exception->getMessage());
+            Prints::print('Failed copy file: ' . $exception->getMessage(), true, true);
         }
 
-        $this->tprint('Set files contents');
+        Prints::print('Set files contents', true);
 
         try {
             $indexContent = file_get_contents($this->console->path . '/public/index.php');
             $indexContent = str_replace('{{vendorPath}}', self::getVendorPath($this->console->path) . '/autoload.php', $indexContent);
             file_put_contents($this->console->path . '/public/index.php', $indexContent);
         } catch (Exception $exception) {
-            $this->dtprint('Failed set files contents: ' . $exception->getMessage());
+            Prints::print('Failed set files contents: ' . $exception->getMessage(), true, true);
         }
 
-        $this->dtprint('End rebuild');
+        Prints::print('End init', true);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\bin\Action;
+namespace Krzysztofzylka\MicroFramework\console\Action;
 
 use Exception;
 use krzysztofzylka\DatabaseManager\AlterTable;
@@ -8,28 +8,28 @@ use krzysztofzylka\DatabaseManager\Column;
 use krzysztofzylka\DatabaseManager\CreateTable;
 use krzysztofzylka\DatabaseManager\Enum\ColumnType;
 use krzysztofzylka\DatabaseManager\Exception\ConditionException;
+use krzysztofzylka\DatabaseManager\Exception\CreateTableException;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Exception\InsertException;
 use krzysztofzylka\DatabaseManager\Exception\SelectException;
+use krzysztofzylka\DatabaseManager\Exception\TableException;
 use krzysztofzylka\DatabaseManager\Exception\UpdateException;
+use krzysztofzylka\DatabaseManager\Exception\UpdateTableException;
 use krzysztofzylka\DatabaseManager\Table;
-use Krzysztofzylka\MicroFramework\bin\Console\Console;
-use Krzysztofzylka\MicroFramework\bin\Trait\Prints;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Database\Enum\UpdateStatus;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
+use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
 
 class Database
 {
 
-    use Prints;
-    use \Krzysztofzylka\MicroFramework\bin\Trait\Database;
+    use \Krzysztofzylka\MicroFramework\console\Trait\Database;
 
     /**
      * Console object
-     * @var Console
      */
-    private Console $console;
+    private $console;
 
     /**
      * Database updater path
@@ -46,9 +46,17 @@ class Database
 
     /**
      * Init project
-     * @param Console $console
+     * @param $console
+     * @param string|null $action
+     * @throws ConditionException
+     * @throws CreateTableException
+     * @throws InsertException
+     * @throws SelectException
+     * @throws TableException
+     * @throws UpdateException
+     * @throws UpdateTableException
      */
-    public function __construct(Console $console, ?string $action = null)
+    public function __construct($console, ?string $action = null)
     {
         $this->console = $console;
         $this->databaseConnect($this->console->path);
@@ -60,14 +68,19 @@ class Database
 
                 break;
             case 'update_info':
-                $table = new \krzysztofzylka\SimpleLibraries\Library\Console\Generator\Table();
-                $table->addColumn('Id', 'id');
-                $table->addColumn('Name', 'name');
-                $table->addColumn('Status', 'status');
-                $table->addColumn('Created', 'date_created');
-                $table->addColumn('Modify', 'date_modify');
-                $table->setData(array_column($this->updateTable->findAll(), 'database_updater'));
-                $table->render();
+                try {
+                    $table = new \krzysztofzylka\SimpleLibraries\Library\Console\Generator\Table();
+                    $table->addColumn('Id', 'id');
+                    $table->addColumn('Name', 'name');
+                    $table->addColumn('Status', 'status');
+                    $table->addColumn('Created', 'date_created');
+                    $table->addColumn('Modify', 'date_modify');
+                    $table->setData(array_column($this->updateTable->findAll(), 'database_updater'));
+                    $table->render();
+                    exit;
+                } catch (Exception $exception) {
+                    Prints::print($exception->getMessage(), false, true);
+                }
 
                 break;
             case 'debug_list':
@@ -75,7 +88,7 @@ class Database
 
                 break;
             default:
-                $this->dprint('Action not found');
+                Prints::print('Action not found', false, true);
 
                 break;
         }
@@ -84,21 +97,22 @@ class Database
     /**
      * Update database
      * @return void
-     * @throws InsertException
-     * @throws UpdateException
-     * @throws NotFoundException
      * @throws ConditionException
+     * @throws CreateTableException
+     * @throws InsertException
      * @throws SelectException
-     * @throws SimpleLibraryException
+     * @throws TableException
+     * @throws UpdateException
+     * @throws UpdateTableException
      */
     public function update(): void
     {
         $this->databaseUpdaterPath = $this->console->path . '/database_updater';
 
-        $this->tprint('Start update database');
-        $this->tprint('Init update table');
+        Prints::print('Start update database', true);
+        Prints::print('Init update table', true);
         $this->initUpdateTable();
-        $this->tprint('Scan directory "' . $this->databaseUpdaterPath . '"');
+        Prints::print('Scan directory "' . $this->databaseUpdaterPath . '"', true);
 
         $databaseFiles = $this->globPath();
 
@@ -108,12 +122,15 @@ class Database
             }
         }
 
-        $this->dtprint('End update database');
+        Prints::print('End update database', true, true);
     }
 
     /**
      * Init main updater table
      * @return void
+     * @throws CreateTableException
+     * @throws TableException
+     * @throws UpdateTableException
      */
     private function initUpdateTable(): void
     {
@@ -133,9 +150,9 @@ class Database
                 ->addDateModifyColumn()
                 ->execute();
 
-            $this->tprint('Success create table');
+            Prints::print('Success create table', true);
         } else {
-            $this->tprint('Table already exists');
+            Prints::print('Table already exists', true);
         }
 
         $columns = array_column((new Table('database_updater'))->columnList(), 'Field');
@@ -167,7 +184,7 @@ class Database
      */
     private function installScript(array $databaseFile): void
     {
-        $this->tprint('Run update file: ' . $databaseFile['name']);
+        Prints::print('Run update file: ' . $databaseFile['name'], true);
         $this->updateTable->insert(['name' => $databaseFile['name']]);
 
         try {
@@ -188,7 +205,7 @@ class Database
             $this->updateTable->updateValue('status', UpdateStatus::Fail->value);
             $this->updateTable->updateValue('error', $exception->getMessage());
 
-            $this->dtprint('Fail update file: ' . $databaseFile['path']);
+            Prints::print('Fail update file: ' . $databaseFile['path'], true, true);
         }
     }
 

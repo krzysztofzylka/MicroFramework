@@ -5,14 +5,15 @@ namespace Krzysztofzylka\MicroFramework\console\Action;
 use krzysztofzylka\SimpleLibraries\Library\Console\Generator\Help as HelpGenerator;
 use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
 
-class Help {
+class Help
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         Prints::print('Help');
         $help = new HelpGenerator();
         $help->addHelp('init', 'Initialize project');
         $help->addHelp('rebuild', 'Rebuild project');
-        $help->addHelp('update', 'Update project');
         $help->addHelp('database update', 'Update database');
         $help->addHelp('database update_info', 'Update database info');
         $help->addHelp('user create <login> <password> <is admin>', 'Create user');

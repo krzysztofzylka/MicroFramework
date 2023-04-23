@@ -1,5 +1,7 @@
 <?php
 
+use config\Config;
+use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
 use krzysztofzylka\SimpleLibraries\Library\Strings;
 
@@ -23,11 +25,32 @@ return new class($argv) {
      */
     private string $actionClass;
 
+    /**
+     * Project path
+     * @var
+     */
+    public $path;
+
+    /**
+     * Resouce path
+     * @var
+     */
+    public $resourcesPath;
+
+    /**
+     * argv
+     * @var
+     */
+    public $arg;
+
     public function __construct(array $argv) {
         $this->consolePath = realpath($argv[0]);
+        $this->path = getcwd();
+        $this->resourcesPath = realpath(__DIR__ . '/resources');
+        $this->arg = $argv;
 
         if (!isset($argv[1])) {
-            Prints::print('No action', false, true);
+            $this->loadHelp();
         }
 
         $this->actionClass = '\Krzysztofzylka\MicroFramework\console\Action\\' . Strings::camelizeString($argv[1], '_');
@@ -51,10 +74,28 @@ return new class($argv) {
         }
     }
 
-    public function loadHelp() {
+    /**
+     * Load helper
+     * @return void
+     */
+    public function loadHelp(): void
+    {
         $class = '\Krzysztofzylka\MicroFramework\console\Action\Help';
 
         new $class();
+
+        exit;
+    }
+
+    public function initKernel(): void
+    {
+        try {
+            Kernel::initPaths($this->path);
+            Kernel::autoload();
+            Kernel::setConfig(new Config());
+            Kernel::configDatabaseConnect();
+        } catch (Exception) {
+        }
     }
 
 };

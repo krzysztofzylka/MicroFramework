@@ -1,14 +1,13 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\bin\Trait;
+namespace Krzysztofzylka\MicroFramework\console\Trait;
 
 use config\Config;
 use Exception;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
-use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Kernel;
-use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
+use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
 
 trait Database
 {
@@ -16,10 +15,8 @@ trait Database
     /**
      * @param $path
      * @return void
-     * @throws NotFoundException
-     * @throws SimpleLibraryException
      */
-    private function databaseConnect($path)
+    private function databaseConnect($path): void
     {
         try {
             Kernel::initPaths($path);
@@ -27,15 +24,15 @@ trait Database
             Kernel::setConfig(new Config());
             Kernel::configDatabaseConnect();
         } catch (DatabaseManagerException $exception) {
-            $this->dtprint('Database fail: ' . $exception->getHiddenMessage());
+            Prints::print('Database fail: ' . $exception->getHiddenMessage(), false, true);
 
             exit;
         } catch (DatabaseException $exception) {
-            $this->dtprint('Database fail: ' . $exception->getHiddenMessage());
+            Prints::print('Database fail: ' . $exception->getHiddenMessage(), false, true);
 
             exit;
         } catch (Exception $exception) {
-            $this->dtprint('Database fail: ' . $exception->getMessage());
+            Prints::print('Database fail: ' . $exception->getMessage(), false, true);
 
             exit;
         }

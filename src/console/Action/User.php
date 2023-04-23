@@ -1,11 +1,11 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\bin\Action;
+namespace Krzysztofzylka\MicroFramework\console\Action;
 
+use config\Config;
 use Exception;
-use Krzysztofzylka\MicroFramework\bin\Console\Console;
-use Krzysztofzylka\MicroFramework\bin\Trait\Database;
-use Krzysztofzylka\MicroFramework\bin\Trait\Prints;
+use Krzysztofzylka\MicroFramework\console\Trait\Database;
+use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
@@ -13,14 +13,13 @@ use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 class User
 {
 
-    use Prints;
     use Database;
 
     /**
      * Users
-     * @param Console $console
+     * @param $console
      */
-    public function __construct(Console $console)
+    public function __construct($console)
     {
         $this->console = $console;
 
@@ -30,7 +29,7 @@ class User
 
                 break;
             default:
-                $this->dprint('Action not found');
+                Prints::print('Action not found', false, true);
 
                 break;
         }
@@ -39,13 +38,11 @@ class User
     /**
      * Create user
      * @return void
-     * @throws NotFoundException
-     * @throws SimpleLibraryException
      */
     private function create() : void
     {
         if (!isset($this->console->arg[3]) || !isset($this->console->arg[4])) {
-            $this->dprint('Login and password is required');
+            Prints::print('Login and password is required', false, true);
 
             exit;
         }
@@ -55,19 +52,23 @@ class User
         $account = new Account();
 
         try {
-            $account->registerUser($this->console->arg[3], $this->console->arg[4]);
+            if ((new Config())->authEmail) {
+                $account->registerUser($this->console->arg[3], $this->console->arg[4], $this->console->arg[3]);
+            } else {
+                $account->registerUser($this->console->arg[3], $this->console->arg[4]);
+            }
 
             if (isset($this->console->arg[5]) && $this->console->arg[5]) {
                 Account::$tableInstance->updateValue('admin', 5);
-                $this->print('User has admin permission!');
+                Prints::print('User has admin permission!', false, true);
             }
         } catch (Exception $exception) {
-            $this->dprint('Fail: ' . $exception->getMessage());
+            Prints::print('Fail: ' . $exception->getMessage(), false, true);
 
             exit;
         }
 
-        $this->dprint('Success');
+        Prints::print('Success', false, true);
     }
 
 }

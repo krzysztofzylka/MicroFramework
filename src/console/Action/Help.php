@@ -1,6 +1,6 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\bin\Action;
+namespace Krzysztofzylka\MicroFramework\console\Action;
 
 use krzysztofzylka\SimpleLibraries\Library\Console\Generator\Help as HelpGenerator;
 use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
@@ -8,16 +8,12 @@ use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
 class Help
 {
 
-    /**
-     * help
-     */
     public function __construct()
     {
         Prints::print('Help');
         $help = new HelpGenerator();
         $help->addHelp('init', 'Initialize project');
         $help->addHelp('rebuild', 'Rebuild project');
-        $help->addHelp('update', 'Update project');
         $help->addHelp('database update', 'Update database');
         $help->addHelp('database update_info', 'Update database info');
         $help->addHelp('user create <login> <password> <is admin>', 'Create user');

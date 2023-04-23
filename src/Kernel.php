@@ -283,7 +283,7 @@ class Kernel
             } elseif (!Account::isLogged()) {
                 throw new NotFoundException(__('micro-framework.kernel.not_logged'));
             } elseif (!Account::$account['account']['admin']) {
-                throw new NotFoundException(__('micro-framework.admin_panel.not_have_permission'));
+                throw new NotFoundException(__('micro-framework.kernel.not_have_permission'));
             }
 
             $class = ObjectNameGenerator::controllerPaLocal($name);

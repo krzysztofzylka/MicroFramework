@@ -277,13 +277,13 @@ class Kernel
     {
         if (isset($params['admin_panel']) && $params['admin_panel']) {
             if (!self::getConfig()->adminPanel) {
-                throw new NotFoundException(__('micr-framework.kernel.adminpanel_disabled'));
+                throw new NotFoundException(__('micro-framework.kernel.adminpanel_disabled'));
             } elseif (!self::getConfig()->authControl) {
-                throw new NotFoundException(__('micr-framework.kernel.authcontrol_disabled'));
+                throw new NotFoundException(__('micro-framework.kernel.authcontrol_disabled'));
             } elseif (!Account::isLogged()) {
-                throw new NotFoundException(__('micr-framework.kernel.not_logged'));
+                throw new NotFoundException(__('micro-framework.kernel.not_logged'));
             } elseif (!Account::$account['account']['admin']) {
-                throw new NotFoundException(__('micr-framework.admin_panel.not_have_permission'));
+                throw new NotFoundException(__('micro-framework.admin_panel.not_have_permission'));
             }
 
             $class = ObjectNameGenerator::controllerPaLocal($name);

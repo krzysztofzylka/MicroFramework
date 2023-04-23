@@ -177,7 +177,7 @@ class View
             'dialogboxConfig' => '[]',
             'accountId' => Account::$accountId,
             'account' => Account::$account,
-            'here' => Kernel::$url,
+            'here' => Kernel::$url ?? null,
             'isDialogbox' => isset($_GET['dialogbox']) ? (bool)$_GET['dialogbox'] : false
         ];
 

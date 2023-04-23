@@ -151,7 +151,7 @@ class Debug
     {
         $data = [
             'projectPath' => Kernel::getProjectPath(),
-            'url' => Kernel::$url,
+            'url' => Kernel::$url ?? null,
             'data' => Kernel::getData(),
             'paths' => Kernel::getPath(null)
         ];

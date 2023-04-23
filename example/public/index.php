@@ -3,11 +3,9 @@ ob_start();
 session_start();
 
 use config\Config;
-use krzysztofzylka\DatabaseManager\Debug;
 use Krzysztofzylka\MicroFramework\Autoload;
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\View;
-use krzysztofzylka\SimpleLibraries\Library\Request;
 
 include('/home/krzysztof/PhpstormProjects/MicroFramework/vendor/autoload.php');
 

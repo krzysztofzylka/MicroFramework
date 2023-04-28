@@ -21,6 +21,7 @@ micro-framework:
     fail_set_remember_field: Błąd zapisywania danych użytkownika
     email_required: Adres e-mail jest wymagany
   validation:
+    fail: Błąd walidacji
     predefined:
       is_email: Nieprawidłowy adres e-mail
       is_valid_date: Data jest nieprawidłowa

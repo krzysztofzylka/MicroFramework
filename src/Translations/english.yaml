@@ -21,6 +21,7 @@ micro-framework:
     fail_set_remember_field: Fail set remember fields
     email_required: E-mail address is required
   validation:
+    fail: Validation fail
     predefined:
       is_email: Invalid email format
       is_valid_date: Invalid date format

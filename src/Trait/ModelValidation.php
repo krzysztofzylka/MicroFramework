@@ -43,7 +43,7 @@ trait ModelValidation
         $this->validationErrors = $validation->validate($data ?? $this->data);
 
         if (!empty($this->validationErrors) && Kernel::getConfig()->debug) {
-            $this->log('Validation fail', 'WARNING', $this->validationErrors);
+            $this->log(__('micro-framework.validation.fail'), 'WARNING', $this->validationErrors);
         }
 
         if (Request::isAjaxRequest() && !empty($this->validationErrors)) {

@@ -15,8 +15,9 @@ trait Alerts
     /**
      * Response alert
      * @param string $message
-     * @param string $type
+     * @param string $type OK, ERR, INFO, WARNING
      * @param string $title
+     * @param array $params
      * @return never
      * @throws MicroFrameworkException
      */

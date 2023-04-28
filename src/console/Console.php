@@ -43,7 +43,8 @@ return new class($argv) {
      */
     public $arg;
 
-    public function __construct(array $argv) {
+    public function __construct(array $argv)
+    {
         $this->consolePath = realpath($argv[0]);
         $this->path = getcwd();
         $this->resourcesPath = realpath(__DIR__ . '/resources');

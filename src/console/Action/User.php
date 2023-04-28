@@ -5,10 +5,8 @@ namespace Krzysztofzylka\MicroFramework\console\Action;
 use config\Config;
 use Exception;
 use Krzysztofzylka\MicroFramework\console\Trait\Database;
-use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
-use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
-use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
+use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
 
 class User
 {
@@ -39,7 +37,7 @@ class User
      * Create user
      * @return void
      */
-    private function create() : void
+    private function create(): void
     {
         if (!isset($this->console->arg[3]) || !isset($this->console->arg[4])) {
             Prints::print('Login and password is required', false, true);

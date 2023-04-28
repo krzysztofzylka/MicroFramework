@@ -16,9 +16,7 @@ use krzysztofzylka\DatabaseManager\Exception\TableException;
 use krzysztofzylka\DatabaseManager\Exception\UpdateException;
 use krzysztofzylka\DatabaseManager\Exception\UpdateTableException;
 use krzysztofzylka\DatabaseManager\Table;
-use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Database\Enum\UpdateStatus;
-use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
 
 class Database

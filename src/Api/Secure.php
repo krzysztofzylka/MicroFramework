@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework\Api;
 
 use Krzysztofzylka\MicroFramework\ControllerApi;
+use Krzysztofzylka\MicroFramework\Trait\Log;
 use krzysztofzylka\SimpleLibraries\Library\Client;
 
 /**
@@ -11,6 +12,8 @@ use krzysztofzylka\SimpleLibraries\Library\Client;
  */
 class Secure
 {
+
+    use Log;
 
     /**
      * Controller
@@ -68,6 +71,8 @@ class Secure
         }
 
         if (!in_array(Client::getIP(), $ips)) {
+            $this->log('Access failed', 'WARNING', ['ip' => Client::getIP()]);
+
             $this->controller->response->error(
                 'Not authorized',
                 401,

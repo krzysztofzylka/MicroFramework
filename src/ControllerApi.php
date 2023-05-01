@@ -4,9 +4,10 @@ namespace Krzysztofzylka\MicroFramework;
 
 use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Api\Authorization;
+use Krzysztofzylka\MicroFramework\Api\Response;
+use Krzysztofzylka\MicroFramework\Api\Secure;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use krzysztofzylka\SimpleLibraries\Library\Request;
-use krzysztofzylka\SimpleLibraries\Library\Response;
 use krzysztofzylka\SimpleLibraries\Library\Strings;
 
 /**
@@ -31,6 +32,18 @@ class ControllerApi extends Controller
     public bool $auth = true;
 
     /**
+     * Response
+     * @var Response
+     */
+    public Response $response;
+
+    /**
+     * Secure
+     * @var Secure
+     */
+    public Secure $secure;
+
+    /**
      * Constructor
      * - Automatic api authorization
      */
@@ -48,13 +61,13 @@ class ControllerApi extends Controller
 
                 if (!$auth) {
                     $this->log('Authorization failed', 'WARNING', ['username' => $username]);
-                    $this->responseError('Not authorized', 401, 'Basic auth fail');
+                    $this->response->error('Not authorized', 401, 'Basic auth fail');
                 }
             } elseif (isset($_SERVER['HTTP_APIKEY'])) {
                 $apikey = Strings::escape($_SERVER['HTTP_APIKEY']);
 
                 if (empty($apikey) || strlen($apikey) < 10) {
-                    $this->responseError('Not authorized', 401, 'ApiKey: ' . $apikey);
+                    $this->response->error('Not authorized', 401, 'ApiKey: ' . $apikey);
                 }
 
                 $account = (new Table('account'))->find(['api_key' => $apikey]);
@@ -64,54 +77,17 @@ class ControllerApi extends Controller
 
                     if (!$auth) {
                         $this->log('Authorization failed', 'WARNING', ['apikey' => $apikey]);
-                        $this->responseError('Not authorized', 401, 'Apikey auth fail');
+                        $this->response->error('Not authorized', 401, 'Apikey auth fail');
                     }
                 } else {
                     $this->log('Authorization failed', 'WARNING', ['apikey' => $apikey]);
-                    $this->responseError('Not authorized', 401, 'Apikey auth fail');
+                    $this->response->error('Not authorized', 401, 'Apikey auth fail');
                 }
             } else {
                 $this->log('Authorization failed', 'WARNING', ['Failed authorization type']);
-                $this->responseError('Not authorized', 401, 'Failed authorization type');
+                $this->response->error('Not authorized', 401, 'Failed authorization type');
             }
         }
-    }
-
-    /**
-     * Response JSON error
-     * @param string $message
-     * @param int $code
-     * @param ?string $detail
-     * @return never
-     */
-    public function responseError(string $message, int $code = 500, ?string $detail = null): never
-    {
-        $data = [
-            'error' => [
-                'message' => $message,
-                'code' => $code
-            ]
-        ];
-
-        if ($detail) {
-            $data['error']['detail'] = $detail;
-        }
-
-        http_response_code($code);
-
-        $response = new Response();
-        $response->json($data);
-    }
-
-    /**
-     * Response JSON
-     * @param array $data
-     * @return never
-     */
-    public function responseJson(array $data): never
-    {
-        $response = new Response();
-        $response->json($data);
     }
 
     /**
@@ -128,7 +104,7 @@ class ControllerApi extends Controller
         }
 
         if (!in_array(strtolower($this->getRequestMethod()), $method)) {
-            $this->responseError(
+            $this->response->error(
                 'Invalid method',
                 400,
                 'Accepted method: ' . strtoupper(implode(',', $method))
@@ -146,50 +122,12 @@ class ControllerApi extends Controller
     }
 
     /**
-     * Content body is json and response 400
-     * @return void
-     */
-    public function contentBodyIsJson(): void
-    {
-        json_decode($this->getBodyContent());
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->responseError(
-                'Bad request',
-                400,
-                'Body is not json'
-            );
-        }
-    }
-
-    /**
      * Get body content
      * @return false|string
      */
     public function getBodyContent(): false|string
     {
         return Request::getInputContents();
-    }
-
-    /**
-     * Validate content body (json) and response 400
-     * @param array $keyList
-     * @return void
-     */
-    public function contentBodyValidate(array $keyList): void
-    {
-        $contentBody = json_decode($this->getBodyContent(), true);
-        $contentBodyKeys = array_keys($contentBody);
-
-        foreach ($keyList as $key) {
-            if (!in_array($key, $contentBodyKeys)) {
-                $this->responseError(
-                    'Invalid input data',
-                    400,
-                    'Require ' . $key
-                );
-            }
-        }
     }
 
 }

@@ -8,6 +8,7 @@ use Exception;
 use krzysztofzylka\DatabaseManager\DatabaseConnect;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Exception\ConnectException;
+use Krzysztofzylka\MicroFramework\Api\Secure;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NoAuthException;
@@ -24,6 +25,7 @@ use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\_Array;
 use krzysztofzylka\SimpleLibraries\Library\File;
 use krzysztofzylka\SimpleLibraries\Library\Request;
+use krzysztofzylka\SimpleLibraries\Library\Response;
 
 /**
  * Kernel
@@ -310,12 +312,22 @@ class Kernel
             $controller->method = $method;
             $controller->arguments = $arguments;
             $controller->data = self::getData();
-            $controller->htmlGenerator = new Html();
             $controller->params = $params;
-            $controller->table = new Table();
-            $controller->table->controller = $controller;
-            $controller->table->data = $controller->data;
-            $controller->table->init();
+
+            if (isset($params['api']) && $params['api']) {
+                /** @var ControllerApi $controller */
+                $controller->secure = new Secure();
+                $controller->response = new Response();
+
+                $controller->secure->controller = $controller;
+                $controller->response->controller = $controller;
+            } else {
+                $controller->htmlGenerator = new Html();
+                $controller->table = new Table();
+                $controller->table->controller = $controller;
+                $controller->table->data = $controller->data;
+                $controller->table->init();
+            }
 
             if (!method_exists($controller, $method)) {
                 throw new Exception(__('micro-framework.kernel.method_is_controller_not_exists', ['methodName' => $method, 'controllerName' => $name]));

@@ -29,6 +29,7 @@ micro-framework:
       length:
         min: Value must be more or equal to
         max: Value must be less or equal to
+      is_numeric: Value must be numeric
   debug:
     sqlTable: SQL
     configTable: Configuration

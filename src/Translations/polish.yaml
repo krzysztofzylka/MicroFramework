@@ -29,6 +29,7 @@ micro-framework:
       length:
         min: Pole nie może posiadać mniej znaków niż
         max: Pole nie może posiadać więcej znaków niż
+      is_numeric: Pole musi być liczbą
   debug:
     sqlTable: SQL
     configTable: Konfiguracja

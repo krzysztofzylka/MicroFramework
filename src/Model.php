@@ -69,7 +69,7 @@ class Model
     /**
      * Set ID
      * @param ?int $id
-     * @return bool
+     * @return Model|false
      */
     public function setId(?int $id = null): self|false
     {

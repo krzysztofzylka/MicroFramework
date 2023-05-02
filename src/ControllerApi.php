@@ -4,9 +4,11 @@ namespace Krzysztofzylka\MicroFramework;
 
 use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Api\Authorization;
+use Krzysztofzylka\MicroFramework\Api\Enum\ContentType;
 use Krzysztofzylka\MicroFramework\Api\Response;
 use Krzysztofzylka\MicroFramework\Api\Secure;
 use Krzysztofzylka\MicroFramework\Trait\Log;
+use krzysztofzylka\SimpleLibraries\Library\Json;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Strings;
 
@@ -101,11 +103,19 @@ class ControllerApi extends Controller
 
     /**
      * Get body content
+     * @param ContentType $contentType Content type, default string
      * @return false|string
      */
-    public function getBodyContent(): false|string
+    public function getBodyContent(ContentType $contentType = ContentType::String): false|string
     {
-        return Request::getInputContents();
+        switch ($contentType) {
+            case ContentType::String:
+                return Request::getInputContents();
+            case ContentType::Json:
+                $this->secure->contentIsJson();
+
+                return json_decode(Request::getInputContents(), true);
+        }
     }
 
 }

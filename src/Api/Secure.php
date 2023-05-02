@@ -5,6 +5,7 @@ namespace Krzysztofzylka\MicroFramework\Api;
 use Krzysztofzylka\MicroFramework\ControllerApi;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use krzysztofzylka\SimpleLibraries\Library\Client;
+use krzysztofzylka\SimpleLibraries\Library\Json;
 
 /**
  * Secure
@@ -27,9 +28,7 @@ class Secure
      */
     public function contentIsJson(): void
     {
-        json_decode($this->controller->getBodyContent());
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
+        if (!Json::isJson($this->controller->getBodyContent())) {
             $this->controller->response->error(
                 'Bad request',
                 400,

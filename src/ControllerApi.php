@@ -91,28 +91,6 @@ class ControllerApi extends Controller
     }
 
     /**
-     * Check request method and response 400
-     * @param string|array $method
-     * @return void
-     */
-    public function allowRequestMethod(string|array $method): void
-    {
-        $method = is_string($method) ? [$method] : $method;
-
-        foreach ($method as $key => $methodValue) {
-            $method[$key] = strtolower($methodValue);
-        }
-
-        if (!in_array(strtolower($this->getRequestMethod()), $method)) {
-            $this->response->error(
-                'Invalid method',
-                400,
-                'Accepted method: ' . strtoupper(implode(',', $method))
-            );
-        }
-    }
-
-    /**
      * Get request method
      * @return string
      */

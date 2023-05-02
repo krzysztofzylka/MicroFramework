@@ -334,7 +334,7 @@ class Kernel
             }
 
             if (!method_exists($controller, $method)) {
-                throw new Exception(__('micro-framework.kernel.method_is_controller_not_exists', ['methodName' => $method, 'controllerName' => $name]));
+                throw new NotFoundException(__('micro-framework.kernel.method_is_controller_not_exists', ['methodName' => $method, 'controllerName' => $name]));
             }
         } catch (NotFoundException $exception) {
             throw new NotFoundException($exception->getHiddenMessage());

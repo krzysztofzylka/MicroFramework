@@ -9,17 +9,18 @@ class test extends ControllerApi {
 
     public bool $auth = false;
 
-    public function insert() {
-        $this->allowRequestMethod('POST');
-        $this->contentBodyIsJson();
-        $this->contentBodyValidate(['name', 'value']);
+    public function insert(): void
+    {
+        $this->secure->allowRequestMethod('POST');
+        $this->secure->contentIsJson();
+        $this->secure->bodyValidation(['name', 'value']);
         $content = json_decode($this->getBodyContent(), true);
 
         try {
             $this->loadModel('test')->insert(['name' => $content['name'], 'value' => $content['value']]);
-            $this->responseJson(['status' => 'success']);
+            $this->response->json(['status' => 'success']);
         } catch (Exception) {
-            $this->responseError('Internal error');
+            $this->response->error('Internal error');
         }
     }
 

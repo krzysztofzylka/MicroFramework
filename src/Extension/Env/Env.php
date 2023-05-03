@@ -2,8 +2,6 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Env;
 
-use Krzysztofzylka\MicroFramework\Kernel;
-
 /**
  * Env
  * @package Extension\Env

@@ -47,6 +47,12 @@ class EnvInstance
         $contents = explode(PHP_EOL, $contents);
 
         foreach($contents as $content) {
+            $content = ltrim($content);
+
+            if (str_starts_with($content, '#') || empty($content)) {
+                continue;
+            }
+
             $explode = explode('=', $content, 2);
             $_ENV[strtolower($this->fileName) . '.' . $explode[0]] = $explode[1];
         }

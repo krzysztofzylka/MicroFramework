@@ -12,6 +12,7 @@ try {
     Kernel::initPaths(__DIR__ . '/../');
     new Autoload(Kernel::getProjectPath());
     Kernel::loadEnv();
+    dumpe($_ENV);
     Kernel::run();
 } catch (Exception $exception) {
     $view = new View();

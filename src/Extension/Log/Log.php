@@ -45,14 +45,14 @@ class Log
             return false;
         }
 
-        if (Kernel::getConfig()->logger) {
+        if ($_ENV['logger.enabled']) {
             $loggerContent = $logContent;
             unset($loggerContent['level'], $loggerContent['message']);
-            Logger::$url = Kernel::getConfig()->loggerUrl;
-            Logger::$api_key = Kernel::getConfig()->loggerApiKey;
-            Logger::$site_key = Kernel::getConfig()->loggerSiteKey;
-            Logger::$username = Kernel::getConfig()->loggerUsername;
-            Logger::$password = Kernel::getConfig()->loggerPassword;
+            Logger::$url = $_ENV['logger.url'];
+            Logger::$api_key = $_ENV['logger.apiKey'];
+            Logger::$site_key = $_ENV['logger.siteKey'];
+            Logger::$username = $_ENV['logger.username'];
+            Logger::$password = $_ENV['logger.password'];
 
             Logger::log($logContent['message'], $logContent['level'], $loggerContent);
         }

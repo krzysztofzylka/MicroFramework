@@ -49,8 +49,8 @@ class ErrorHandler
             );
         }
 
-        if (Kernel::getConfig()->debug) {
-            if (Kernel::getConfig()->showAllErrors) {
+        if ($_ENV['config.debug']) {
+            if ($_ENV['config.showAllErrors']) {
                 ob_end_clean();
                 dumpe([
                     'type' => $errorType,

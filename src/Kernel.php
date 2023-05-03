@@ -62,12 +62,6 @@ class Kernel
     ];
 
     /**
-     * Config
-     * @var object
-     */
-    private static object $config;
-
-    /**
      * Parametry kontrolera
      * @var array
      */
@@ -119,15 +113,17 @@ class Kernel
      */
     public static function run(): void
     {
-        if (!isset(self::$config)) {
-            self::$config = new ConfigDefault();
-        }
-
-        if (self::getConfig()->debug) {
+        if ($_ENV['config.debug']) {
             Debug::$variables['site_load']['start'] = microtime(true);
         }
 
-        Translation::getTranslationFile(__DIR__ . '/Translations/' . self::getConfig()->translation . '.yaml');
+        if ($_ENV['config.showAllErrors']) {
+            ini_set('display_errors', 1);
+            ini_set('display_startup_errors', 1);
+            error_reporting(E_ALL);
+        }
+
+        Translation::getTranslationFile(__DIR__ . '/Translations/' . $_ENV['config.translation'] . '.yaml');
 
         self::errorHandler();
 
@@ -137,7 +133,7 @@ class Kernel
             new Account();
         }
 
-        $url = self::$url = isset($_GET['url']) ? ('/' . $_GET['url']) : self::getConfig()->defaultPage;
+        $url = self::$url = isset($_GET['url']) ? ('/' . $_GET['url']) : $_ENV['config.defaultPage'];
         $extension = File::getExtension($url);
 
         new Statistic();
@@ -158,25 +154,25 @@ class Kernel
 
         $controller = $explode[0];
 
-        if (self::$config->api && $controller === self::$config->apiUri) {
+        if ($_ENV['api.enabled'] && $controller === $_ENV['api.url']) {
             $controller = $explode[1];
             $method = $explode[2] ?? self::getConfig()->defaultMethod;
             $arguments = array_slice($explode, 3);
 
             self::init($controller, $method, $arguments, ['api' => true]);
-        } elseif (self::$config->adminPanel && $controller === self::$config->adminPanelUri) {
-            $controller = $explode[1] ?? self::getConfig()->defaultController;
-            $method = $explode[2] ?? self::getConfig()->defaultMethod;
+        } elseif ($_ENV['admin_panel.enabled'] && $controller === $_ENV['admin_panel.url']) {
+            $controller = $explode[1] ?? $_ENV['config.defaultController'];
+            $method = $explode[2] ?? $_ENV['config.defaultMethod'];
             $arguments = array_slice($explode, 3);
 
             if (empty($controller)) {
                 $controller = $method;
-                $method = self::getConfig()->defaultMethod;
+                $method = $_ENV['config.defaultMethod'];
             }
 
             self::init($controller, $method, $arguments, ['admin_panel' => true]);
         } else {
-            $method = $explode[1] ?? self::getConfig()->defaultMethod;
+            $method = $explode[1] ?? $_ENV['config.defaultMethod'];
             $arguments = array_slice($explode, 2);
 
             self::init($controller, $method, $arguments);
@@ -201,14 +197,14 @@ class Kernel
      */
     public static function configDatabaseConnect(): void
     {
-        if (self::$config->database) {
+        if ($_ENV['database.enabled']) {
             $databaseConnect = (new DatabaseConnect())
-                ->setHost(self::$config->databaseHost)
-                ->setUsername(self::$config->databaseUsername)
-                ->setPassword(self::$config->databasePassword)
-                ->setDatabaseName(self::$config->databaseName);
+                ->setHost($_ENV['database.host'])
+                ->setUsername($_ENV['database.username'])
+                ->setPassword($_ENV['database.password'])
+                ->setDatabaseName($_ENV['database.name']);
 
-            if (self::getConfig()->debug) {
+            if ($_ENV['config.debug']) {
                 $databaseConnect->setDebug(true);
             }
 
@@ -219,25 +215,6 @@ class Kernel
                 throw new DatabaseException($exception->getHiddenMessage());
             }
         }
-    }
-
-    /**
-     * Get config
-     * @return ConfigDefault
-     */
-    public static function getConfig(): object
-    {
-        return self::$config ?? new ConfigDefault();
-    }
-
-    /**
-     * Set config
-     * @param object $config
-     * @return void
-     */
-    public static function setConfig(object $config): void
-    {
-        self::$config = $config;
     }
 
     /**

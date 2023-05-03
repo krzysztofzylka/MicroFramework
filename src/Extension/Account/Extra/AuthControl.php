@@ -27,7 +27,7 @@ class AuthControl
      */
     public static function run(string $class, string $method, bool $isApi): void
     {
-        if (Kernel::getConfig()->authControl) {
+        if ($_ENV['auth.authControl']) {
             if ($isApi) {
                 return;
             }
@@ -35,10 +35,10 @@ class AuthControl
             $checkAuthorization = self::checkAuthorization($class, $method);
 
             if (!$checkAuthorization) {
-                switch (Kernel::getConfig()->authControlAction) {
-                    case AuthControlAction::redirect:
-                        (new Controller())->redirect(Kernel::getConfig()->authControlRedirect);
-                    case AuthControlAction::exception:
+                switch ($_ENV['auth.action']) {
+                    case 'redirect':
+                        (new Controller())->redirect($_ENV['auth.redirect']);
+                    case 'exception':
                         throw new NoAuthException();
                 }
             }
@@ -61,7 +61,7 @@ class AuthControl
         }
 
         try {
-            $requireAuth = PHPDoc::getClassMethodComment($class, $method, 'auth')[0] ?? Kernel::getConfig()->authControlDefaultRequireAuth;
+            $requireAuth = PHPDoc::getClassMethodComment($class, $method, 'auth')[0] ?? $_ENV['auth.defaultRequireAuth'];
 
             if (is_string($requireAuth)) {
                 $requireAuth = filter_var($requireAuth, FILTER_VALIDATE_BOOLEAN);

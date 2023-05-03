@@ -12,7 +12,6 @@ try {
     Kernel::initPaths(__DIR__ . '/../');
     new Autoload(Kernel::getProjectPath());
     Kernel::loadEnv();
-    dumpe($_ENV);
     Kernel::run();
 } catch (Exception $exception) {
     $view = new View();
@@ -20,6 +19,6 @@ try {
     echo $view->renderError($exception->getCode() ?? 500, $exception);
 }
 
-if (Kernel::getConfig()->debug) {
+if ($_ENV['config.debug']) {
     echo (new \Krzysztofzylka\MicroFramework\Extension\Debug\Debug())->render();
 }

@@ -28,7 +28,7 @@ class Statistic
     public function __construct()
     {
         try {
-            if (!Kernel::getConfig()->statistics || !Kernel::getConfig()->database) {
+            if (!$_ENV['statistics.enabled'] || !$_ENV['database.enabled']) {
                 return;
             }
 

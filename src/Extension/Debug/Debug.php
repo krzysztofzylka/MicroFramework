@@ -48,7 +48,6 @@ class Debug
             $view = new View();
             self::$variables['app'] = $view->getGlobalVariables();
             $this->generateSqlTable();
-            $this->generateConfigTable();
             $this->generateTranslationTable();
             $this->generateKernelTable();
             $this->generateTablesTable();
@@ -81,20 +80,6 @@ class Debug
         ob_start();
         \krzysztofzylka\SimpleLibraries\Library\Debug::print_r(array_reverse(\krzysztofzylka\DatabaseManager\Debug::getSql()));
         self::$variables['sqlListTable'] = ob_get_clean();
-    }
-
-    /**
-     * Configuration table
-     * @return void
-     */
-    private function generateConfigTable(): void
-    {
-        $config = (array)Kernel::getConfig();
-        ksort($config);
-
-        ob_start();
-        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($config);
-        self::$variables['configTable'] = ob_get_clean();
     }
 
     /**

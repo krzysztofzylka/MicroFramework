@@ -72,7 +72,7 @@ class Email
      */
     public function newEmail(): SendEmail|false
     {
-        if (!Kernel::getConfig()->email) {
+        if (!$_ENV['email.enabled']) {
             return false;
         }
 

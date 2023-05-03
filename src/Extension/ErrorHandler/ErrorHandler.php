@@ -102,7 +102,7 @@ class ErrorHandler
 
         }
 
-        if (Kernel::getConfig()->debug) {
+        if ($_ENV['config.debug']) {
             ob_end_clean();
 
             dumpe($lastError);

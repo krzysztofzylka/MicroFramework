@@ -42,7 +42,7 @@ trait ModelValidation
         $validation->setValidation($validationData);
         $this->validationErrors = $validation->validate($data ?? $this->data);
 
-        if (!empty($this->validationErrors) && Kernel::getConfig()->debug) {
+        if (!empty($this->validationErrors) && $_ENV['config.debug']) {
             $this->log(__('micro-framework.validation.fail'), 'WARNING', $this->validationErrors);
         }
 

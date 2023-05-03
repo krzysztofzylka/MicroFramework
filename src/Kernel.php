@@ -17,6 +17,7 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
 use Krzysztofzylka\MicroFramework\Extension\Debug\Debug;
+use Krzysztofzylka\MicroFramework\Extension\Env\Env;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Statistic\Statistic;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
@@ -56,7 +57,8 @@ class Kernel
         'storage' => null,
         'logs' => null,
         'database_updater' => null,
-        'config' => null
+        'config' => null,
+        'env' => null
     ];
 
     /**
@@ -99,6 +101,7 @@ class Kernel
         self::$paths['database_updater'] = $projectPath . '/database_updater';
         self::$paths['assets'] = self::$paths['public'] . '/assets';
         self::$paths['config'] = $projectPath . '/config';
+        self::$paths['env'] = $projectPath . '/env';
 
         foreach (self::$paths as $name => $path) {
             self::$paths[$name] = File::repairPath($path);
@@ -423,6 +426,16 @@ class Kernel
         } catch (ConnectException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
+    }
+
+    /**
+     * Load ENV files
+     * @return void
+     */
+    public static function loadEnv(): void
+    {
+        Env::createFromDirectory(__DIR__ . '/Extension/Env/Default');
+        Env::createFromDirectory(Kernel::getPath('env'));
     }
 
 }

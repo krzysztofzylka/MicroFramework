@@ -21,6 +21,9 @@
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#tablemodal">{{ __('micro-framework.debug.table') }}</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#envmodal">{{ __('micro-framework.debug.env') }}</a>
+                </li>
             </ul>
             <span class="navbar-text">
                 {{ site_load.end }}s
@@ -129,6 +132,23 @@
             </div>
             <div class="modal-body p-0">
                 {{ tablesTable|raw }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('micro-framework.modal.close') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="envmodal" tabindex="-1" aria-labelledby="tableenvlabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-lg-down">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="tableenvlabel">{{ __('micro-framework.debug.env') }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                {{ envTable|raw }}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('micro-framework.modal.close') }}</button>

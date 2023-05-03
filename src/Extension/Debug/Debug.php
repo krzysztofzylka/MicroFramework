@@ -53,6 +53,7 @@ class Debug
             $this->generateKernelTable();
             $this->generateTablesTable();
             $this->generateAccountTable();
+            $this->generateEnvTable();
             self::$variables['site_load']['end'] = number_format(microtime(true) - self::$variables['site_load']['start'], 4);
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
@@ -159,6 +160,17 @@ class Debug
         ob_start();
         \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($data);
         self::$variables['kernelTable'] = ob_get_clean();
+    }
+
+    /**
+     * Env table
+     * @return void
+     */
+    private function generateEnvTable(): void
+    {
+        ob_start();
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($_ENV);
+        self::$variables['envTable'] = ob_get_clean();
     }
 
 }

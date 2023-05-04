@@ -21,7 +21,7 @@ class auth extends Controller {
      */
     public function index() : void {
         if (Account::isLogged()) {
-            $this->redirect(Kernel::getConfig()->defaultPage);
+            $this->redirect($_ENV['config_default_page']);
         }
 
         $validation = new Validation();
@@ -40,7 +40,7 @@ class auth extends Controller {
                                 $account = new Account();
                                 $account->login($this->data['auth']['login'], $this->data['auth']['password']);
 
-                                $this->redirect(Kernel::getConfig()->defaultPage);
+                                $this->redirect($_ENV['config_default_page']);
                             } catch (Exception) {
                                 throw new ValidationException('Login failed');
                             }
@@ -71,7 +71,7 @@ class auth extends Controller {
 
     public function register() : void {
         if (Account::isLogged()) {
-            $this->redirect(Kernel::getConfig()->defaultPage);
+            $this->redirect($_ENV['config_default_page']);
         }
 
         $validation = new Validation();
@@ -91,7 +91,7 @@ class auth extends Controller {
                                 $account = new Account();
                                 $account->registerUser(null, $this->data['auth']['password'], $this->data['auth']['email']);
 
-                                $this->redirect(Kernel::getConfig()->defaultPage);
+                                $this->redirect($_ENV['config_default_page']);
                             } catch (Exception $exception) {
                                 throw new ValidationException($exception->getMessage());
                             }

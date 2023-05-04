@@ -68,6 +68,18 @@ class Debug
      */
     public function render(): string
     {
+        if ($_ENV['config_debug_account_ids'] !== false) {
+            if (!isset(Account::$accountId)) {
+                return '';
+            }
+
+            $accountIds = explode(',', $_ENV['config_debug_account_ids']);
+
+            if (!in_array(Account::$accountId, $accountIds)) {
+                return '';
+            }
+        }
+
         return $this->environment->render('MicroFramework/Layout/debug.twig', self::$variables);
     }
 
@@ -153,8 +165,16 @@ class Debug
      */
     private function generateEnvTable(): void
     {
+        $env = $_ENV;
+
+        foreach (['database_password', 'logger_api_key', 'logger_site_key'] as $name) {
+            if (!empty($env[$name])) {
+                $env[$name] = '******';
+            }
+        }
+
         ob_start();
-        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($_ENV);
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($env);
         self::$variables['envTable'] = ob_get_clean();
     }
 

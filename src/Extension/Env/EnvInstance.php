@@ -54,6 +54,7 @@ class EnvInstance
             }
 
             $explode = explode('=', $content, 2);
+            $name = $explode[0];
             $value = $explode[1];
 
             if (str_starts_with($value, '"') && str_ends_with($value, '"') || str_starts_with($value, "'") && str_ends_with($value, "'")) {
@@ -78,7 +79,7 @@ class EnvInstance
                 }
             }
 
-            $_ENV[strtolower($this->fileName) . '.' . $explode[0]] = $value;
+            $_ENV[$name] = $value;
         }
 
         ksort($_ENV);

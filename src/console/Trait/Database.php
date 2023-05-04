@@ -2,7 +2,6 @@
 
 namespace Krzysztofzylka\MicroFramework\console\Trait;
 
-use config\Config;
 use Exception;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
@@ -21,7 +20,7 @@ trait Database
         try {
             Kernel::initPaths($path);
             Kernel::autoload();
-            Kernel::setConfig(new Config());
+            Kernel::loadEnv();
             Kernel::configDatabaseConnect();
         } catch (DatabaseManagerException $exception) {
             Prints::print('Database fail: ' . $exception->getHiddenMessage(), false, true);

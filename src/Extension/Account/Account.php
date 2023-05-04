@@ -67,7 +67,7 @@ class Account
             self::$tableInstance = (new Table())->setName('account');
         }
 
-        if ($_ENV['auth.authControl'] === true
+        if ($_ENV['auth_control'] === true
             && DatabaseManager::getDatabaseType() === DatabaseType::mysql
             && !self::$tableInstance->exists()
         ) {
@@ -157,7 +157,7 @@ class Account
         }
 
         try {
-            if ($_ENV['auth.AuthWithEmail']) {
+            if ($_ENV['auth_with_email']) {
                 if (is_null($email) || empty($email)) {
                     throw new AccountException(__('micro-framework.account.email_required'));
                 }

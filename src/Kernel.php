@@ -113,17 +113,17 @@ class Kernel
      */
     public static function run(): void
     {
-        if ($_ENV['config.debug']) {
+        if ($_ENV['config_debug']) {
             Debug::$variables['site_load']['start'] = microtime(true);
         }
 
-        if ($_ENV['config.showAllErrors']) {
+        if ($_ENV['config_show_all_errors']) {
             ini_set('display_errors', 1);
             ini_set('display_startup_errors', 1);
             error_reporting(E_ALL);
         }
 
-        Translation::getTranslationFile(__DIR__ . '/Translations/' . $_ENV['config.translation'] . '.yaml');
+        Translation::getTranslationFile(__DIR__ . '/Translations/' . $_ENV['config_translation'] . '.yaml');
 
         self::errorHandler();
 
@@ -133,7 +133,7 @@ class Kernel
             new Account();
         }
 
-        $url = self::$url = isset($_GET['url']) ? ('/' . $_GET['url']) : $_ENV['config.defaultPage'];
+        $url = self::$url = isset($_GET['url']) ? ('/' . $_GET['url']) : $_ENV['config_default_page'];
         $extension = File::getExtension($url);
 
         new Statistic();
@@ -154,25 +154,25 @@ class Kernel
 
         $controller = $explode[0];
 
-        if ($_ENV['api.enabled'] && $controller === $_ENV['api.url']) {
+        if ($_ENV['api_enabled'] && $controller === $_ENV['api_url']) {
             $controller = $explode[1];
-            $method = $explode[2] ?? self::getConfig()->defaultMethod;
+            $method = $explode[2] ?? $_ENV['config_default_method'];
             $arguments = array_slice($explode, 3);
 
             self::init($controller, $method, $arguments, ['api' => true]);
-        } elseif ($_ENV['admin_panel.enabled'] && $controller === $_ENV['admin_panel.url']) {
-            $controller = $explode[1] ?? $_ENV['config.defaultController'];
-            $method = $explode[2] ?? $_ENV['config.defaultMethod'];
+        } elseif ($_ENV['admin_panel_enabled'] && $controller === $_ENV['admin_panel_url']) {
+            $controller = $explode[1] ?? $_ENV['config_default_controller'];
+            $method = $explode[2] ?? $_ENV['config_default_method'];
             $arguments = array_slice($explode, 3);
 
             if (empty($controller)) {
                 $controller = $method;
-                $method = $_ENV['config.defaultMethod'];
+                $method = $_ENV['config_default_method'];
             }
 
             self::init($controller, $method, $arguments, ['admin_panel' => true]);
         } else {
-            $method = $explode[1] ?? $_ENV['config.defaultMethod'];
+            $method = $explode[1] ?? $_ENV['config_default_method'];
             $arguments = array_slice($explode, 2);
 
             self::init($controller, $method, $arguments);
@@ -197,14 +197,14 @@ class Kernel
      */
     public static function configDatabaseConnect(): void
     {
-        if ($_ENV['database.enabled']) {
+        if ($_ENV['database_enabled']) {
             $databaseConnect = (new DatabaseConnect())
-                ->setHost($_ENV['database.host'])
-                ->setUsername($_ENV['database.username'])
-                ->setPassword($_ENV['database.password'])
-                ->setDatabaseName($_ENV['database.name']);
+                ->setHost($_ENV['database_host'])
+                ->setUsername($_ENV['database_username'])
+                ->setPassword($_ENV['database_password'])
+                ->setDatabaseName($_ENV['database_name']);
 
-            if ($_ENV['config.debug']) {
+            if ($_ENV['config_debug']) {
                 $databaseConnect->setDebug(true);
             }
 
@@ -262,9 +262,9 @@ class Kernel
     public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []): Controller
     {
         if (isset($params['admin_panel']) && $params['admin_panel']) {
-            if (!self::getConfig()->adminPanel) {
+            if (!$_ENV['admin_panel_enabled']) {
                 throw new NotFoundException(__('micro-framework.kernel.adminpanel_disabled'));
-            } elseif (!self::getConfig()->authControl) {
+            } elseif (!$_ENV['auth_control']) {
                 throw new NotFoundException(__('micro-framework.kernel.authcontrol_disabled'));
             } elseif (!Account::isLogged()) {
                 throw new NotFoundException(__('micro-framework.kernel.not_logged'));

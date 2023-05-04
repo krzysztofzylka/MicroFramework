@@ -19,6 +19,6 @@ try {
     echo $view->renderError($exception->getCode() ?? 500, $exception);
 }
 
-if ($_ENV['config.debug']) {
+if ($_ENV['config_debug']) {
     echo (new \Krzysztofzylka\MicroFramework\Extension\Debug\Debug())->render();
 }

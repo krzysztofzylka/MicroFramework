@@ -28,7 +28,7 @@ class Statistic
     public function __construct()
     {
         try {
-            if (!$_ENV['statistics.enabled'] || !$_ENV['database.enabled']) {
+            if (!$_ENV['statistics_enabled'] || !$_ENV['database_enabled']) {
                 return;
             }
 
@@ -92,7 +92,7 @@ class Statistic
      */
     private function geoplugin(string $ip)
     {
-        if (!Kernel::getConfig()->statisticsAnalyzeIp) {
+        if (!$_ENV['statistics_analyze_ip']) {
             return [];
         }
 

@@ -49,8 +49,8 @@ class ErrorHandler
             );
         }
 
-        if ($_ENV['config.debug']) {
-            if ($_ENV['config.showAllErrors']) {
+        if ($_ENV['config_debug']) {
+            if ($_ENV['config_show_all_errors']) {
                 ob_end_clean();
                 dumpe([
                     'type' => $errorType,
@@ -102,7 +102,7 @@ class ErrorHandler
 
         }
 
-        if ($_ENV['config.debug']) {
+        if ($_ENV['config_debug']) {
             ob_end_clean();
 
             dumpe($lastError);

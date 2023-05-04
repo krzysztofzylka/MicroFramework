@@ -112,7 +112,7 @@ class Cron
     {
         if (!$this->cronFilePath) {
             return false;
-        } elseif (!$_ENV['database.enabled']) {
+        } elseif (!$_ENV['database_enabled']) {
             return false;
         }
 

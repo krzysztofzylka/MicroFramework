@@ -41,6 +41,7 @@ micro-framework:
     account:
       title: Authorization
       not_logged: You not logged
+    env: ENV
   kernel:
     adminpanel_disabled: Admin panel is disabled
     authcontrol_disabled: Account control is disabled

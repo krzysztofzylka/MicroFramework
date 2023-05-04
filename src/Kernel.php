@@ -17,6 +17,7 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
 use Krzysztofzylka\MicroFramework\Extension\Debug\Debug;
+use Krzysztofzylka\MicroFramework\Extension\Env\Env;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Statistic\Statistic;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
@@ -56,14 +57,9 @@ class Kernel
         'storage' => null,
         'logs' => null,
         'database_updater' => null,
-        'config' => null
+        'config' => null,
+        'env' => null
     ];
-
-    /**
-     * Config
-     * @var object
-     */
-    private static object $config;
 
     /**
      * Parametry kontrolera
@@ -99,6 +95,7 @@ class Kernel
         self::$paths['database_updater'] = $projectPath . '/database_updater';
         self::$paths['assets'] = self::$paths['public'] . '/assets';
         self::$paths['config'] = $projectPath . '/config';
+        self::$paths['env'] = $projectPath . '/env';
 
         foreach (self::$paths as $name => $path) {
             self::$paths[$name] = File::repairPath($path);
@@ -116,15 +113,17 @@ class Kernel
      */
     public static function run(): void
     {
-        if (!isset(self::$config)) {
-            self::$config = new ConfigDefault();
-        }
-
-        if (self::getConfig()->debug) {
+        if ($_ENV['config_debug']) {
             Debug::$variables['site_load']['start'] = microtime(true);
         }
 
-        Translation::getTranslationFile(__DIR__ . '/Translations/' . self::getConfig()->translation . '.yaml');
+        if ($_ENV['config_show_all_errors']) {
+            ini_set('display_errors', 1);
+            ini_set('display_startup_errors', 1);
+            error_reporting(E_ALL);
+        }
+
+        Translation::getTranslationFile(__DIR__ . '/Translations/' . $_ENV['config_translation'] . '.yaml');
 
         self::errorHandler();
 
@@ -134,7 +133,7 @@ class Kernel
             new Account();
         }
 
-        $url = self::$url = isset($_GET['url']) ? ('/' . $_GET['url']) : self::getConfig()->defaultPage;
+        $url = self::$url = isset($_GET['url']) ? ('/' . $_GET['url']) : $_ENV['config_default_page'];
         $extension = File::getExtension($url);
 
         new Statistic();
@@ -155,25 +154,25 @@ class Kernel
 
         $controller = $explode[0];
 
-        if (self::$config->api && $controller === self::$config->apiUri) {
+        if ($_ENV['api_enabled'] && $controller === $_ENV['api_url']) {
             $controller = $explode[1];
-            $method = $explode[2] ?? self::getConfig()->defaultMethod;
+            $method = $explode[2] ?? $_ENV['config_default_method'];
             $arguments = array_slice($explode, 3);
 
             self::init($controller, $method, $arguments, ['api' => true]);
-        } elseif (self::$config->adminPanel && $controller === self::$config->adminPanelUri) {
-            $controller = $explode[1] ?? self::getConfig()->defaultController;
-            $method = $explode[2] ?? self::getConfig()->defaultMethod;
+        } elseif ($_ENV['admin_panel_enabled'] && $controller === $_ENV['admin_panel_url']) {
+            $controller = $explode[1] ?? $_ENV['config_default_controller'];
+            $method = $explode[2] ?? $_ENV['config_default_method'];
             $arguments = array_slice($explode, 3);
 
             if (empty($controller)) {
                 $controller = $method;
-                $method = self::getConfig()->defaultMethod;
+                $method = $_ENV['config_default_method'];
             }
 
             self::init($controller, $method, $arguments, ['admin_panel' => true]);
         } else {
-            $method = $explode[1] ?? self::getConfig()->defaultMethod;
+            $method = $explode[1] ?? $_ENV['config_default_method'];
             $arguments = array_slice($explode, 2);
 
             self::init($controller, $method, $arguments);
@@ -198,14 +197,14 @@ class Kernel
      */
     public static function configDatabaseConnect(): void
     {
-        if (self::$config->database) {
+        if ($_ENV['database_enabled']) {
             $databaseConnect = (new DatabaseConnect())
-                ->setHost(self::$config->databaseHost)
-                ->setUsername(self::$config->databaseUsername)
-                ->setPassword(self::$config->databasePassword)
-                ->setDatabaseName(self::$config->databaseName);
+                ->setHost($_ENV['database_host'])
+                ->setUsername($_ENV['database_username'])
+                ->setPassword($_ENV['database_password'])
+                ->setDatabaseName($_ENV['database_name']);
 
-            if (self::getConfig()->debug) {
+            if ($_ENV['config_debug']) {
                 $databaseConnect->setDebug(true);
             }
 
@@ -216,25 +215,6 @@ class Kernel
                 throw new DatabaseException($exception->getHiddenMessage());
             }
         }
-    }
-
-    /**
-     * Get config
-     * @return ConfigDefault
-     */
-    public static function getConfig(): object
-    {
-        return self::$config ?? new ConfigDefault();
-    }
-
-    /**
-     * Set config
-     * @param object $config
-     * @return void
-     */
-    public static function setConfig(object $config): void
-    {
-        self::$config = $config;
     }
 
     /**
@@ -282,9 +262,9 @@ class Kernel
     public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []): Controller
     {
         if (isset($params['admin_panel']) && $params['admin_panel']) {
-            if (!self::getConfig()->adminPanel) {
+            if (!$_ENV['admin_panel_enabled']) {
                 throw new NotFoundException(__('micro-framework.kernel.adminpanel_disabled'));
-            } elseif (!self::getConfig()->authControl) {
+            } elseif (!$_ENV['auth_control']) {
                 throw new NotFoundException(__('micro-framework.kernel.authcontrol_disabled'));
             } elseif (!Account::isLogged()) {
                 throw new NotFoundException(__('micro-framework.kernel.not_logged'));
@@ -423,6 +403,16 @@ class Kernel
         } catch (ConnectException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
+    }
+
+    /**
+     * Load ENV files
+     * @return void
+     */
+    public static function loadEnv(): void
+    {
+        Env::createFromDirectory(__DIR__ . '/Extension/Env/Default');
+        Env::createFromDirectory(Kernel::getPath('env'));
     }
 
 }

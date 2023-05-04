@@ -54,7 +54,7 @@ class View
         try {
             $this->filesystemLoader = new FilesystemLoader(Kernel::getPath('view'));
             $this->filesystemLoader->addPath(__DIR__ . '/Extension/Twig/TwigFiles');
-            $this->environment = new Environment($this->filesystemLoader, ['debug' => Kernel::getConfig()->debug]);
+            $this->environment = new Environment($this->filesystemLoader, ['debug' => $_ENV['config_debug']]);
             $this->environment->addExtension(new DebugExtension());
             $translationFunction = new TwigFunction('__', function (string $name) {
                 return __($name);
@@ -101,7 +101,7 @@ class View
                 ]
             ];
 
-            if (Kernel::getConfig()->debug) {
+            if ($_ENV['config_debug']) {
                 $data['error']['hiddenMessage'] = $hiddenMessage;
             }
 
@@ -112,7 +112,7 @@ class View
         return $this->render(
             [
                 'code' => $code ?? 500,
-                'debug' => Kernel::getConfig()->debug ? $exception : false,
+                'debug' => $_ENV['config_debug'] ? $exception : false,
                 'hiddenMessage' => $hiddenMessage
             ],
             $name
@@ -152,7 +152,7 @@ class View
             });
             $this->environment->addFunction($formFunction);
 
-            if (Kernel::getConfig()->viewDisableCache) {
+            if ($_ENV['config_view_cache']) {
                 $this->environment->setCache(false);
             }
 
@@ -172,7 +172,7 @@ class View
             'name' => $this->name,
             'view' => $this,
             'variables' => $this->variables,
-            'config' => (array)Kernel::getConfig(),
+            'config' => $_ENV,
             'controller' => $this->controller,
             'dialogboxConfig' => '[]',
             'accountId' => Account::$accountId,

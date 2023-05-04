@@ -10,9 +10,6 @@
                     <a class="nav-link" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#dbdebugmodal">{{ __('micro-framework.debug.sqlTable') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#configmodal">{{ __('micro-framework.debug.configTable') }}</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#translationmodal">{{ __('micro-framework.debug.translation') }}</a>
                 </li>
                 <li class="nav-item">
@@ -20,6 +17,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#tablemodal">{{ __('micro-framework.debug.table') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#envmodal">{{ __('micro-framework.debug.env') }}</a>
                 </li>
             </ul>
             <span class="navbar-text">
@@ -61,23 +61,6 @@
             </div>
             <div class="modal-body p-0">
                 {{ sqlListTable|raw }}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('micro-framework.modal.close') }}</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="configmodal" tabindex="-1" aria-labelledby="configmodallabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-lg-down">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="configmodallabel">{{ __('micro-framework.debug.config') }}</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-0">
-                {{ configTable|raw }}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('micro-framework.modal.close') }}</button>
@@ -129,6 +112,23 @@
             </div>
             <div class="modal-body p-0">
                 {{ tablesTable|raw }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('micro-framework.modal.close') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="envmodal" tabindex="-1" aria-labelledby="tableenvlabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl modal-fullscreen-lg-down">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="tableenvlabel">{{ __('micro-framework.debug.env') }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                {{ envTable|raw }}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('micro-framework.modal.close') }}</button>

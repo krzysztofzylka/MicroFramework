@@ -144,7 +144,7 @@ class Table
         $this->session();
         $this->getResults();
 
-        if (Kernel::getConfig()->debug) {
+        if ($_ENV['config_debug']) {
             Debug::$variables['table'][] = [
                 'model' => $this->model->name ?? null,
                 'controller' => $this->controller->name ?? null,

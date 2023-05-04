@@ -149,7 +149,7 @@ class Controller
     public function redirect(string $url): never
     {
         if (str_starts_with($url, '/')) {
-            Redirect::redirect(Kernel::getConfig()->pageUrl . substr($url, 1));
+            Redirect::redirect($_ENV['config_page_url'] . substr($url, 1));
         }
 
         Redirect::redirect($url);

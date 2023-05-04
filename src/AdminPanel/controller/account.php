@@ -44,7 +44,7 @@ class account extends Controller
     {
         $account = new \Krzysztofzylka\MicroFramework\Extension\Account\Account();
         $account->logout();
-        $this->redirect('/' . Kernel::getConfig()->defaultPage);
+        $this->redirect('/' . $_ENV['config_default_page']);
     }
 
 }

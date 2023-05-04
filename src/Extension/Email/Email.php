@@ -2,7 +2,6 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Email;
 
-use config\Config;
 use Exception;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Email\Enum\PredefinedConfig;
@@ -72,7 +71,7 @@ class Email
      */
     public function newEmail(): SendEmail|false
     {
-        if (!Kernel::getConfig()->email) {
+        if (!$_ENV['email_enabled']) {
             return false;
         }
 
@@ -101,33 +100,33 @@ class Email
     private function connect(PHPMailer $phpMailer, ?object $config = null): void
     {
         /** @var Config $config */
-        $config = $config ?? Kernel::getConfig();
+        $config = $config ?? $_ENV;
 
-        if (!is_null($config->emailPredefinedConfig)) {
-            $predefinedConfig = match ($config->emailPredefinedConfig) {
-                PredefinedConfig::Gmail => new Gmail()
+        if (!is_null($config['email_predefined_config'])) {
+            $predefinedConfig = match ($config['email_predefined_config']) {
+                'gmail' => new Gmail()
             };
         }
 
-        if ($config->debug && $config->emailDebug) {
+        if ($config['config_debug'] && $config['email_debug']) {
             $phpMailer->SMTPDebug = SMTP::DEBUG_SERVER;
         }
 
-        $phpMailer->From = $config->emailFrom ?? $config->emailUsername;
-        $phpMailer->FromName = $config->emailFromName;
-        $phpMailer->Username = $config->emailUsername;
-        $phpMailer->Password = $config->emailPassword;
+        $phpMailer->From = $config['email_from'] ?? $config['email_username'];
+        $phpMailer->FromName = $config['email_from_name'];
+        $phpMailer->Username = $config['email_username'];
+        $phpMailer->Password = $config['email_password'];
 
-        if ($config->emailIsSMTP) {
+        if ($config['email_is_smtp']) {
             $phpMailer->Mailer = 'smtp';
             $phpMailer->isSMTP();
-            $phpMailer->SMTPSecure = $predefinedConfig->emailSMTPSecure ?? $config->emailSMTPSecure;
-            $phpMailer->SMTPAuth = $predefinedConfig->emailSMTPAuth ?? $config->emailSMTPAuth;
+            $phpMailer->SMTPSecure = $predefinedConfig->emailSMTPSecure ?? $config['email_smtp_secure'];
+            $phpMailer->SMTPAuth = $predefinedConfig->emailSMTPAuth ?? $config['email_smtp_auth'];
         }
 
-        $phpMailer->Host = $predefinedConfig->emailHost ?? $config->emailHost;
-        $phpMailer->CharSet = $predefinedConfig->emailCharset ?? $config->emailCharset;
-        $phpMailer->Port = $predefinedConfig->emailPort ?? $config->emailPort;
+        $phpMailer->Host = $predefinedConfig->emailHost ?? $config['email_host'];
+        $phpMailer->CharSet = $predefinedConfig->emailCharset ?? $config['email_charset'];
+        $phpMailer->Port = $predefinedConfig->emailPort ?? $config['email_port'];
     }
 
 }

@@ -48,11 +48,11 @@ class Debug
             $view = new View();
             self::$variables['app'] = $view->getGlobalVariables();
             $this->generateSqlTable();
-            $this->generateConfigTable();
             $this->generateTranslationTable();
             $this->generateKernelTable();
             $this->generateTablesTable();
             $this->generateAccountTable();
+            $this->generateEnvTable();
             self::$variables['site_load']['end'] = number_format(microtime(true) - self::$variables['site_load']['start'], 4);
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
@@ -80,20 +80,6 @@ class Debug
         ob_start();
         \krzysztofzylka\SimpleLibraries\Library\Debug::print_r(array_reverse(\krzysztofzylka\DatabaseManager\Debug::getSql()));
         self::$variables['sqlListTable'] = ob_get_clean();
-    }
-
-    /**
-     * Configuration table
-     * @return void
-     */
-    private function generateConfigTable(): void
-    {
-        $config = (array)Kernel::getConfig();
-        ksort($config);
-
-        ob_start();
-        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($config);
-        self::$variables['configTable'] = ob_get_clean();
     }
 
     /**
@@ -159,6 +145,17 @@ class Debug
         ob_start();
         \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($data);
         self::$variables['kernelTable'] = ob_get_clean();
+    }
+
+    /**
+     * Env table
+     * @return void
+     */
+    private function generateEnvTable(): void
+    {
+        ob_start();
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($_ENV);
+        self::$variables['envTable'] = ob_get_clean();
     }
 
 }

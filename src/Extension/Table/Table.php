@@ -230,10 +230,10 @@ class Table
             $this->page = (int)$this->session['page'];
         }
 
-        $conditions = $this->haveCondition ? $this->conditions : null;
+        $conditions = $this->haveCondition ? $this->conditions : [];
 
         if (isset($this->model)) {
-            $this->pages = floor($this->model->findCount($conditions) / $this->paginationLimit);
+            $this->pages = ceil($this->model->findCount($conditions) / $this->paginationLimit);
         }
 
         if ($this->activePagination) {

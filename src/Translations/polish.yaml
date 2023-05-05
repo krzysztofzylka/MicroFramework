@@ -42,6 +42,8 @@ micro-framework:
       title: Autoryzacja
       not_logged: Nie jesteś zalogowany
     env: ENV
+    server:
+      title: Serwer
   kernel:
     adminpanel_disabled: Panel administracyjny jest wyłączony
     authcontrol_disabled: Kontrola użytkowników jest wyłączona

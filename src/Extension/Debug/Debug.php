@@ -53,6 +53,7 @@ class Debug
             $this->generateTablesTable();
             $this->generateAccountTable();
             $this->generateEnvTable();
+            $this->generateServerInfoTable();
             self::$variables['site_load']['end'] = number_format(microtime(true) - self::$variables['site_load']['start'], 4);
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
@@ -164,6 +165,37 @@ class Debug
         ob_start();
         \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($env);
         self::$variables['envTable'] = ob_get_clean();
+    }
+
+    /**
+     * ServerInfo table
+     * @return void
+     */
+    private function generateServerInfoTable(): void
+    {
+        $srv = [
+            'PHP_VERSION' => phpversion(),
+        ];
+
+        ob_start();
+        echo '<br /><h5>PHP</h5>';
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($srv);
+        echo '<br /><h5>GET</h5>';
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($_GET);
+        echo '<br /><h5>POST</h5>';
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($_POST);
+        echo '<br /><h5>FILES</h5>';
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($_FILES);
+        echo '<br /><h5>$_COOKIE</h5>';
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($_COOKIE);
+        echo '<br /><h5>$_SESSION</h5>';
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($_SESSION);
+        echo '<br /><h5>$_REQUEST</h5>';
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($_REQUEST);
+        echo '<br />';
+        echo '<br /><h5>$_SERVER</h5>';
+        \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($_SERVER);
+        self::$variables['serverInfoTable'] = ob_get_clean();
     }
 
 }

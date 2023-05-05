@@ -131,6 +131,18 @@ class Kernel
 
         if (Account::isLogged()) {
             new Account();
+
+            if ($_ENV['config_debug_account_ids'] !== false) {
+                try {
+                    $accountIds = explode(',', $_ENV['config_debug_account_ids']);
+
+                    if (isset(Account::$accountId) && in_array(Account::$accountId, $accountIds)) {
+                        $_ENV['config_debug'] = true;
+                        Debug::$variables['site_load']['start'] = microtime(true);
+                    }
+                } catch (Exception){
+                }
+            }
         }
 
         $url = self::$url = isset($_GET['url']) ? ('/' . $_GET['url']) : $_ENV['config_default_page'];

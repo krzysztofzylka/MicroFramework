@@ -167,7 +167,7 @@ class Kernel
         $controller = $explode[0];
 
         if ($_ENV['api_enabled'] && $controller === $_ENV['api_url']) {
-            $controller = $explode[1];
+            $controller = $explode[1] ?? $_ENV['config_default_controller'];
             $method = $explode[2] ?? $_ENV['config_default_method'];
             $arguments = array_slice($explode, 3);
 

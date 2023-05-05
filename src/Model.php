@@ -449,6 +449,10 @@ class Model
      */
     public function save(array $data, bool $validate = true, ?array $protected = null): bool
     {
+        if (empty($data)) {
+            return false;
+        }
+
         $isValid = $validate ? $this->validate($data) : true;
 
         if ($isValid) {

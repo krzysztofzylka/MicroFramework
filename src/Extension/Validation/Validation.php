@@ -32,6 +32,10 @@ class Validation
      */
     public function validate(?array $data): array
     {
+        if (!$data) {
+            return [];
+        }
+
         $errors = [];
 
         foreach ($data ?? [] as $model => $modelData) {

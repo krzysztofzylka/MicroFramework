@@ -119,7 +119,7 @@ class Table
      * SQL limit
      * @var ?string
      */
-    private ?string $limit = null;
+    public ?string $limit = null;
 
     /**
      * Default order by

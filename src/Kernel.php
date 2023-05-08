@@ -139,6 +139,7 @@ class Kernel
                     if (isset(Account::$accountId) && in_array(Account::$accountId, $accountIds)) {
                         $_ENV['config_debug'] = true;
                         Debug::$variables['site_load']['start'] = microtime(true);
+                        DatabaseManager::$connection->setDebug(true);
                     }
                 } catch (Exception){
                 }

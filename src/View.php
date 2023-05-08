@@ -16,6 +16,12 @@ class View
 {
 
     /**
+     * Global variables
+     * @var array
+     */
+    public static array $globalVariables = [];
+
+    /**
      * Twig filesystem loader
      * @var FilesystemLoader
      */
@@ -178,7 +184,8 @@ class View
             'accountId' => Account::$accountId,
             'account' => Account::$account,
             'here' => Kernel::$url ?? null,
-            'isDialogbox' => isset($_GET['dialogbox']) ? (bool)$_GET['dialogbox'] : false
+            'isDialogbox' => isset($_GET['dialogbox']) ? (bool)$_GET['dialogbox'] : false,
+            'global' => self::$globalVariables
         ];
 
         if (isset($this->controller->layout) && $this->controller->layout === 'dialogbox') {

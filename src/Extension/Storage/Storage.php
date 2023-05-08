@@ -137,6 +137,7 @@ class Storage {
 
     /**
      * Set isolator directory by account
+     * @param int|null $accountId
      * @return Storage
      */
     public function setAccountIsolator(?int $accountId = null): Storage

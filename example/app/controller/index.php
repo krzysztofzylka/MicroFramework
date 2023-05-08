@@ -95,8 +95,8 @@ class index extends Controller {
 
     public function storage() {
         $storage = new Storage();
-        $storage->setFileName('testing.txt')->setDirectory('test');
-        dumpe($storage->write('storage content'), $storage->read(), $storage->getModifiedDate(), $storage->delete());
+        $storage->setFileName('testing.txt')->setDirectory('test')->setAccountIsolator();
+        dumpe($storage->write('storage content'), $storage->read(), $storage->getModifiedDate(), $storage->delete(), $storage);
     }
 
 }

@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Storage;
 
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
+use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\File;
 
@@ -27,6 +28,12 @@ class Storage {
     private string $fileName;
 
     /**
+     * Isolator directory
+     * @var string
+     */
+    private string $isolatorDirectory = '';
+
+    /**
      * Initialize extension
      * @throws MicroFrameworkException
      */
@@ -48,8 +55,6 @@ class Storage {
         }
 
         $this->directory = $directoryPath;
-
-        $this->generatePath();
 
         return $this;
     }
@@ -77,6 +82,8 @@ class Storage {
         if (!isset($this->fileName)) {
             throw new MicroFrameworkException('Storage file name is not defined');
         }
+
+        $this->generatePath();
 
         try {
             return file_put_contents($this->getFilePath(), $content) !== false;
@@ -113,6 +120,33 @@ class Storage {
     }
 
     /**
+     * Set isolator directory
+     * @param string $isolatorDirectory
+     * @return Storage
+     */
+    public function setIsolatorDirectory(string $isolatorDirectory): Storage
+    {
+        if (!str_ends_with($isolatorDirectory, '/')) {
+            $isolatorDirectory .= '/';
+        }
+
+        $this->isolatorDirectory = $isolatorDirectory;
+
+        return $this;
+    }
+
+    /**
+     * Set isolator directory by account
+     * @return Storage
+     */
+    public function setAccountIsolator(?int $accountId = null): Storage
+    {
+        $this->isolatorDirectory = 'account_' . ($accountId ?? Account::$accountId ?? 0) . '/';
+
+        return $this;
+    }
+
+    /**
      * Generate storage directory path
      * @return void
      * @throws MicroFrameworkException
@@ -120,7 +154,11 @@ class Storage {
     private function generatePath(): void
     {
         try {
-            $this->path = Kernel::getPath('storage') . '/' . $this->directory;
+            $this->path = realpath(Kernel::getPath('storage')) . '/' . $this->directory;
+
+            if (!empty($this->isolatorDirectory)) {
+                $this->path .= $this->isolatorDirectory;
+            }
 
             if (!empty($this->directory)) {
                 File::mkdir($this->path);

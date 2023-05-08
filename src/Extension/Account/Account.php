@@ -14,6 +14,7 @@ use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Exception\AccountException;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
+use Krzysztofzylka\MicroFramework\Extension\Storage\Storage;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\Generator;
@@ -58,6 +59,12 @@ class Account
     public static Table $tableInstance;
 
     /**
+     * Account storage
+     * @var Storage
+     */
+    public static ?Storage $storage = null;
+
+    /**
      * Constructor
      * @throws DatabaseException
      */
@@ -79,6 +86,15 @@ class Account
             self::$account = self::getAccountData(self::$accountId);
             self::$accountRememberField = new AccountRememberField();
             self::$tableInstance->setId(self::$accountId);
+
+            try {
+                self::$storage = (new Storage())
+                    ->setDirectory('account_storage')
+                    ->setAccountIsolator()
+                    ->lock();
+            } catch (Exception) {
+                self::$storage = null;
+            }
         }
     }
 

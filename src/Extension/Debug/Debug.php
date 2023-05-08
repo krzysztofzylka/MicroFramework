@@ -122,7 +122,13 @@ class Debug
             'id' => Account::$accountId,
             'sessionName' => Account::$sessionName,
             'account' => $accountData,
-            'rememberFields' => array_column((new Table('account_remember_field'))->findAll(['account_remember_field.account_id' => Account::$accountId]), 'account_remember_field')
+            'rememberFields' => array_column((new Table('account_remember_field'))->findAll(['account_remember_field.account_id' => Account::$accountId]), 'account_remember_field'),
+            'storage' => [
+                'storageLocked' => Account::$storage->isLocked() ? 'True' : 'False',
+                'storagePath' => Account::$storage->getDirectory() . Account::$storage->getIsolatorDirectory(),
+                'storageDirectory' => Account::$storage->getDirectory(),
+                'storageIsolatorDirectory' => Account::$storage->getIsolatorDirectory()
+            ]
         ];
 
         ob_start();

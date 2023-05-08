@@ -5,6 +5,7 @@ namespace app\controller;
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
+use Krzysztofzylka\MicroFramework\Extension\Storage\Storage;
 
 class index extends Controller {
 
@@ -90,6 +91,12 @@ class index extends Controller {
 
     public function modalSave() {
         $this->loadModel('example')->save($this->data);
+    }
+
+    public function storage() {
+        $storage = new Storage();
+        $storage->setFileName('testing.txt')->setDirectory('test')->setAccountIsolator();
+        dumpe($storage->write('storage content'), $storage->read(), $storage->getModifiedDate(), $storage->delete(), $storage);
     }
 
 }

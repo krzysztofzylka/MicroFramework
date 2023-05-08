@@ -142,9 +142,7 @@ class Storage {
      */
     public function setAccountIsolator(?int $accountId = null): Storage
     {
-        $this->setIsolatorDirectory('account_' . ($accountId ?? Account::$accountId ?? 0));
-
-        return $this;
+        return $this->setIsolatorDirectory('account_' . ($accountId ?? Account::$accountId ?? 0));
     }
 
     /**

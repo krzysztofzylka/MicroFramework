@@ -34,6 +34,12 @@ class Storage {
     private string $isolatorDirectory = '';
 
     /**
+     * Lock edit directory
+     * @var bool
+     */
+    private bool $locked = false;
+
+    /**
      * Initialize extension
      * @throws MicroFrameworkException
      */
@@ -50,6 +56,10 @@ class Storage {
      */
     public function setDirectory(string $directoryPath): Storage
     {
+        if ($this->locked) {
+            throw new MicroFrameworkException('Change storage directory is locked');
+        }
+
         if (!str_ends_with($directoryPath, '/')) {
             $directoryPath .= '/';
         }
@@ -123,9 +133,14 @@ class Storage {
      * Set isolator directory
      * @param string $isolatorDirectory
      * @return Storage
+     * @throws MicroFrameworkException
      */
     public function setIsolatorDirectory(string $isolatorDirectory): Storage
     {
+        if ($this->locked) {
+            throw new MicroFrameworkException('Change storage directory is locked');
+        }
+
         if (!str_ends_with($isolatorDirectory, '/')) {
             $isolatorDirectory .= '/';
         }
@@ -174,6 +189,28 @@ class Storage {
     private function getFilePath(): string
     {
         return $this->path . '/' . $this->fileName;
+    }
+
+    /**
+     * Lock change directory
+     * @return Storage
+     */
+    public function lock(): Storage
+    {
+        $this->locked = true;
+
+        return $this;
+    }
+
+    /**
+     * Unlock change directory
+     * @return Storage
+     */
+    public function unlock(): Storage
+    {
+        $this->locked = false;
+
+        return $this;
     }
 
 }

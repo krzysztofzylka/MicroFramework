@@ -90,7 +90,8 @@ class Account
             try {
                 self::$storage = (new Storage())
                     ->setDirectory('account_storage')
-                    ->setAccountIsolator();
+                    ->setAccountIsolator()
+                    ->lock();
             } catch (Exception) {
                 self::$storage = null;
             }

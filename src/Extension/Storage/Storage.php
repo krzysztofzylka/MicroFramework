@@ -56,7 +56,7 @@ class Storage {
      */
     public function setDirectory(string $directoryPath): Storage
     {
-        if ($this->locked) {
+        if ($this->isLocked()) {
             throw new MicroFrameworkException('Change storage directory is locked');
         }
 
@@ -137,7 +137,7 @@ class Storage {
      */
     public function setIsolatorDirectory(string $isolatorDirectory): Storage
     {
-        if ($this->locked) {
+        if ($this->isLocked()) {
             throw new MicroFrameworkException('Change storage directory is locked');
         }
 
@@ -154,6 +154,7 @@ class Storage {
      * Set isolator directory by account
      * @param int|null $accountId
      * @return Storage
+     * @throws MicroFrameworkException
      */
     public function setAccountIsolator(?int $accountId = null): Storage
     {
@@ -168,13 +169,13 @@ class Storage {
     private function generatePath(): void
     {
         try {
-            $this->path = realpath(Kernel::getPath('storage')) . '/' . $this->directory;
+            $this->path = realpath(Kernel::getPath('storage')) . '/' . $this->getDirectory();
 
-            if (!empty($this->isolatorDirectory)) {
-                $this->path .= $this->isolatorDirectory;
+            if (!empty($this->getIsolatorDirectory())) {
+                $this->path .= $this->getIsolatorDirectory();
             }
 
-            if (!empty($this->directory)) {
+            if (!empty($this->getDirectory())) {
                 File::mkdir($this->path);
             }
         } catch (\Exception) {
@@ -186,7 +187,7 @@ class Storage {
      * Get storage file path
      * @return string
      */
-    private function getFilePath(): string
+    public function getFilePath(): string
     {
         return $this->path . '/' . $this->fileName;
     }
@@ -211,6 +212,33 @@ class Storage {
         $this->locked = false;
 
         return $this;
+    }
+
+    /**
+     * Get storage directory
+     * @return string
+     */
+    public function getDirectory(): string
+    {
+        return $this->directory;
+    }
+
+    /**
+     * Get storage isolator directory
+     * @return string
+     */
+    public function getIsolatorDirectory(): string
+    {
+        return $this->isolatorDirectory;
+    }
+
+    /**
+     * Storage change directory is locked
+     * @return bool
+     */
+    public function isLocked() : bool
+    {
+        return $this->locked;
     }
 
 }

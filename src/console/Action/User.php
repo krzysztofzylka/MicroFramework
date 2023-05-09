@@ -21,7 +21,7 @@ class User
     {
         $this->console = $console;
 
-        switch ($console->arg[2] ?? false) {
+        switch ($console->arg['args'][1] ?? false) {
             case 'create':
                 $this->create();
 
@@ -39,7 +39,7 @@ class User
      */
     private function create(): void
     {
-        if (!isset($this->console->arg[3]) || !isset($this->console->arg[4])) {
+        if (!isset($this->console->arg['args'][2]) || !isset($this->console->arg['args'][3])) {
             Prints::print('Login and password is required', false, true);
 
             exit;
@@ -51,12 +51,12 @@ class User
 
         try {
             if ((new Config())->authEmail) {
-                $account->registerUser($this->console->arg[3], $this->console->arg[4], $this->console->arg[3]);
+                $account->registerUser($this->console->arg['args'][2], $this->console->arg['args'][3], $this->console->arg['args'][2]);
             } else {
-                $account->registerUser($this->console->arg[3], $this->console->arg[4]);
+                $account->registerUser($this->console->arg['args'][2], $this->console->arg['args'][3]);
             }
 
-            if (isset($this->console->arg[5]) && $this->console->arg[5]) {
+            if (isset($this->console->arg['args'][4]) && $this->console->arg['args'][4]) {
                 Account::$tableInstance->updateValue('admin', 5);
                 Prints::print('User has admin permission!', false, true);
             }

@@ -26,7 +26,7 @@ class Cron
             Prints::print('Cron is disabled', false, true);
         }
 
-        switch ($console->arg[2] ?? false) {
+        switch ($console->arg['args'][1] ?? false) {
             case 'scheduled':
                 Prints::print('Start cron scheduled', true);
 

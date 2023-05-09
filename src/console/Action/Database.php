@@ -60,7 +60,7 @@ class Database
         $this->databaseConnect($this->console->path);
         $this->updateTable = (new Table())->setName('database_updater');
 
-        switch ($action ?? $console->arg[2] ?? false) {
+        switch ($action ?? $console->arg['args'][1] ?? false) {
             case 'update':
                 $this->update();
 

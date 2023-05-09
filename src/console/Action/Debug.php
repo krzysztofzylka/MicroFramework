@@ -10,7 +10,8 @@ class Debug
     public function __construct($console)
     {
         $data = [
-            ['name' => 'path', 'value' => $console->path]
+            ['name' => 'path', 'value' => $console->path],
+            ['name' => 'consolePath', 'value' => $console->consolePath]
         ];
 
         $table = new Table();

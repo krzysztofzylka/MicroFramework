@@ -1,7 +1,7 @@
 <?php
 
-use config\Config;
 use Krzysztofzylka\MicroFramework\Kernel;
+use krzysztofzylka\SimpleLibraries\Library\Console\Args;
 use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
 use krzysztofzylka\SimpleLibraries\Library\Strings;
 
@@ -17,7 +17,7 @@ return new class($argv) {
      * Console path
      * @var string|false
      */
-    private string|bool $consolePath;
+    public string|bool $consolePath;
 
     /**
      * Action class
@@ -39,39 +39,37 @@ return new class($argv) {
 
     /**
      * argv
-     * @var
+     * @var array
      */
-    public $arg;
+    public array $arg;
 
     public function __construct(array $argv)
     {
-        $this->consolePath = realpath($argv[0]);
-        $this->path = getcwd();
+        $this->arg = Args::getArgs($argv);
+        $this->consolePath = $this->arg['path'];
+        $this->path = $this->arg['params']['projectPath'] ?? getcwd();
         $this->resourcesPath = realpath(__DIR__ . '/resources');
-        $this->arg = $argv;
 
-        if (!isset($argv[1])) {
+        if (!isset($this->arg['args'][0])) {
             $this->loadHelp();
+
+            return;
         }
 
-        $this->actionClass = '\Krzysztofzylka\MicroFramework\console\Action\\' . Strings::camelizeString($argv[1], '_');
+        $this->actionClass = '\Krzysztofzylka\MicroFramework\console\Action\\' . Strings::camelizeString($this->arg['args'][0], '_');
 
         if (!class_exists($this->actionClass)) {
             Prints::print('Action not found', false, true);
         }
 
-        try {
-            $class = new $this->actionClass($this);
+        $class = new $this->actionClass($this);
 
-            if (isset($argv[2])) {
-                if (!method_exists($class, $argv[2])) {
-                    throw new Exception('Action not exists');
-                }
-
-                $class->{$argv[2]}();
+        if (isset($this->arg['args'][0])) {
+            if (!method_exists($class, $this->arg['args'][0])) {
+                Prints::print('Action not found', false, true);
             }
-        } catch (Exception) {
-            $this->loadHelp();
+
+            $class->{$this->arg['args'][0]}();
         }
     }
 

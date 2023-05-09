@@ -48,6 +48,8 @@ class Cron
     {
         $this->cronFilePath = realpath(Kernel::getPath('config') . '/Cron.php');
 
+        var_dump(Kernel::getPath('config'));
+
         if (!$this->isActive()) {
             return false;
         }

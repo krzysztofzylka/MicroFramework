@@ -21,6 +21,12 @@ class Help
         $help->addHelp('cron runTasks', 'Run cron tasks');
         $help->addHelp('debug', 'Debug');
         $help->render();
+
+        Prints::print('');
+        Prints::print('Params');
+        $help = new HelpGenerator();
+        $help->addHelp('-projectPath <projectPath>', 'Define project path');
+        $help->render();
     }
 
 }

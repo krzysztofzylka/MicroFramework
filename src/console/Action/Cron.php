@@ -20,8 +20,6 @@ class Cron
         $this->console = $console;
         $this->console->initKernel();
 
-        var_dump($_ENV);
-
         $cron = new \Krzysztofzylka\MicroFramework\Extension\Cron\Cron();
 
         if (!$cron->isActive()) {

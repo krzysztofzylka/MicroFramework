@@ -93,7 +93,7 @@ return new class($argv) {
         try {
             Kernel::initPaths($this->path);
             Kernel::autoload();
-            Kernel::setConfig(new Config());
+            Kernel::loadEnv();
             Kernel::configDatabaseConnect();
         } catch (Exception) {
         }

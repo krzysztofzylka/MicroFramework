@@ -10,8 +10,8 @@ class Help
 
     public function __construct()
     {
-        Prints::print('Help');
         $help = new HelpGenerator();
+        $help->addHeader('Help');
         $help->addHelp('init', 'Initialize project');
         $help->addHelp('rebuild', 'Rebuild project');
         $help->addHelp('database update', 'Update database');
@@ -20,11 +20,7 @@ class Help
         $help->addHelp('cron scheduled', 'Generate tasks');
         $help->addHelp('cron runTasks', 'Run cron tasks');
         $help->addHelp('debug', 'Debug');
-        $help->render();
-
-        Prints::print('');
-        Prints::print('Params');
-        $help = new HelpGenerator();
+        $help->addHeader('Params');
         $help->addHelp('-projectPath <projectPath>', 'Define project path');
         $help->render();
     }

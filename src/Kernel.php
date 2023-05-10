@@ -117,6 +117,10 @@ class Kernel
             Debug::$variables['site_load']['start'] = microtime(true);
         }
 
+        if (!is_null($_ENV['config_timezone'])) {
+            date_default_timezone_set($_ENV['config_timezone']);
+        }
+
         if ($_ENV['config_show_all_errors']) {
             ini_set('display_errors', 1);
             ini_set('display_startup_errors', 1);
@@ -224,6 +228,13 @@ class Kernel
             try {
                 $databaseManager = new DatabaseManager();
                 $databaseManager->connect($databaseConnect);
+
+                if (!is_null($_ENV['config_timezone'])) {
+                    $time_zone = (new \DateTime('now', new \DateTimeZone($_ENV['config_timezone'])))->format('P');
+                    $sql = 'SET time_zone="' . $time_zone . '";';
+                    DatabaseManager::setLastSql($sql);
+                    $databaseManager->query($sql);
+                }
             } catch (ConnectException $exception) {
                 throw new DatabaseException($exception->getHiddenMessage());
             }

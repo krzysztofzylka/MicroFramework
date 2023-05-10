@@ -12,12 +12,6 @@ class EnvInstance
 {
 
     /**
-     * Env filename
-     * @var string
-     */
-    private string $fileName;
-
-    /**
      * Env filepath
      * @var string
      */
@@ -30,7 +24,6 @@ class EnvInstance
     public function __construct(string $path)
     {
         $this->filePath = realpath($path);
-        $this->fileName = explode('.', strtolower(basename($path)), 2)[0];
     }
 
     /**
@@ -66,14 +59,14 @@ class EnvInstance
                     $value = (float)$value;
                 }
 
-                switch ($value) {
+                switch (strtolower($value)) {
                     case 'false':
                         $value = false;
                         break;
                     case 'true':
                         $value = true;
                         break;
-                    case 'NULL':
+                    case 'null':
                         $value = null;
                         break;
                 }

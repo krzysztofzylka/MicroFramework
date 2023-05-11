@@ -3,6 +3,8 @@ Micro-framework
 - Storage extension
 - Add global view variable
 - Global timezone config
+- Repair validation in form ajax
+- Repair z-index vanillatoasts
 Console
 - Change console help
 - Update cron

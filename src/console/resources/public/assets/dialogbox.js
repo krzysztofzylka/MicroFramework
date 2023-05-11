@@ -279,13 +279,9 @@ $.fn.ajaxlink = function (event, data = null) {
                 $.each(data.list, function (name, value) {
                     let $element = $(data.formElement).find('[name="' + name + '"]');
 
-                    if (!value[0]) {
-                        $element.removeClass('is-invalid');
-                        $element.parent().find('.invalid-feedback').remove();
-                        $element.parent().find('.text-muted').removeClass('d-none');
-                    } else {
-                        $element.addClass('is-invalid');
+                    $element.addClass('is-invalid');
 
+                    if (typeof value === 'string') {
                         if ($element.parent().find('.invalid-feedback').length === 0) {
                             $element.parent().append('<div class="invalid-feedback">' + value + '</div>');
                         } else {

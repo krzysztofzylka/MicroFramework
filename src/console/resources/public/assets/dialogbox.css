@@ -16,3 +16,5 @@
 .modal-bootstrap5 .modal-body { width: 100% !important; }
 @media (max-width: 600px) { .modal-bootstrap5 .modal-body { height: calc(100% - 50px) !important; } }
 @media (min-width: 600px) { .modal-bootstrap5 .modal-body { max-height: 600px !important; } }
+
+#vanillatoasts-container {z-index: 10000!important;}

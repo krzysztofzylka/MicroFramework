@@ -1,11 +1,13 @@
 v0.0.19-alpha
 Micro-framework
-- Storage extension
-- Add global view variable
-- Global timezone config
-- Repair validation in form ajax
-- Repair z-index vanillatoasts
+    - Storage extension
+    - Add global view variable
+    - Global timezone config
+    - Repair validation in form ajax
+    - Repair z-index vanillatoasts
+    - Add try...catch to logs
+    - Fixed bug in statistics extension
 Console
-- Change console help
-- Update cron
-- Repair cron env
+    - Change console help
+    - Update cron
+    - Repair cron env

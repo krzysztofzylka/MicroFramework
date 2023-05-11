@@ -46,18 +46,25 @@ class Log
         }
 
         if ($_ENV['logger_enabled']) {
-            $loggerContent = $logContent;
-            unset($loggerContent['level'], $loggerContent['message']);
-            Logger::$url = $_ENV['logger_url'];
-            Logger::$api_key = $_ENV['logger_api_key'];
-            Logger::$site_key = $_ENV['logger_site_key'];
-            Logger::$username = $_ENV['logger_username'];
-            Logger::$password = $_ENV['logger_password'];
+            try {
+                $loggerContent = $logContent;
+                unset($loggerContent['level'], $loggerContent['message']);
+                Logger::$url = $_ENV['logger_url'];
+                Logger::$api_key = $_ENV['logger_api_key'];
+                Logger::$site_key = $_ENV['logger_site_key'];
+                Logger::$username = $_ENV['logger_username'];
+                Logger::$password = $_ENV['logger_password'];
 
-            Logger::log($logContent['message'], $logContent['level'], $loggerContent);
+                Logger::log($logContent['message'], $logContent['level'], $loggerContent);
+            } catch (\Throwable) {
+            }
         }
 
-        return (bool)file_put_contents($logPath, $jsonLogData . PHP_EOL, FILE_APPEND);
+        try {
+            return (bool)file_put_contents($logPath, $jsonLogData . PHP_EOL, FILE_APPEND);
+        } catch (\Exception) {
+            return false;
+        }
     }
 
     /**

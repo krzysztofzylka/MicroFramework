@@ -77,7 +77,7 @@ class Statistic
                 'country' => $data['country'] ?? null,
                 'city' => $data['city'] ?? null,
                 'continent' => $data['continent'] ?? null,
-                'browser' => $_SERVER['HTTP_USER_AGENT'],
+                'browser' => $_SERVER['HTTP_USER_AGENT'] ?? null,
                 'page' => $_GET['url'] ?? null
             ]);
         } catch (Exception $exception) {

@@ -6,8 +6,6 @@ $.fn.dialogbox = function (event = 'create', config = {}) {
         event = 'create';
     }
 
-    console.log(1, config);
-
     config.isDialogbox = $(this).hasClass('ui-dialog-content');
     config.id = config.isDialogbox
         ? $(this).attr('id')
@@ -25,8 +23,6 @@ $.fn.dialogbox = function (event = 'create', config = {}) {
     if (config.load && config.load[0] === '/') {
         config.load = config.load + '&dialogbox=1';
     }
-
-    console.log(2, config);
 
     switch (event) {
         case 'load':

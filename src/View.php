@@ -188,16 +188,14 @@ class View
             'account' => Account::$account,
             'here' => Kernel::$url ?? null,
             'isDialogbox' => isset($this->controller->layout) ? $this->controller->layout === 'dialogbox' : false,
-            'global' => self::$globalVariables,
-            'id' => $id
+            'global' => self::$globalVariables
         ];
 
         if (isset($this->controller->layout) && $this->controller->layout === 'dialogbox') {
             $config['dialogboxConfig'] = json_encode([
                 'dialogboxWidth' => $this->controller->dialogboxWidth,
                 'layout' => 'dialogbox',
-                'title' => $this->controller->title,
-                'id' => $id
+                'title' => $this->controller->title
             ]);
         }
 

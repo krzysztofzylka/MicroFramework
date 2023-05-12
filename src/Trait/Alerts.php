@@ -35,12 +35,12 @@ trait Alerts
             'type' => $type,
             'ajaxLoaderConfig' => [
                 'dialog' => [
-                    'close' => false
+                    'close' => $params['dialog']['close'] ?? false
                 ],
                 'layout' => 'toast',
                 'pageReload' => $params['pageReload'] ?? false,
-                'reloadForm' => false,
-                'redirect' => false
+                'reloadForm' => $params['reloadForm'] ?? false,
+                'redirect' => $params['redirect'] ?? false
             ]
         ]);
     }

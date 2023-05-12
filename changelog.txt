@@ -7,6 +7,8 @@ Micro-framework
     - Repair z-index vanillatoasts
     - Add try...catch to logs
     - Fixed bug in statistics extension
+    - Controller confirm action (trait)
+    - Extends responseAlert params
 Console
     - Change console help
     - Update cron

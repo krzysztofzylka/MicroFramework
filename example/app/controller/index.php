@@ -80,6 +80,10 @@ class index extends Controller {
         $this->responseAlert('alert', 'OK', '', ['pageReload' => true]);
     }
 
+    public function alertRedirect() {
+        $this->responseAlert('alert', 'OK', '', ['redirect' => '/index/table']);
+    }
+
     public function alert2() {
         $this->responseAlert('alert', 'ERR');
     }
@@ -97,6 +101,13 @@ class index extends Controller {
         $storage = new Storage();
         $storage->setFileName('testing.txt')->setDirectory('test')->setAccountIsolator();
         dumpe($storage->write('storage content'), $storage->read(), $storage->getModifiedDate(), $storage->delete(), $storage);
+    }
+
+    public function confirm(): void {
+        if ($this->confirmAction()) {
+            $this->responseAlert('confirm');
+        }
+
     }
 
 }

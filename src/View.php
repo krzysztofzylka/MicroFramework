@@ -6,6 +6,7 @@ use Exception;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Form\Form;
+use krzysztofzylka\SimpleLibraries\Library\Generator;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
@@ -174,6 +175,8 @@ class View
      */
     public function getGlobalVariables(): array
     {
+        $id = Generator::uniqId(20);
+
         $config = [
             'name' => $this->name,
             'view' => $this,
@@ -184,15 +187,17 @@ class View
             'accountId' => Account::$accountId,
             'account' => Account::$account,
             'here' => Kernel::$url ?? null,
-            'isDialogbox' => isset($_GET['dialogbox']) ? (bool)$_GET['dialogbox'] : false,
-            'global' => self::$globalVariables
+            'isDialogbox' => isset($this->controller->layout) ? $this->controller->layout === 'dialogbox' : false,
+            'global' => self::$globalVariables,
+            'id' => $id
         ];
 
         if (isset($this->controller->layout) && $this->controller->layout === 'dialogbox') {
             $config['dialogboxConfig'] = json_encode([
                 'dialogboxWidth' => $this->controller->dialogboxWidth,
                 'layout' => 'dialogbox',
-                'title' => $this->controller->title
+                'title' => $this->controller->title,
+                'id' => $id
             ]);
         }
 

@@ -6,6 +6,7 @@ use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table as TableExtension;
 use Krzysztofzylka\MicroFramework\Trait\Alerts;
+use Krzysztofzylka\MicroFramework\Trait\Controller\Confirm;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use krzysztofzylka\SimpleLibraries\Library\_Array;
 use krzysztofzylka\SimpleLibraries\Library\Redirect;
@@ -16,6 +17,8 @@ use krzysztofzylka\SimpleLibraries\Library\Redirect;
  */
 class Controller
 {
+
+    use Confirm;
 
     use Log;
     use \Krzysztofzylka\MicroFramework\Trait\Model;

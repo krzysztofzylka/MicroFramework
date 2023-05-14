@@ -253,6 +253,21 @@ class Kernel
      */
     public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = [], array $params = []): void
     {
+        if ($_ENV['update_block_site'] && isset($params['api']) && !$params['api']) {
+            $view = new View();
+            echo $view->render([], $_ENV['update_view']);
+
+            exit;
+        } elseif ($_ENV['update_block_api'] && isset($params['api']) && $params['api']) {
+            $response = new Response();
+            $response->json([
+                'error' => [
+                    'message' => 'System update',
+                    'code' => 500
+                ]
+            ]);
+        }
+
         self::$controllerParams = $params;
 
         if (!self::$projectPath) {

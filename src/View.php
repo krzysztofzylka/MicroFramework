@@ -175,8 +175,6 @@ class View
      */
     public function getGlobalVariables(): array
     {
-        $id = Generator::uniqId(20);
-
         $config = [
             'name' => $this->name,
             'view' => $this,

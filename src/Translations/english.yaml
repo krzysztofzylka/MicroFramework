@@ -63,3 +63,8 @@ micro-framework:
       object_not_found: Object not found
     database:
       error: Database error
+  update:
+    title: Coming soon
+    coming_soon: Coming soon
+    line1: We are preparing changes for you.
+    line2: Welcome back in a moment

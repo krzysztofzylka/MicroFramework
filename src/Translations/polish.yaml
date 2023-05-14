@@ -63,3 +63,8 @@ micro-framework:
       object_not_found: Obiekt nie został znaleziony
     database:
       error: Błąd bazy danych
+  update:
+    title: Wkrótce wracamy
+    coming_soon: Trwa aktualizacja systemu
+    line1: Zmieniamy się dla Ciebie!
+    line2: Zapraszamy ponownie za chwilę.

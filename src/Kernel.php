@@ -261,7 +261,7 @@ class Kernel
                     'code' => 500
                 ]
             ]);
-        } elseif ($_ENV['update_block_site'] && (!isset($params['api']) && !$params['api'])) {
+        } elseif ($_ENV['update_block_site'] && (!isset($params['api']) || isset($params['api']) && !$params['api'])) {
             $view = new View();
             echo $view->render([], $_ENV['update_view']);
 

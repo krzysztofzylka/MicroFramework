@@ -9,6 +9,7 @@ Micro-framework
     - Fixed bug in statistics extension
     - Controller confirm action (trait)
     - Extends responseAlert params
+    - Add update site view
 Console
     - Change console help
     - Update cron

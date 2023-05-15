@@ -253,12 +253,7 @@ class Kernel
      */
     public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = [], array $params = []): void
     {
-        if ($_ENV['update_block_site'] && isset($params['api']) && !$params['api']) {
-            $view = new View();
-            echo $view->render([], $_ENV['update_view']);
-
-            exit;
-        } elseif ($_ENV['update_block_api'] && isset($params['api']) && $params['api']) {
+        if ($_ENV['update_block_api'] && isset($params['api']) && $params['api']) {
             $response = new Response();
             $response->json([
                 'error' => [
@@ -266,6 +261,11 @@ class Kernel
                     'code' => 500
                 ]
             ]);
+        } elseif ($_ENV['update_block_site'] && (!isset($params['api']) && !$params['api'])) {
+            $view = new View();
+            echo $view->render([], $_ENV['update_view']);
+
+            exit;
         }
 
         self::$controllerParams = $params;

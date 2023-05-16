@@ -107,7 +107,10 @@ class index extends Controller {
         if ($this->confirmAction()) {
             $this->responseAlert('confirm');
         }
+    }
 
+    public function dialogboxClose(): void {
+        $this->responseAlert('Zamknieto dialogbox i przeładowano stronę główną.', 'OK', '', ['pageReload' => true, 'dialog' => ['close' => true]]);
     }
 
 }

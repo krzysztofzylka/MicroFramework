@@ -6,3 +6,11 @@
     <script src="/assets/dialogbox.js"></script>
     <link rel="stylesheet" href="/assets/dialogbox.css" />
 {% endmacro %}
+
+{% macro loadConfig() %}
+    <script>
+        var dialogboxConfig = {
+            url: '{{ app.here }}'
+        };
+    </script>
+{% endmacro %}

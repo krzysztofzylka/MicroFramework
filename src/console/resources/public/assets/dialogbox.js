@@ -20,10 +20,6 @@ $.fn.dialogbox = function (event = 'create', config = {}) {
     config.closeDestroy = config.closeDestroy ?? true;
     config.width = config.width ?? 300;
 
-    if (config.load && config.load[0] === '/') {
-        config.load = config.load + '&dialogbox=1';
-    }
-
     switch (event) {
         case 'load':
             if (!config.isDialogbox) {
@@ -43,7 +39,9 @@ $.fn.dialogbox = function (event = 'create', config = {}) {
                 }
             });
 
-            $(this).attr('data-controller', config.load.replace('index.php?url=', '').replace('&dialogbox=1', ''));
+            console.log(config);
+
+            $(this).attr('data-controller', config.load.replace('index.php?url=', ''));
             $(this).trigger('dialogLoad', this);
             break;
         case 'open':
@@ -63,6 +61,8 @@ $.fn.dialogbox = function (event = 'create', config = {}) {
             $(this).trigger('dialogClose', this);
             break;
         case 'destroy':
+            console.log($(this), config);
+
             if (!config.isDialogbox) {
                 return $(this);
             }
@@ -279,9 +279,13 @@ $.fn.ajaxlink = function (event, data = null) {
                 $.each(data.list, function (name, value) {
                     let $element = $(data.formElement).find('[name="' + name + '"]');
 
-                    $element.addClass('is-invalid');
+                    if (!value[0]) {
+                        $element.removeClass('is-invalid');
+                        $element.parent().find('.invalid-feedback').remove();
+                        $element.parent().find('.text-muted').removeClass('d-none');
+                    } else {
+                        $element.addClass('is-invalid');
 
-                    if (typeof value === 'string') {
                         if ($element.parent().find('.invalid-feedback').length === 0) {
                             $element.parent().append('<div class="invalid-feedback">' + value + '</div>');
                         } else {
@@ -323,9 +327,7 @@ $.fn.ajaxlink = function (event, data = null) {
             }
 
             if (data.ajaxLoaderConfig.pageReload) {
-                let mainLoad = $('body:first').attr('data-load');
-
-                $('.ajax-content').load(mainLoad + '&dialogbox=1');
+                $('.ajax-content').load(dialogboxConfig.url);
             }
             break;
         case 'toast':

@@ -7,6 +7,7 @@ use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Form\Form;
 use krzysztofzylka\SimpleLibraries\Library\Generator;
+use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
@@ -185,7 +186,7 @@ class View
             'accountId' => Account::$accountId,
             'account' => Account::$account,
             'here' => Kernel::$url ?? null,
-            'isDialogbox' => isset($this->controller->layout) ? $this->controller->layout === 'dialogbox' : false,
+            'isAjax' => Request::isAjaxRequest(),
             'global' => self::$globalVariables
         ];
 

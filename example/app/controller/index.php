@@ -48,6 +48,7 @@ class index extends Controller {
                 'title' => 'Modify'
             ]
         ];
+        $this->table->paginationLimit = 5;
 
         $this->loadView(['table' => $this->table->render()]);
     }

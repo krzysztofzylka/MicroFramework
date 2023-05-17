@@ -8,7 +8,6 @@ use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Extension\Debug\Debug;
 use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Render;
 use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Session;
-use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Model;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 
@@ -28,11 +27,13 @@ class Table
      * @var ?Model
      */
     public ?Model $model = null;
+
     /**
      * Controller
      * @var Controller
      */
     public Controller $controller;
+
     /**
      * Table columns:
      * [
@@ -50,71 +51,85 @@ class Table
      * @var array
      */
     public array $columns = [];
+
     /**
      * Data results for body
      * @var array
      */
     public array $results = [];
+
     /**
      * Search string
      * @var string
      */
     public string $search = '';
+
     /**
      * Enable search
      * @var bool
      */
     public bool $activeSearch = true;
+
     /**
      * Post data
      * @var ?array
      */
     public ?array $data = null;
+
     /**
      * Enable pagination
      * @var bool
      */
     public bool $activePagination = true;
+
     /**
      * Elements per page
      * @var int
      */
     public int $paginationLimit = 20;
+
     /**
      * Actual page
      * @var int
      */
     public int $page = 1;
+
     /**
      * Pages
      * @var ?int
      */
     public int $pages = 1;
+
     /**
      * Table ID
      * @var string
      */
     private string $id = '';
+
     /**
      * Html table
      * @var string
      */
     private string $html = '';
+
     /**
      * Conditions
      * @var ?Condition
      */
     private ?array $conditions = [];
+
     /**
      * Have conditions
      * @var bool
      */
     private bool $haveCondition = false;
+
     /**
      * Session
      * @var mixed
      */
     private mixed $session = null;
+
     /**
      * SQL limit
      * @var ?string
@@ -127,6 +142,11 @@ class Table
      */
     public ?string $orderBy = null;
 
+    /**
+     * Initialize table
+     * @return void
+     * @throws DatabaseException
+     */
     public function init(): void
     {
         $this->conditions = [];
@@ -241,8 +261,12 @@ class Table
                 if (isset($this->data['page'])) {
                     if ($this->data['page'] === "«") {
                         $this->page--;
+                    } elseif ($this->data['page'] === "««") {
+                        $this->page = 0;
                     } elseif ($this->data['page'] === "»") {
                         $this->page++;
+                    } elseif ($this->data['page'] === "»»") {
+                        $this->page = $this->pages;
                     } else {
                         $this->page = (int)$this->data['page'];
                     }
@@ -288,7 +312,7 @@ class Table
                 $this->conditions = null;
             }
 
-            $this->results = $this->model->findAll($this->conditions, null, $this->orderBy, $this->limit);
+            $this->results = $this->model->findAll($this->conditions, null, $this->orderBy, $this->limit) ?: [];
         }
     }
 

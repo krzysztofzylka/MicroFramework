@@ -13,6 +13,10 @@ use krzysztofzylka\SimpleLibraries\Library\Strings;
 trait Render
 {
 
+    /**
+     * Generowanie stopki
+     * @return void
+     */
     public function renderFooter(): void
     {
         $this->html .= '<div class="footer float-end">';
@@ -21,7 +25,8 @@ trait Render
             $this->html .= '<form method="POST">';
             $this->html .= '<input type="hidden" name="table_id" value="' . $this->id . '" />';
             $this->html .= '<nav aria-label="navigation"><ul class="pagination">';
-            $this->html .= '<li class="page-item"><input type="submit" name="page" class="page-link" value="&#171;" /></li>';
+            $this->html .= '<li class="page-item ' . (in_array($this->page, [0, 1]) ? 'disabled' : '') . '"><input type="submit" name="page" class="page-link" value="&#171;&#171;" /></li>';
+            $this->html .= '<li class="page-item ' . (in_array($this->page, [0, 1]) ? 'disabled' : '') . '"><input type="submit" name="page" class="page-link" value="&#171;" /></li>';
             $from = $this->page - 3;
 
             for ($i = 0; $i < 7; $i++) {
@@ -36,7 +41,8 @@ trait Render
                 $this->html .= '<li class="page-item active"><input type="submit" name="page" class="page-link" value="1" /></li>';
             }
 
-            $this->html .= '<li class="page-item"><input type="submit" name="page" class="page-link" value="&#187;" /></li>';
+            $this->html .= '<li class="page-item ' . (($this->pages === 0 || $this->pages === $this->page || $this->pages === $this->page - 1) ? 'disabled' : '') . '"><input type="submit" name="page" class="page-link" value="&#187;" /></li>';
+            $this->html .= '<li class="page-item ' . (($this->pages === 0 || $this->pages === $this->page || $this->pages === $this->page - 1) ? 'disabled' : '') . '"><input type="submit" name="page" class="page-link" value="&#187;&#187;" /></li>';
             $this->html .= '</ul></nav>';
             $this->html .= '</form>';
         }

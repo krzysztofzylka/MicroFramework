@@ -4,7 +4,6 @@ namespace Krzysztofzylka\MicroFramework\AdminPanel\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Extension\Table\Extra\Cell;
-use Krzysztofzylka\MicroFramework\Kernel;
 
 class account extends Controller
 {

@@ -8,7 +8,6 @@ use Krzysztofzylka\MicroFramework\Api\Enum\ContentType;
 use Krzysztofzylka\MicroFramework\Api\Response;
 use Krzysztofzylka\MicroFramework\Api\Secure;
 use Krzysztofzylka\MicroFramework\Trait\Log;
-use krzysztofzylka\SimpleLibraries\Library\Json;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Strings;
 

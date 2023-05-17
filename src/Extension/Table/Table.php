@@ -40,11 +40,11 @@ class Table
      *   'key' => [ //key to database data in model eg. id for $result['id'] or user.name for $result['user']['name']
      *     'title' => 'Column title', //column title
      *     'width' => 200, //column width
-     *     'maxChar' => null, //int max character
+     *     'maxChar' => null, //int max character (4-...)
      *     'value' => '', //custom value
      *     'value' => function ($cell) {
      *       return $cell->val;
-     *     }, //function custom value
+     *     }, //function to custom value
      *   ],
      *   ...
      * ]
@@ -143,6 +143,24 @@ class Table
     public ?string $orderBy = null;
 
     /**
+     * Active pagination limit select
+     * @var bool
+     */
+    public bool $activePaginationLimit = true;
+
+    /**
+     * Accepted pagination limits
+     * @var array|int[]
+     */
+    public array $paginationLimits = [5, 20, 50, 100];
+
+    /**
+     * Default pagination limit
+     * @var int
+     */
+    public int $paginationLimitDefault = 20;
+
+    /**
      * Initialize table
      * @return void
      * @throws DatabaseException
@@ -174,6 +192,9 @@ class Table
                 'page' => $this->page,
                 'pages' => $this->pages,
                 'activePagination' => $this->activePagination,
+                'activePaginationLimit' => $this->activePaginationLimit,
+                'paginationLimitDefault' => $this->paginationLimitDefault,
+                'paginationLimits' => $this->paginationLimits,
                 'paginationLimit' => $this->paginationLimit,
                 'id' => $this->id,
                 'conditions' => json_decode(json_encode($this->conditions), true),
@@ -238,6 +259,12 @@ class Table
                 : $this->data['search'] ?? '';
         }
 
+        if ($this->activePaginationLimit && isset($this->session['paginationLimit']) || isset($this->data['paginationLimit'])) {
+            $this->paginationLimit = !is_null($this->session) && isset($this->session['paginationLimit']) && !isset($this->data['paginationLimit'])
+                ? $this->session['paginationLimit']
+                : $this->data['paginationLimit'] ?? $this->paginationLimitDefault;
+        }
+
         if (isset($this->model) && $this->activeSearch && $this->search) {
             $this->haveCondition = true;
 
@@ -251,6 +278,10 @@ class Table
         }
 
         $conditions = $this->haveCondition ? $this->conditions : [];
+
+        if (!in_array($this->paginationLimit, $this->paginationLimits)) {
+            $this->paginationLimit = $this->paginationLimitDefault;
+        }
 
         if (isset($this->model)) {
             $this->pages = ceil($this->model->findCount($conditions) / $this->paginationLimit);
@@ -291,7 +322,8 @@ class Table
         if (isset($this->data['table_id']) && $this->data['table_id'] === $this->id) {
             $this->saveSession([
                 'search' => $this->data['search'] ?? $this->session['search'] ?? null,
-                'page' => $this->page ?? 0
+                'page' => $this->page ?? 0,
+                'paginationLimit' => $this->paginationLimit ?? $this->paginationLimitDefault
             ]);
         }
     }

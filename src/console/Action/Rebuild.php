@@ -48,7 +48,6 @@ class Rebuild
 
         try {
             File::copy($this->console->resourcesPath . '/public/index.php', $this->console->path . '/public/index.php');
-            File::copy($this->console->resourcesPath . '/public/.htaccess', $this->console->path . '/public/.htaccess');
             File::copy($this->console->resourcesPath . '/config/.gitignore', $this->console->path . '/config/.gitignore');
             File::copy($this->console->resourcesPath . '/public/assets/dialogbox.css', $this->console->path . '/public/assets/dialogbox.css');
             File::copy($this->console->resourcesPath . '/public/assets/dialogbox.js', $this->console->path . '/public/assets/dialogbox.js');

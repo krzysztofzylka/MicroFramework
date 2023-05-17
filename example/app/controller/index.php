@@ -106,7 +106,7 @@ class index extends Controller {
 
     public function confirm(): void {
         if ($this->confirmAction()) {
-            $this->responseAlert('confirm');
+            $this->responseAlert('confirm', 'OK', '', ['dialog' => ['close' => true]]);
         }
     }
 

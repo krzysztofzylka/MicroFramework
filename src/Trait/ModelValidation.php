@@ -3,7 +3,6 @@
 namespace Krzysztofzylka\MicroFramework\Trait;
 
 use Krzysztofzylka\MicroFramework\Extension\Validation\Validation;
-use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 

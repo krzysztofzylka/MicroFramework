@@ -122,7 +122,17 @@ trait Render
         $this->html .= '<div class="actions float-end">';
 
         if ($this->activeSearch) {
-            $this->html .= '<form method="POST"><input type="hidden" name="table_id" value="' . $this->id . '" /><input name="search" class="form-control" placeholder="' . __('micro-framework.table.search') . '" value="' . $this->search . '" /></form>';
+            $this->html .= '<form method="POST" class="float-end me-2"><input type="hidden" name="table_id" value="' . $this->id . '" /><input name="search" class="form-control" placeholder="' . __('micro-framework.table.search') . '" value="' . $this->search . '" /></form>';
+        }
+
+        if ($this->activePaginationLimit) {
+            $this->html .= '<form method="POST" class="float-end me-2"><input type="hidden" name="table_id" value="' . $this->id . '" /><select class="form-select" name="paginationLimit" onchange="this.form.submit()">';
+
+            foreach ($this->paginationLimits as $limit) {
+                $this->html .= '<option value="' . $limit . '" ' . ($limit === $this->paginationLimit ? 'selected' : '') . '>' . $limit . '</option>';
+            }
+
+            $this->html .= '</select></form>';
         }
 
         $this->html .= '</div>';

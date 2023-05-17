@@ -2,9 +2,10 @@
 
 namespace Krzysztofzylka\MicroFramework\Trait\Controller;
 
-trait Confirm {
+trait Confirm
+{
 
-    public function confirmAction(string $message = 'Czy na pewno chcesz wykonać tą operację?', string $title = 'Powierdzenie wykonania operacji'): bool
+    public function confirmAction(?string $message = 'Czy na pewno chcesz wykonać tą operację?', string $title = 'Powierdzenie wykonania operacji'): bool
     {
         if (isset($this->data['confirmAction']) && $this->data['confirmAction']) {
             return true;

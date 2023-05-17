@@ -145,7 +145,7 @@ class Kernel
                         Debug::$variables['site_load']['start'] = microtime(true);
                         DatabaseManager::$connection->setDebug(true);
                     }
-                } catch (Exception){
+                } catch (Exception) {
                 }
             }
         }

@@ -2,8 +2,6 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Env;
 
-use Krzysztofzylka\MicroFramework\Kernel;
-
 /**
  * Env instance
  * @package Extension\Env
@@ -39,7 +37,7 @@ class EnvInstance
         $contents = file_get_contents($this->filePath);
         $contents = explode(PHP_EOL, $contents);
 
-        foreach($contents as $content) {
+        foreach ($contents as $content) {
             $content = ltrim($content);
 
             if (str_starts_with($content, '#') || empty($content)) {

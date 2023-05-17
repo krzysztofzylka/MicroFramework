@@ -7,7 +7,8 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\File;
 
-class Storage {
+class Storage
+{
 
     /**
      * Custom storage directory
@@ -236,7 +237,7 @@ class Storage {
      * Storage change directory is locked
      * @return bool
      */
-    public function isLocked() : bool
+    public function isLocked(): bool
     {
         return $this->locked;
     }

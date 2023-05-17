@@ -3,7 +3,6 @@
 namespace Krzysztofzylka\MicroFramework\console\Action;
 
 use krzysztofzylka\SimpleLibraries\Library\Console\Generator\Help as HelpGenerator;
-use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
 
 class Help
 {

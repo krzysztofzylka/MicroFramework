@@ -7,7 +7,6 @@ use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Email\Enum\PredefinedConfig;
 use Krzysztofzylka\MicroFramework\Extension\Email\Extra\SendEmail;
 use Krzysztofzylka\MicroFramework\Extension\Email\PredefinedConfig\Gmail;
-use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use Krzysztofzylka\MicroFramework\View;
 use PHPMailer\PHPMailer\PHPMailer;

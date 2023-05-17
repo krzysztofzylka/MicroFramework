@@ -30,6 +30,7 @@ micro-framework:
         min: Pole nie może posiadać mniej znaków niż
         max: Pole nie może posiadać więcej znaków niż
       is_numeric: Pole musi być liczbą
+      allow_values: "Wartość nieprawidłowa, wybierz prawidłową wartość z listy: {valueList}"
   debug:
     sqlTable: SQL
     configTable: Konfiguracja
@@ -68,3 +69,5 @@ micro-framework:
     coming_soon: Trwa aktualizacja systemu
     line1: Zmieniamy się dla Ciebie!
     line2: Zapraszamy ponownie za chwilę.
+  confirm:
+    accept: Kontynuuj

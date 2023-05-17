@@ -3,14 +3,20 @@ Micro-framework
     - Storage extension
     - Add global view variable
     - Global timezone config
-    - Repair validation in form ajax
-    - Repair z-index vanillatoasts
+    - Fix validation in form ajax
+    - Fix z-index vanillatoasts
     - Add try...catch to logs
     - Fixed bug in statistics extension
     - Controller confirm action (trait)
     - Extends responseAlert params
     - Add update site view
+    - Fix table bug (database connected)
+    - Add pagination limit select to table
+    - Add html constructor to table cell
+    - Fix confirmAction in controller
+    - Reformat code and optimize imports
+    - Add allowed values validation
 Console
     - Change console help
     - Update cron
-    - Repair cron env
+    - Fix cron env

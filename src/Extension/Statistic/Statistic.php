@@ -4,7 +4,6 @@ namespace Krzysztofzylka\MicroFramework\Extension\Statistic;
 
 use Exception;
 use krzysztofzylka\DatabaseManager\Table;
-use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use krzysztofzylka\SimpleLibraries\Library\Client;
 

@@ -116,7 +116,14 @@ class ControllerApi extends Controller
                     $this->response->error('Not authorized', 401, 'Apikey auth fail');
                 }
             } else {
-                $this->log('Authorization failed', 'WARNING', ['Failed authorization type']);
+                $this->log(
+                    'Authorization failed',
+                    'WARNING',
+                    [
+                        'message' => 'Failed authorization type',
+                        'server' => $_SERVER
+                    ]
+                );
                 $this->response->error('Not authorized', 401, 'Failed authorization type');
             }
         }

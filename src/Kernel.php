@@ -344,6 +344,8 @@ class Kernel
 
                 $controller->secure->controller = $controller;
                 $controller->response->controller = $controller;
+
+                $controller->_autoAuth();
             } else {
                 $controller->htmlGenerator = new Html();
                 $controller->table = new Table();

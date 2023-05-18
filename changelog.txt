@@ -16,6 +16,7 @@ Micro-framework
     - Fix confirmAction in controller
     - Reformat code and optimize imports
     - Add allowed values validation
+    - Fix api authorization
 Console
     - Change console help
     - Update cron

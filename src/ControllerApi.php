@@ -2,6 +2,9 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use krzysztofzylka\DatabaseManager\Exception\ConditionException;
+use krzysztofzylka\DatabaseManager\Exception\SelectException;
+use krzysztofzylka\DatabaseManager\Exception\TableException;
 use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Api\Authorization;
 use Krzysztofzylka\MicroFramework\Api\Enum\ContentType;
@@ -45,11 +48,39 @@ class ControllerApi extends Controller
     public Secure $secure;
 
     /**
-     * Constructor
-     * - Automatic api authorization
+     * Get request method
+     * @return string
      */
-    public function __construct()
+    public function getRequestMethod(): string
     {
+        return $_SERVER['REQUEST_METHOD'];
+    }
+
+    /**
+     * Get body content
+     * @param ContentType $contentType Content type, default string
+     * @return false|string
+     */
+    public function getBodyContent(ContentType $contentType = ContentType::String): false|string
+    {
+        switch ($contentType) {
+            case ContentType::String:
+                return Request::getInputContents();
+            case ContentType::Json:
+                $this->secure->contentIsJson();
+
+                return json_decode(Request::getInputContents(), true);
+        }
+    }
+
+    /**
+     * Authorize API
+     * @return void
+     * @throws ConditionException
+     * @throws SelectException
+     * @throws TableException
+     */
+    public function _autoAuth() : void {
         if ($this->auth) {
             if (isset($_SERVER['PHP_AUTH_USER']) || isset($_SERVER['PHP_AUTH_PW'])) {
                 $username = isset($_SERVER['PHP_AUTH_USER']) ? htmlspecialchars($_SERVER['PHP_AUTH_USER']) : false;
@@ -88,32 +119,6 @@ class ControllerApi extends Controller
                 $this->log('Authorization failed', 'WARNING', ['Failed authorization type']);
                 $this->response->error('Not authorized', 401, 'Failed authorization type');
             }
-        }
-    }
-
-    /**
-     * Get request method
-     * @return string
-     */
-    public function getRequestMethod(): string
-    {
-        return $_SERVER['REQUEST_METHOD'];
-    }
-
-    /**
-     * Get body content
-     * @param ContentType $contentType Content type, default string
-     * @return false|string
-     */
-    public function getBodyContent(ContentType $contentType = ContentType::String): false|string
-    {
-        switch ($contentType) {
-            case ContentType::String:
-                return Request::getInputContents();
-            case ContentType::Json:
-                $this->secure->contentIsJson();
-
-                return json_decode(Request::getInputContents(), true);
         }
     }
 

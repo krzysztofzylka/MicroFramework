@@ -205,7 +205,7 @@ class Table
             ];
         }
 
-        $this->html .= '<div class="tableRender" id="' . $this->id . '">';
+        $this->html .= '<div class="tableRender table-responsive" id="' . $this->id . '">';
         $this->renderAction();
         $this->html .= '<table class="table table-sm">';
         $this->renderHeaders();

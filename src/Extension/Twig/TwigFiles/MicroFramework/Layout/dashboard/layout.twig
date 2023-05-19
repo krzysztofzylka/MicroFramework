@@ -19,6 +19,11 @@
         <meta name="theme-color" content="#7952b3">
         <style>{% include 'MicroFramework/Layout/dashboard/style.css' %}</style>
         {{ dialogbox.loadAssets() }}
+        <script>
+            $(document).ready(function () {
+                $('#sidebarMenu').removeClass('show');
+            });
+        </script>
         {% block head %}{% endblock %}
     </head>
     <body>

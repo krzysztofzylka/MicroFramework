@@ -6,6 +6,9 @@ use Exception;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Form\Form;
+use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Action;
+use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Form as FormTwigCustomFunctions;
+use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Translate;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 use Twig\Environment;
@@ -63,10 +66,11 @@ class View
             $this->filesystemLoader->addPath(__DIR__ . '/Extension/Twig/TwigFiles');
             $this->environment = new Environment($this->filesystemLoader, ['debug' => $_ENV['config_debug']]);
             $this->environment->addExtension(new DebugExtension());
-            $translationFunction = new TwigFunction('__', function (string $name) {
-                return __($name);
-            });
-            $this->environment->addFunction($translationFunction);
+
+            //add custom functions
+            new Translate($this->environment);
+            new Action($this->environment);
+
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
         }
@@ -154,10 +158,9 @@ class View
             $this->environment->addGlobal('app', $this->getGlobalVariables());
 
             $controller = $this->controller;
-            $formFunction = new TwigFunction('form', function () use ($controller) {
-                return new Form($controller);
-            });
-            $this->environment->addFunction($formFunction);
+
+            //add custom functions
+            new FormTwigCustomFunctions($this->environment, $controller);
 
             if ($_ENV['config_view_cache']) {
                 $this->environment->setCache(false);

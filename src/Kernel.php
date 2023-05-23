@@ -303,6 +303,12 @@ class Kernel
      */
     public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []): Controller
     {
+        if (empty($params)) {
+            $params = $_SESSION['controllerParams'];
+        } else {
+            $_SESSION['controllerParams'] = $params;
+        }
+
         if (isset($params['admin_panel']) && $params['admin_panel']) {
             if (!$_ENV['admin_panel_enabled']) {
                 throw new NotFoundException(__('micro-framework.kernel.adminpanel_disabled'));
@@ -368,7 +374,7 @@ class Kernel
 
         call_user_func_array([$controller, $method], $arguments);
 
-        if (!$controller->viewLoaded && (!isset($controller->params['api']) || $controller->params['api'] !== true)) {
+        if (!$controller->viewLoaded && (!isset($controller->params['api']) || $controller->params['api'] !== true) && $controller->layout !== 'none') {
             $controller->loadView();
         }
 

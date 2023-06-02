@@ -10,10 +10,12 @@ class view extends Controller
     public function renderTest(){
     }
 
-    public function text() : void {
+    public function text(bool $show = true) : void {
         $this->layout = 'none';
 
-        echo 'test text';
+        if ($show) {
+            echo 'test text';
+        }
     }
 
     public function table() : void {

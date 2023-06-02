@@ -20,7 +20,8 @@ class Action {
             $method = $explode[1];
 
             ob_start();
-            $controller = Kernel::loadController($controller, $method);
+            $arguments = array_slice($explode, 2);
+            $controller = Kernel::loadController($controller, $method, $arguments);
 
             if ($type === 'table') {
                 echo $controller->table->render();

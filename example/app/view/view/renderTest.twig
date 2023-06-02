@@ -1,6 +1,7 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-    {{ action('/view/text') }}
+    {{ action('/view/text/0') }}
+    {{ action('/view/text/1') }}
     {{ action('/view/table', 'table') | raw }}
 {% endblock %}

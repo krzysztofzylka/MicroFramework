@@ -126,7 +126,7 @@ trait Render
         }
 
         if ($this->activePaginationLimit) {
-            $this->html .= '<form method="POST" class="float-end me-2"><input type="hidden" name="table_id" value="' . $this->id . '" /><select class="form-select" name="paginationLimit" onchange="this.form.submit()">';
+            $this->html .= '<form method="POST" class="float-end me-2"><input type="hidden" name="table_id" value="' . $this->id . '" /><select class="form-select" name="paginationLimit" ' . ($this->isAjax ? '' : 'onchange="this.form.submit()"') . '>';
 
             foreach ($this->paginationLimits as $limit) {
                 $this->html .= '<option value="' . $limit . '" ' . ($limit === $this->paginationLimit ? 'selected' : '') . '>' . $limit . '</option>';

@@ -19,8 +19,9 @@ class view extends Controller
     }
 
     public function table() : void {
-        $this->layout = 'none';
+        $this->layout = 'table';
 
+        $this->table->isAjax = true;
         $this->table->columns = [
             '1' => [
                 'title' => 'test'

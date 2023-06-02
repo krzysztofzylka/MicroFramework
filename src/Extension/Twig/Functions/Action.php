@@ -24,7 +24,9 @@ class Action {
             $controller = Kernel::loadController($controller, $method, $arguments);
 
             if ($type === 'table') {
-                echo $controller->table->render();
+                if (!$controller->table->isRender) {
+                    echo $controller->table->render();
+                }
             }
 
             return ob_get_clean();

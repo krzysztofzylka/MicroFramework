@@ -10,6 +10,7 @@ use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Render;
 use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Session;
 use Krzysztofzylka\MicroFramework\Model;
 use Krzysztofzylka\MicroFramework\Trait\Log;
+use krzysztofzylka\SimpleLibraries\Library\Request;
 
 /**
  * Table generator
@@ -161,6 +162,18 @@ class Table
     public int $paginationLimitDefault = 20;
 
     /**
+     * Is ajax
+     * @var bool
+     */
+    public bool $isAjax = false;
+
+    /**
+     * Table is rendered
+     * @var bool
+     */
+    public bool $isRender = false;
+
+    /**
      * Initialize table
      * @return void
      * @throws DatabaseException
@@ -205,14 +218,28 @@ class Table
             ];
         }
 
-        $this->html .= '<div class="tableRender table-responsive" id="' . $this->id . '">';
+        $uri = '/' . $this->controller->name . '/' . $this->controller->method . ($this->controller->arguments ? ('/' . implode('/', $this->controller->arguments)) : '');
+
+        if (!Request::isAjaxRequest()) {
+            $this->html .= '<div class="table-render table-responsive' . ($this->isAjax ? ' table-ajax' : '') . '" id="' . $this->id . '" controller="' . $uri . '">';
+        }
+
         $this->renderAction();
         $this->html .= '<table class="table table-sm">';
         $this->renderHeaders();
         $this->renderBody();
         $this->html .= '</table>';
         $this->renderFooter();
-        $this->html .= '</div>';
+
+        if (!Request::isAjaxRequest()) {
+            $this->html .= '</div>';
+        }
+
+        if ($this->isAjax && !Request::isAjaxRequest()) {
+            $this->html .= '<script>$("#' . $this->id . '").table()</script>';
+        }
+
+        $this->isRender = true;
 
         return $this->html;
     }

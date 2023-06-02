@@ -28,6 +28,12 @@ class index extends Controller {
 
     public function table(): void
     {
+    }
+
+    public function tableRender(): void
+    {
+        $this->layout = 'table';
+        $this->table->isAjax = true;
         $this->table->model = $this->loadModel('account');
         $this->table->orderBy = 'account.id DESC';
         $this->table->columns = [
@@ -49,8 +55,6 @@ class index extends Controller {
             ]
         ];
         $this->table->paginationLimit = 5;
-
-        $this->loadView(['table' => $this->table->render()]);
     }
 
     public function table2(): void

@@ -1,5 +1,5 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-    {{ table|raw }}
+    {{ action('/index/tableRender')|raw }}
 {% endblock %}

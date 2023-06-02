@@ -374,8 +374,12 @@ class Kernel
 
         call_user_func_array([$controller, $method], $arguments);
 
-        if (!$controller->viewLoaded && (!isset($controller->params['api']) || $controller->params['api'] !== true) && $controller->layout !== 'none') {
+        if (!$controller->viewLoaded && (!isset($controller->params['api']) || $controller->params['api'] !== true) && !in_array($controller->layout, ['none', 'table'])) {
             $controller->loadView();
+        } elseif ($controller->layout === 'table') {
+            if (!$controller->table->isRender) {
+                echo $controller->table->render();
+            }
         }
 
         return $controller;

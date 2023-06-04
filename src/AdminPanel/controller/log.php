@@ -43,22 +43,22 @@ class log extends Controller
         $this->table->results = array_slice($logs, ($this->table->page - 1) * $this->table->paginationLimit, $this->table->paginationLimit);
         $this->table->columns = [
             'log.logLineNumber' => [
-                'title' => 'Lp.',
+                'title' => __('micro-framework.admin_panel.log.lp'),
                 'width' => 150,
                 'value' => function (Cell $cell) {
                     return '<a class="ajaxlink" href="/admin_panel/log/detail/' . $cell->val . '">' . $cell->val . '</a>';
                 }
             ],
             'log.datetime' => [
-                'title' => 'Date',
+                'title' => __('micro-framework.admin_panel.log.date'),
                 'width' => 220
             ],
             'log.level' => [
-                'title' => 'Level',
+                'title' => __('micro-framework.admin_panel.log.level'),
                 'width' => 100
             ],
             'log.message' => [
-                'title' => 'Message',
+                'title' => __('micro-framework.admin_panel.log.message'),
                 'maxChar' => 100
             ]
         ];

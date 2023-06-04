@@ -1,5 +1,8 @@
 micro-framework:
   name: English
+  yes: Yes
+  no: No
+  coming_soon: Coming soon
   modal:
     close: Close
   view:
@@ -71,3 +74,23 @@ micro-framework:
     line2: Welcome back in a moment
   confirm:
     accept: Continue
+  admin_panel:
+    menu:
+      dashboard: Dashboard
+      logs: Logs
+      account: Account
+      integrations: Integrations
+    accounts:
+      title: Accounts
+      username: Username
+      is_admin: Is admin
+      created: Created
+      modify: Modify
+    log:
+      title: Logi
+      lp: Lp.
+      date: Date
+      level: Level
+      message: Message
+    dashboard:
+      title: Dashboard

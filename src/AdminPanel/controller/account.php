@@ -17,21 +17,21 @@ class account extends Controller
                 'width' => 50
             ],
             'account.username' => [
-                'title' => 'Username'
+                'title' => __('micro-framework.admin_panel.accounts.username')
             ],
             'account.admin' => [
-                'title' => 'Is admin',
+                'title' => __('micro-framework.admin_panel.accounts.is_admin'),
                 'width' => 80,
                 'value' => function (Cell $cell) {
-                    return $cell->val ? 'Yes' : 'No';
+                    return $cell->val ? __('micro-framework.yes') : __('micro-framework.no');
                 }
             ],
             'account.date_created' => [
-                'title' => 'Created',
+                'title' => __('micro-framework.admin_panel.accounts.created'),
                 'width' => 250
             ],
             'account.date_modify' => [
-                'title' => 'Modify',
+                'title' => __('micro-framework.admin_panel.accounts.modify'),
                 'width' => 250
             ]
         ];

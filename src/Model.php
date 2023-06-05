@@ -9,6 +9,7 @@ use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
+use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Memcache\Memcache;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use Krzysztofzylka\MicroFramework\Trait\ModelValidation;
@@ -515,7 +516,7 @@ class Model
      */
     public function memcacheSet(string $key, mixed $value, int $expiration = 0): bool
     {
-        return Memcache::set('model_' . $this->name . '_' . $key, $value, $expiration);
+        return Memcache::set(Account::$accountId . '_model_' . $this->name . '_' . $key, $value, $expiration);
     }
 
     /**
@@ -525,7 +526,7 @@ class Model
      */
     public function memcacheGet(string $key): mixed
     {
-        return Memcache::get('model_' . $this->name . '_' . $key);
+        return Memcache::get(Account::$accountId . '_model_' . $this->name . '_' . $key);
     }
 
     /**

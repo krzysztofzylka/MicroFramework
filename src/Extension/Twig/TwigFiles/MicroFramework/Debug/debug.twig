@@ -1,0 +1,119 @@
+<style>
+    .gg-debug {
+        box-sizing: border-box;
+        position: relative;
+        display: block;
+        transform: scale(var(--ggs,1));
+        width: 12px;
+        height: 18px;
+        border: 2px solid;
+        border-radius: 22px
+    }
+
+    .gg-debug::after,
+    .gg-debug::before {
+        content: "";
+        display: block;
+        box-sizing: border-box;
+        position: absolute
+    }
+
+    .gg-debug::before {
+        width: 8px;
+        height: 4px;
+        border: 2px solid;
+        top: -4px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        border-top: 0
+    }
+
+    .gg-debug::after {
+        background: currentColor;
+        width: 4px;
+        height: 2px;
+        border-radius: 5px;
+        top: 4px;
+        left: 2px;
+        box-shadow:
+                0 4px 0,
+                -6px -2px 0,
+                -6px 2px 0,
+                -6px 6px 0,
+                6px -2px 0,
+                6px 2px 0,
+                6px 6px 0
+    }
+
+    .debug-body {
+        font-size: 0.9em;
+        font-family: monospace;
+    }
+
+    .debug-body td {
+        font-size: 0.9em;
+        font-family: monospace;
+    }
+</style>
+
+<a style="position:fixed; bottom:0; right:0; height: 31px; width: 29px; border-left: 1px; border-top: 1px; background: black;" data-bs-toggle="modal" data-bs-target="#debugModal">
+    <div class="gg-debug" style="left: 9px; top: 9px; color: white;"></div>
+</a>
+
+<div class="modal fade" id="debugModal" tabindex="-1" aria-labelledby="debugModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-body overflow-auto">
+                <div class="row">
+                    <div class="col-2">
+                        <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <button class="btn btn-sm active" data-bs-toggle="pill" data-bs-target="#debug-info" aria-controls="debug-info" aria-selected="true">Informacje</button>
+                            <button class="btn btn-sm" data-bs-toggle="pill" data-bs-target="#debug-times" aria-controls="debug-times">Czasy ładowania</button>
+                            <button class="btn btn-sm" data-bs-toggle="pill" data-bs-target="#debug-sql" aria-controls="debug-sql">SQL</button>
+                            <button class="btn btn-sm" data-bs-toggle="pill" data-bs-target="#debug-authorize" aria-controls="debug-authorize">Autoryzacja</button>
+                            <button class="btn btn-sm" data-bs-toggle="pill" data-bs-target="#debug-table" aria-controls="debug-table">Tabele</button>
+                            <button class="btn btn-sm" data-bs-toggle="pill" data-bs-target="#debug-translaction" aria-controls="debug-translaction">Translacje</button>
+                            <button class="btn btn-sm" data-bs-toggle="pill" data-bs-target="#debug-server" aria-controls="debug-server">Informacje o serwerze</button>
+                            <button class="btn btn-sm" data-bs-toggle="pill" data-bs-target="#debug-models" aria-controls="debug-models">Modele</button>
+                            <button class="btn btn-sm" data-bs-toggle="pill" data-bs-target="#debug-views" aria-controls="debug-views">Widoki</button>
+                            <button class="btn btn-sm" data-bs-toggle="pill" data-bs-target="#debug-memcache" aria-controls="debug-memcache">Memcache</button>
+                            <button class="btn btn-sm btn-secondary" data-bs-dismiss="modal" aria-label="Close">Zamknij</button>
+                        </div>
+                    </div>
+                    <div class="col-10 tab-content debug-body" style="font-size: 0.5em">
+                        <div class="tab-pane fade show active" id="debug-info" role="tabpanel" aria-labelledby="debug-info-tab">
+                            {{ debugTable(data.env) }}
+                        </div>
+                        <div class="tab-pane fade show" id="debug-times" role="tabpanel" aria-labelledby="debug-times-tab">
+                            {{ debugTable(data.times) }}
+                        </div>
+                        <div class="tab-pane fade show" id="debug-sql" role="tabpanel" aria-labelledby="debug-sql-tab">
+                            {{ debugTable(data.sql) }}
+                        </div>
+                        <div class="tab-pane fade" id="debug-authorize" role="tabpanel" aria-labelledby="debug-authorize-tab">
+                            {{ debugTable(data.authorize) }}
+                        </div>
+                        <div class="tab-pane fade" id="debug-table" role="tabpanel" aria-labelledby="debug-table-tab">
+                            {{ debugTable(data.table) }}
+                        </div>
+                        <div class="tab-pane fade" id="debug-translaction" role="tabpanel" aria-labelledby="debug-translaction-tab">
+                            {{ debugTable(data.translation) }}
+                        </div>
+                        <div class="tab-pane fade" id="debug-models" role="tabpanel" aria-labelledby="debug-models-tab">
+                            {{ debugTable(data.models) }}
+                        </div>
+                        <div class="tab-pane fade" id="debug-views" role="tabpanel" aria-labelledby="debug-views-tab">
+                            {{ debugTable(data.views) }}
+                        </div>
+                        <div class="tab-pane fade" id="debug-memcache" role="tabpanel" aria-labelledby="debug-memcache-tab">
+                            {{ debugTable(data.memcache) }}
+                        </div>
+                        <div class="tab-pane fade" id="debug-server" role="tabpanel" aria-labelledby="debug-settings-tab">
+                            {{ serverTable|raw }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

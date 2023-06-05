@@ -67,35 +67,6 @@ class Model
     public ?array $data = null;
 
     /**
-     * Set ID
-     * @param ?int $id
-     * @return Model|false
-     */
-    public function setId(?int $id = null): self|false
-    {
-        if (!isset($this->tableInstance)) {
-            return false;
-        }
-
-        $this->tableInstance->setId($id);
-
-        return $this;
-    }
-
-    /**
-     * Get ID
-     * @return false|int|null
-     */
-    public function getId(): false|null|int
-    {
-        if (!isset($this->tableInstance)) {
-            return false;
-        }
-
-        return $this->tableInstance->getId();
-    }
-
-    /**
      * Select required
      * @param array|null $condition
      * @param array|null $columns
@@ -138,7 +109,17 @@ class Model
         }
 
         try {
-            return $this->tableInstance->find($condition, $columns, $orderBy);
+            if ($_ENV['config_debug']) {
+                $time_start = microtime(true);
+            }
+
+            $find = $this->tableInstance->find($condition, $columns, $orderBy);
+
+            if ($_ENV['config_debug']) {
+                Debug::$data['times']['model_' . $this->name . '_find_' . random_int(0, 99999)] = microtime(true) - $time_start;
+            }
+
+            return $find;
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
@@ -161,55 +142,20 @@ class Model
         }
 
         try {
-            return $this->tableInstance->findAll($condition, $columns, $orderBy, $limit, $groupBy);
+            if ($_ENV['config_debug']) {
+                $time_start = microtime(true);
+            }
+
+            $find = $this->tableInstance->findAll($condition, $columns, $orderBy, $limit, $groupBy);
+
+            if ($_ENV['config_debug']) {
+                Debug::$data['times']['model_' . $this->name . '_findAll_' . random_int(0, 99999)] = microtime(true) - $time_start;
+            }
+
+            return $find;
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
-    }
-
-    /**
-     * Insert
-     * @param array $data
-     * @return bool
-     * @throws DatabaseException
-     */
-    public function insert(array $data): bool
-    {
-        if (!isset($this->tableInstance)) {
-            return false;
-        }
-
-        try {
-            if (!$this->beforeInsert()) {
-                return false;
-            }
-
-            if ($this->tableInstance->insert($data)) {
-                return $this->afterInsert();
-            } else {
-                return false;
-            }
-        } catch (DatabaseManagerException $exception) {
-            throw new DatabaseException($exception->getHiddenMessage());
-        }
-    }
-
-    /**
-     * Before insert
-     * @return bool
-     */
-    public function beforeInsert(): bool
-    {
-        return true;
-    }
-
-    /**
-     * After insert
-     * @return bool
-     */
-    public function afterInsert(): bool
-    {
-        return true;
     }
 
     /**
@@ -226,7 +172,17 @@ class Model
         }
 
         try {
-            return $this->tableInstance->findCount($condition, $groupBy);
+            if ($_ENV['config_debug']) {
+                $time_start = microtime(true);
+            }
+
+            $findCount = $this->tableInstance->findCount($condition, $groupBy);
+
+            if ($_ENV['config_debug']) {
+                Debug::$data['times']['model_' . $this->name . '_findCount_' . random_int(0, 99999)] = microtime(true) - $time_start;
+            }
+
+            return $findCount;
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
@@ -249,55 +205,6 @@ class Model
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
-    }
-
-    /**
-     * Update
-     * @param array $data
-     * @return bool
-     * @throws DatabaseException
-     */
-    public function update(array $data): bool
-    {
-        if (!isset($this->tableInstance)) {
-            return false;
-        }
-
-        try {
-            if (!$this->beforeUpdate()) {
-                return false;
-            }
-
-            if ($this->tableInstance->update($data)) {
-                return $this->afterUpdate();
-            } else {
-                return false;
-            }
-        } catch (DatabaseManagerException $exception) {
-            throw new DatabaseException($exception->getHiddenMessage());
-        }
-    }
-
-    /**
-     * Before update
-     * @param ?string $columnName if updateValue
-     * @param ?string $value if updateValue
-     * @return bool
-     */
-    public function beforeUpdate(?string $columnName = null, ?string $value = null): bool
-    {
-        return true;
-    }
-
-    /**
-     * After update
-     * @param ?string $columnName if updateValue
-     * @param ?string $value if updateValue
-     * @return bool
-     */
-    public function afterUpdate(?string $columnName = null, ?string $value = null): bool
-    {
-        return true;
     }
 
     /**
@@ -326,6 +233,28 @@ class Model
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
+    }
+
+    /**
+     * Before update
+     * @param ?string $columnName if updateValue
+     * @param ?string $value if updateValue
+     * @return bool
+     */
+    public function beforeUpdate(?string $columnName = null, ?string $value = null): bool
+    {
+        return true;
+    }
+
+    /**
+     * After update
+     * @param ?string $columnName if updateValue
+     * @param ?string $value if updateValue
+     * @return bool
+     */
+    public function afterUpdate(?string $columnName = null, ?string $value = null): bool
+    {
+        return true;
     }
 
     /**
@@ -472,6 +401,107 @@ class Model
         }
 
         return false;
+    }
+
+    /**
+     * Get ID
+     * @return false|int|null
+     */
+    public function getId(): false|null|int
+    {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        return $this->tableInstance->getId();
+    }
+
+    /**
+     * Update
+     * @param array $data
+     * @return bool
+     * @throws DatabaseException
+     */
+    public function update(array $data): bool
+    {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        try {
+            if (!$this->beforeUpdate()) {
+                return false;
+            }
+
+            if ($this->tableInstance->update($data)) {
+                return $this->afterUpdate();
+            } else {
+                return false;
+            }
+        } catch (DatabaseManagerException $exception) {
+            throw new DatabaseException($exception->getHiddenMessage());
+        }
+    }
+
+    /**
+     * Set ID
+     * @param ?int $id
+     * @return Model|false
+     */
+    public function setId(?int $id = null): self|false
+    {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        $this->tableInstance->setId($id);
+
+        return $this;
+    }
+
+    /**
+     * Insert
+     * @param array $data
+     * @return bool
+     * @throws DatabaseException
+     */
+    public function insert(array $data): bool
+    {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        try {
+            if (!$this->beforeInsert()) {
+                return false;
+            }
+
+            if ($this->tableInstance->insert($data)) {
+                return $this->afterInsert();
+            } else {
+                return false;
+            }
+        } catch (DatabaseManagerException $exception) {
+            throw new DatabaseException($exception->getHiddenMessage());
+        }
+    }
+
+    /**
+     * Before insert
+     * @return bool
+     */
+    public function beforeInsert(): bool
+    {
+        return true;
+    }
+
+    /**
+     * After insert
+     * @return bool
+     */
+    public function afterInsert(): bool
+    {
+        return true;
     }
 
     /**

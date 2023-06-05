@@ -3,6 +3,9 @@ micro-framework:
   yes: Yes
   no: No
   coming_soon: Coming soon
+  yes: Yes
+  no: No
+  coming_soon: Coming soon
   modal:
     close: Close
   view:
@@ -80,6 +83,7 @@ micro-framework:
       logs: Logs
       account: Account
       integrations: Integrations
+      setting: Settings
     accounts:
       title: Accounts
       username: Username
@@ -94,3 +98,6 @@ micro-framework:
       message: Message
     dashboard:
       title: Dashboard
+    setting:
+      title: Settings
+      clear_memcache: Clear memcache

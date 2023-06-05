@@ -13,6 +13,25 @@ trait Alerts
 {
 
     /**
+     * Alerts and ajax simple function
+     * @throws MicroFrameworkException
+     */
+    public function response(
+        string $message,
+        string $type = 'OK',
+        bool   $reloadPage = false,
+        bool   $closeDialog = false
+    ): never
+    {
+        $this->responseAlert($message, $type, '', [
+            'pageReload' => $reloadPage,
+            'dialog' => [
+                'close' => $closeDialog
+            ]
+        ]);
+    }
+
+    /**
      * Response alert
      * @param string $message
      * @param string $type OK, ERR, INFO, WARNING

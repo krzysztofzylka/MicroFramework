@@ -5,8 +5,8 @@ namespace Krzysztofzylka\MicroFramework;
 use Exception;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
-use Krzysztofzylka\MicroFramework\Extension\Form\Form;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Action;
+use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\DebugTable;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Form as FormTwigCustomFunctions;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Translate;
 use krzysztofzylka\SimpleLibraries\Library\Request;
@@ -14,7 +14,6 @@ use krzysztofzylka\SimpleLibraries\Library\Response;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
-use Twig\TwigFunction;
 
 class View
 {
@@ -70,6 +69,7 @@ class View
             //add custom functions
             new Translate($this->environment);
             new Action($this->environment);
+            new DebugTable($this->environment);
 
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
@@ -140,6 +140,10 @@ class View
      */
     public function render(array $variables = [], ?string $name = null): string
     {
+        if ($_ENV['config_debug']) {
+            $time_start = microtime(true);
+        }
+
         try {
             $this->variables = $variables;
 
@@ -166,7 +170,18 @@ class View
                 $this->environment->setCache(false);
             }
 
-            return $this->environment->render($name . '.twig', $variables);
+            $render = $this->environment->render($name . '.twig', $variables);
+
+            if ($_ENV['config_debug']) {
+                Debug::$data['times']['view_render_' . $name . '_' . random_int(0, 99999)] = microtime(true) - $time_start;
+                Debug::$data['views'][] = [
+                    'name' => $name,
+                    'globalVariables' => $this->getGlobalVariables(true),
+                    'variables' => $this->specialcharsarray($this->variables)
+                ];
+            }
+
+            return $render;
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage());
         }
@@ -174,22 +189,23 @@ class View
 
     /**
      * Generate global variables
+     * @param bool $slim
      * @return array
      */
-    public function getGlobalVariables(): array
+    public function getGlobalVariables(bool $slim = false): array
     {
         $config = [
             'name' => $this->name,
-            'view' => $this,
-            'variables' => $this->variables,
-            'config' => $_ENV,
-            'controller' => $this->controller,
+            'view' => !$slim ? $this : null,
+            'variables' => !$slim ? $this->variables : null,
+            'config' => !$slim ? $_ENV : null,
+            'controller' => !$slim ? $this->controller : null,
             'dialogboxConfig' => '[]',
             'accountId' => Account::$accountId,
             'account' => Account::$account,
             'here' => Kernel::$url ?? null,
             'isAjax' => Request::isAjaxRequest(),
-            'global' => self::$globalVariables
+            'global' => !$slim ? self::$globalVariables : null
         ];
 
         if (isset($this->controller->layout) && $this->controller->layout === 'dialogbox') {
@@ -201,6 +217,17 @@ class View
         }
 
         return $config;
+    }
+
+    private function specialcharsarray(array $array)
+    {
+        $return = [];
+
+        foreach ($array as $name => $value) {
+            $return[$name] = is_array($value) ? $this->specialcharsarray($value) : (is_string($value) ? htmlspecialchars($value) : $value);
+        }
+
+        return $return;
     }
 
 }

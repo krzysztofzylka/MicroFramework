@@ -7,6 +7,7 @@ use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Controller;
+use Krzysztofzylka\MicroFramework\Debug;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use Krzysztofzylka\MicroFramework\Model as ModelClass;
@@ -39,9 +40,18 @@ trait Model
      */
     public function loadModel(string ...$name): ModelClass
     {
+        if ($_ENV['config_debug']) {
+            $time_start = microtime(true);
+        }
+
         if (count($name) > 1) {
             foreach ($name as $singleName) {
                 $lastModel = $this->loadModel($singleName);
+            }
+
+            if ($_ENV['config_debug']) {
+                Debug::$data['times']['model_' . $singleName . '_' . random_int(0, 99999)] = microtime(true) - $time_start;
+                Debug::$data['models'][$singleName] = (Debug::$data['models'][$singleName] ?? 0) + 1;
             }
 
             return $lastModel;
@@ -94,6 +104,11 @@ trait Model
         }
 
         $this->models[Strings::camelizeString(str_replace('\\', '_', $startName), '_')] = $model;
+
+        if ($_ENV['config_debug']) {
+            Debug::$data['times']['model_' . $name . '_' . random_int(0, 99999)] = microtime(true) - $time_start;
+            Debug::$data['models'][$name] = (Debug::$data['models'][$name] ?? 0) + 1;
+        }
 
         return $model;
     }

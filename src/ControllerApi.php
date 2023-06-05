@@ -80,7 +80,8 @@ class ControllerApi extends Controller
      * @throws SelectException
      * @throws TableException
      */
-    public function _autoAuth() : void {
+    public function _autoAuth(): void
+    {
         if ($this->auth) {
             if (isset($_SERVER['PHP_AUTH_USER']) || isset($_SERVER['PHP_AUTH_PW'])) {
                 $username = isset($_SERVER['PHP_AUTH_USER']) ? htmlspecialchars($_SERVER['PHP_AUTH_USER']) : false;

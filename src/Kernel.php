@@ -16,9 +16,9 @@ use Krzysztofzylka\MicroFramework\Exception\NoAuthException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
-use Krzysztofzylka\MicroFramework\Extension\Debug\Debug;
 use Krzysztofzylka\MicroFramework\Extension\Env\Env;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
+use Krzysztofzylka\MicroFramework\Extension\Memcache\Memcache;
 use Krzysztofzylka\MicroFramework\Extension\Statistic\Statistic;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
 use Krzysztofzylka\MicroFramework\Extension\Translation\Translation;
@@ -35,11 +35,20 @@ class Kernel
 {
 
     /**
+     * Parametry kontrolera
+     * @var array
+     */
+    public static array $controllerParams;
+    /**
+     * Url
+     * @var string
+     */
+    public static string $url;
+    /**
      * Project path
      * @var string
      */
     private static string $projectPath;
-
     /**
      * Paths
      * @var array
@@ -60,18 +69,6 @@ class Kernel
         'config' => null,
         'env' => null
     ];
-
-    /**
-     * Parametry kontrolera
-     * @var array
-     */
-    public static array $controllerParams;
-
-    /**
-     * Url
-     * @var string
-     */
-    public static string $url;
 
     /**
      * Init project
@@ -113,10 +110,6 @@ class Kernel
      */
     public static function run(): void
     {
-        if ($_ENV['config_debug']) {
-            Debug::$variables['site_load']['start'] = microtime(true);
-        }
-
         if (!is_null($_ENV['config_timezone'])) {
             date_default_timezone_set($_ENV['config_timezone']);
         }
@@ -128,6 +121,10 @@ class Kernel
         } else {
             ini_set('display_errors', 0);
             ini_set('display_startup_errors', 0);
+        }
+
+        if ($_ENV['config_memcache']) {
+            Memcache::run();
         }
 
         Translation::getTranslationFile(__DIR__ . '/Translations/' . $_ENV['config_translation'] . '.yaml');
@@ -145,7 +142,6 @@ class Kernel
 
                     if (isset(Account::$accountId) && in_array(Account::$accountId, $accountIds)) {
                         $_ENV['config_debug'] = true;
-                        Debug::$variables['site_load']['start'] = microtime(true);
                         DatabaseManager::$connection->setDebug(true);
                     }
                 } catch (Exception) {
@@ -303,6 +299,10 @@ class Kernel
      */
     public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []): Controller
     {
+        if ($_ENV['config_debug']) {
+            $time_start = microtime(true);
+        }
+
         if (empty($params)) {
             $params = $_SESSION['controllerParams'];
         } else {
@@ -382,6 +382,10 @@ class Kernel
             }
         }
 
+        if ($_ENV['config_debug']) {
+            Debug::$data['times']['controller_' . $name . '_' . random_int(0, 99999)] = microtime(true) - $time_start;
+        }
+
         return $controller;
     }
 
@@ -396,24 +400,6 @@ class Kernel
         }
 
         return Request::getAllPostEscapeData();
-    }
-
-    /**
-     * Get path
-     * @param string|null $name controller / model / view
-     * @return string|array|false
-     */
-    public static function getPath(?string $name): string|array|false
-    {
-        if (is_null($name)) {
-            return self::$paths;
-        }
-
-        if (!_Array::inArrayKeys($name, self::$paths)) {
-            return false;
-        }
-
-        return self::$paths[$name];
     }
 
     /**
@@ -467,6 +453,24 @@ class Kernel
     {
         Env::createFromDirectory(__DIR__ . '/Extension/Env/Default');
         Env::createFromDirectory(Kernel::getPath('env'));
+    }
+
+    /**
+     * Get path
+     * @param string|null $name controller / model / view
+     * @return string|array|false
+     */
+    public static function getPath(?string $name): string|array|false
+    {
+        if (is_null($name)) {
+            return self::$paths;
+        }
+
+        if (!_Array::inArrayKeys($name, self::$paths)) {
+            return false;
+        }
+
+        return self::$paths[$name];
     }
 
 }

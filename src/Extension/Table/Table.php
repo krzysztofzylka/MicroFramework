@@ -4,8 +4,8 @@ namespace Krzysztofzylka\MicroFramework\Extension\Table;
 
 use krzysztofzylka\DatabaseManager\Condition;
 use Krzysztofzylka\MicroFramework\Controller;
+use Krzysztofzylka\MicroFramework\Debug;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
-use Krzysztofzylka\MicroFramework\Extension\Debug\Debug;
 use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Render;
 use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Session;
 use Krzysztofzylka\MicroFramework\Model;
@@ -174,74 +174,30 @@ class Table
     public bool $isRender = false;
 
     /**
+     * Execute time
+     * @var float|int
+     */
+    private float $time = 0;
+
+    /**
      * Initialize table
      * @return void
      * @throws DatabaseException
      */
     public function init(): void
     {
+        if ($_ENV['config_debug']) {
+            $time_start = microtime(true);
+        }
+
         $this->conditions = [];
         $this->generateDefaultData();
         $this->session();
-    }
-
-    /**
-     * Render table
-     * @return string
-     * @throws DatabaseException
-     */
-    public function render(): string
-    {
-        $this->session();
-        $this->getResults();
 
         if ($_ENV['config_debug']) {
-            Debug::$variables['table'][] = [
-                'model' => $this->model->name ?? null,
-                'controller' => $this->controller->name ?? null,
-                'columns' => json_decode(json_encode($this->columns), true),
-                'search' => $this->search,
-                'activeSearch' => $this->activeSearch,
-                'page' => $this->page,
-                'pages' => $this->pages,
-                'activePagination' => $this->activePagination,
-                'activePaginationLimit' => $this->activePaginationLimit,
-                'paginationLimitDefault' => $this->paginationLimitDefault,
-                'paginationLimits' => $this->paginationLimits,
-                'paginationLimit' => $this->paginationLimit,
-                'id' => $this->id,
-                'conditions' => json_decode(json_encode($this->conditions), true),
-                'haveCondition' => $this->haveCondition,
-                'session' => $this->session,
-                'limit' => $this->limit,
-                'orderBy' => $this->orderBy
-            ];
+            $time = microtime(true) - $time_start;
+            $this->time += $time;
         }
-
-        $uri = '/' . $this->controller->name . '/' . $this->controller->method . ($this->controller->arguments ? ('/' . implode('/', $this->controller->arguments)) : '');
-
-        if (!Request::isAjaxRequest()) {
-            $this->html .= '<div class="table-render table-responsive' . ($this->isAjax ? ' table-ajax' : '') . '" id="' . $this->id . '" controller="' . $uri . '">';
-        }
-
-        $this->renderAction();
-        $this->html .= '<table class="table table-sm">';
-        $this->renderHeaders();
-        $this->renderBody();
-        $this->html .= '</table>';
-        $this->renderFooter();
-
-        if (!Request::isAjaxRequest()) {
-            $this->html .= '</div>';
-        }
-
-        if ($this->isAjax && !Request::isAjaxRequest()) {
-            $this->html .= '<script>$("#' . $this->id . '").table()</script>';
-        }
-
-        $this->isRender = true;
-
-        return $this->html;
     }
 
     /**
@@ -353,6 +309,82 @@ class Table
                 'paginationLimit' => $this->paginationLimit ?? $this->paginationLimitDefault
             ]);
         }
+    }
+
+    /**
+     * Render table
+     * @return string
+     * @throws DatabaseException
+     */
+    public function render(): string
+    {
+        if ($_ENV['config_debug']) {
+            $time_start = microtime(true);
+        }
+
+        $this->session();
+        $this->getResults();
+
+        if ($_ENV['config_debug']) {
+            ob_start();
+            \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($this->results);
+            $debugResults = ob_get_clean();
+
+            Debug::$data['table'][] = [
+                'id' => $this->id,
+                'isAjax' => $this->isAjax,
+                'model' => $this->model->name ?? null,
+                'controller' => $this->controller->name ?? null,
+                'columns' => json_decode(json_encode($this->columns), true),
+                'search' => $this->search,
+                'activeSearch' => $this->activeSearch,
+                'page' => $this->page,
+                'pages' => $this->pages,
+                'activePagination' => $this->activePagination,
+                'activePaginationLimit' => $this->activePaginationLimit,
+                'paginationLimitDefault' => $this->paginationLimitDefault,
+                'paginationLimits' => $this->paginationLimits,
+                'paginationLimit' => $this->paginationLimit,
+                'conditions' => json_decode(json_encode($this->conditions), true),
+                'haveCondition' => $this->haveCondition,
+                'session' => $this->session,
+                'limit' => $this->limit,
+                'orderBy' => $this->orderBy,
+                'result' => '<details><summary>result</summary>' . $debugResults . '</details>'
+            ];
+        }
+
+        $uri = '/' . $this->controller->name . '/' . $this->controller->method . ($this->controller->arguments ? ('/' . implode('/', $this->controller->arguments)) : '');
+
+        if (!Request::isAjaxRequest()) {
+            $this->html .= '<div class="table-render table-responsive' . ($this->isAjax ? ' table-ajax' : '') . '" id="' . $this->id . '" controller="' . $uri . '">';
+        }
+
+        $this->renderAction();
+        $this->html .= '<table class="table table-sm">';
+        $this->renderHeaders();
+        $this->renderBody();
+        $this->html .= '</table>';
+        $this->renderFooter();
+
+        if (!Request::isAjaxRequest()) {
+            $this->html .= '</div>';
+        }
+
+        if ($this->isAjax && !Request::isAjaxRequest()) {
+            $this->html .= '<script>$("#' . $this->id . '").table()</script>';
+        }
+
+        $this->isRender = true;
+
+        if ($_ENV['config_debug']) {
+            $time = microtime(true) - $time_start;
+            $this->time += $time;
+
+            Debug::$data['times']['table_' . $this->id] = $this->time;
+        }
+
+        return $this->html;
     }
 
     /**

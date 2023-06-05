@@ -80,6 +80,7 @@ micro-framework:
       logs: Logi
       account: Użytkownicy
       integrations: Integracje
+      setting: Ustawienia
     accounts:
       title: Użytkownicy
       username: Użytkownik
@@ -94,3 +95,6 @@ micro-framework:
       message: Treść
     dashboard:
       title: Dashboard
+    setting:
+      title: Ustawienia
+      clear_memcache: Wyczyść memcache

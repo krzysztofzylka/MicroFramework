@@ -35,6 +35,12 @@
                 {{ __('micro-framework.admin_panel.menu.integrations') }}
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/{{ app.config.admin_panel_url }}/setting/index">
+                <i class="fa-solid fa-gear me-1"></i>
+                {{ __('micro-framework.admin_panel.menu.setting') }}
+            </a>
+        </li>
         {{ block("navbar_links", "layout.twig") }}
     </ul>
 {% endblock %}

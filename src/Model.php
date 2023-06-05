@@ -9,8 +9,10 @@ use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
+use Krzysztofzylka\MicroFramework\Extension\Memcache\Memcache;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use Krzysztofzylka\MicroFramework\Trait\ModelValidation;
+use Krzysztofzylka\MicroFramework\Debug;
 use PDOStatement;
 
 /**
@@ -502,6 +504,28 @@ class Model
     public function afterInsert(): bool
     {
         return true;
+    }
+
+    /**
+     * Save memcache
+     * @param string $key
+     * @param mixed $value
+     * @param int $expiration
+     * @return bool
+     */
+    public function memcacheSet(string $key, mixed $value, int $expiration = 0): bool
+    {
+        return Memcache::set('model_' . $this->name . '_' . $key, $value, $expiration);
+    }
+
+    /**
+     * Get memcache
+     * @param string $key
+     * @return mixed
+     */
+    public function memcacheGet(string $key): mixed
+    {
+        return Memcache::get('model_' . $this->name . '_' . $key);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use Exception;
 use krzysztofzylka\DatabaseManager\Exception\SelectException;
 use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
@@ -10,6 +11,11 @@ use Krzysztofzylka\MicroFramework\Extension\Translation\Translation;
 
 class Debug
 {
+
+    /**
+     * Time
+     */
+    public static float $time = 0;
 
     /**
      * Dane debugowania
@@ -63,6 +69,7 @@ class Debug
     {
         $accountData = Account::$account;
         $accountData['account']['password'] = '******';
+        $storage = [];
 
         if (isset(Account::$storage)) {
             $storage = [
@@ -85,7 +92,7 @@ class Debug
     /**
      * Load debug view
      * @return void
-     * @throws Exception\ViewException
+     * @throws ViewException
      */
     public function loadView(): void
     {
@@ -126,6 +133,33 @@ class Debug
         echo '<br /><h5>$_SERVER</h5>';
         \krzysztofzylka\SimpleLibraries\Library\Debug::print_r($_SERVER);
         return ob_get_clean();
+    }
+
+    /**
+     * Start save time
+     * @return void
+     */
+    public static function startTime(): void
+    {
+        self::$time = microtime(true);
+    }
+
+    /**
+     * Save time
+     * @param string $name
+     * @param bool $random
+     * @return void
+     * @throws Exception
+     */
+    public static function endTime(string $name, bool $random = true): void
+    {
+        $time = microtime(true) - self::$time;
+
+        if ($random) {
+            $name .= '_' . random_int(100000, 999999);
+        }
+
+        self::$data['times'][$name] = $time;
     }
 
 }

@@ -90,7 +90,6 @@ class Debug
     public function loadView(): void
     {
         $view = new View();
-        $this->viewLoaded = true;
 
         echo $view->render([
             'data' => self::$data,

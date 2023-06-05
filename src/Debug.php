@@ -154,7 +154,7 @@ class Debug
      * @return void
      * @throws Exception
      */
-    public static function endTime(string $name, int $time = null): void
+    public static function endTime(string $name, float $time = null): void
     {
         if (!$_ENV['config_debug']) {
             return;

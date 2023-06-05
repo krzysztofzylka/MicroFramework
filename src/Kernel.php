@@ -299,10 +299,7 @@ class Kernel
      */
     public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []): Controller
     {
-        if ($_ENV['config_debug']) {
-            $time_start = microtime(true);
-        }
-
+        Debug::startTime();
         if (empty($params)) {
             $params = $_SESSION['controllerParams'];
         } else {
@@ -382,9 +379,7 @@ class Kernel
             }
         }
 
-        if ($_ENV['config_debug']) {
-            Debug::$data['times']['controller_' . $name . '_' . random_int(0, 99999)] = microtime(true) - $time_start;
-        }
+        Debug::endTime('controller_' . $name);
 
         return $controller;
     }

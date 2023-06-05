@@ -381,7 +381,7 @@ class Table
             $time = microtime(true) - $time_start;
             $this->time += $time;
 
-            Debug::$data['times']['table_' . $this->id] = $this->time;
+            Debug::endTime('table_' . $this->id, $this->time);
         }
 
         return $this->html;

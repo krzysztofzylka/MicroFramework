@@ -37,12 +37,11 @@ trait Model
      * @param string ...$name
      * @return ModelClass
      * @throws NotFoundException
+     * @throws Exception
      */
     public function loadModel(string ...$name): ModelClass
     {
-        if ($_ENV['config_debug']) {
-            $time_start = microtime(true);
-        }
+        Debug::startTime();
 
         if (count($name) > 1) {
             foreach ($name as $singleName) {
@@ -50,7 +49,7 @@ trait Model
             }
 
             if ($_ENV['config_debug']) {
-                Debug::$data['times']['model_' . $singleName . '_' . random_int(0, 99999)] = microtime(true) - $time_start;
+                Debug::endTime('model_' . $singleName);
                 Debug::$data['models'][$singleName] = (Debug::$data['models'][$singleName] ?? 0) + 1;
             }
 
@@ -106,7 +105,7 @@ trait Model
         $this->models[Strings::camelizeString(str_replace('\\', '_', $startName), '_')] = $model;
 
         if ($_ENV['config_debug']) {
-            Debug::$data['times']['model_' . $name . '_' . random_int(0, 99999)] = microtime(true) - $time_start;
+            Debug::endTime('model_' . $name);
             Debug::$data['models'][$name] = (Debug::$data['models'][$name] ?? 0) + 1;
         }
 

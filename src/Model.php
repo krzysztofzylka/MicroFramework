@@ -13,7 +13,6 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Memcache\Memcache;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use Krzysztofzylka\MicroFramework\Trait\ModelValidation;
-use Krzysztofzylka\MicroFramework\Debug;
 use PDOStatement;
 
 /**
@@ -104,6 +103,7 @@ class Model
      * @param ?string $orderBy
      * @return array|false
      * @throws DatabaseException
+     * @throws \Exception
      */
     public function find(?array $condition = null, ?array $columns = null, ?string $orderBy = null): array|false
     {
@@ -112,15 +112,9 @@ class Model
         }
 
         try {
-            if ($_ENV['config_debug']) {
-                $time_start = microtime(true);
-            }
-
+            Debug::startTime();
             $find = $this->tableInstance->find($condition, $columns, $orderBy);
-
-            if ($_ENV['config_debug']) {
-                Debug::$data['times']['model_' . $this->name . '_find_' . random_int(0, 99999)] = microtime(true) - $time_start;
-            }
+            Debug::endTime($this->name . '_find');
 
             return $find;
         } catch (DatabaseManagerException $exception) {
@@ -145,15 +139,9 @@ class Model
         }
 
         try {
-            if ($_ENV['config_debug']) {
-                $time_start = microtime(true);
-            }
-
+            Debug::startTime();
             $find = $this->tableInstance->findAll($condition, $columns, $orderBy, $limit, $groupBy);
-
-            if ($_ENV['config_debug']) {
-                Debug::$data['times']['model_' . $this->name . '_findAll_' . random_int(0, 99999)] = microtime(true) - $time_start;
-            }
+            Debug::endTime($this->name . '_findAll');
 
             return $find;
         } catch (DatabaseManagerException $exception) {
@@ -175,15 +163,9 @@ class Model
         }
 
         try {
-            if ($_ENV['config_debug']) {
-                $time_start = microtime(true);
-            }
-
+            Debug::startTime();
             $findCount = $this->tableInstance->findCount($condition, $groupBy);
-
-            if ($_ENV['config_debug']) {
-                Debug::$data['times']['model_' . $this->name . '_findCount_' . random_int(0, 99999)] = microtime(true) - $time_start;
-            }
+            Debug::endTime($this->name . '_findCount');
 
             return $findCount;
         } catch (DatabaseManagerException $exception) {

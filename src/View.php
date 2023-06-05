@@ -140,9 +140,7 @@ class View
      */
     public function render(array $variables = [], ?string $name = null): string
     {
-        if ($_ENV['config_debug']) {
-            $time_start = microtime(true);
-        }
+        Debug::startTime();
 
         try {
             $this->variables = $variables;
@@ -173,7 +171,7 @@ class View
             $render = $this->environment->render($name . '.twig', $variables);
 
             if ($_ENV['config_debug']) {
-                Debug::$data['times']['view_render_' . $name . '_' . random_int(0, 99999)] = microtime(true) - $time_start;
+                Debug::endTime('view_render_' . $name);
                 Debug::$data['views'][] = [
                     'name' => $name,
                     'globalVariables' => $this->getGlobalVariables(true),

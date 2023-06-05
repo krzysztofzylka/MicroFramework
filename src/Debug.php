@@ -141,25 +141,28 @@ class Debug
      */
     public static function startTime(): void
     {
+        if (!$_ENV['config_debug']) {
+            return;
+        }
+
         self::$time = microtime(true);
     }
 
     /**
      * Save time
      * @param string $name
-     * @param bool $random
      * @return void
      * @throws Exception
      */
-    public static function endTime(string $name, bool $random = true): void
+    public static function endTime(string $name, int $time = null): void
     {
-        $time = microtime(true) - self::$time;
-
-        if ($random) {
-            $name .= '_' . random_int(100000, 999999);
+        if (!$_ENV['config_debug']) {
+            return;
         }
 
-        self::$data['times'][$name] = $time;
+        $time = $time ?? microtime(true) - self::$time;
+
+        self::$data['times'][sprintf("%04d", count(self::$data['times']) + 1) . '_' . $name] = $time;
     }
 
 }

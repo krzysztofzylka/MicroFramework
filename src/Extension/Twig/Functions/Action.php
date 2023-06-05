@@ -12,9 +12,7 @@ class Action
     public function __construct(&$environment)
     {
         $formFunction = new TwigFunction('action', function ($name, $type = false) {
-            if ($_ENV['config_debug']) {
-                $time_start = microtime(true);
-            }
+            Debug::startTime();
 
             $explode = explode('/', $name);
 
@@ -36,9 +34,7 @@ class Action
                 }
             }
 
-            if ($_ENV['config_debug']) {
-                Debug::$data['times']['twig_action_' . $name . '_' . $type . '_' . random_int(0, 99999)] = microtime(true) - $time_start;
-            }
+            Debug::endTime('twig_action_' . $name . '_' . $type);
 
             return ob_get_clean();
         });

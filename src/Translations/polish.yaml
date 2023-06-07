@@ -81,6 +81,7 @@ micro-framework:
       account: Użytkownicy
       integrations: Integracje
       setting: Ustawienia
+      statistics: Statystyki
     accounts:
       title: Użytkownicy
       username: Użytkownik

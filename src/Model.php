@@ -69,6 +69,18 @@ class Model
     public ?array $data = null;
 
     /**
+     * Active cache
+     * @var bool
+     */
+    public bool $cache = false;
+
+    /**
+     * Cache data
+     * @var array
+     */
+    public array $cacheData = [];
+
+    /**
      * Select required
      * @param array|null $condition
      * @param array|null $columns
@@ -111,6 +123,14 @@ class Model
             return false;
         }
 
+        if ($this->cache) {
+            $hash = hash('xxh128', json_encode([$condition, $columns, $orderBy]));
+
+            if (isset($this->cacheData[$hash])) {
+                return $this->cacheData[$hash];
+            }
+        }
+
         try {
             Debug::startTime();
             $find = $this->tableInstance->find($condition, $columns, $orderBy);
@@ -138,6 +158,14 @@ class Model
             return false;
         }
 
+        if ($this->cache) {
+            $hash = hash('xxh128', json_encode([$condition, $columns, $orderBy, $limit, $groupBy]));
+
+            if (isset($this->cacheData[$hash])) {
+                return $this->cacheData[$hash];
+            }
+        }
+
         try {
             Debug::startTime();
             $find = $this->tableInstance->findAll($condition, $columns, $orderBy, $limit, $groupBy);
@@ -162,6 +190,14 @@ class Model
             return false;
         }
 
+        if ($this->cache) {
+            $hash = hash('xxh128', json_encode([$condition, $groupBy]));
+
+            if (isset($this->cacheData[$hash])) {
+                return $this->cacheData[$hash];
+            }
+        }
+
         try {
             Debug::startTime();
             $findCount = $this->tableInstance->findCount($condition, $groupBy);
@@ -183,6 +219,14 @@ class Model
     {
         if (!isset($this->tableInstance)) {
             return false;
+        }
+
+        if ($this->cache) {
+            $hash = hash('xxh128', json_encode([$condition]));
+
+            if (isset($this->cacheData[$hash])) {
+                return $this->cacheData[$hash];
+            }
         }
 
         try {
@@ -347,6 +391,18 @@ class Model
      */
     public function query(string $sql): bool|PDOStatement
     {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        if ($this->cache) {
+            $hash = hash('xxh128', $sql);
+
+            if (isset($this->cacheData[$hash])) {
+                return $this->cacheData[$hash];
+            }
+        }
+
         $pdo = DatabaseManager::$connection->getConnection();
 
         return $pdo->query($sql);
@@ -509,6 +565,18 @@ class Model
     public function memcacheGet(string $key): mixed
     {
         return Memcache::get(Account::$accountId . '_model_' . $this->name . '_' . $key);
+    }
+
+    /**
+     * Set cache status
+     * @param bool $isActive
+     * @return Model
+     */
+    public function setCache(bool $isActive = true): self
+    {
+        $this->cache = $isActive;
+
+        return $this;
     }
 
     /**

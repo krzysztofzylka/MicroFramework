@@ -19,8 +19,8 @@ trait Alerts
     public function response(
         string $message,
         string $type = 'OK',
-        bool   $reloadPage = false,
-        bool   $closeDialog = false
+        bool $reloadPage = false,
+        bool $closeDialog = false
     ): never
     {
         $this->responseAlert($message, $type, '', [

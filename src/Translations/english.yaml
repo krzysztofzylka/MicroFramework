@@ -84,6 +84,7 @@ micro-framework:
       account: Account
       integrations: Integrations
       setting: Settings
+      statistics: Statistics
     accounts:
       title: Accounts
       username: Username

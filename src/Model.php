@@ -136,6 +136,10 @@ class Model
             $find = $this->tableInstance->find($condition, $columns, $orderBy);
             Debug::endTime($this->name . '_find');
 
+            if ($this->cache) {
+                $this->cacheData[$hash] = $find;
+            }
+
             return $find;
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
@@ -171,6 +175,10 @@ class Model
             $find = $this->tableInstance->findAll($condition, $columns, $orderBy, $limit, $groupBy);
             Debug::endTime($this->name . '_findAll');
 
+            if ($this->cache) {
+                $this->cacheData[$hash] = $find;
+            }
+
             return $find;
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
@@ -203,6 +211,10 @@ class Model
             $findCount = $this->tableInstance->findCount($condition, $groupBy);
             Debug::endTime($this->name . '_findCount');
 
+            if ($this->cache) {
+                $this->cacheData[$hash] = $findCount;
+            }
+
             return $findCount;
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
@@ -230,7 +242,13 @@ class Model
         }
 
         try {
-            return $this->tableInstance->findIsset($condition);
+            $findIsset = $this->tableInstance->findIsset($condition);
+
+            if ($this->cache) {
+                $this->cacheData[$hash] = $findIsset;
+            }
+
+            return $findIsset;
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
@@ -404,6 +422,10 @@ class Model
         }
 
         $pdo = DatabaseManager::$connection->getConnection();
+
+        if ($this->cache) {
+            $this->cacheData[$hash] = $pdo;
+        }
 
         return $pdo->query($sql);
     }

@@ -8,6 +8,7 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Action;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\DebugTable;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Form as FormTwigCustomFunctions;
+use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Load;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Translate;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Response;
@@ -70,6 +71,7 @@ class View
             new Translate($this->environment);
             new Action($this->environment);
             new DebugTable($this->environment);
+            new Load($this->environment);
 
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);

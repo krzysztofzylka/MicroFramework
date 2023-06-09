@@ -73,10 +73,11 @@ class Kernel
     /**
      * Init project
      * @param string $projectPath
+     * @param bool $createPath
      * @return void
      * @throws SimpleLibraryException
      */
-    public static function initPaths(string $projectPath): void
+    public static function initPaths(string $projectPath, bool $createPath = true): void
     {
         self::$projectPath = $projectPath;
         self::$paths['public'] = $projectPath . '/public';
@@ -94,10 +95,12 @@ class Kernel
         self::$paths['config'] = $projectPath . '/config';
         self::$paths['env'] = $projectPath . '/env';
 
-        foreach (self::$paths as $name => $path) {
-            self::$paths[$name] = File::repairPath($path);
+        if ($createPath) {
+            foreach (self::$paths as $name => $path) {
+                self::$paths[$name] = File::repairPath($path);
 
-            File::mkdir($path, 0755);
+                File::mkdir($path, 0755);
+            }
         }
     }
 

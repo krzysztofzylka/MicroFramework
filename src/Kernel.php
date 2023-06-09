@@ -456,9 +456,9 @@ class Kernel
     /**
      * Get path
      * @param string|null $name controller / model / view
-     * @return string|array|false
+     * @return mixed
      */
-    public static function getPath(?string $name): string|array|false
+    public static function getPath(?string $name): mixed
     {
         if (is_null($name)) {
             return self::$paths;

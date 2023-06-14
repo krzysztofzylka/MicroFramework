@@ -45,7 +45,8 @@ class Table
      *     'value' => '', //custom value
      *     'value' => function ($cell) {
      *       return $cell->val;
-     *     }, //function to custom value
+     *      }, //function to custom value
+     *      'forceSearch' => false
      *   ],
      *   ...
      * ]
@@ -252,6 +253,10 @@ class Table
             $this->haveCondition = true;
 
             foreach (array_keys($this->columns) as $field) {
+                if (!str_contains($field, '.') && !($data['forceSearch'] ?? false)) {
+                    continue;
+                }
+
                 $this->conditions['OR'][] = new Condition($field, 'LIKE', '%' . $this->search . '%');
             }
         }

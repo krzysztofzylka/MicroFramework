@@ -374,8 +374,14 @@ class Kernel
 
         try {
             call_user_func_array([$controller, $method], $arguments);
-        } catch (Exception) {
-            throw new NotFoundException();
+        } catch (\Throwable $exception) {
+            \Krzysztofzylka\MicroFramework\Extension\Log\Log::log(
+                'Błąd wywołania kontrolera',
+                'WARNING',
+                ['exception' => $exception->getMessage(), 'trace' => $exception->getTrace()]
+            );
+
+            throw new MicroFrameworkException('Błędne dane wejściowe.');
         }
 
         if (!$controller->viewLoaded && (!isset($controller->params['api']) || $controller->params['api'] !== true) && !in_array($controller->layout, ['none', 'table'])) {

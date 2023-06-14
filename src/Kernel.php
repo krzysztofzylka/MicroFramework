@@ -372,7 +372,11 @@ class Kernel
             throw new MicroFrameworkException($exception->getMessage(), $exception->getCode());
         }
 
-        call_user_func_array([$controller, $method], $arguments);
+        try {
+            call_user_func_array([$controller, $method], $arguments);
+        } catch (Exception) {
+            throw new NotFoundException();
+        }
 
         if (!$controller->viewLoaded && (!isset($controller->params['api']) || $controller->params['api'] !== true) && !in_array($controller->layout, ['none', 'table'])) {
             $controller->loadView();

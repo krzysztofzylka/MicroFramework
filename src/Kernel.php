@@ -67,7 +67,8 @@ class Kernel
         'logs' => null,
         'database_updater' => null,
         'config' => null,
-        'env' => null
+        'env' => null,
+        'service' => null
     ];
 
     /**
@@ -94,6 +95,7 @@ class Kernel
         self::$paths['assets'] = self::$paths['public'] . '/assets';
         self::$paths['config'] = $projectPath . '/config';
         self::$paths['env'] = $projectPath . '/env';
+        self::$paths['service'] = $projectPath . '/service';
 
         if ($createPath) {
             foreach (self::$paths as $name => $path) {

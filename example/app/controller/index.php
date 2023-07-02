@@ -4,8 +4,8 @@ namespace app\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
-use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Storage\Storage;
+use Krzysztofzylka\MicroFramework\Service;
 
 class index extends Controller {
 
@@ -116,6 +116,11 @@ class index extends Controller {
 
     public function dialogboxClose(): void {
         $this->responseAlert('Zamknieto dialogbox i przeładowano stronę główną.', 'OK', '', ['pageReload' => true, 'dialog' => ['close' => true]]);
+    }
+
+    public function service(): void {
+        dump(Service::loadService('test_service')->test());
+        exit;
     }
 
 }

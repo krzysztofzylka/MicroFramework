@@ -10,25 +10,11 @@ use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
  */
 class Service {
 
-    use \Krzysztofzylka\MicroFramework\Trait\Model;
-
     /**
      * Loaded services list
      * @var array
      */
     private static array $LOADED_SERVICES = [];
-
-    /**
-     * Params
-     * @var array
-     */
-    public array $params = [];
-
-    /**
-     * Data
-     * @var array
-     */
-    public array $data = [];
 
     /**
      * Load service

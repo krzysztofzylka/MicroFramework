@@ -86,7 +86,7 @@ class index extends Controller {
     }
 
     public function alertRedirect() {
-        $this->responseAlert('alert', 'OK', '', ['redirect' => '/index/table']);
+        $this->responseAlert('Test alert', 'OK', '', ['redirect' => '/index/table']);
     }
 
     public function alert2() {

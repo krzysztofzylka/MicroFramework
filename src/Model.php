@@ -427,6 +427,8 @@ class Model
             $this->cacheData[$hash] = $pdo;
         }
 
+        DatabaseManager::setLastSql($sql);
+
         return $pdo->query($sql);
     }
 

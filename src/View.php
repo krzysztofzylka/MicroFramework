@@ -205,8 +205,13 @@ class View
             'account' => Account::$account,
             'here' => Kernel::$url ?? null,
             'isAjax' => Request::isAjaxRequest(),
-            'global' => !$slim ? self::$globalVariables : null
+            'global' => !$slim ? self::$globalVariables : null,
+            'redirectAlert' => $_SESSION['redirectAlert'] ?? null
         ];
+
+        if (isset($_SESSION['redirectAlert'])) {
+            unset($_SESSION['redirectAlert']);
+        }
 
         if (isset($this->controller->layout) && $this->controller->layout === 'dialogbox') {
             $config['dialogboxConfig'] = json_encode([

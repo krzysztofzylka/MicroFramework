@@ -12,5 +12,11 @@
         var dialogboxConfig = {
             url: '{{ app.here }}'
         };
+
+        {% if app.redirectAlert is not empty %}
+            $(document).ready(function() {
+                $(this).ajaxlink('toast', JSON.parse('{{ app.redirectAlert|raw }}'))
+            });
+        {% endif %}
     </script>
 {% endmacro %}

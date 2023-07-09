@@ -48,6 +48,10 @@ trait Alerts
             throw new MicroFrameworkException('Type error');
         }
 
+        if (!empty($message) && $params['redirect']) {
+            $_SESSION['redirectAlert'] = json_encode(['message' => $message, 'type' => $type, 'title' => $title]);
+        }
+
         (new Response())->json([
             'message' => $message,
             'title' => $title,

@@ -1,3 +1,8 @@
+v0.0.20
+Micro-framework
+    - Fix query
+    - Fix redirect with alert
+
 v0.0.19-alpha
 Micro-framework
     - Storage extension

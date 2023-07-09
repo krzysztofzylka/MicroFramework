@@ -2,6 +2,7 @@ v0.0.20
 Micro-framework
     - Fix query
     - Fix redirect with alert
+    - Fix database 1688329365 script
 
 v0.0.19-alpha
 Micro-framework

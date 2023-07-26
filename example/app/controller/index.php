@@ -81,6 +81,34 @@ class index extends Controller {
         $this->loadView(['table' => $this->table->render()], 'table');
     }
 
+    public function table3(): void
+    {
+    }
+
+    public function table3Render(): void
+    {
+        $this->layout = 'table';
+        $this->table->isAjax = true;
+        $this->table->model = $this->loadModel('example');
+        $this->table->columns = [
+            'example.id' => [
+                'title' => 'ID'
+            ],
+            'example.name' => [
+                'title' => 'Name',
+                'wordBreak' => true
+            ],
+            'example.status' => [
+                'title' => 'Status'
+            ],
+            'example.date_modify' => [
+                'title' => 'Modify',
+                'noWrap' => true
+            ]
+        ];
+        $this->table->paginationLimit = 5;
+    }
+
     public function alert() {
         $this->responseAlert('alert', 'OK', '', ['pageReload' => true]);
     }

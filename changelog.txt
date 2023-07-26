@@ -3,6 +3,9 @@ Micro-framework
     - Fix query
     - Fix redirect with alert
     - Fix database 1688329365 script
+    - Fix view throw exception (more info)
+    - Fix Twig RuntimeError
+    - Add wordBreak and noWrap to table parameters
 
 v0.0.19-alpha
 Micro-framework

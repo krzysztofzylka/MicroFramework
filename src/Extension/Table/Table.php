@@ -46,7 +46,8 @@ class Table
      *     'value' => function ($cell) {
      *       return $cell->val;
      *      }, //function to custom value
-     *      'forceSearch' => false
+     *      'forceSearch' => false,
+     *      'wordBreak' => true
      *   ],
      *   ...
      * ]

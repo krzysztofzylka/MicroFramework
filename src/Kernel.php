@@ -27,6 +27,7 @@ use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\_Array;
 use krzysztofzylka\SimpleLibraries\Library\File;
 use krzysztofzylka\SimpleLibraries\Library\Request;
+use Twig\Error\RuntimeError;
 
 /**
  * Kernel
@@ -175,28 +176,36 @@ class Kernel
 
         $controller = $explode[0];
 
-        if ($_ENV['api_enabled'] && $controller === $_ENV['api_url']) {
-            $controller = $explode[1] ?? $_ENV['config_default_controller'];
-            $method = $explode[2] ?? $_ENV['config_default_method'];
-            $arguments = array_slice($explode, 3);
+        try {
+            if ($_ENV['api_enabled'] && $controller === $_ENV['api_url']) {
+                $controller = $explode[1] ?? $_ENV['config_default_controller'];
+                $method = $explode[2] ?? $_ENV['config_default_method'];
+                $arguments = array_slice($explode, 3);
 
-            self::init($controller, $method, $arguments, ['api' => true]);
-        } elseif ($_ENV['admin_panel_enabled'] && $controller === $_ENV['admin_panel_url']) {
-            $controller = $explode[1] ?? $_ENV['config_default_controller'];
-            $method = $explode[2] ?? $_ENV['config_default_method'];
-            $arguments = array_slice($explode, 3);
+                self::init($controller, $method, $arguments, ['api' => true]);
+            } elseif ($_ENV['admin_panel_enabled'] && $controller === $_ENV['admin_panel_url']) {
+                $controller = $explode[1] ?? $_ENV['config_default_controller'];
+                $method = $explode[2] ?? $_ENV['config_default_method'];
+                $arguments = array_slice($explode, 3);
 
-            if (empty($controller)) {
-                $controller = $method;
-                $method = $_ENV['config_default_method'];
+                if (empty($controller)) {
+                    $controller = $method;
+                    $method = $_ENV['config_default_method'];
+                }
+
+                self::init($controller, $method, $arguments, ['admin_panel' => true]);
+            } else {
+                $method = $explode[1] ?? $_ENV['config_default_method'];
+                $arguments = array_slice($explode, 2);
+
+                self::init($controller, $method, $arguments);
+            }
+        } catch (\Throwable $throwable) {
+            if ($throwable instanceOf RuntimeError && $throwable->getPrevious()) {
+                $throwable = $throwable->getPrevious();
             }
 
-            self::init($controller, $method, $arguments, ['admin_panel' => true]);
-        } else {
-            $method = $explode[1] ?? $_ENV['config_default_method'];
-            $arguments = array_slice($explode, 2);
-
-            self::init($controller, $method, $arguments);
+            throw $throwable;
         }
     }
 

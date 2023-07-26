@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework;
 
 use Exception;
+use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Action;
@@ -98,13 +99,8 @@ class View
      */
     public function renderError(int $code, Exception $exception, string $name = 'MicroFramework/Layout/error'): string
     {
-        $hiddenMessage = false;
-
-        if (method_exists($exception, 'getHiddenMessage')) {
-            $hiddenMessage = $exception->getHiddenMessage();
-        }
-
         http_response_code($code);
+        $hiddenMessage = $exception instanceof MicroFrameworkException ? $exception->getHiddenMessage() : false;
 
         if (isset(Kernel::$controllerParams['api']) && Kernel::$controllerParams['api']) {
             $data = [
@@ -183,6 +179,10 @@ class View
 
             return $render;
         } catch (Exception $exception) {
+            if ($this->controller) {
+                throw $exception;
+            }
+
             throw new ViewException($exception->getMessage());
         }
     }

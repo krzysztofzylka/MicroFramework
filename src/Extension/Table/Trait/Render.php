@@ -77,16 +77,26 @@ trait Render
             $this->html .= '<tr>';
 
             foreach ($this->columns as $columnKey => $column) {
-                $style = '';
+                $style = [];
                 $cell = new Cell();
                 $cell->val = _Array::getFromArrayUsingString($columnKey, $result);
                 $cell->data = $result;
+                $wordBreak = $column['wordBreak'] ?? false;
+                $noWrap = $column['noWrap'] ?? false;
 
                 if (isset($column['width'])) {
-                    $style .= 'width:' . (int)$column['width'] . 'px;';
+                    $style[] = 'width:' . (int)$column['width'] . 'px';
                 }
 
-                $this->html .= '<td style="' . $style . '">';
+                if ($wordBreak) {
+                    $style[] = 'word-break: break-all';
+                }
+
+                if ($noWrap) {
+                    $style[] = 'white-space: nowrap';
+                }
+
+                $this->html .= '<td style="' . implode('; ', $style) . '">';
 
                 if (isset($column['value']) && is_string($column['value'])) {
                     $value = $column['value'];

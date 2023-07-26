@@ -5,5 +5,5 @@
 {% endblock %}
 
 {% block content %}
-    {{ table|raw }}
+    {{ action('/account/indexTable', 'table')|raw }}
 {% endblock %}

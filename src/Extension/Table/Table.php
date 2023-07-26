@@ -360,7 +360,10 @@ class Table
             ];
         }
 
-        $uri = '/' . $this->controller->name . '/' . $this->controller->method . ($this->controller->arguments ? ('/' . implode('/', $this->controller->arguments)) : '');
+        $uri = ($this->controller->params['admin_panel'] ? ('/' . $_ENV['admin_panel_url']) : '')
+            . '/' . $this->controller->name
+            . '/' . $this->controller->method
+            . ($this->controller->arguments ? ('/' . implode('/', $this->controller->arguments)) : '');
 
         if (!Request::isAjaxRequest()) {
             $this->html .= '<div class="table-render table-responsive' . ($this->isAjax ? ' table-ajax' : '') . '" id="' . $this->id . '" controller="' . $uri . '">';

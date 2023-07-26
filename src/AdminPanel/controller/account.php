@@ -10,6 +10,12 @@ class account extends Controller
 
     public function index(): void
     {
+    }
+
+    public function indexTable(): void
+    {
+        $this->layout = 'table';
+        $this->table->isAjax = true;
         $this->table->model = $this->loadModel('account');
         $this->table->columns = [
             'account.id' => [
@@ -35,8 +41,6 @@ class account extends Controller
                 'width' => 250
             ]
         ];
-
-        $this->loadView(['table' => $this->table->render()]);
     }
 
     public function logout(): void

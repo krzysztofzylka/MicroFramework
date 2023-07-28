@@ -58,7 +58,12 @@ class FormHelper
      * @return ?string
      * @ignore
      */
-    public static function getData(string $name, ?array &$params = null, array &$attributes = [], ?array $postData = null): mixed
+    public static function getData(
+        string $name,
+        ?array &$params = null,
+        array &$attributes = [],
+        ?array $postData = null
+    ): mixed
     {
         $generatedArray = '["' . implode('"]["', explode('/', $name)) . '"]';
 

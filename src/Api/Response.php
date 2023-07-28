@@ -24,8 +24,7 @@ class Response
      */
     public function json(array $data): never
     {
-        $response = new \krzysztofzylka\SimpleLibraries\Library\Response();
-        $response->json($data);
+        (new \krzysztofzylka\SimpleLibraries\Library\Response())->json($data);
     }
 
     /**

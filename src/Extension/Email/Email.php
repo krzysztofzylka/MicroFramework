@@ -4,7 +4,6 @@ namespace Krzysztofzylka\MicroFramework\Extension\Email;
 
 use Exception;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
-use Krzysztofzylka\MicroFramework\Extension\Email\Enum\PredefinedConfig;
 use Krzysztofzylka\MicroFramework\Extension\Email\Extra\SendEmail;
 use Krzysztofzylka\MicroFramework\Extension\Email\PredefinedConfig\Gmail;
 use Krzysztofzylka\MicroFramework\Trait\Log;

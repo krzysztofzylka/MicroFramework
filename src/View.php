@@ -229,7 +229,9 @@ class View
         $return = [];
 
         foreach ($array as $name => $value) {
-            $return[$name] = is_array($value) ? $this->specialcharsarray($value) : (is_string($value) ? htmlspecialchars($value) : $value);
+            $return[$name] = is_array($value)
+                ? $this->specialcharsarray($value)
+                : (is_string($value) ? htmlspecialchars($value) : $value);
         }
 
         return $return;

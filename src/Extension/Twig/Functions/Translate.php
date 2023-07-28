@@ -4,9 +4,11 @@ namespace Krzysztofzylka\MicroFramework\Extension\Twig\Functions;
 
 use Twig\TwigFunction;
 
-class Translate {
+class Translate
+{
 
-    public function __construct(&$environment) {
+    public function __construct(&$environment)
+    {
         $translationFunction = new TwigFunction('__', function (string $name) {
             return __($name);
         });

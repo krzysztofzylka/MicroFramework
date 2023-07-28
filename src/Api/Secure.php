@@ -28,13 +28,15 @@ class Secure
      */
     public function contentIsJson(): void
     {
-        if (!Json::isJson($this->controller->getBodyContent())) {
-            $this->controller->response->error(
-                'Bad request',
-                400,
-                'Body is not json'
-            );
+        if (Json::isJson($this->controller->getBodyContent())) {
+            return;
         }
+
+        $this->controller->response->error(
+            'Bad request',
+            400,
+            'Body is not json'
+        );
     }
 
     /**
@@ -48,13 +50,15 @@ class Secure
         $contentBodyKeys = array_keys($contentBody);
 
         foreach ($keyList as $key) {
-            if (!in_array($key, $contentBodyKeys)) {
-                $this->controller->response->error(
-                    'Invalid input data',
-                    400,
-                    'Require ' . $key
-                );
+            if (in_array($key, $contentBodyKeys)) {
+                continue;
             }
+
+            $this->controller->response->error(
+                'Invalid input data',
+                400,
+                'Require ' . $key
+            );
         }
     }
 
@@ -69,15 +73,17 @@ class Secure
             $ips = [$ips];
         }
 
-        if (!in_array(Client::getIP(), $ips)) {
-            $this->log('Access failed', 'WARNING', ['ip' => Client::getIP()]);
-
-            $this->controller->response->error(
-                'Not authorized',
-                401,
-                'IP address is incorrect'
-            );
+        if (in_array(Client::getIP(), $ips)) {
+            return;
         }
+
+        $this->log('Access failed', 'WARNING', ['ip' => Client::getIP()]);
+
+        $this->controller->response->error(
+            'Not authorized',
+            401,
+            'IP address is incorrect'
+        );
     }
 
     /**
@@ -87,19 +93,21 @@ class Secure
      */
     public function allowRequestMethod(string|array $method): void
     {
-        $method = is_string($method) ? [$method] : $method;
+        $method = !is_array($method) ? [$method] : $method;
 
         foreach ($method as $key => $methodValue) {
             $method[$key] = strtolower($methodValue);
         }
 
-        if (!in_array(strtolower($this->controller->getRequestMethod()), $method)) {
-            $this->controller->response->error(
-                'Invalid method',
-                400,
-                'Accepted method: ' . strtoupper(implode(',', $method))
-            );
+        if (in_array(strtolower($this->controller->getRequestMethod()), $method)) {
+            return;
         }
+
+        $this->controller->response->error(
+            'Invalid method',
+            400,
+            'Accepted method: ' . strtoupper(implode(',', $method))
+        );
     }
 
 }

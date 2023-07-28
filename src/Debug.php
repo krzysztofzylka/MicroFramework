@@ -18,7 +18,7 @@ class Debug
     public static float $time = 0;
 
     /**
-     * Dane debugowania
+     * Debug data
      * @var array
      */
     public static array $data = [
@@ -52,7 +52,12 @@ class Debug
         self::$data['env']['logger_api_key'] = '******';
 
         foreach (self::$data['times'] as $id => $time) {
-            self::$data['times'][$id] = number_format(str_contains($time, 'E-5') ? 0 : $time, 5, '.', '') . 's';
+            self::$data['times'][$id] = number_format(
+                str_contains($time, 'E-5') ? 0 : $time,
+                5,
+                '.',
+                ''
+                ) . 's';
         }
 
         $this->loadView();

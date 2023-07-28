@@ -2,10 +2,23 @@
 
 namespace Krzysztofzylka\MicroFramework\Trait\Controller;
 
+use Krzysztofzylka\MicroFramework\Exception\ViewException;
+
 trait Confirm
 {
 
-    public function confirmAction(?string $message = 'Czy na pewno chcesz wykonać tą operację?', string $title = 'Powierdzenie wykonania operacji'): bool
+    /**
+     * Confirm action
+     * @param string|null $message
+     * @param string $title
+     * @return bool
+     * @throws ViewException
+     * @todo translate
+     */
+    public function confirmAction(
+        ?string $message = 'Czy na pewno chcesz wykonać tą operację?',
+        string $title = 'Powierdzenie wykonania operacji'
+    ): bool
     {
         if (isset($this->data['confirmAction']) && $this->data['confirmAction']) {
             return true;

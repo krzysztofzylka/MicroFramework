@@ -97,12 +97,18 @@ trait Model
                 $model->transactionInstance = new Transaction();
             }
         } catch (Exception $exception) {
-            $this->log(__('micro-framework.model.fail_load', ['name' => $name]), 'ERR', ['name' => $startName, 'class' => $class, 'exception' => $exception]);
+            $this->log(
+                __('micro-framework.model.fail_load', ['name' => $name]),
+                'ERR',
+                ['name' => $startName, 'class' => $class, 'exception' => $exception]
+            );
 
             throw new NotFoundException(__('micro-framework.model.not_found', ['name' => $startName]));
         }
 
-        $this->models[Strings::camelizeString(str_replace('\\', '_', $startName), '_')] = $model;
+        $modelName = Strings::camelizeString(str_replace('\\', '_', $startName), '_');
+
+        $this->models[$modelName] = $model;
 
         if ($_ENV['config_debug']) {
             Debug::endTime('model_' . $name);

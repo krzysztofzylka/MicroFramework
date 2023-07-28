@@ -8,7 +8,8 @@ use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 /**
  * Services
  */
-class Service {
+class Service
+{
 
     /**
      * Loaded services list
@@ -23,7 +24,8 @@ class Service {
      * @return Service
      * @throws MicroFrameworkException
      */
-    public static function loadService(string $mainName, bool $single = false) : Service {
+    public static function loadService(string $mainName, bool $single = false) : Service
+    {
         if (!$single && isset(self::$LOADED_SERVICES[$mainName])) {
             return self::$LOADED_SERVICES[$mainName];
         }

@@ -28,10 +28,8 @@ class Action
             $arguments = array_slice($explode, 2);
             $controller = Kernel::loadController($controller, $method, $arguments);
 
-            if ($type === 'table') {
-                if (!$controller->table->isRender) {
-                    echo $controller->table->render();
-                }
+            if ($type === 'table' && !$controller->table->isRender) {
+                echo $controller->table->render();
             }
 
             Debug::endTime('twig_action_' . $name . '_' . $type);

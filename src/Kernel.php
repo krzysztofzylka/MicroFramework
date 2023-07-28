@@ -18,6 +18,7 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
 use Krzysztofzylka\MicroFramework\Extension\Env\Env;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
+use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Extension\Memcache\Memcache;
 use Krzysztofzylka\MicroFramework\Extension\Statistic\Statistic;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
@@ -40,16 +41,19 @@ class Kernel
      * @var array
      */
     public static array $controllerParams;
+
     /**
      * Url
      * @var string
      */
     public static string $url;
+
     /**
      * Project path
      * @var string
      */
     private static string $projectPath;
+
     /**
      * Paths
      * @var array
@@ -274,7 +278,10 @@ class Kernel
                     'code' => 500
                 ]
             ]);
-        } elseif ($_ENV['update_block_site'] && (!isset($params['api']) || isset($params['api']) && !$params['api'])) {
+        } elseif ($_ENV['update_block_site']
+            && (!isset($params['api'])
+                || isset($params['api']) && !$params['api'])
+        ) {
             $view = new View();
             echo $view->render([], $_ENV['update_view']);
 
@@ -311,7 +318,12 @@ class Kernel
      * @throws NoAuthException
      * @throws MicroFrameworkException
      */
-    public static function loadController(string $name, string $method = 'index', array $arguments = [], array $params = []): Controller
+    public static function loadController(
+        string $name,
+        string $method = 'index',
+        array $arguments = [],
+        array $params = []
+    ): Controller
     {
         Debug::startTime();
         if (empty($params)) {
@@ -386,7 +398,7 @@ class Kernel
         try {
             call_user_func_array([$controller, $method], $arguments);
         } catch (\Throwable $exception) {
-            \Krzysztofzylka\MicroFramework\Extension\Log\Log::log(
+            Log::log(
                 'Błąd wywołania kontrolera',
                 'WARNING',
                 ['exception' => $exception->getMessage(), 'trace' => $exception->getTrace()]
@@ -395,7 +407,10 @@ class Kernel
             throw new MicroFrameworkException('Błędne dane wejściowe.');
         }
 
-        if (!$controller->viewLoaded && (!isset($controller->params['api']) || $controller->params['api'] !== true) && !in_array($controller->layout, ['none', 'table'])) {
+        if (!$controller->viewLoaded
+            && (!isset($controller->params['api']) || $controller->params['api'] !== true)
+            && !in_array($controller->layout, ['none', 'table'])
+        ) {
             $controller->loadView();
         } elseif ($controller->layout === 'table') {
             if (!$controller->table->isRender) {

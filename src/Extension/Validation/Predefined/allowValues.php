@@ -18,7 +18,9 @@ class allowValues
     public function __construct($value, $key, $data)
     {
         if (!in_array($value, $data)) {
-            throw new ValidationException(__('micro-framework.validation.predefined.allow_values', ['valueList' => implode(', ', $data)]));
+            throw new ValidationException(
+                __('micro-framework.validation.predefined.allow_values', ['valueList' => implode(', ', $data)])
+            );
         }
     }
 

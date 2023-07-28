@@ -73,7 +73,10 @@ class Log
      */
     private static function getDatetime(): string
     {
-        return DateTime::createFromFormat('U.u', sprintf('%.f', microtime(true)))->format('Y-m-d H:i:s.u');
+        return DateTime::createFromFormat(
+            'U.u',
+            sprintf('%.f', microtime(true))
+        )->format('Y-m-d H:i:s.u');
     }
 
 }

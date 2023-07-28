@@ -331,7 +331,12 @@ class Model
      * @param ?string $foreignKey
      * @return $this
      */
-    public function bind(BindType|array $bind, string $tableName = null, ?string $primaryKey = null, ?string $foreignKey = null): self
+    public function bind(
+        BindType|array $bind,
+        string $tableName = null,
+        ?string $primaryKey = null,
+        ?string $foreignKey = null
+    ): self
     {
         if (!isset($this->tableInstance)) {
             return $this;
@@ -614,7 +619,10 @@ class Model
             return $this->models[$name];
         }
 
-        return trigger_error(__('micro-framework.model.undefined_property', ['name' => $name]), E_USER_WARNING);
+        return trigger_error(
+            __('micro-framework.model.undefined_property', ['name' => $name]),
+            E_USER_WARNING
+        );
     }
 
 }

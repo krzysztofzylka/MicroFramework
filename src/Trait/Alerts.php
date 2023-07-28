@@ -40,7 +40,12 @@ trait Alerts
      * @return never
      * @throws MicroFrameworkException
      */
-    public function responseAlert(string $message, string $type = 'OK', string $title = '', array $params = []): never
+    public function responseAlert(
+        string $message,
+        string $type = 'OK',
+        string $title = '',
+        array $params = []
+    ): never
     {
         $type = strtoupper($type);
 

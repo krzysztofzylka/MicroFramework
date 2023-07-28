@@ -239,9 +239,9 @@ class Table
         $this->getSession();
 
         if (isset($this->session['search']) || isset($this->data['search'])) {
-            $this->search = !is_null($this->session) && isset($this->session['search']) && !isset($this->data['search'])
+            $this->search = ((!is_null($this->session) && isset($this->session['search']) && !isset($this->data['search']))
                 ? $this->session['search']
-                : $this->data['search'] ?? '';
+                : $this->data['search']) ?? '';
         }
 
         if ($this->activePaginationLimit && isset($this->session['paginationLimit']) || isset($this->data['paginationLimit'])) {
@@ -412,7 +412,12 @@ class Table
                 $this->conditions = null;
             }
 
-            $this->results = $this->model->findAll($this->conditions, null, $this->orderBy, $this->limit) ?: [];
+            $this->results = $this->model->findAll(
+                $this->conditions,
+                null,
+                $this->orderBy,
+                $this->limit
+            ) ?: [];
         }
     }
 

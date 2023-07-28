@@ -99,15 +99,15 @@ class Statistic
             $url = 'http://www.geoplugin.net/php.gp?ip=' . $ip;
             $data = unserialize(file_get_contents($url));
 
-            if ($data['geoplugin_status'] === 200) {
-                return [
-                    'continent' => $data['geoplugin_continentName'] ?? null,
-                    'country' => $data['geoplugin_countryName'] ?? null,
-                    'city' => $data['geoplugin_city'] ?? null
-                ];
+            if ($data['geoplugin_status'] !== 200) {
+                return [];
             }
 
-            return [];
+            return [
+                'continent' => $data['geoplugin_continentName'] ?? null,
+                'country' => $data['geoplugin_countryName'] ?? null,
+                'city' => $data['geoplugin_city'] ?? null
+            ];
         } catch (Exception $exception) {
             $this->log('Geoplugin problem', 'ERR', ['exception' => $exception, 'ip' => $ip, 'url' => $url]);
 

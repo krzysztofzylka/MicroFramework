@@ -21,9 +21,7 @@ function dump(...$data): void
  */
 function dumpe(...$data): void
 {
-    echo '<pre>';
-    var_dump($data);
-    echo '</pre>';
+    dump(...$data);
     exit;
 }
 

@@ -108,7 +108,13 @@ trait Render
 
                 if (isset($column['maxChar']) && is_int($column['maxChar'])) {
                     if (mb_strlen($value) > $column['maxChar']) {
-                        $value = mb_strimwidth(Strings::removeLineBreaks($value), 0, $column['maxChar'], '...', 'UTF-8');
+                        $value = mb_strimwidth(
+                            Strings::removeLineBreaks($value),
+                            0,
+                            $column['maxChar'],
+                            '...',
+                            'UTF-8'
+                        );
                     }
                 }
 

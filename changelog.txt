@@ -8,6 +8,8 @@ Micro-framework
     - Add wordBreak and noWrap to table parameters
     - Fix redirect exception in alert
     - Fix ajax table in admin panel
+    - Reformat code
+    - Fix getBodyContent return
 
 v0.0.19-alpha
 Micro-framework

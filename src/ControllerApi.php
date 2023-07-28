@@ -71,6 +71,8 @@ class ControllerApi extends Controller
 
                 return json_decode(Request::getInputContents(), true);
         }
+
+        return false;
     }
 
     /**

@@ -205,7 +205,7 @@ class Kernel
                 self::init($controller, $method, $arguments);
             }
         } catch (\Throwable $throwable) {
-            if ($throwable instanceOf RuntimeError && $throwable->getPrevious()) {
+            if ($throwable instanceof RuntimeError && $throwable->getPrevious()) {
                 $throwable = $throwable->getPrevious();
             }
 

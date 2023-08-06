@@ -57,7 +57,7 @@ class Debug
                 5,
                 '.',
                 ''
-                ) . 's';
+            ) . 's';
         }
 
         $this->loadView();

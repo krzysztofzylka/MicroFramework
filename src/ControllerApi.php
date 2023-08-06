@@ -11,6 +11,7 @@ use Krzysztofzylka\MicroFramework\Api\Enum\ContentType;
 use Krzysztofzylka\MicroFramework\Api\Response;
 use Krzysztofzylka\MicroFramework\Api\Secure;
 use Krzysztofzylka\MicroFramework\Trait\Log;
+use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Strings;
 
@@ -60,6 +61,7 @@ class ControllerApi extends Controller
      * Get body content
      * @param ContentType $contentType Content type, default string
      * @return false|string
+     * @throws SimpleLibraryException
      */
     public function getBodyContent(ContentType $contentType = ContentType::String): false|string
     {

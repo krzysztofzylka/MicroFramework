@@ -10,6 +10,7 @@ Micro-framework
     - Fix ajax table in admin panel
     - Reformat code
     - Fix getBodyContent return
+    - Fix bugs
 
 v0.0.19-alpha
 Micro-framework

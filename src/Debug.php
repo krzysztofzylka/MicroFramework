@@ -43,7 +43,7 @@ class Debug
         self::$data['translation'] = array_merge(self::$data['translation'], Translation::$translation);
         self::$data['sql'] = array_merge(self::$data['sql'], \krzysztofzylka\DatabaseManager\Debug::getSql());
         self::$data['env'] = array_merge(self::$data['env'], $_ENV);
-        self::$data['memcache'] = array_merge(self::$data['memcache'], Memcache::$memcachedInstance->getAllKeys());
+        self::$data['memcache'] = array_merge(self::$data['memcache'], Memcache::$memcachedInstance->getAllKeys() ?: []);
 
         self::$data['env']['database_password'] = '******';
         self::$data['env']['email_password'] = '******';
@@ -61,8 +61,6 @@ class Debug
         }
 
         $this->loadView();
-
-//        Memcache::set('debugData_' . Account::$accountId . '_' . ($_SERVER['REDIRECT_URL'] ?? '') . '_' . time() . '_' . random_int(1000, 9999), self::$data, 60 * 60);
     }
 
     /**
@@ -72,6 +70,10 @@ class Debug
      */
     private function getAccountInfo(): array
     {
+        if (!isset(Account::$account)) {
+            return [];
+        }
+
         $accountData = Account::$account;
         $accountData['account']['password'] = '******';
         $storage = [];

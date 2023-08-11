@@ -3,9 +3,6 @@ micro-framework:
   yes: Yes
   no: No
   coming_soon: Coming soon
-  yes: Yes
-  no: No
-  coming_soon: Coming soon
   modal:
     close: Close
   view:

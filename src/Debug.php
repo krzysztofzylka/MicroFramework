@@ -5,6 +5,7 @@ namespace Krzysztofzylka\MicroFramework;
 use Exception;
 use krzysztofzylka\DatabaseManager\Exception\SelectException;
 use krzysztofzylka\DatabaseManager\Table;
+use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Memcache\Memcache;
 use Krzysztofzylka\MicroFramework\Extension\Translation\Translation;

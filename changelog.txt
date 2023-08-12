@@ -13,6 +13,7 @@ Micro-framework
     - Fix bugs
     - Fix kernel error message
     - Fix storage bug in read content
+    - Fix kernel exception
 
 v0.0.19-alpha
 Micro-framework

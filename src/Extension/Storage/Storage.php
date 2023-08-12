@@ -112,9 +112,12 @@ class Storage
     /**
      * Read storage file
      * @return string|false
+     * @throws MicroFrameworkException
      */
     public function read(): string|false
     {
+        $this->generatePath();
+
         return file_get_contents($this->getFilePath());
     }
 
@@ -196,7 +199,7 @@ class Storage
      */
     public function getFilePath(): string
     {
-        return $this->path . '/' . $this->getDirectory() . '/' . $this->fileName;
+        return $this->path . '/' . $this->fileName;
     }
 
     /**

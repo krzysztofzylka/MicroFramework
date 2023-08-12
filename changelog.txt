@@ -11,6 +11,7 @@ Micro-framework
     - Reformat code
     - Fix getBodyContent return
     - Fix bugs
+    - Fix kernel error message
 
 v0.0.19-alpha
 Micro-framework

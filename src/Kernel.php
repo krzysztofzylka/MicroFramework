@@ -16,6 +16,7 @@ use Krzysztofzylka\MicroFramework\Exception\NoAuthException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
+use Krzysztofzylka\MicroFramework\Extension\CommonFiles\CommonFiles;
 use Krzysztofzylka\MicroFramework\Extension\Env\Env;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
@@ -226,7 +227,6 @@ class Kernel
     /**
      * Connect to database
      * @return void
-     * @throws ConnectException
      * @throws DatabaseException
      */
     public static function configDatabaseConnect(): void
@@ -368,6 +368,7 @@ class Kernel
             $controller->arguments = $arguments;
             $controller->data = self::getData();
             $controller->params = $params;
+            $controller->commonFiles = new CommonFiles();
 
             if (isset($params['api']) && $params['api']) {
                 /** @var ControllerApi $controller */
@@ -404,7 +405,7 @@ class Kernel
                 ['exception' => $exception->getMessage(), 'trace' => $exception->getTrace()]
             );
 
-            throw new MicroFrameworkException('Błędne dane wejściowe.');
+            throw new MicroFrameworkException($exception->getMessage());
         }
 
         if (!$controller->viewLoaded

@@ -4,16 +4,22 @@ namespace Krzysztofzylka\MicroFramework;
 
 include(__DIR__ . '/Extra/Functions.php');
 
+use DateTime;
+use DateTimeZone;
 use Exception;
 use krzysztofzylka\DatabaseManager\DatabaseConnect;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
+use krzysztofzylka\DatabaseManager\Exception\ConditionException;
 use krzysztofzylka\DatabaseManager\Exception\ConnectException;
+use krzysztofzylka\DatabaseManager\Exception\SelectException;
+use krzysztofzylka\DatabaseManager\Exception\TableException;
 use Krzysztofzylka\MicroFramework\Api\Response;
 use Krzysztofzylka\MicroFramework\Api\Secure;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NoAuthException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
+use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
 use Krzysztofzylka\MicroFramework\Extension\CommonFiles\CommonFiles;
@@ -29,6 +35,7 @@ use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\_Array;
 use krzysztofzylka\SimpleLibraries\Library\File;
 use krzysztofzylka\SimpleLibraries\Library\Request;
+use Throwable;
 use Twig\Error\RuntimeError;
 
 /**
@@ -115,9 +122,8 @@ class Kernel
     /**
      * Run framework
      * @return void
-     * @throws ConnectException
-     * @throws MicroFrameworkException
-     * @throws NotFoundException
+     * @throws DatabaseException
+     * @throws Throwable
      */
     public static function run(): void
     {
@@ -205,7 +211,7 @@ class Kernel
 
                 self::init($controller, $method, $arguments);
             }
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             if ($throwable instanceof RuntimeError && $throwable->getPrevious()) {
                 $throwable = $throwable->getPrevious();
             }
@@ -247,7 +253,7 @@ class Kernel
                 $databaseManager->connect($databaseConnect);
 
                 if (!is_null($_ENV['config_timezone'])) {
-                    $time_zone = (new \DateTime('now', new \DateTimeZone($_ENV['config_timezone'])))->format('P');
+                    $time_zone = (new DateTime('now', new DateTimeZone($_ENV['config_timezone'])))->format('P');
                     $sql = 'SET time_zone="' . $time_zone . '";';
                     DatabaseManager::setLastSql($sql);
                     $databaseManager->query($sql);
@@ -265,8 +271,15 @@ class Kernel
      * @param array $controllerArguments
      * @param array $params additional init params
      * @return void
+     * @throws ConditionException
+     * @throws DatabaseException
      * @throws MicroFrameworkException
+     * @throws NoAuthException
      * @throws NotFoundException
+     * @throws SelectException
+     * @throws TableException
+     * @throws Throwable
+     * @throws ViewException
      */
     public static function init(?string $controllerName = null, string $controllerMethod = 'index', array $controllerArguments = [], array $params = []): void
     {
@@ -314,9 +327,15 @@ class Kernel
      * @param array $arguments method arguments
      * @param array $params additional params for loader
      * @return Controller
-     * @throws NotFoundException
-     * @throws NoAuthException
+     * @throws DatabaseException
+     * @throws ViewException
      * @throws MicroFrameworkException
+     * @throws NoAuthException
+     * @throws NotFoundException
+     * @throws Throwable
+     * @throws ConditionException
+     * @throws SelectException
+     * @throws TableException
      */
     public static function loadController(
         string $name,
@@ -398,14 +417,14 @@ class Kernel
 
         try {
             call_user_func_array([$controller, $method], $arguments);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             Log::log(
                 'Błąd wywołania kontrolera',
                 'WARNING',
                 ['exception' => $exception->getMessage(), 'trace' => $exception->getTrace()]
             );
 
-            throw new MicroFrameworkException($exception->getMessage());
+            throw $exception;
         }
 
         if (!$controller->viewLoaded

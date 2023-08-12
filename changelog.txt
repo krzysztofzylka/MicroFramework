@@ -12,6 +12,7 @@ Micro-framework
     - Fix getBodyContent return
     - Fix bugs
     - Fix kernel error message
+    - Fix storage bug in read content
 
 v0.0.19-alpha
 Micro-framework

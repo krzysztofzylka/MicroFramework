@@ -97,6 +97,12 @@ class Storage
         $this->generatePath();
 
         try {
+            if (str_contains($this->fileName, '/')) {
+                $createPath = implode('/', explode(DIRECTORY_SEPARATOR, $this->getFilePath(), -1));
+
+                File::mkdir(File::repairPath($createPath));
+            }
+
             return file_put_contents($this->getFilePath(), $content) !== false;
         } catch (\Exception) {
             return false;
@@ -190,7 +196,7 @@ class Storage
      */
     public function getFilePath(): string
     {
-        return $this->path . '/' . $this->fileName;
+        return $this->path . '/' . $this->getDirectory() . '/' . $this->fileName;
     }
 
     /**

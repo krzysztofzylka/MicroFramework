@@ -62,7 +62,7 @@ class Controller
 
     /**
      * Layout<br>
-     * null / dialogbox
+     * null (default) / dialogbox / table / none
      * @var ?string
      */
     public ?string $layout = null;

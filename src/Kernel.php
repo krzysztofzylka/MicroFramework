@@ -387,7 +387,7 @@ class Kernel
             $controller->arguments = $arguments;
             $controller->data = self::getData();
             $controller->params = $params;
-            $controller->commonFiles = new CommonFiles();
+//            $controller->commonFiles = new CommonFiles();
 
             if (isset($params['api']) && $params['api']) {
                 /** @var ControllerApi $controller */

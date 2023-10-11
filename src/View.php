@@ -197,7 +197,7 @@ class View
     {
         $config = [
             'name' => $this->name,
-            'id' => ($this->controller->layout === 'dialogbox' ? 'dialogbox_' : ''). Generator::uniqId(20),
+            'id' => Generator::uniqId(20),
             'view' => !$slim ? $this : null,
             'variables' => !$slim ? $this->variables : null,
             'config' => !$slim ? $_ENV : null,

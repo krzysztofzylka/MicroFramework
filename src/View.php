@@ -11,6 +11,7 @@ use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\DebugTable;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Form as FormTwigCustomFunctions;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Load;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Translate;
+use krzysztofzylka\SimpleLibraries\Library\Generator;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 use Twig\Environment;
@@ -196,6 +197,7 @@ class View
     {
         $config = [
             'name' => $this->name,
+            'id' => Generator::uniqId(20),
             'view' => !$slim ? $this : null,
             'variables' => !$slim ? $this->variables : null,
             'config' => !$slim ? $_ENV : null,

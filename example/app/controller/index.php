@@ -15,7 +15,6 @@ class index extends Controller {
      */
     public function index(): void
     {
-        $this->loadView();
     }
 
     public function dialogbox(): void
@@ -23,7 +22,6 @@ class index extends Controller {
         $this->layout = 'dialogbox';
         $this->title = 'Test dialogbox';
         $this->dialogboxWidth = 500;
-        $this->loadView();
     }
 
     public function table(): void

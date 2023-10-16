@@ -141,8 +141,26 @@ trait Render
      */
     private function renderAction(): void
     {
-        $this->html .= '<div class="actions float-end">';
+        $this->html .= '<div class="actions">';
+        $this->html .= '<div class="row w-100">';
+        $this->html .= '<div class="col-8">';
 
+        foreach ($this->actions as $action) {
+            $type = $action['type'] ?? 'primary';
+            $value = $action['value'] ?? '';
+            $href = $action['href'] ?? '#';
+            $class = $action['class'] ?? '';
+            $dialogbox = $action['dialogbox'] ?? true;
+
+            if ($dialogbox) {
+                $class .= ' ajaxlink';
+            }
+
+            $this->html .= '<a class="btn btn-' . $type . ' me-2 ' . $class . '" href="' . $href . '">' . $value . '</a>';
+        }
+
+        $this->html .= '</div>';
+        $this->html .= '<div class="col-4">';
         if ($this->activeSearch) {
             $this->html .= '<form method="POST" class="float-end me-2"><input type="hidden" name="table_id" value="' . $this->id . '" /><input name="search" class="form-control" placeholder="' . __('micro-framework.table.search') . '" value="' . $this->search . '" /></form>';
         }
@@ -157,6 +175,8 @@ trait Render
             $this->html .= '</select></form>';
         }
 
+        $this->html .= '</div>';
+        $this->html .= '</div>';
         $this->html .= '</div>';
     }
 

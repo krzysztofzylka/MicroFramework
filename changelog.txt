@@ -3,6 +3,7 @@ Micro-framework
     - Fix table width
     - Add actions to table
     - Available load model and controller from subdirectory
+    - Common files extension
 
 v0.0.20-alpha
 Micro-framework

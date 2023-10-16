@@ -12,71 +12,52 @@ class ObjectNameGenerator
     /**
      * Generate controller class name
      * @param string $controllerName
+     * @param ObjectTypeEnum $objectTypeEnum Enum
      * @return string
      */
-    public static function controller(string $controllerName): string
+    public static function controller(string $controllerName, ObjectTypeEnum $objectTypeEnum = ObjectTypeEnum::APP): string
     {
-        return '\app\controller\\' . $controllerName;
-    }
+        $objectName = match($objectTypeEnum) {
+            ObjectTypeEnum::APP => '\app\controller\\',
+            ObjectTypeEnum::PA => '\Krzysztofzylka\MicroFramework\AdminPanel\controller\\',
+            ObjectTypeEnum::PA_LOCAL => '\admin_panel\controller\\',
+            ObjectTypeEnum::API => '\api\controller\\'
+        };
 
-    /**
-     * Generate admin panel controller class name
-     * @param string $controllerName
-     * @return string
-     */
-    public static function controllerPa(string $controllerName): string
-    {
-        return '\Krzysztofzylka\MicroFramework\AdminPanel\controller\\' . $controllerName;
-    }
+        if (!class_exists($objectName . $controllerName)) {
+            $objectNameDirectory = $objectName . explode('_', $controllerName)[0] . '\\';
 
-    /**
-     * Generate local admin panel controller class name
-     * @param string $controllerName
-     * @return string
-     */
-    public static function controllerPaLocal(string $controllerName): string
-    {
-        return '\admin_panel\controller\\' . $controllerName;
-    }
+            if (class_exists($objectNameDirectory . $controllerName)) {
+                return $objectNameDirectory . $controllerName;
+            }
+        }
 
-    /**
-     * Generate api controller class name
-     * @param string $controllerName
-     * @return string
-     */
-    public static function controllerApi(string $controllerName): string
-    {
-        return '\api\controller\\' . $controllerName;
+        return $objectName . $controllerName;
     }
 
     /**
      * Generate model class name
      * @param string $modelName
+     * @param ObjectTypeEnum $objectTypeEnum
      * @return string
      */
-    public static function model(string $modelName): string
+    public static function model(string $modelName, ObjectTypeEnum $objectTypeEnum = ObjectTypeEnum::APP): string
     {
-        return '\app\model\\' . $modelName;
-    }
+        $objectName = match($objectTypeEnum) {
+            ObjectTypeEnum::APP => '\app\model\\',
+            ObjectTypeEnum::PA => '\Krzysztofzylka\MicroFramework\AdminPanel\model\\',
+            ObjectTypeEnum::PA_LOCAL => '\admin_panel\model\\'
+        };
 
-    /**
-     * Generate model class name
-     * @param string $modelName
-     * @return string
-     */
-    public static function modelPa(string $modelName): string
-    {
-        return '\Krzysztofzylka\MicroFramework\AdminPanel\model\\' . $modelName;
-    }
+        if (!class_exists($objectName . $modelName)) {
+            $objectNameDirectory = $objectName . explode('_', $modelName)[0] . '\\';
 
-    /**
-     * Generate admin panel local model class name
-     * @param string $modelName
-     * @return string
-     */
-    public static function modelPaLocal(string $modelName): string
-    {
-        return '\admin_panel\model\\' . $modelName;
+            if (class_exists($objectNameDirectory . $modelName)) {
+                return $objectNameDirectory . $modelName;
+            }
+        }
+
+        return $objectName . $modelName;
     }
 
     /**

@@ -31,6 +31,7 @@ use Krzysztofzylka\MicroFramework\Extension\Statistic\Statistic;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
 use Krzysztofzylka\MicroFramework\Extension\Translation\Translation;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
+use Krzysztofzylka\MicroFramework\Extra\ObjectTypeEnum;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\_Array;
 use krzysztofzylka\SimpleLibraries\Library\File;
@@ -362,13 +363,13 @@ class Kernel
                 throw new NotFoundException(__('micro-framework.kernel.not_have_permission'));
             }
 
-            $class = ObjectNameGenerator::controllerPaLocal($name);
+            $class = ObjectNameGenerator::controller($name, ObjectTypeEnum::PA_LOCAL);
 
             if (!class_exists($class)) {
-                $class = ObjectNameGenerator::controllerPa($name);
+                $class = ObjectNameGenerator::controller($name, ObjectTypeEnum::PA);
             }
         } elseif (isset($params['api']) && $params['api']) {
-            $class = ObjectNameGenerator::controllerApi($name);
+            $class = ObjectNameGenerator::controller($name, ObjectTypeEnum::API);
         } else {
             $class = ObjectNameGenerator::controller($name);
         }

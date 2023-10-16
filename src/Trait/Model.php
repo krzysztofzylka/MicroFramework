@@ -10,6 +10,7 @@ use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Debug;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
+use Krzysztofzylka\MicroFramework\Extra\ObjectTypeEnum;
 use Krzysztofzylka\MicroFramework\Model as ModelClass;
 use krzysztofzylka\SimpleLibraries\Library\Strings;
 
@@ -62,10 +63,10 @@ trait Model
         $params = isset($this->params) ? $this->params : $this->controller->params;
 
         if (isset($params['admin_panel']) && $params['admin_panel']) {
-            $class = ObjectNameGenerator::modelPaLocal($name);
+            $class = ObjectNameGenerator::model($name, ObjectTypeEnum::PA_LOCAL);
 
             if (!class_exists($class)) {
-                $class = ObjectNameGenerator::modelPa($name);
+                $class = ObjectNameGenerator::model($name, ObjectTypeEnum::PA);
             }
 
             if (!class_exists($class)) {

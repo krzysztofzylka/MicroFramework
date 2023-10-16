@@ -1,6 +1,7 @@
 v0.0.21-alpha
 Micro-framework
     - Fix table width
+    - Add actions to table
 
 v0.0.20-alpha
 Micro-framework

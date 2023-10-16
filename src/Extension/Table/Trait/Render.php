@@ -142,8 +142,8 @@ trait Render
     private function renderAction(): void
     {
         $this->html .= '<div class="actions">';
-        $this->html .= '<div class="row">';
-        $this->html .= '<div class="col">';
+        $this->html .= '<div class="row w-100">';
+        $this->html .= '<div class="col-8">';
 
         foreach ($this->actions as $action) {
             $type = $action['type'] ?? 'primary';
@@ -160,7 +160,7 @@ trait Render
         }
 
         $this->html .= '</div>';
-        $this->html .= '<div class="col-3 float-end">';
+        $this->html .= '<div class="col-4">';
         if ($this->activeSearch) {
             $this->html .= '<form method="POST" class="float-end me-2"><input type="hidden" name="table_id" value="' . $this->id . '" /><input name="search" class="form-control" placeholder="' . __('micro-framework.table.search') . '" value="' . $this->search . '" /></form>';
         }

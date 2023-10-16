@@ -219,29 +219,6 @@ class Table
     }
 
     /**
-     * Render table
-     * @return string
-     * @throws DatabaseException
-     */
-    public function render(): string
-    {
-        if (empty($this->columns)) {
-            return '<div class="alert alert-danger">Table column is empty</div>';
-        }
-
-        $this->session();
-        $this->getResults();
-        $this->html .= '<div class="tableRender" id="' . $this->id . '">';
-        $this->renderAction();
-        $this->html .= '<table class="table table-sm">';
-        $this->renderHeaders();
-        $this->renderBody();
-        $this->html .= '</table>';
-        $this->renderFooter();
-        $this->html .= '</div>';
-    }
-
-    /**
      * Generate default data
      * @return void
      */
@@ -381,6 +358,7 @@ class Table
                 'model' => $this->model->name ?? null,
                 'controller' => $this->controller->name ?? null,
                 'columns' => json_decode(json_encode($this->columns), true),
+                'actions' => json_decode(json_encode($this->actions), true),
                 'search' => $this->search,
                 'activeSearch' => $this->activeSearch,
                 'page' => $this->page,

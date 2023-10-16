@@ -199,7 +199,7 @@ class Storage
      */
     public function getFilePath(): string
     {
-        return $this->path . '/' . $this->fileName;
+        return File::repairPath($this->path . '/' . $this->fileName);
     }
 
     /**

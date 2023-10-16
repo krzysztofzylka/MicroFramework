@@ -1,5 +1,8 @@
 micro-framework:
   name: Polski
+  yes: Tak
+  no: Nie
+  coming_soon: Wkrótce
   modal:
     close: Zamknij
   view:
@@ -21,6 +24,7 @@ micro-framework:
     fail_set_remember_field: Błąd zapisywania danych użytkownika
     email_required: Adres e-mail jest wymagany
   validation:
+    fail: Błąd walidacji
     predefined:
       is_email: Nieprawidłowy adres e-mail
       is_valid_date: Data jest nieprawidłowa
@@ -28,6 +32,8 @@ micro-framework:
       length:
         min: Pole nie może posiadać mniej znaków niż
         max: Pole nie może posiadać więcej znaków niż
+      is_numeric: Pole musi być liczbą
+      allow_values: "Wartość nieprawidłowa, wybierz prawidłową wartość z listy: {valueList}"
   debug:
     sqlTable: SQL
     configTable: Konfiguracja
@@ -39,6 +45,9 @@ micro-framework:
     account:
       title: Autoryzacja
       not_logged: Nie jesteś zalogowany
+    env: ENV
+    server:
+      title: Serwer
   kernel:
     adminpanel_disabled: Panel administracyjny jest wyłączony
     authcontrol_disabled: Kontrola użytkowników jest wyłączona
@@ -58,3 +67,35 @@ micro-framework:
       object_not_found: Obiekt nie został znaleziony
     database:
       error: Błąd bazy danych
+  update:
+    title: Wkrótce wracamy
+    coming_soon: Trwa aktualizacja systemu
+    line1: Zmieniamy się dla Ciebie!
+    line2: Zapraszamy ponownie za chwilę.
+  confirm:
+    accept: Kontynuuj
+  admin_panel:
+    menu:
+      dashboard: Dashboard
+      logs: Logi
+      account: Użytkownicy
+      integrations: Integracje
+      setting: Ustawienia
+      statistics: Statystyki
+    accounts:
+      title: Użytkownicy
+      username: Użytkownik
+      is_admin: Administrator
+      created: Utworzono
+      modify: Zmodyfikowano
+    log:
+      title: Logi
+      lp: Lp.
+      date: Data
+      level: Poziom
+      message: Treść
+    dashboard:
+      title: Dashboard
+    setting:
+      title: Ustawienia
+      clear_memcache: Wyczyść memcache

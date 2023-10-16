@@ -1,8 +1,22 @@
 {% macro loadAssets() %}
     <script src="https://cdn.jsdelivr.net/npm/vanillatoasts@1.3.0/vanillatoasts.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillatoasts@1.3.0/vanillatoasts.css" />
-    <script src="/assets/spinner.js"></script>
-    <link rel="stylesheet" href="/assets/spinner.css" />
-    <script src="/assets/dialogbox.js"></script>
-    <link rel="stylesheet" href="/assets/dialogbox.css" />
+    {{ loadAsset('spinner.js')|raw }}
+    {{ loadAsset('spinner.css')|raw }}
+    {{ loadAsset('dialogbox.js')|raw }}
+    {{ loadAsset('dialogbox.css')|raw }}
+{% endmacro %}
+
+{% macro loadConfig() %}
+    <script>
+        var dialogboxConfig = {
+            url: '{{ app.here }}'
+        };
+
+        {% if app.redirectAlert is not empty %}
+            $(document).ready(function() {
+                $(this).ajaxlink('toast', JSON.parse('{{ app.redirectAlert|raw }}'))
+            });
+        {% endif %}
+    </script>
 {% endmacro %}

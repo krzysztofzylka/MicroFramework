@@ -3,17 +3,29 @@
 namespace Krzysztofzylka\MicroFramework;
 
 use Exception;
+use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
-use Krzysztofzylka\MicroFramework\Extension\Form\Form;
+use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Action;
+use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\DebugTable;
+use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Form as FormTwigCustomFunctions;
+use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Load;
+use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Translate;
+use krzysztofzylka\SimpleLibraries\Library\Generator;
+use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
-use Twig\TwigFunction;
 
 class View
 {
+
+    /**
+     * Global variables
+     * @var array
+     */
+    public static array $globalVariables = [];
 
     /**
      * Twig filesystem loader
@@ -54,12 +66,15 @@ class View
         try {
             $this->filesystemLoader = new FilesystemLoader(Kernel::getPath('view'));
             $this->filesystemLoader->addPath(__DIR__ . '/Extension/Twig/TwigFiles');
-            $this->environment = new Environment($this->filesystemLoader, ['debug' => Kernel::getConfig()->debug]);
+            $this->environment = new Environment($this->filesystemLoader, ['debug' => $_ENV['config_debug']]);
             $this->environment->addExtension(new DebugExtension());
-            $translationFunction = new TwigFunction('__', function (string $name) {
-                return __($name);
-            });
-            $this->environment->addFunction($translationFunction);
+
+            //add custom functions
+            new Translate($this->environment);
+            new Action($this->environment);
+            new DebugTable($this->environment);
+            new Load($this->environment);
+
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
         }
@@ -85,13 +100,8 @@ class View
      */
     public function renderError(int $code, Exception $exception, string $name = 'MicroFramework/Layout/error'): string
     {
-        $hiddenMessage = false;
-
-        if (method_exists($exception, 'getHiddenMessage')) {
-            $hiddenMessage = $exception->getHiddenMessage();
-        }
-
         http_response_code($code);
+        $hiddenMessage = $exception instanceof MicroFrameworkException ? $exception->getHiddenMessage() : false;
 
         if (isset(Kernel::$controllerParams['api']) && Kernel::$controllerParams['api']) {
             $data = [
@@ -101,7 +111,7 @@ class View
                 ]
             ];
 
-            if (Kernel::getConfig()->debug) {
+            if ($_ENV['config_debug']) {
                 $data['error']['hiddenMessage'] = $hiddenMessage;
             }
 
@@ -112,7 +122,7 @@ class View
         return $this->render(
             [
                 'code' => $code ?? 500,
-                'debug' => Kernel::getConfig()->debug ? $exception : false,
+                'debug' => $_ENV['config_debug'] ? $exception : false,
                 'hiddenMessage' => $hiddenMessage
             ],
             $name
@@ -129,6 +139,8 @@ class View
      */
     public function render(array $variables = [], ?string $name = null): string
     {
+        Debug::startTime();
+
         try {
             $this->variables = $variables;
 
@@ -147,39 +159,61 @@ class View
             $this->environment->addGlobal('app', $this->getGlobalVariables());
 
             $controller = $this->controller;
-            $formFunction = new TwigFunction('form', function () use ($controller) {
-                return new Form($controller);
-            });
-            $this->environment->addFunction($formFunction);
 
-            if (Kernel::getConfig()->viewDisableCache) {
+            //add custom functions
+            new FormTwigCustomFunctions($this->environment, $controller);
+
+            if ($_ENV['config_view_cache']) {
                 $this->environment->setCache(false);
             }
 
-            return $this->environment->render($name . '.twig', $variables);
+            $render = $this->environment->render($name . '.twig', $variables);
+
+            if ($_ENV['config_debug']) {
+                Debug::endTime('view_render_' . $name);
+                Debug::$data['views'][] = [
+                    'name' => $name,
+                    'globalVariables' => $this->getGlobalVariables(true),
+                    'variables' => $this->specialcharsarray($this->variables)
+                ];
+            }
+
+            return $render;
         } catch (Exception $exception) {
+            if ($this->controller) {
+                throw $exception;
+            }
+
             throw new ViewException($exception->getMessage());
         }
     }
 
     /**
      * Generate global variables
+     * @param bool $slim
      * @return array
      */
-    public function getGlobalVariables(): array
+    public function getGlobalVariables(bool $slim = false): array
     {
         $config = [
             'name' => $this->name,
-            'view' => $this,
-            'variables' => $this->variables,
-            'config' => (array)Kernel::getConfig(),
-            'controller' => $this->controller,
+            'id' => Generator::uniqId(20),
+            'view' => !$slim ? $this : null,
+            'variables' => !$slim ? $this->variables : null,
+            'config' => !$slim ? $_ENV : null,
+            'controller' => !$slim ? $this->controller : null,
             'dialogboxConfig' => '[]',
             'accountId' => Account::$accountId,
             'account' => Account::$account,
-            'here' => Kernel::$url,
-            'isDialogbox' => isset($_GET['dialogbox']) ? (bool)$_GET['dialogbox'] : false
+            'here' => Kernel::$url ?? null,
+            'isAjax' => Request::isAjaxRequest(),
+            'global' => !$slim ? self::$globalVariables : null,
+            'redirectAlert' => $_SESSION['redirectAlert'] ?? null
         ];
+
+        if (isset($_SESSION['redirectAlert'])) {
+            unset($_SESSION['redirectAlert']);
+        }
 
         if (isset($this->controller->layout) && $this->controller->layout === 'dialogbox') {
             $config['dialogboxConfig'] = json_encode([
@@ -190,6 +224,19 @@ class View
         }
 
         return $config;
+    }
+
+    private function specialcharsarray(array $array)
+    {
+        $return = [];
+
+        foreach ($array as $name => $value) {
+            $return[$name] = is_array($value)
+                ? $this->specialcharsarray($value)
+                : (is_string($value) ? htmlspecialchars($value) : $value);
+        }
+
+        return $return;
     }
 
 }

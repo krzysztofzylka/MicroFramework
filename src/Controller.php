@@ -3,9 +3,11 @@
 namespace Krzysztofzylka\MicroFramework;
 
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
+use Krzysztofzylka\MicroFramework\Extension\CommonFiles\CommonFiles;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table as TableExtension;
 use Krzysztofzylka\MicroFramework\Trait\Alerts;
+use Krzysztofzylka\MicroFramework\Trait\Controller\Confirm;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use krzysztofzylka\SimpleLibraries\Library\_Array;
 use krzysztofzylka\SimpleLibraries\Library\Redirect;
@@ -16,6 +18,8 @@ use krzysztofzylka\SimpleLibraries\Library\Redirect;
  */
 class Controller
 {
+
+    use Confirm;
 
     use Log;
     use \Krzysztofzylka\MicroFramework\Trait\Model;
@@ -59,7 +63,7 @@ class Controller
 
     /**
      * Layout<br>
-     * null / dialogbox
+     * null (default) / dialogbox / table / none
      * @var ?string
      */
     public ?string $layout = null;
@@ -149,7 +153,7 @@ class Controller
     public function redirect(string $url): never
     {
         if (str_starts_with($url, '/')) {
-            Redirect::redirect(Kernel::getConfig()->pageUrl . substr($url, 1));
+            Redirect::redirect($_ENV['config_page_url'] . substr($url, 1));
         }
 
         Redirect::redirect($url);

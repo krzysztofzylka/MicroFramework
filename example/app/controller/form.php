@@ -25,6 +25,7 @@ class form extends Controller {
                 ->input('validTest/date', 'isDate', ['type' => 'date'])
                 ->input('validTest/date2', 'isDate')
                 ->input('validTest/email', 'isEmail')
+                ->input('validTest/values', 'required, only aa or bb values')
                 ->button('Check')
         );
 

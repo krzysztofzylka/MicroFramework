@@ -6,8 +6,9 @@ use Krzysztofzylka\MicroFramework\ControllerApi;
 
 class auth extends ControllerApi {
 
-    public function test() {
-        $this->responseJson(['status' => 'OK']);
+    public function test(): void
+    {
+        $this->response->json(['status' => 'OK']);
     }
 
 }

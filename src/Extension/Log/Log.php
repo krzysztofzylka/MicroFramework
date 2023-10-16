@@ -45,19 +45,26 @@ class Log
             return false;
         }
 
-        if (Kernel::getConfig()->logger) {
-            $loggerContent = $logContent;
-            unset($loggerContent['level'], $loggerContent['message']);
-            Logger::$url = Kernel::getConfig()->loggerUrl;
-            Logger::$api_key = Kernel::getConfig()->loggerApiKey;
-            Logger::$site_key = Kernel::getConfig()->loggerSiteKey;
-            Logger::$username = Kernel::getConfig()->loggerUsername;
-            Logger::$password = Kernel::getConfig()->loggerPassword;
+        if ($_ENV['logger_enabled']) {
+            try {
+                $loggerContent = $logContent;
+                unset($loggerContent['level'], $loggerContent['message']);
+                Logger::$url = $_ENV['logger_url'];
+                Logger::$api_key = $_ENV['logger_api_key'];
+                Logger::$site_key = $_ENV['logger_site_key'];
+                Logger::$username = $_ENV['logger_username'];
+                Logger::$password = $_ENV['logger_password'];
 
-            Logger::log($logContent['message'], $logContent['level'], $loggerContent);
+                Logger::log($logContent['message'], $logContent['level'], $loggerContent);
+            } catch (\Throwable) {
+            }
         }
 
-        return (bool)file_put_contents($logPath, $jsonLogData . PHP_EOL, FILE_APPEND);
+        try {
+            return (bool)file_put_contents($logPath, $jsonLogData . PHP_EOL, FILE_APPEND);
+        } catch (\Exception) {
+            return false;
+        }
     }
 
     /**
@@ -66,7 +73,10 @@ class Log
      */
     private static function getDatetime(): string
     {
-        return DateTime::createFromFormat('U.u', sprintf('%.f', microtime(true)))->format('Y-m-d H:i:s.u');
+        return DateTime::createFromFormat(
+            'U.u',
+            sprintf('%.f', microtime(true))
+        )->format('Y-m-d H:i:s.u');
     }
 
 }

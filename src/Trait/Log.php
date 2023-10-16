@@ -2,6 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework\Trait;
 
+use Krzysztofzylka\MicroFramework\Extension\Log\Log as LogExtension;
+
 /**
  * Logs
  * @package Trait
@@ -18,7 +20,7 @@ trait Log
      */
     public function log(string $message, string $level = 'INFO', array $content = []): bool
     {
-        return \Krzysztofzylka\MicroFramework\Extension\Log\Log::log($message, $level, $content);
+        return LogExtension::log($message, $level, $content);
     }
 
 }

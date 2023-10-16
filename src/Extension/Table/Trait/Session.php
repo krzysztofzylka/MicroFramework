@@ -11,7 +11,6 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 trait Session
 {
 
-
     /**
      * Get saved session
      * @return mixed

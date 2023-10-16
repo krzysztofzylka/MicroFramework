@@ -32,6 +32,10 @@ class Validation
      */
     public function validate(?array $data): array
     {
+        if (!$data) {
+            return [];
+        }
+
         $errors = [];
 
         foreach ($data ?? [] as $model => $modelData) {
@@ -71,6 +75,7 @@ class Validation
      * @param $value
      * @param array $elementValidations
      * @return ?string
+     * @todo rewrite
      */
     private function _validateElement(string $name, $value, array $elementValidations): ?string
     {

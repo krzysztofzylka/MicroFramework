@@ -48,6 +48,8 @@ class Cron
     {
         $this->cronFilePath = realpath(Kernel::getPath('config') . '/Cron.php');
 
+        var_dump(Kernel::getPath('config'));
+
         if (!$this->isActive()) {
             return false;
         }
@@ -112,7 +114,7 @@ class Cron
     {
         if (!$this->cronFilePath) {
             return false;
-        } elseif (!Kernel::getConfig()->database) {
+        } elseif (!$_ENV['database_enabled']) {
             return false;
         }
 

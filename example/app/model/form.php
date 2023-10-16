@@ -42,6 +42,10 @@ class form extends Model
                 'email' => [
                     'isEmail'
                 ],
+                'values' => [
+                    'required',
+                    'allowValues' => ['aa', 'bb']
+                ]
             ],
             'test' => [
                 'input' => [

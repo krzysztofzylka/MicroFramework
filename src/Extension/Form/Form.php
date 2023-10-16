@@ -63,9 +63,19 @@ class Form
         }
 
         FormHelper::getData($name, $params, $attributes, $this->data);
-        $input = (new Html())->clearTag('input', null, [...$params, ...$attributes])->__toString() . $this->generateInvalidDiv($invalidText);
+        $input = (new Html())
+                ->clearTag(
+                    'input',
+                    null,
+                    [...$params, ...$attributes]
+                )->__toString() . $this->generateInvalidDiv($invalidText);
 
-        return (new Html())->tag('div', $this->generateTitle($title, $params) . $input, ['class' => 'form-group mb-2']);
+        return (new Html())
+            ->tag(
+                'div',
+                $this->generateTitle($title, $params) . $input,
+                ['class' => 'form-group mb-2']
+            );
     }
 
     /**
@@ -78,7 +88,11 @@ class Form
      */
     public function date(string $name, ?string $title = null, array $attributes = []): Html
     {
-        return $this->input($name, $title, array_merge($attributes, ['type' => 'date']));
+        return $this->input(
+            $name,
+            $title,
+            array_merge($attributes, ['type' => 'date'])
+        );
     }
 
     /**
@@ -121,9 +135,19 @@ class Form
             $optionsString .= $htmlOption->tag('option', $value, $optionAttributes);
         }
 
-        $select = (new Html())->clearTag('select', $optionsString, [...$params, ...$attributes]) . $this->generateInvalidDiv($invalidText);
+        $select = (new Html())
+                ->clearTag(
+                    'select',
+                    $optionsString,
+                    [...$params, ...$attributes]
+                ) . $this->generateInvalidDiv($invalidText);
 
-        return (new Html())->tag('div', $this->generateTitle($title, $params) . $select, ['class' => 'form-group mb-2']);
+        return (new Html())
+            ->tag(
+                'div',
+                $this->generateTitle($title, $params) . $select,
+                ['class' => 'form-group mb-2']
+            );
     }
 
     /**
@@ -188,7 +212,12 @@ class Form
 
         FormHelper::getData($name, $params, $attributes, $this->data);
 
-        return (new Html())->tag('input', null, [...$params, ...$attributes]);
+        return (new Html())
+            ->tag(
+                'input',
+                null,
+                [...$params, ...$attributes]
+            );
     }
 
 
@@ -219,7 +248,11 @@ class Form
         $data = $value ?? FormHelper::getData($name, $emptyArray, $emptyArray, $this->data);
         $textarea = (new Html())->clearTag('textarea', $data ?? '', [...$params, ...$attributes]) . $this->generateInvalidDiv($invalidText);
 
-        return (new Html())->tag('div', $this->generateTitle($title, $params) . $textarea, ['class' => 'form-group mb-2']);
+        return (new Html())->tag(
+            'div',
+            $this->generateTitle($title, $params) . $textarea,
+            ['class' => 'form-group mb-2']
+        );
     }
 
     /**
@@ -235,7 +268,12 @@ class Form
             return '';
         }
 
-        return (new Html())->clearTag('label', $title, ['for' => $params['id'], 'class' => 'form-label'])->__toString();
+        return (new Html())
+            ->clearTag(
+                'label',
+                $title,
+                ['for' => $params['id'], 'class' => 'form-label']
+            )->__toString();
     }
 
 }

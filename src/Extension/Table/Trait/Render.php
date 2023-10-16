@@ -13,6 +13,10 @@ use krzysztofzylka\SimpleLibraries\Library\Strings;
 trait Render
 {
 
+    /**
+     * Generowanie stopki
+     * @return void
+     */
     public function renderFooter(): void
     {
         $this->html .= '<div class="footer float-end">';
@@ -21,7 +25,8 @@ trait Render
             $this->html .= '<form method="POST">';
             $this->html .= '<input type="hidden" name="table_id" value="' . $this->id . '" />';
             $this->html .= '<nav aria-label="navigation"><ul class="pagination">';
-            $this->html .= '<li class="page-item"><input type="submit" name="page" class="page-link" value="&#171;" /></li>';
+            $this->html .= '<li class="page-item ' . (in_array($this->page, [0, 1]) ? 'disabled' : '') . '"><input type="submit" name="page" class="page-link" value="&#171;&#171;" /></li>';
+            $this->html .= '<li class="page-item ' . (in_array($this->page, [0, 1]) ? 'disabled' : '') . '"><input type="submit" name="page" class="page-link" value="&#171;" /></li>';
             $from = $this->page - 3;
 
             for ($i = 0; $i < 7; $i++) {
@@ -36,7 +41,8 @@ trait Render
                 $this->html .= '<li class="page-item active"><input type="submit" name="page" class="page-link" value="1" /></li>';
             }
 
-            $this->html .= '<li class="page-item"><input type="submit" name="page" class="page-link" value="&#187;" /></li>';
+            $this->html .= '<li class="page-item ' . (($this->pages === 0 || $this->pages === $this->page || $this->pages === $this->page - 1) ? 'disabled' : '') . '"><input type="submit" name="page" class="page-link" value="&#187;" /></li>';
+            $this->html .= '<li class="page-item ' . (($this->pages === 0 || $this->pages === $this->page || $this->pages === $this->page - 1) ? 'disabled' : '') . '"><input type="submit" name="page" class="page-link" value="&#187;&#187;" /></li>';
             $this->html .= '</ul></nav>';
             $this->html .= '</form>';
         }
@@ -71,16 +77,26 @@ trait Render
             $this->html .= '<tr>';
 
             foreach ($this->columns as $columnKey => $column) {
-                $style = '';
+                $style = [];
                 $cell = new Cell();
                 $cell->val = _Array::getFromArrayUsingString($columnKey, $result);
                 $cell->data = $result;
+                $wordBreak = $column['wordBreak'] ?? false;
+                $noWrap = $column['noWrap'] ?? false;
 
                 if (isset($column['width'])) {
-                    $style .= 'width:' . (int)$column['width'] . 'px;';
+                    $style[] = 'width:' . (int)$column['width'] . 'px';
                 }
 
-                $this->html .= '<td style="' . $style . '">';
+                if ($wordBreak) {
+                    $style[] = 'word-break: break-all';
+                }
+
+                if ($noWrap) {
+                    $style[] = 'white-space: nowrap';
+                }
+
+                $this->html .= '<td style="' . implode('; ', $style) . '">';
 
                 if (isset($column['value']) && is_string($column['value'])) {
                     $value = $column['value'];
@@ -92,7 +108,13 @@ trait Render
 
                 if (isset($column['maxChar']) && is_int($column['maxChar'])) {
                     if (mb_strlen($value) > $column['maxChar']) {
-                        $value = mb_strimwidth(Strings::removeLineBreaks($value), 0, $column['maxChar'], '...', 'UTF-8');
+                        $value = mb_strimwidth(
+                            Strings::removeLineBreaks($value),
+                            0,
+                            $column['maxChar'],
+                            '...',
+                            'UTF-8'
+                        );
                     }
                 }
 
@@ -116,7 +138,17 @@ trait Render
         $this->html .= '<div class="actions float-end">';
 
         if ($this->activeSearch) {
-            $this->html .= '<form method="POST"><input type="hidden" name="table_id" value="' . $this->id . '" /><input name="search" class="form-control" placeholder="' . __('micro-framework.table.search') . '" value="' . $this->search . '" /></form>';
+            $this->html .= '<form method="POST" class="float-end me-2"><input type="hidden" name="table_id" value="' . $this->id . '" /><input name="search" class="form-control" placeholder="' . __('micro-framework.table.search') . '" value="' . $this->search . '" /></form>';
+        }
+
+        if ($this->activePaginationLimit) {
+            $this->html .= '<form method="POST" class="float-end me-2"><input type="hidden" name="table_id" value="' . $this->id . '" /><select class="form-select" name="paginationLimit" ' . ($this->isAjax ? '' : 'onchange="this.form.submit()"') . '>';
+
+            foreach ($this->paginationLimits as $limit) {
+                $this->html .= '<option value="' . $limit . '" ' . ($limit === $this->paginationLimit ? 'selected' : '') . '>' . $limit . '</option>';
+            }
+
+            $this->html .= '</select></form>';
         }
 
         $this->html .= '</div>';

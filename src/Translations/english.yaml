@@ -1,5 +1,8 @@
 micro-framework:
   name: English
+  yes: Yes
+  no: No
+  coming_soon: Coming soon
   modal:
     close: Close
   view:
@@ -21,6 +24,7 @@ micro-framework:
     fail_set_remember_field: Fail set remember fields
     email_required: E-mail address is required
   validation:
+    fail: Validation fail
     predefined:
       is_email: Invalid email format
       is_valid_date: Invalid date format
@@ -28,6 +32,8 @@ micro-framework:
       length:
         min: Value must be more or equal to
         max: Value must be less or equal to
+      is_numeric: Value must be numeric
+      allow_values: "Allowed values: {valueList}"
   debug:
     sqlTable: SQL
     configTable: Configuration
@@ -39,6 +45,9 @@ micro-framework:
     account:
       title: Authorization
       not_logged: You not logged
+    env: ENV
+    server:
+      title: Server
   kernel:
     adminpanel_disabled: Admin panel is disabled
     authcontrol_disabled: Account control is disabled
@@ -58,3 +67,35 @@ micro-framework:
       object_not_found: Object not found
     database:
       error: Database error
+  update:
+    title: Coming soon
+    coming_soon: Coming soon
+    line1: We are preparing changes for you.
+    line2: Welcome back in a moment
+  confirm:
+    accept: Continue
+  admin_panel:
+    menu:
+      dashboard: Dashboard
+      logs: Logs
+      account: Account
+      integrations: Integrations
+      setting: Settings
+      statistics: Statistics
+    accounts:
+      title: Accounts
+      username: Username
+      is_admin: Is admin
+      created: Created
+      modify: Modify
+    log:
+      title: Logi
+      lp: Lp.
+      date: Date
+      level: Level
+      message: Message
+    dashboard:
+      title: Dashboard
+    setting:
+      title: Settings
+      clear_memcache: Clear memcache

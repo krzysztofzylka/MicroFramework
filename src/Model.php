@@ -9,6 +9,8 @@ use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
+use Krzysztofzylka\MicroFramework\Extension\Account\Account;
+use Krzysztofzylka\MicroFramework\Extension\Memcache\Memcache;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use Krzysztofzylka\MicroFramework\Trait\ModelValidation;
 use PDOStatement;
@@ -67,33 +69,16 @@ class Model
     public ?array $data = null;
 
     /**
-     * Set ID
-     * @param ?int $id
-     * @return bool
+     * Active cache
+     * @var bool
      */
-    public function setId(?int $id = null): self|false
-    {
-        if (!isset($this->tableInstance)) {
-            return false;
-        }
-
-        $this->tableInstance->setId($id);
-
-        return $this;
-    }
+    public bool $cache = false;
 
     /**
-     * Get ID
-     * @return false|int|null
+     * Cache data
+     * @var array
      */
-    public function getId(): false|null|int
-    {
-        if (!isset($this->tableInstance)) {
-            return false;
-        }
-
-        return $this->tableInstance->getId();
-    }
+    public array $cacheData = [];
 
     /**
      * Select required
@@ -130,6 +115,7 @@ class Model
      * @param ?string $orderBy
      * @return array|false
      * @throws DatabaseException
+     * @throws \Exception
      */
     public function find(?array $condition = null, ?array $columns = null, ?string $orderBy = null): array|false
     {
@@ -137,8 +123,24 @@ class Model
             return false;
         }
 
+        if ($this->cache) {
+            $hash = hash('xxh128', json_encode([$condition, $columns, $orderBy]));
+
+            if (isset($this->cacheData[$hash])) {
+                return $this->cacheData[$hash];
+            }
+        }
+
         try {
-            return $this->tableInstance->find($condition, $columns, $orderBy);
+            Debug::startTime();
+            $find = $this->tableInstance->find($condition, $columns, $orderBy);
+            Debug::endTime($this->name . '_find');
+
+            if ($this->cache) {
+                $this->cacheData[$hash] = $find;
+            }
+
+            return $find;
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
@@ -160,56 +162,27 @@ class Model
             return false;
         }
 
-        try {
-            return $this->tableInstance->findAll($condition, $columns, $orderBy, $limit, $groupBy);
-        } catch (DatabaseManagerException $exception) {
-            throw new DatabaseException($exception->getHiddenMessage());
-        }
-    }
+        if ($this->cache) {
+            $hash = hash('xxh128', json_encode([$condition, $columns, $orderBy, $limit, $groupBy]));
 
-    /**
-     * Insert
-     * @param array $data
-     * @return bool
-     * @throws DatabaseException
-     */
-    public function insert(array $data): bool
-    {
-        if (!isset($this->tableInstance)) {
-            return false;
+            if (isset($this->cacheData[$hash])) {
+                return $this->cacheData[$hash];
+            }
         }
 
         try {
-            if (!$this->beforeInsert()) {
-                return false;
+            Debug::startTime();
+            $find = $this->tableInstance->findAll($condition, $columns, $orderBy, $limit, $groupBy);
+            Debug::endTime($this->name . '_findAll');
+
+            if ($this->cache) {
+                $this->cacheData[$hash] = $find;
             }
 
-            if ($this->tableInstance->insert($data)) {
-                return $this->afterInsert();
-            } else {
-                return false;
-            }
+            return $find;
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
-    }
-
-    /**
-     * Before insert
-     * @return bool
-     */
-    public function beforeInsert(): bool
-    {
-        return true;
-    }
-
-    /**
-     * After insert
-     * @return bool
-     */
-    public function afterInsert(): bool
-    {
-        return true;
     }
 
     /**
@@ -225,8 +198,24 @@ class Model
             return false;
         }
 
+        if ($this->cache) {
+            $hash = hash('xxh128', json_encode([$condition, $groupBy]));
+
+            if (isset($this->cacheData[$hash])) {
+                return $this->cacheData[$hash];
+            }
+        }
+
         try {
-            return $this->tableInstance->findCount($condition, $groupBy);
+            Debug::startTime();
+            $findCount = $this->tableInstance->findCount($condition, $groupBy);
+            Debug::endTime($this->name . '_findCount');
+
+            if ($this->cache) {
+                $this->cacheData[$hash] = $findCount;
+            }
+
+            return $findCount;
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
@@ -244,60 +233,25 @@ class Model
             return false;
         }
 
-        try {
-            return $this->tableInstance->findIsset($condition);
-        } catch (DatabaseManagerException $exception) {
-            throw new DatabaseException($exception->getHiddenMessage());
-        }
-    }
+        if ($this->cache) {
+            $hash = hash('xxh128', json_encode([$condition]));
 
-    /**
-     * Update
-     * @param array $data
-     * @return bool
-     * @throws DatabaseException
-     */
-    public function update(array $data): bool
-    {
-        if (!isset($this->tableInstance)) {
-            return false;
+            if (isset($this->cacheData[$hash])) {
+                return $this->cacheData[$hash];
+            }
         }
 
         try {
-            if (!$this->beforeUpdate()) {
-                return false;
+            $findIsset = $this->tableInstance->findIsset($condition);
+
+            if ($this->cache) {
+                $this->cacheData[$hash] = $findIsset;
             }
 
-            if ($this->tableInstance->update($data)) {
-                return $this->afterUpdate();
-            } else {
-                return false;
-            }
+            return $findIsset;
         } catch (DatabaseManagerException $exception) {
             throw new DatabaseException($exception->getHiddenMessage());
         }
-    }
-
-    /**
-     * Before update
-     * @param ?string $columnName if updateValue
-     * @param ?string $value if updateValue
-     * @return bool
-     */
-    public function beforeUpdate(?string $columnName = null, ?string $value = null): bool
-    {
-        return true;
-    }
-
-    /**
-     * After update
-     * @param ?string $columnName if updateValue
-     * @param ?string $value if updateValue
-     * @return bool
-     */
-    public function afterUpdate(?string $columnName = null, ?string $value = null): bool
-    {
-        return true;
     }
 
     /**
@@ -329,6 +283,28 @@ class Model
     }
 
     /**
+     * Before update
+     * @param ?string $columnName if updateValue
+     * @param ?string $value if updateValue
+     * @return bool
+     */
+    public function beforeUpdate(?string $columnName = null, ?string $value = null): bool
+    {
+        return true;
+    }
+
+    /**
+     * After update
+     * @param ?string $columnName if updateValue
+     * @param ?string $value if updateValue
+     * @return bool
+     */
+    public function afterUpdate(?string $columnName = null, ?string $value = null): bool
+    {
+        return true;
+    }
+
+    /**
      * Delete
      * @param ?int $id
      * @return bool
@@ -355,7 +331,12 @@ class Model
      * @param ?string $foreignKey
      * @return $this
      */
-    public function bind(BindType|array $bind, string $tableName = null, ?string $primaryKey = null, ?string $foreignKey = null): self
+    public function bind(
+        BindType|array $bind,
+        string $tableName = null,
+        ?string $primaryKey = null,
+        ?string $foreignKey = null
+    ): self
     {
         if (!isset($this->tableInstance)) {
             return $this;
@@ -433,7 +414,25 @@ class Model
      */
     public function query(string $sql): bool|PDOStatement
     {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        if ($this->cache) {
+            $hash = hash('xxh128', $sql);
+
+            if (isset($this->cacheData[$hash])) {
+                return $this->cacheData[$hash];
+            }
+        }
+
         $pdo = DatabaseManager::$connection->getConnection();
+
+        if ($this->cache) {
+            $this->cacheData[$hash] = $pdo;
+        }
+
+        DatabaseManager::setLastSql($sql);
 
         return $pdo->query($sql);
     }
@@ -449,6 +448,10 @@ class Model
      */
     public function save(array $data, bool $validate = true, ?array $protected = null): bool
     {
+        if (empty($data)) {
+            return false;
+        }
+
         $isValid = $validate ? $this->validate($data) : true;
 
         if ($isValid) {
@@ -471,6 +474,141 @@ class Model
     }
 
     /**
+     * Get ID
+     * @return false|int|null
+     */
+    public function getId(): false|null|int
+    {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        return $this->tableInstance->getId();
+    }
+
+    /**
+     * Update
+     * @param array $data
+     * @return bool
+     * @throws DatabaseException
+     */
+    public function update(array $data): bool
+    {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        try {
+            if (!$this->beforeUpdate()) {
+                return false;
+            }
+
+            if ($this->tableInstance->update($data)) {
+                return $this->afterUpdate();
+            } else {
+                return false;
+            }
+        } catch (DatabaseManagerException $exception) {
+            throw new DatabaseException($exception->getHiddenMessage());
+        }
+    }
+
+    /**
+     * Set ID
+     * @param ?int $id
+     * @return Model|false
+     */
+    public function setId(?int $id = null): self|false
+    {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        $this->tableInstance->setId($id);
+
+        return $this;
+    }
+
+    /**
+     * Insert
+     * @param array $data
+     * @return bool
+     * @throws DatabaseException
+     */
+    public function insert(array $data): bool
+    {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
+        try {
+            if (!$this->beforeInsert()) {
+                return false;
+            }
+
+            if ($this->tableInstance->insert($data)) {
+                return $this->afterInsert();
+            } else {
+                return false;
+            }
+        } catch (DatabaseManagerException $exception) {
+            throw new DatabaseException($exception->getHiddenMessage());
+        }
+    }
+
+    /**
+     * Before insert
+     * @return bool
+     */
+    public function beforeInsert(): bool
+    {
+        return true;
+    }
+
+    /**
+     * After insert
+     * @return bool
+     */
+    public function afterInsert(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Save memcache
+     * @param string $key
+     * @param mixed $value
+     * @param int $expiration
+     * @return bool
+     */
+    public function memcacheSet(string $key, mixed $value, int $expiration = 0): bool
+    {
+        return Memcache::set(Account::$accountId . '_model_' . $this->name . '_' . $key, $value, $expiration);
+    }
+
+    /**
+     * Get memcache
+     * @param string $key
+     * @return mixed
+     */
+    public function memcacheGet(string $key): mixed
+    {
+        return Memcache::get(Account::$accountId . '_model_' . $this->name . '_' . $key);
+    }
+
+    /**
+     * Set cache status
+     * @param bool $isActive
+     * @return Model
+     */
+    public function setCache(bool $isActive = true): self
+    {
+        $this->cache = $isActive;
+
+        return $this;
+    }
+
+    /**
      * Magic __get
      * @param string $name
      * @return mixed|Model
@@ -481,7 +619,10 @@ class Model
             return $this->models[$name];
         }
 
-        return trigger_error(__('micro-framework.model.undefined_property', ['name' => $name]), E_USER_WARNING);
+        return trigger_error(
+            __('micro-framework.model.undefined_property', ['name' => $name]),
+            E_USER_WARNING
+        );
     }
 
 }

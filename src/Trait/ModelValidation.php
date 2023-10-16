@@ -3,7 +3,6 @@
 namespace Krzysztofzylka\MicroFramework\Trait;
 
 use Krzysztofzylka\MicroFramework\Extension\Validation\Validation;
-use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 
@@ -42,8 +41,8 @@ trait ModelValidation
         $validation->setValidation($validationData);
         $this->validationErrors = $validation->validate($data ?? $this->data);
 
-        if (!empty($this->validationErrors) && Kernel::getConfig()->debug) {
-            $this->log('Validation fail', 'WARNING', $this->validationErrors);
+        if (!empty($this->validationErrors) && $_ENV['config_debug']) {
+            $this->log(__('micro-framework.validation.fail'), 'WARNING', $this->validationErrors);
         }
 
         if (Request::isAjaxRequest() && !empty($this->validationErrors)) {

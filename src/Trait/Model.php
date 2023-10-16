@@ -7,6 +7,7 @@ use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Controller;
+use Krzysztofzylka\MicroFramework\Debug;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 use Krzysztofzylka\MicroFramework\Model as ModelClass;
@@ -36,12 +37,20 @@ trait Model
      * @param string ...$name
      * @return ModelClass
      * @throws NotFoundException
+     * @throws Exception
      */
     public function loadModel(string ...$name): ModelClass
     {
+        Debug::startTime();
+
         if (count($name) > 1) {
             foreach ($name as $singleName) {
                 $lastModel = $this->loadModel($singleName);
+            }
+
+            if ($_ENV['config_debug']) {
+                Debug::endTime('model_' . $singleName);
+                Debug::$data['models'][$singleName] = (Debug::$data['models'][$singleName] ?? 0) + 1;
             }
 
             return $lastModel;
@@ -88,12 +97,23 @@ trait Model
                 $model->transactionInstance = new Transaction();
             }
         } catch (Exception $exception) {
-            $this->log(__('micro-framework.model.fail_load', ['name' => $name]), 'ERR', ['name' => $startName, 'class' => $class, 'exception' => $exception]);
+            $this->log(
+                __('micro-framework.model.fail_load', ['name' => $name]),
+                'ERR',
+                ['name' => $startName, 'class' => $class, 'exception' => $exception]
+            );
 
             throw new NotFoundException(__('micro-framework.model.not_found', ['name' => $startName]));
         }
 
-        $this->models[Strings::camelizeString(str_replace('\\', '_', $startName), '_')] = $model;
+        $modelName = Strings::camelizeString(str_replace('\\', '_', $startName), '_');
+
+        $this->models[$modelName] = $model;
+
+        if ($_ENV['config_debug']) {
+            Debug::endTime('model_' . $name);
+            Debug::$data['models'][$name] = (Debug::$data['models'][$name] ?? 0) + 1;
+        }
 
         return $model;
     }

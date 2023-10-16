@@ -224,7 +224,13 @@ class Html
      * @return string
      * @throws MicroFrameworkException
      */
-    public function icon(string $icon, ?string $title = null, ?string $color = null, array $attributes = [], bool $show = true): string
+    public function icon(
+        string $icon,
+        ?string $title = null,
+        ?string $color = null,
+        array $attributes = [],
+        bool $show = true
+    ): string
     {
         if (!$show) {
             return '';

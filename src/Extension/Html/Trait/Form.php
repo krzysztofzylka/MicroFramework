@@ -49,9 +49,17 @@ trait Form
         }
 
         $this->getData($name, $params, $attributes);
-        $input = $this->clearTag('input', null, [...$params, ...$attributes])->__toString() . $this->generateInvalidDiv($invalidText);
+        $input = $this->clearTag(
+            'input',
+            null,
+            [...$params, ...$attributes]
+        )->__toString() . $this->generateInvalidDiv($invalidText);
 
-        return $this->tag('div', $this->generateTitle($title, $params) . $input, ['class' => 'form-group mb-2']);
+        return $this->tag(
+            'div',
+            $this->generateTitle($title, $params) . $input,
+            ['class' => 'form-group mb-2']
+        );
     }
 
     /**
@@ -116,7 +124,11 @@ trait Form
     private function generateInvalidDiv(string|false $invalidText): string
     {
         if ($invalidText) {
-            return $this->clearTag('div', $invalidText, ['id' => 'fieldError', 'class' => 'invalid-feedback'])->__toString();
+            return $this->clearTag(
+                'div',
+                $invalidText,
+                ['id' => 'fieldError', 'class' => 'invalid-feedback']
+            )->__toString();
         }
 
         return '';
@@ -136,7 +148,11 @@ trait Form
             return '';
         }
 
-        return $this->clearTag('label', $title, ['for' => $params['id'], 'class' => 'form-label'])->__toString();
+        return $this->clearTag(
+            'label',
+            $title,
+            ['for' => $params['id'], 'class' => 'form-label']
+        )->__toString();
     }
 
     /**
@@ -159,7 +175,11 @@ trait Form
         $this->getData($name, $params, $attributes);
         $input = $this->clearTag('input', null, [...$params, ...$attributes])->__toString();
 
-        return $this->tag('div', $this->generateTitle($title, $params) . $input, ['class' => 'form-group mb-2']);
+        return $this->tag(
+            'div',
+            $this->generateTitle($title, $params) . $input,
+            ['class' => 'form-group mb-2']
+        );
     }
 
     /**
@@ -172,7 +192,13 @@ trait Form
      * @return Html
      * @throws MicroFrameworkException
      */
-    public function select(string $name, array $options, ?string $selected = null, ?string $title = null, array $attributes = []): Html
+    public function select(
+        string $name,
+        array $options,
+        ?string $selected = null,
+        ?string $title = null,
+        array $attributes = []
+    ): Html
     {
         $invalidText = $this->getInvalidText($name);
 
@@ -201,7 +227,11 @@ trait Form
             $optionsString .= $htmlOption->tag('option', $value, $optionAttributes);
         }
 
-        $select = $this->clearTag('select', $optionsString, [...$params, ...$attributes]) . $this->generateInvalidDiv($invalidText);
+        $select = $this->clearTag(
+            'select',
+            $optionsString,
+            [...$params, ...$attributes]
+        ) . $this->generateInvalidDiv($invalidText);
 
         return $this->tag('div', $this->generateTitle($title, $params) . $select, ['class' => 'form-group mb-2']);
     }
@@ -239,7 +269,11 @@ trait Form
             $selected = [$selected];
         }
 
-        if (isset($attributes['multiple']) && $attributes['multiple'] === true && str_starts_with($data, '[') && str_ends_with($data, ']')) {
+        if (isset($attributes['multiple'])
+            && $attributes['multiple'] === true
+            && str_starts_with($data, '[')
+            && str_ends_with($data, ']')
+        ) {
             $data = json_decode($data, true);
         }
 

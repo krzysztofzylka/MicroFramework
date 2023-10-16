@@ -14,7 +14,7 @@ use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Exception\AccountException;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
-use Krzysztofzylka\MicroFramework\Kernel;
+use Krzysztofzylka\MicroFramework\Extension\Storage\Storage;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\Generator;
 use krzysztofzylka\SimpleLibraries\Library\Hash;
@@ -58,6 +58,12 @@ class Account
     public static Table $tableInstance;
 
     /**
+     * Account storage
+     * @var Storage
+     */
+    public static ?Storage $storage = null;
+
+    /**
      * Constructor
      * @throws DatabaseException
      */
@@ -67,7 +73,7 @@ class Account
             self::$tableInstance = (new Table())->setName('account');
         }
 
-        if (Kernel::getConfig()->authControl === true
+        if ($_ENV['auth_control'] === true
             && DatabaseManager::getDatabaseType() === DatabaseType::mysql
             && !self::$tableInstance->exists()
         ) {
@@ -79,6 +85,15 @@ class Account
             self::$account = self::getAccountData(self::$accountId);
             self::$accountRememberField = new AccountRememberField();
             self::$tableInstance->setId(self::$accountId);
+
+            try {
+                self::$storage = (new Storage())
+                    ->setDirectory('account_storage')
+                    ->setAccountIsolator()
+                    ->lock();
+            } catch (Exception) {
+                self::$storage = null;
+            }
         }
     }
 
@@ -157,7 +172,7 @@ class Account
         }
 
         try {
-            if (Kernel::getConfig()->authEmail) {
+            if ($_ENV['auth_with_email']) {
                 if (is_null($email) || empty($email)) {
                     throw new AccountException(__('micro-framework.account.email_required'));
                 }

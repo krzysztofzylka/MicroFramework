@@ -2,8 +2,10 @@
 
 namespace app\controller;
 
+use krzysztofzylka\DatabaseManager\Exception\InsertException;
 use Krzysztofzylka\MicroFramework\Controller;
-use Krzysztofzylka\MicroFramework\Exception\ViewException;
+use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
+use Krzysztofzylka\MicroFramework\Extension\CommonFile\CommonFile;
 use Krzysztofzylka\MicroFramework\Extension\Storage\Storage;
 use Krzysztofzylka\MicroFramework\Service;
 
@@ -11,7 +13,8 @@ class index extends Controller {
 
     /**
      * @return void
-     * @throws ViewException
+     * @throws NotFoundException
+     * @throws InsertException
      */
     public function index(): void
     {

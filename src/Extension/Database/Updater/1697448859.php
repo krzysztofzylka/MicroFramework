@@ -1,4 +1,4 @@
-`<?php
+<?php
 
 use Krzysztofzylka\MicroFramework\Extension\Database\CreateTable;
 use Krzysztofzylka\MicroFramework\Extension\Database\Updater;
@@ -12,7 +12,7 @@ return (new class extends Updater {
             ->addIdColumn()
             ->addSimpleIntColumn('account_id', false)
             ->addSimpleVarcharColumn('name')
-            ->addSimpleVarcharColumn('file_path')
+            ->addSimpleVarcharColumn('file_path', 2048)
             ->addSimpleVarcharColumn('file_extension')
             ->addSimpleVarcharColumn('file_size')
             ->addSimpleBoolColumn('is_public')

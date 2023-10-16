@@ -5,6 +5,7 @@ Micro-framework
     - Available load model and controller from subdirectory
     - Common files extension
     - Fix return path in storage
+    - Fix logger api
 
 v0.0.20-alpha
 Micro-framework

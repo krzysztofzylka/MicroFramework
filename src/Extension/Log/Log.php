@@ -51,7 +51,7 @@ class Log
                 unset($loggerContent['level'], $loggerContent['message']);
                 Logger::$url = $_ENV['logger_url'];
                 Logger::$api_key = $_ENV['logger_api_key'];
-                Logger::$site_key = $_ENV['logger_site_key'];
+                Logger::$cluster_key = $_ENV['logger_cluster_key'];
                 Logger::$username = $_ENV['logger_username'];
                 Logger::$password = $_ENV['logger_password'];
 

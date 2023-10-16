@@ -59,7 +59,13 @@ trait Render
         $this->html .= '<thead><tr>';
 
         foreach ($this->columns as $column) {
-            $this->html .= '<th>' . ($column['title'] ?? '') . '</th>';
+            $class = [];
+
+            if (isset($column['width'])) {
+                $class[] = 'width: ' . $column['width'] . 'px';
+            }
+
+            $this->html .= '<th ' . (isset($column['width']) ? ('width="' . $column['width'] . 'px"') : '') . '>' . ($column['title'] ?? '') . '</th>';
         }
 
         $this->html .= '</tr></thead>';

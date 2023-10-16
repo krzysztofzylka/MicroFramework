@@ -6,6 +6,7 @@ use krzysztofzylka\DatabaseManager\Condition;
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Debug;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
+use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Render;
 use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Session;
 use Krzysztofzylka\MicroFramework\Model;
@@ -102,6 +103,21 @@ class Table
      * @var ?int
      */
     public int $pages = 1;
+
+    /**
+     * Actions
+     * [
+     *   [
+     *     'value' => '', //button value
+     *     'type' => 'primary', //button type
+     *     'href' => '#', //button url
+     *     'class' => '', //additional classes
+     *     'dialogbox' => true, //add ajaxlink class
+     *   ]
+     * ]
+     * @var array
+     */
+    public array $actions = [];
 
     /**
      * Table ID
@@ -342,6 +358,7 @@ class Table
                 'model' => $this->model->name ?? null,
                 'controller' => $this->controller->name ?? null,
                 'columns' => json_decode(json_encode($this->columns), true),
+                'actions' => json_decode(json_encode($this->actions), true),
                 'search' => $this->search,
                 'activeSearch' => $this->activeSearch,
                 'page' => $this->page,
@@ -432,6 +449,21 @@ class Table
             $this->haveCondition = true;
             $this->conditions = array_merge($this->conditions, $conditions);
         }
+    }
+
+    /**
+     * Set model
+     * @param string|Model|null $model
+     * @return void
+     * @throws NotFoundException
+     */
+    public function setModel(string|Model|null $model): void
+    {
+        if (is_string($model)) {
+            $model = $this->controller->loadModel($model);
+        }
+
+        $this->model = $model;
     }
 
 }

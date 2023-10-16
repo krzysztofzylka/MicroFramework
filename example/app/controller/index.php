@@ -3,7 +3,6 @@
 namespace app\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
-use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Storage\Storage;
 use Krzysztofzylka\MicroFramework\Service;
 
@@ -11,7 +10,6 @@ class index extends Controller {
 
     /**
      * @return void
-     * @throws ViewException
      */
     public function index(): void
     {

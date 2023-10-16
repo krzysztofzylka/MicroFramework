@@ -50,7 +50,7 @@ class User
         $account = new Account();
 
         try {
-            if ((new Config())->authEmail) {
+            if ($_ENV['auth_with_email']) {
                 $account->registerUser($this->console->arg['args'][2], $this->console->arg['args'][3], $this->console->arg['args'][2]);
             } else {
                 $account->registerUser($this->console->arg['args'][2], $this->console->arg['args'][3]);

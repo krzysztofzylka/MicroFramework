@@ -176,7 +176,7 @@ class Storage
      * @return void
      * @throws MicroFrameworkException
      */
-    private function generatePath(): void
+    public function generatePath(): void
     {
         try {
             $this->path = realpath(Kernel::getPath('storage')) . '/' . $this->getDirectory();
@@ -199,7 +199,7 @@ class Storage
      */
     public function getFilePath(): string
     {
-        return $this->path . '/' . $this->fileName;
+        return File::repairPath($this->path . '/' . $this->fileName);
     }
 
     /**

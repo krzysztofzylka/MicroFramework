@@ -2,6 +2,7 @@ v0.0.21-alpha
 Micro-framework
     - Fix table width
     - Add actions to table
+    - Available load model and controller from subdirectory
 
 v0.0.20-alpha
 Micro-framework

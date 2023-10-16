@@ -1,0 +1,1 @@
+wget https://phpdoc.org/phpDocumentor.phar phpDocumentor.phar

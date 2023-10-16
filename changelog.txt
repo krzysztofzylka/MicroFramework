@@ -1,0 +1,40 @@
+v0.0.20-alpha
+Micro-framework
+    - Fix query
+    - Fix redirect with alert
+    - Fix database 1688329365 script
+    - Fix view throw exception (more info)
+    - Fix Twig RuntimeError
+    - Add wordBreak and noWrap to table parameters
+    - Fix redirect exception in alert
+    - Fix ajax table in admin panel
+    - Reformat code
+    - Fix getBodyContent return
+    - Fix bugs
+    - Fix kernel error message
+    - Fix storage bug in read content
+    - Fix kernel exception
+
+v0.0.19-alpha
+Micro-framework
+    - Storage extension
+    - Add global view variable
+    - Global timezone config
+    - Fix validation in form ajax
+    - Fix z-index vanillatoasts
+    - Add try...catch to logs
+    - Fixed bug in statistics extension
+    - Controller confirm action (trait)
+    - Extends responseAlert params
+    - Add update site view
+    - Fix table bug (database connected)
+    - Add pagination limit select to table
+    - Add html constructor to table cell
+    - Fix confirmAction in controller
+    - Reformat code and optimize imports
+    - Add allowed values validation
+    - Fix api authorization
+Console
+    - Change console help
+    - Update cron
+    - Fix cron env

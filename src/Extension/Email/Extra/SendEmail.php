@@ -6,6 +6,10 @@ use Krzysztofzylka\MicroFramework\Trait\Log;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
+/**
+ * Send mail
+ * @package Extension\Email\Extra
+ */
 class SendEmail
 {
 

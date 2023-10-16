@@ -4,7 +4,6 @@ namespace Krzysztofzylka\MicroFramework\Extension\Account;
 
 use Exception;
 use krzysztofzylka\DatabaseManager\Column;
-use krzysztofzylka\DatabaseManager\Condition;
 use krzysztofzylka\DatabaseManager\CreateTable;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Enum\ColumnType;
@@ -15,14 +14,15 @@ use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Exception\AccountException;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
-use Krzysztofzylka\MicroFramework\Kernel;
+use Krzysztofzylka\MicroFramework\Extension\Storage\Storage;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
+use krzysztofzylka\SimpleLibraries\Library\Generator;
 use krzysztofzylka\SimpleLibraries\Library\Hash;
 use krzysztofzylka\SimpleLibraries\Library\Session;
 
 /**
  * Account extension
- * @package Extension
+ * @package Extension\Account
  */
 class Account
 {
@@ -58,6 +58,12 @@ class Account
     public static Table $tableInstance;
 
     /**
+     * Account storage
+     * @var Storage
+     */
+    public static ?Storage $storage = null;
+
+    /**
      * Constructor
      * @throws DatabaseException
      */
@@ -67,7 +73,7 @@ class Account
             self::$tableInstance = (new Table())->setName('account');
         }
 
-        if (Kernel::getConfig()->authControl === true
+        if ($_ENV['auth_control'] === true
             && DatabaseManager::getDatabaseType() === DatabaseType::mysql
             && !self::$tableInstance->exists()
         ) {
@@ -78,6 +84,16 @@ class Account
             self::$accountId = (int)Session::get(self::$sessionName);
             self::$account = self::getAccountData(self::$accountId);
             self::$accountRememberField = new AccountRememberField();
+            self::$tableInstance->setId(self::$accountId);
+
+            try {
+                self::$storage = (new Storage())
+                    ->setDirectory('account_storage')
+                    ->setAccountIsolator()
+                    ->lock();
+            } catch (Exception) {
+                self::$storage = null;
+            }
         }
     }
 
@@ -141,7 +157,7 @@ class Account
     }
 
     /**
-     * @param string $username
+     * @param ?string $username
      * @param string $password
      * @param ?string $email
      * @return bool
@@ -149,15 +165,27 @@ class Account
      * @throws DatabaseException
      * @throws MicroFrameworkException
      */
-    public function registerUser(string $username, string $password, ?string $email = null): bool
+    public function registerUser(?string $username, string $password, ?string $email = null): bool
     {
         if (!isset(DatabaseManager::$connection)) {
             return false;
         }
 
         try {
-            if (self::$tableInstance->findIsset(['username' => $username])) {
-                throw new AccountException('User is already isset');
+            if ($_ENV['auth_with_email']) {
+                if (is_null($email) || empty($email)) {
+                    throw new AccountException(__('micro-framework.account.email_required'));
+                }
+
+                $username = $email;
+
+                if (self::$tableInstance->findIsset(['email' => $email])) {
+                    throw new AccountException(__('micro-framework.account.account_isset'));
+                }
+            } else {
+                if (self::$tableInstance->findIsset(['username' => $username])) {
+                    throw new AccountException(__('micro-framework.account.account_isset'));
+                }
             }
 
             return self::$tableInstance->insert([
@@ -217,7 +245,7 @@ class Account
         }
 
         if (!$find) {
-            throw new AccountException('User not found', 404);
+            throw new AccountException(__('micro-framework.account.user_not_found'), 404);
         }
 
         try {
@@ -227,7 +255,38 @@ class Account
         }
 
         if (!$checkHash) {
-            throw new AccountException('Authentication failed', 401);
+            throw new AccountException(__('micro-framework.account.auth_failed'), 401);
+        }
+
+        self::$accountId = (int)$find['account']['id'];
+        self::$account = self::getAccountData(self::$accountId);
+        Session::set(self::$sessionName, (int)$find['account']['id']);
+
+        return true;
+    }
+
+    /**
+     * Login to account by apikey
+     * @param string $apiKey
+     * @return bool
+     * @throws AccountException
+     * @throws DatabaseException
+     * @throws MicroFrameworkException
+     */
+    public function loginApikey(string $apiKey): bool
+    {
+        if (!isset(DatabaseManager::$connection)) {
+            return false;
+        }
+
+        try {
+            $find = self::$tableInstance->find(['api_key' => $apiKey], ['id']);
+        } catch (DatabaseManagerException $exception) {
+            throw new DatabaseException($exception->getHiddenMessage());
+        }
+
+        if (!$find) {
+            throw new AccountException(__('micro-framework.account.user_not_found'), 404);
         }
 
         self::$accountId = (int)$find['account']['id'];
@@ -247,6 +306,25 @@ class Account
 
         self::$accountId = null;
         self::$account = null;
+    }
+
+    /**
+     * Generate api_key
+     * @return string|false
+     * @throws UpdateException
+     */
+    public function generateApikey(): string|false
+    {
+        if (!isset(DatabaseManager::$connection) || !Account::$accountId) {
+            return false;
+        }
+
+        $apikey = Account::$accountId . Generator::uniqId() . Account::$account['account']['password'];
+        $apikey = hash('xxh128', $apikey) . Generator::uniqId(5);
+
+        self::$tableInstance->updateValue('api_key', $apikey);
+
+        return $apikey;
     }
 
 }

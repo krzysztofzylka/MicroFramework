@@ -3,8 +3,11 @@
 namespace Krzysztofzylka\MicroFramework\Extension\ErrorHandler;
 
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
-use Krzysztofzylka\MicroFramework\Kernel;
 
+/**
+ * Error handlers
+ * @package Extension\ErrorHandler
+ */
 class ErrorHandler
 {
 
@@ -45,8 +48,8 @@ class ErrorHandler
             );
         }
 
-        if (Kernel::getConfig()->debug) {
-            if (Kernel::getConfig()->showAllErrors) {
+        if ($_ENV['config_debug']) {
+            if ($_ENV['config_show_all_errors']) {
                 ob_end_clean();
                 dumpe([
                     'type' => $errorType,
@@ -98,7 +101,7 @@ class ErrorHandler
 
         }
 
-        if (Kernel::getConfig()->debug) {
+        if ($_ENV['config_debug']) {
             ob_end_clean();
 
             dumpe($lastError);

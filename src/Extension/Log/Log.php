@@ -3,10 +3,15 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Log;
 
 use DateTime;
+use Krzysztofzylka\Logger\Logger;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\Client;
 
+/**
+ * Logs
+ * @package Extension\Log
+ */
 class Log
 {
 
@@ -40,7 +45,26 @@ class Log
             return false;
         }
 
-        return (bool)file_put_contents($logPath, $jsonLogData . PHP_EOL, FILE_APPEND);
+        if ($_ENV['logger_enabled']) {
+            try {
+                $loggerContent = $logContent;
+                unset($loggerContent['level'], $loggerContent['message']);
+                Logger::$url = $_ENV['logger_url'];
+                Logger::$api_key = $_ENV['logger_api_key'];
+                Logger::$site_key = $_ENV['logger_site_key'];
+                Logger::$username = $_ENV['logger_username'];
+                Logger::$password = $_ENV['logger_password'];
+
+                Logger::log($logContent['message'], $logContent['level'], $loggerContent);
+            } catch (\Throwable) {
+            }
+        }
+
+        try {
+            return (bool)file_put_contents($logPath, $jsonLogData . PHP_EOL, FILE_APPEND);
+        } catch (\Exception) {
+            return false;
+        }
     }
 
     /**
@@ -49,7 +73,10 @@ class Log
      */
     private static function getDatetime(): string
     {
-        return DateTime::createFromFormat('U.u', sprintf('%.f', microtime(true)))->format('Y-m-d H:i:s.u');
+        return DateTime::createFromFormat(
+            'U.u',
+            sprintf('%.f', microtime(true))
+        )->format('Y-m-d H:i:s.u');
     }
 
 }

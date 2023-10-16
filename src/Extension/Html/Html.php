@@ -5,10 +5,11 @@ namespace Krzysztofzylka\MicroFramework\Extension\Html;
 use Exception;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Extension\Html\Trait\Form;
+use Krzysztofzylka\MicroFramework\Model;
 
 /**
  * Html helper
- * @package Extension
+ * @package Extension\Html
  */
 class Html
 {
@@ -36,6 +37,18 @@ class Html
     public function setFormValidation(array $formValidation): Html
     {
         $this->formValidation = $formValidation;
+
+        return $this;
+    }
+
+    /**
+     * Validate by model
+     * @param Model $model
+     * @return Html
+     */
+    public function validateModel(Model $model): Html
+    {
+        $this->formValidation = $model->validationErrors;
 
         return $this;
     }
@@ -211,7 +224,13 @@ class Html
      * @return string
      * @throws MicroFrameworkException
      */
-    public function icon(string $icon, ?string $title = null, ?string $color = null, array $attributes = [], bool $show = true): string
+    public function icon(
+        string $icon,
+        ?string $title = null,
+        ?string $color = null,
+        array $attributes = [],
+        bool $show = true
+    ): string
     {
         if (!$show) {
             return '';

@@ -1,0 +1,101 @@
+micro-framework:
+  name: Polski
+  yes: Tak
+  no: Nie
+  coming_soon: Wkrótce
+  modal:
+    close: Zamknij
+  view:
+    error:
+      error: Błąd
+      not_found: Nie znaleziono
+      page_not_found: Strona nie została znaleziona
+      unauthorized: Brak autoryzacji
+      auth_fail: Nie posiadasz autoryzacji
+      server_error: Błąd serwera
+      unexpected_error: Nieznany błąd serwera
+  table:
+    search: Szukaj ...
+  account:
+    account_isset: Użytkownik już istnieje
+    user_not_found: Nie znaleziono użytkownika
+    auth_failed: Błąd autoryzacji
+    fail_get_remember_field: Błąd pobierania zapisanych danych użytkownika
+    fail_set_remember_field: Błąd zapisywania danych użytkownika
+    email_required: Adres e-mail jest wymagany
+  validation:
+    fail: Błąd walidacji
+    predefined:
+      is_email: Nieprawidłowy adres e-mail
+      is_valid_date: Data jest nieprawidłowa
+      required: Pole jest wymagane
+      length:
+        min: Pole nie może posiadać mniej znaków niż
+        max: Pole nie może posiadać więcej znaków niż
+      is_numeric: Pole musi być liczbą
+      allow_values: "Wartość nieprawidłowa, wybierz prawidłową wartość z listy: {valueList}"
+  debug:
+    sqlTable: SQL
+    configTable: Konfiguracja
+    databaseConfig: SQL
+    config: Konfiguracja micro framework
+    translation: Translacje
+    kernel: Kernel
+    table: Tabele
+    account:
+      title: Autoryzacja
+      not_logged: Nie jesteś zalogowany
+    env: ENV
+    server:
+      title: Serwer
+  kernel:
+    adminpanel_disabled: Panel administracyjny jest wyłączony
+    authcontrol_disabled: Kontrola użytkowników jest wyłączona
+    not_have_permission: Nie masz uprawnień do panelu administracyjnego
+    not_logged: Nie jesteś zalogowany
+    controller_not_exists: Kontroler {controllerName} nie istnieje
+    method_is_controller_not_exists: Metoda {methodName} nie istnieje w kontrolerze {controllerName}
+    project_not_defined: Projekt nie został zdefiniowany
+  model:
+    undefined_property: Nie znaleziono zmiennej {name}
+    not_found: Nie znaleziono modelu {name}
+    fail_load: Błąd ładowania modelu {name}
+  controller:
+    undefined_property: Nie znaleziono zmiennej {name}
+  exceptions:
+    not_found:
+      object_not_found: Obiekt nie został znaleziony
+    database:
+      error: Błąd bazy danych
+  update:
+    title: Wkrótce wracamy
+    coming_soon: Trwa aktualizacja systemu
+    line1: Zmieniamy się dla Ciebie!
+    line2: Zapraszamy ponownie za chwilę.
+  confirm:
+    accept: Kontynuuj
+  admin_panel:
+    menu:
+      dashboard: Dashboard
+      logs: Logi
+      account: Użytkownicy
+      integrations: Integracje
+      setting: Ustawienia
+      statistics: Statystyki
+    accounts:
+      title: Użytkownicy
+      username: Użytkownik
+      is_admin: Administrator
+      created: Utworzono
+      modify: Zmodyfikowano
+    log:
+      title: Logi
+      lp: Lp.
+      date: Data
+      level: Poziom
+      message: Treść
+    dashboard:
+      title: Dashboard
+    setting:
+      title: Ustawienia
+      clear_memcache: Wyczyść memcache

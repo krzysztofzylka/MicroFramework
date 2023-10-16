@@ -1,0 +1,17 @@
+{% extends "MicroFramework/Layout/dialogbox.twig" %}
+
+{% block content %}
+    <center class="mt-3">
+        {{ message }}
+        <form method="POST" action="{{ app.here }}">
+            <input type="hidden" name="confirmAction" value="1" />
+            <input type="submit" class="btn btn-primary mt-4" value="{{ __('micro-framework.confirm.accept') }}" class="btn-primary mt-4" />
+        </form>
+    </center>
+
+    {{ app.id }}
+
+    <script>
+        $('#dialogbox_{{ app.id }}').dialogbox('close');
+    </script>
+{% endblock %}

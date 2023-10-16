@@ -1,0 +1,9 @@
+{% extends "MicroFramework/Layout/dashboard/paLayout.twig" %}
+
+{% block contentTitle %}
+    {{ __('micro-framework.admin_panel.setting.title') }}
+{% endblock %}
+
+{% block content %}
+    <a class="btn btn-warning btn-sm ajaxlink" href="/admin_panel/setting/clearMemcache">{{ __('micro-framework.admin_panel.setting.clear_memcache') }}</a>
+{% endblock %}

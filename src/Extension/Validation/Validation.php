@@ -6,6 +6,11 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Exception\ValidationException;
 use Krzysztofzylka\MicroFramework\Extra\ObjectNameGenerator;
 
+
+/**
+ * Validations
+ * @package Extension\Validation
+ */
 class Validation
 {
 
@@ -27,6 +32,10 @@ class Validation
      */
     public function validate(?array $data): array
     {
+        if (!$data) {
+            return [];
+        }
+
         $errors = [];
 
         foreach ($data ?? [] as $model => $modelData) {
@@ -49,6 +58,14 @@ class Validation
             }
         }
 
+        foreach ($this->validation as $model => $modelData) {
+            foreach ($modelData as $name => $value) {
+                if (($value === 'required' || in_array('required', $value)) && !isset($data[$model][$name])) {
+                    $errors[$model][$name] = __('micro-framework.validation.predefined.required');
+                }
+            }
+        }
+
         return $errors;
     }
 
@@ -58,6 +75,7 @@ class Validation
      * @param $value
      * @param array $elementValidations
      * @return ?string
+     * @todo rewrite
      */
     private function _validateElement(string $name, $value, array $elementValidations): ?string
     {

@@ -1,0 +1,101 @@
+micro-framework:
+  name: English
+  yes: Yes
+  no: No
+  coming_soon: Coming soon
+  modal:
+    close: Close
+  view:
+    error:
+      error: Error
+      not_found: Not found
+      page_not_found: Page not found
+      unauthorized: Unauthorized
+      auth_fail: You authorization failed
+      server_error: Server error
+      unexpected_error: Unexpected error
+  table:
+    search: Search ...
+  account:
+    account_isset: User is already isset
+    user_not_found: User not found
+    auth_failed: Authentication failed
+    fail_get_remember_field: Fail get remember fields
+    fail_set_remember_field: Fail set remember fields
+    email_required: E-mail address is required
+  validation:
+    fail: Validation fail
+    predefined:
+      is_email: Invalid email format
+      is_valid_date: Invalid date format
+      required: This field is required,
+      length:
+        min: Value must be more or equal to
+        max: Value must be less or equal to
+      is_numeric: Value must be numeric
+      allow_values: "Allowed values: {valueList}"
+  debug:
+    sqlTable: SQL
+    configTable: Configuration
+    databaseConfig: SQL
+    config: Micro framework configuration
+    translation: Translations
+    kernel: Kernel
+    table: Tables
+    account:
+      title: Authorization
+      not_logged: You not logged
+    env: ENV
+    server:
+      title: Server
+  kernel:
+    adminpanel_disabled: Admin panel is disabled
+    authcontrol_disabled: Account control is disabled
+    not_have_permission: You not have permission to admin panel
+    not_logged: You not logged
+    controller_not_exists: Controller {controllerName} not exists
+    method_is_controller_not_exists: Method {methodName} not exists in controller {controllerName}
+    project_not_defined: Project is not defined
+  model:
+    undefined_property: Undefined property {name}
+    not_found: Not found model {name}
+    fail_load: Fail load model {name}
+  controller:
+    undefined_property: Undefined property {name}
+  exceptions:
+    not_found:
+      object_not_found: Object not found
+    database:
+      error: Database error
+  update:
+    title: Coming soon
+    coming_soon: Coming soon
+    line1: We are preparing changes for you.
+    line2: Welcome back in a moment
+  confirm:
+    accept: Continue
+  admin_panel:
+    menu:
+      dashboard: Dashboard
+      logs: Logs
+      account: Account
+      integrations: Integrations
+      setting: Settings
+      statistics: Statistics
+    accounts:
+      title: Accounts
+      username: Username
+      is_admin: Is admin
+      created: Created
+      modify: Modify
+    log:
+      title: Logi
+      lp: Lp.
+      date: Date
+      level: Level
+      message: Message
+    dashboard:
+      title: Dashboard
+    setting:
+      title: Settings
+      clear_memcache: Clear memcache

@@ -4,18 +4,16 @@ namespace Krzysztofzylka\MicroFramework\Extension\Account\Extra;
 
 use Exception;
 use Krzysztofzylka\MicroFramework\Controller;
-use Krzysztofzylka\MicroFramework\ControllerApi;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NoAuthException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Account\Enum\AuthControlAction;
-use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\PHPDoc;
 
 /**
  * Auth control
- * @package Extension
+ * @package Extension\Account\Extra
  */
 class AuthControl
 {
@@ -28,19 +26,19 @@ class AuthControl
      */
     public static function run(string $class, string $method, bool $isApi): void
     {
-        if (Kernel::getConfig()->authControl) {
+        if ($_ENV['auth_control']) {
+            if ($isApi) {
+                return;
+            }
+
             $checkAuthorization = self::checkAuthorization($class, $method);
 
             if (!$checkAuthorization) {
-                if ($isApi) {
-                    (new ControllerApi())->responseError('Not authorized', 401);
-                } else {
-                    switch (Kernel::getConfig()->authControlAction) {
-                        case AuthControlAction::redirect:
-                            (new Controller())->redirect(Kernel::getConfig()->authControlRedirect);
-                        case AuthControlAction::exception:
-                            throw new NoAuthException();
-                    }
+                switch ($_ENV['auth_action']) {
+                    case 'redirect':
+                        (new Controller())->redirect($_ENV['auth_redirect']);
+                    case 'exception':
+                        throw new NoAuthException();
                 }
             }
         }
@@ -62,7 +60,7 @@ class AuthControl
         }
 
         try {
-            $requireAuth = PHPDoc::getClassMethodComment($class, $method, 'auth')[0] ?? Kernel::getConfig()->authControlDefaultRequireAuth;
+            $requireAuth = PHPDoc::getClassMethodComment($class, $method, 'auth')[0] ?? $_ENV['auth_default_require_auth'];
 
             if (is_string($requireAuth)) {
                 $requireAuth = filter_var($requireAuth, FILTER_VALIDATE_BOOLEAN);

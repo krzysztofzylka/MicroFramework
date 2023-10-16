@@ -6,7 +6,7 @@ use Krzysztofzylka\MicroFramework\Exception\ValidationException;
 
 /**
  * Required content
- * @package Validation
+ * @package Extension\Validation\Predefined
  */
 class required
 {
@@ -18,7 +18,7 @@ class required
     public function __construct($value)
     {
         if (empty($value)) {
-            throw new ValidationException('This field is required');
+            throw new ValidationException(__('micro-framework.validation.predefined.required'));
         }
     }
 

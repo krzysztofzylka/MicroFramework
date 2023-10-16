@@ -4,11 +4,16 @@ namespace Krzysztofzylka\MicroFramework\Extension\Statistic;
 
 use Exception;
 use krzysztofzylka\DatabaseManager\Table;
-use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Trait\Log;
 use krzysztofzylka\SimpleLibraries\Library\Client;
 
-class Statistic {
+
+/**
+ * Statistics
+ * @package Extension\Statistic
+ */
+class Statistic
+{
 
     use Log;
 
@@ -19,9 +24,10 @@ class Statistic {
     /**
      * Save statistics
      */
-    public function __construct() {
+    public function __construct()
+    {
         try {
-            if (!Kernel::getConfig()->statistics || !Kernel::getConfig()->database) {
+            if (!$_ENV['statistics_enabled'] || !$_ENV['database_enabled']) {
                 return;
             }
 
@@ -70,7 +76,7 @@ class Statistic {
                 'country' => $data['country'] ?? null,
                 'city' => $data['city'] ?? null,
                 'continent' => $data['continent'] ?? null,
-                'browser' => $_SERVER['HTTP_USER_AGENT'],
+                'browser' => $_SERVER['HTTP_USER_AGENT'] ?? null,
                 'page' => $_GET['url'] ?? null
             ]);
         } catch (Exception $exception) {
@@ -83,20 +89,25 @@ class Statistic {
      * @param string $ip
      * @return array
      */
-    private function geoplugin(string $ip) {
+    private function geoplugin(string $ip)
+    {
+        if (!$_ENV['statistics_analyze_ip']) {
+            return [];
+        }
+
         try {
             $url = 'http://www.geoplugin.net/php.gp?ip=' . $ip;
             $data = unserialize(file_get_contents($url));
 
-            if ($data['geoplugin_status'] === 200) {
-                return [
-                    'continent' => $data['geoplugin_continentName'] ?? null,
-                    'country' => $data['geoplugin_countryName'] ?? null,
-                    'city' => $data['geoplugin_city'] ?? null
-                ];
+            if ($data['geoplugin_status'] !== 200) {
+                return [];
             }
 
-            return [];
+            return [
+                'continent' => $data['geoplugin_continentName'] ?? null,
+                'country' => $data['geoplugin_countryName'] ?? null,
+                'city' => $data['geoplugin_city'] ?? null
+            ];
         } catch (Exception $exception) {
             $this->log('Geoplugin problem', 'ERR', ['exception' => $exception, 'ip' => $ip, 'url' => $url]);
 

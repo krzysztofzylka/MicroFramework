@@ -6,7 +6,7 @@ use Krzysztofzylka\MicroFramework\Exception\ValidationException;
 
 /**
  * Length checker
- * @package Validation
+ * @package Extension\Validation\Predefined
  */
 class length
 {
@@ -20,9 +20,9 @@ class length
     public function __construct($value, $key, $data)
     {
         if (isset($data['min']) && strlen($value) < $data['min']) {
-            throw new ValidationException('Value must be more or equal to ' . $data['min']);
+            throw new ValidationException(__('micro-framework.validation.predefined.length.min') . ' ' . $data['min']);
         } elseif (isset($data['max']) && strlen($value) > $data['max']) {
-            throw new ValidationException('Value must be less or equal to ' . $data['max']);
+            throw new ValidationException(__('micro-framework.validation.predefined.length.max') . ' ' . $data['max']);
         }
     }
 

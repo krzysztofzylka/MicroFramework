@@ -2,11 +2,18 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use krzysztofzylka\DatabaseManager\Exception\ConditionException;
+use krzysztofzylka\DatabaseManager\Exception\SelectException;
+use krzysztofzylka\DatabaseManager\Exception\TableException;
+use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Api\Authorization;
-use Krzysztofzylka\MicroFramework\Api\Enum\AuthorizationType;
+use Krzysztofzylka\MicroFramework\Api\Enum\ContentType;
+use Krzysztofzylka\MicroFramework\Api\Response;
+use Krzysztofzylka\MicroFramework\Api\Secure;
 use Krzysztofzylka\MicroFramework\Trait\Log;
+use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\Request;
-use krzysztofzylka\SimpleLibraries\Library\Response;
+use krzysztofzylka\SimpleLibraries\Library\Strings;
 
 /**
  * Api controller
@@ -30,73 +37,16 @@ class ControllerApi extends Controller
     public bool $auth = true;
 
     /**
-     * Authorization type
-     * @var AuthorizationType
+     * Response
+     * @var Response
      */
-    public AuthorizationType $authorizationType = AuthorizationType::basic;
+    public Response $response;
 
     /**
-     * Constructor
-     * - Automatic api authorization
+     * Secure
+     * @var Secure
      */
-    public function __construct()
-    {
-        if ($this->auth) {
-            if ($this->authorizationType === AuthorizationType::basic) {
-                $username = isset($_SERVER['PHP_AUTH_USER']) ? htmlspecialchars($_SERVER['PHP_AUTH_USER']) : false;
-                $password = isset($_SERVER['PHP_AUTH_PW']) ? htmlspecialchars($_SERVER['PHP_AUTH_PW']) : false;
-                $auth = false;
-
-                if ($username && $password) {
-                    $auth = (new Authorization())->basic($username, $password);
-                }
-
-                if (!$auth) {
-                    $this->log('Authorization failed', 'WARNING', ['username' => $username, 'authorizationType' => $this->authorizationType->name]);
-                    $this->responseError('Not authorized', 401);
-                }
-            }
-        }
-    }
-
-    /**
-     * Response JSON error
-     * @param string $message
-     * @param int $code
-     * @return never
-     */
-    public function responseError(string $message, int $code = 500): never
-    {
-        http_response_code($code);
-
-        $response = new Response();
-        $response->json(['error' => ['message' => $message, 'code' => $code]]);
-    }
-
-    /**
-     * Response JSON
-     * @param array $data
-     * @return never
-     */
-    public function responseJson(array $data): never
-    {
-        $response = new Response();
-        $response->json($data);
-    }
-
-    /**
-     * Check request method and response 400
-     * @param string|array $method
-     * @return void
-     */
-    public function allowRequestMethod(string|array $method): void
-    {
-        $method = is_string($method) ? [$method] : $method;
-
-        if (!in_array($this->getRequestMethod(), $method)) {
-            $this->responseError('Bad request', 400);
-        }
-    }
+    public Secure $secure;
 
     /**
      * Get request method
@@ -108,40 +58,78 @@ class ControllerApi extends Controller
     }
 
     /**
-     * Content body is json and response 400
-     * @return void
-     */
-    public function contentBodyIsJson(): void
-    {
-        json_decode($this->getBodyContent());
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->responseError('Bad request', 400);
-        }
-    }
-
-    /**
      * Get body content
+     * @param ContentType $contentType Content type, default string
      * @return false|string
+     * @throws SimpleLibraryException
      */
-    public function getBodyContent(): false|string
+    public function getBodyContent(ContentType $contentType = ContentType::String): false|string
     {
-        return Request::getInputContents();
+        switch ($contentType) {
+            case ContentType::String:
+                return Request::getInputContents();
+            case ContentType::Json:
+                $this->secure->contentIsJson();
+
+                return json_decode(Request::getInputContents(), true);
+        }
+
+        return false;
     }
 
     /**
-     * Validate content body (json) and response 400
-     * @param array $keyList
+     * Authorize API
      * @return void
+     * @throws ConditionException
+     * @throws SelectException
+     * @throws TableException
      */
-    public function contentBodyValidate(array $keyList): void
+    public function _autoAuth(): void
     {
-        $contentBody = json_decode($this->getBodyContent(), true);
-        $contentBodyKeys = array_keys($contentBody);
+        if ($this->auth) {
+            if (isset($_SERVER['PHP_AUTH_USER']) || isset($_SERVER['PHP_AUTH_PW'])) {
+                $username = isset($_SERVER['PHP_AUTH_USER']) ? htmlspecialchars($_SERVER['PHP_AUTH_USER']) : false;
+                $password = isset($_SERVER['PHP_AUTH_PW']) ? htmlspecialchars($_SERVER['PHP_AUTH_PW']) : false;
+                $auth = false;
 
-        foreach ($keyList as $key) {
-            if (!in_array($key, $contentBodyKeys)) {
-                $this->responseError('Invalid input data', 400);
+                if ($username && $password) {
+                    $auth = (new Authorization())->basic($username, $password);
+                }
+
+                if (!$auth) {
+                    $this->log('Authorization failed', 'WARNING', ['username' => $username]);
+                    $this->response->error('Not authorized', 401, 'Basic auth fail');
+                }
+            } elseif (isset($_SERVER['HTTP_APIKEY'])) {
+                $apikey = Strings::escape($_SERVER['HTTP_APIKEY']);
+
+                if (empty($apikey) || strlen($apikey) < 10) {
+                    $this->response->error('Not authorized', 401, 'ApiKey: ' . $apikey);
+                }
+
+                $account = (new Table('account'))->find(['api_key' => $apikey]);
+
+                if ($account) {
+                    $auth = (new Authorization())->apikey($apikey);
+
+                    if (!$auth) {
+                        $this->log('Authorization failed', 'WARNING', ['apikey' => $apikey]);
+                        $this->response->error('Not authorized', 401, 'Apikey auth fail');
+                    }
+                } else {
+                    $this->log('Authorization failed', 'WARNING', ['apikey' => $apikey]);
+                    $this->response->error('Not authorized', 401, 'Apikey auth fail');
+                }
+            } else {
+                $this->log(
+                    'Authorization failed',
+                    'WARNING',
+                    [
+                        'message' => 'Failed authorization type',
+                        'server' => $_SERVER
+                    ]
+                );
+                $this->response->error('Not authorized', 401, 'Failed authorization type');
             }
         }
     }

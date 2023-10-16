@@ -21,7 +21,7 @@ class auth extends Controller {
      */
     public function index() : void {
         if (Account::isLogged()) {
-            $this->redirect(Kernel::getConfig()->defaultPage);
+            $this->redirect($_ENV['config_default_page']);
         }
 
         $validation = new Validation();
@@ -40,7 +40,7 @@ class auth extends Controller {
                                 $account = new Account();
                                 $account->login($this->data['auth']['login'], $this->data['auth']['password']);
 
-                                $this->redirect(Kernel::getConfig()->defaultPage);
+                                $this->redirect($_ENV['config_default_page']);
                             } catch (Exception) {
                                 throw new ValidationException('Login failed');
                             }
@@ -71,15 +71,16 @@ class auth extends Controller {
 
     public function register() : void {
         if (Account::isLogged()) {
-            $this->redirect(Kernel::getConfig()->defaultPage);
+            $this->redirect($_ENV['config_default_page']);
         }
 
         $validation = new Validation();
         $validation->setValidation(
             [
                 'auth' => [
-                    'login' => [
+                    'email' => [
                         'required',
+                        'isEmail',
                         function () {
                             if (empty($this->data['auth']['password'])) {
                                 throw new ValidationException('Password is required');
@@ -88,16 +89,17 @@ class auth extends Controller {
                         function () {
                             try {
                                 $account = new Account();
-                                $account->registerUser($this->data['auth']['login'], $this->data['auth']['password']);
+                                $account->registerUser(null, $this->data['auth']['password'], $this->data['auth']['email']);
 
-                                $this->redirect(Kernel::getConfig()->defaultPage);
-                            } catch (Exception) {
-                                throw new ValidationException('Register failed');
+                                $this->redirect($_ENV['config_default_page']);
+                            } catch (Exception $exception) {
+                                throw new ValidationException($exception->getMessage());
                             }
                         }
                     ],
                     'password' => [
-                        'required'
+                        'required',
+                        'length' => ['min' => 6]
                     ]
                 ]
             ]
@@ -111,7 +113,7 @@ class auth extends Controller {
         $form = (new Html())->form(
             (new Html())
                 ->setFormValidation($validationData)
-                ->input('auth/login', 'Login')
+                ->input('auth/email', 'E-Mail')
                 ->input('auth/password', 'Password', ['type' => 'password'])
                 ->button('Register')
         );

@@ -13,7 +13,7 @@ class DatabaseException extends MicroFrameworkException
     {
         $this->setHiddenMessage($message);
 
-        parent::__construct('Database error.', 404);
+        parent::__construct(__('micro-framework.exceptions.database.error'), 404);
     }
 
 }

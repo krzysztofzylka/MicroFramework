@@ -90,7 +90,8 @@ class index extends Controller {
         $this->table->model = $this->loadModel('example');
         $this->table->columns = [
             'example.id' => [
-                'title' => 'ID'
+                'title' => 'ID',
+                'width' => 100
             ],
             'example.name' => [
                 'title' => 'Name',

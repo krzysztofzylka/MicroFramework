@@ -15,10 +15,11 @@ class ObjectNameGenerator
      * @param ObjectTypeEnum $objectTypeEnum Enum
      * @return string
      */
-    public static function controller(string $controllerName, ObjectTypeEnum $objectTypeEnum = ObjectTypeEnum::APP): string
+    public static function controller(string $controllerName, ObjectTypeEnum $objectTypeEnum): string
     {
         $objectName = match($objectTypeEnum) {
-            ObjectTypeEnum::APP => '\app\controller\\',
+            ObjectTypeEnum::APP_LOCAL => '\app\controller\\',
+            ObjectTypeEnum::APP => '\Krzysztofzylka\MicroFramework\App\controller\\',
             ObjectTypeEnum::PA => '\Krzysztofzylka\MicroFramework\AdminPanel\controller\\',
             ObjectTypeEnum::PA_LOCAL => '\admin_panel\controller\\',
             ObjectTypeEnum::API => '\api\controller\\'

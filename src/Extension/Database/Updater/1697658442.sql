@@ -1,0 +1,1 @@
+alter table common_file add hash varchar(128) null after is_temp;

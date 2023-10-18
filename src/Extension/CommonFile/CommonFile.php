@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework\Extension\CommonFile;
 
 use Exception;
+use krzysztofzylka\DatabaseManager\Condition;
 use krzysztofzylka\DatabaseManager\Exception\ConditionException;
 use krzysztofzylka\DatabaseManager\Exception\DeleteException;
 use krzysztofzylka\DatabaseManager\Exception\InsertException;
@@ -98,7 +99,8 @@ class CommonFile
             'file_size' => $fileSize,
             'is_public' => (int)$isPublic,
             'is_temp' => (int)$isTemp,
-            'date_temp' => date('Y-m-d H:i:s', time() + $tempTime)
+            'date_temp' => date('Y-m-d H:i:s', time() + $tempTime),
+            'hash' => $this->generateHash()
         ];
 
         if (!$this->tableInstance->insert($insertData)) {
@@ -147,7 +149,8 @@ class CommonFile
             'file_size' => $fileSize,
             'is_public' => (int)$isPublic,
             'is_temp' => (int)$isTemp,
-            'date_temp' => date('Y-m-d H:i:s', time() + $tempTime)
+            'date_temp' => date('Y-m-d H:i:s', time() + $tempTime),
+            'hash' => $this->generateHash()
         ];
 
         if (!$this->tableInstance->insert($insertData)) {
@@ -188,7 +191,32 @@ class CommonFile
      */
     public function getCommonFile(int $commonFileId): array
     {
-        return $this->tableInstance->find(['common_file.id' => $commonFileId, 'common_file.account_id' => $this->accountIsolator]);
+        return $this->tableInstance->find([
+            'common_file.id' => $commonFileId,
+            'OR' => [
+                new Condition('common_file.account_id', '=', $this->accountIsolator),
+                new Condition('common_file.account_id', '=', -1)
+            ]
+        ]);
+    }
+
+    /**
+     * Get common file
+     * @param string $hash
+     * @return array
+     * @throws ConditionException
+     * @throws SelectException
+     * @throws TableException
+     */
+    public function getCommonFileByHash(string $hash): array
+    {
+        return $this->tableInstance->find([
+            'common_file.hash' => $hash,
+            'OR' => [
+                new Condition('common_file.account_id', '=', $this->accountIsolator),
+                new Condition('common_file.account_id', '=', -1)
+            ]
+        ]);
     }
 
     /**
@@ -223,6 +251,7 @@ class CommonFile
      * @return false|int
      * @throws InsertException
      * @throws MicroFrameworkException
+     * @throws Exception
      */
     public function uploadFromForm(
         string $inputFileName,
@@ -255,7 +284,8 @@ class CommonFile
             'file_size' => $fileSize,
             'is_public' => (int)$isPublic,
             'is_temp' => (int)$isTemp,
-            'date_temp' => date('Y-m-d H:i:s', time() + $tempTime)
+            'date_temp' => date('Y-m-d H:i:s', time() + $tempTime),
+            'hash' => $this->generateHash()
         ];
 
         if (!$this->tableInstance->insert($insertData)) {
@@ -273,6 +303,16 @@ class CommonFile
     private function generateFileName(): string
     {
         return Generator::uniqId(50);
+    }
+
+    /**
+     * Generate hash
+     * @return string
+     * @throws Exception
+     */
+    private function generateHash(): string
+    {
+        return Generator::uniqId(100);
     }
 
 }

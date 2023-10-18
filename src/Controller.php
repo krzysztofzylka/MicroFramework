@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework;
 
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
+use Krzysztofzylka\MicroFramework\Extension\CommonFile\CommonFile;
 use Krzysztofzylka\MicroFramework\Extension\CommonFiles\CommonFiles;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table as TableExtension;
@@ -103,6 +104,12 @@ class Controller
      * @var array
      */
     public array $viewVariables = [];
+
+    /**
+     * Common file
+     * @var CommonFile
+     */
+    public CommonFile $commonFile;
 
     /**
      * Load view

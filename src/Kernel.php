@@ -22,6 +22,7 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
+use Krzysztofzylka\MicroFramework\Extension\CommonFile\CommonFile;
 use Krzysztofzylka\MicroFramework\Extension\CommonFiles\CommonFiles;
 use Krzysztofzylka\MicroFramework\Extension\Env\Env;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
@@ -371,7 +372,11 @@ class Kernel
         } elseif (isset($params['api']) && $params['api']) {
             $class = ObjectNameGenerator::controller($name, ObjectTypeEnum::API);
         } else {
-            $class = ObjectNameGenerator::controller($name);
+            $class = ObjectNameGenerator::controller($name, ObjectTypeEnum::APP_LOCAL);
+
+            if (!class_exists($class)) {
+                $class = ObjectNameGenerator::controller($name, ObjectTypeEnum::APP);
+            }
         }
 
         if (!class_exists($class)) {
@@ -388,7 +393,7 @@ class Kernel
             $controller->arguments = $arguments;
             $controller->data = self::getData();
             $controller->params = $params;
-//            $controller->commonFiles = new CommonFiles();
+            $controller->commonFile = new CommonFile();
 
             if (isset($params['api']) && $params['api']) {
                 /** @var ControllerApi $controller */

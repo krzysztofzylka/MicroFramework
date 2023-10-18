@@ -9,6 +9,7 @@ Micro-framework
     - Confirm optimization
     - Optimize save, insert and update
     - File upload
+    - Download file from common file
 
 v0.0.20-alpha
 Micro-framework

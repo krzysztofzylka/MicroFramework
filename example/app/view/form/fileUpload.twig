@@ -1,0 +1,10 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+    <form action="{{ app.here }}" method="post" enctype="multipart/form-data">
+        {{ (
+        form().file('file', 'Title')
+        )|raw }}
+        <input type="submit" value="wyslij" />
+    </form>
+{% endblock %}

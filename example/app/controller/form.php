@@ -3,6 +3,7 @@
 namespace app\controller;
 
 use Krzysztofzylka\MicroFramework\Controller;
+use Krzysztofzylka\MicroFramework\Extension\CommonFile\CommonFile;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 
 class form extends Controller {
@@ -46,6 +47,12 @@ class form extends Controller {
             'form' => 'a'
         ]);
         exit;
+    }
+
+    public function fileUpload() {
+        if ($_FILES) {
+            (new CommonFile())->uploadFromForm('file');
+        }
     }
 
 }

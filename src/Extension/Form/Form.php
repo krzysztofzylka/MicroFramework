@@ -96,6 +96,23 @@ class Form
     }
 
     /**
+     * File
+     * @param string $name Name eg. abc/def...
+     * @param ?string $title Title
+     * @param array $attributes Attributes
+     * @return Html
+     * @throws MicroFrameworkException
+     */
+    public function file(string $name, ?string $title = null, array $attributes = []): Html
+    {
+        return $this->input(
+            $name,
+            $title,
+            array_merge($attributes, ['type' => 'file'])
+        );
+    }
+
+    /**
      * Select
      * @param string $name
      * @param array $options

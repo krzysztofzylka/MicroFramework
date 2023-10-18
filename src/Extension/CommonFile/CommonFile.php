@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\CommonFile;
 
+use Exception;
 use krzysztofzylka\DatabaseManager\Exception\ConditionException;
 use krzysztofzylka\DatabaseManager\Exception\DeleteException;
 use krzysztofzylka\DatabaseManager\Exception\InsertException;
@@ -14,6 +15,7 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Storage\Storage;
 use krzysztofzylka\SimpleLibraries\Library\File;
 use krzysztofzylka\SimpleLibraries\Library\Generator;
+use krzysztofzylka\SimpleLibraries\Library\Request;
 
 /**
  * Common file
@@ -55,7 +57,7 @@ class CommonFile
         }
 
         if (!isset($this->accountIsolator)) {
-            $this->accountIsolator = Account::$accountId;
+            $this->accountIsolator = Account::$accountId ?? -1;
         }
     }
 
@@ -63,25 +65,25 @@ class CommonFile
      * Upload file
      * @throws NotFoundException
      * @throws InsertException
-     * @throws \Exception
+     * @throws Exception
      */
     public function uploadFile(
         string $path,
-        ?bool $isTemp = false,
-        ?int $tempTime = 86400,
-        ?bool $isPublic = false
+        ?bool  $isTemp = false,
+        ?int   $tempTime = 86400,
+        ?bool  $isPublic = false
     ): false|int
     {
         if (!file_exists($path)) {
             throw new NotFoundException();
         }
 
-        $accountId = Account::$accountId ?? -1;
+        $accountId = $this->accountIsolator ?? Account::$accountId ?? -1;
         $fileExtension = File::getExtension($path);
         $fileName = pathinfo($path, PATHINFO_FILENAME);
         $fileSize = filesize($path);
 
-        $this->storage->setFileName(Generator::uniqId(50));
+        $this->storage->setFileName($this->generateFileName());
         $this->storage->generatePath();
 
         $filePath = $this->storage->getFilePath();
@@ -106,18 +108,31 @@ class CommonFile
         return $this->tableInstance->getId();
     }
 
+    /**
+     * Zapis tekstu do pliku
+     * @param string $text
+     * @param string $fileName
+     * @param bool|null $isTemp
+     * @param int|null $tempTime
+     * @param bool|null $isPublic
+     * @return false|int|null
+     * @throws InsertException
+     * @throws MicroFrameworkException
+     * @throws Exception
+     */
     public function write(
         string $text,
         string $fileName,
-        ?bool $isTemp = false,
-        ?int $tempTime = 86400,
-        ?bool $isPublic = false
-    ) {
-        $accountId = Account::$accountId ?? -1;
+        ?bool  $isTemp = false,
+        ?int   $tempTime = 86400,
+        ?bool  $isPublic = false
+    ): false|int|null
+    {
+        $accountId = $this->accountIsolator ?? Account::$accountId ?? -1;
         $fileExtension = File::getExtension($fileName);
         $fileName = pathinfo($fileName, PATHINFO_FILENAME);
 
-        $this->storage->setFileName(Generator::uniqId(50));
+        $this->storage->setFileName($this->generateFileName());
         $this->storage->generatePath();
         $this->storage->write($text);
 
@@ -189,9 +204,75 @@ class CommonFile
             ->lock();
     }
 
+    /**
+     * Set isolator
+     * @param int $accountId
+     * @return void
+     */
     public function setIsolator(int $accountId): void
     {
         $this->accountIsolator = $accountId;
+    }
+
+    /**
+     * Upload file from form input
+     * @param string $inputFileName
+     * @param bool $isPublic
+     * @param bool $isTemp
+     * @param int $tempTime
+     * @return false|int
+     * @throws InsertException
+     * @throws MicroFrameworkException
+     */
+    public function uploadFromForm(
+        string $inputFileName,
+        bool $isPublic = false,
+        bool $isTemp = false,
+        int $tempTime = 86400
+    ): false|int
+    {
+        $files = Request::getFiles();
+
+        if (!isset($files[$inputFileName])) {
+            return false;
+        }
+
+        $fileExtension = File::getExtension($files[$inputFileName]['name']);
+        $fileName = pathinfo($files[$inputFileName]['name'], PATHINFO_FILENAME);
+
+        $this->storage->setFileName($this->generateFileName());
+        $this->storage->generatePath();
+
+        $filePath = $this->storage->getFilePath();
+        move_uploaded_file($files[$inputFileName]['tmp_name'], $filePath);
+        $fileSize = filesize($filePath);
+
+        $insertData = [
+            'account_id' => $this->accountIsolator ?? Account::$accountId ?? -1,
+            'name' => $fileName,
+            'file_path' => $filePath,
+            'file_extension' => $fileExtension,
+            'file_size' => $fileSize,
+            'is_public' => (int)$isPublic,
+            'is_temp' => (int)$isTemp,
+            'date_temp' => date('Y-m-d H:i:s', time() + $tempTime)
+        ];
+
+        if (!$this->tableInstance->insert($insertData)) {
+            return false;
+        }
+
+        return $this->tableInstance->getId();
+    }
+
+    /**
+     * Generate file name
+     * @return string
+     * @throws Exception
+     */
+    private function generateFileName(): string
+    {
+        return Generator::uniqId(50);
     }
 
 }

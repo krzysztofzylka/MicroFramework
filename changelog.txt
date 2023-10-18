@@ -6,6 +6,7 @@ Micro-framework
     - Common files extension
     - Fix return path in storage
     - Fix logger api
+    - Confirm optimization
 
 v0.0.20-alpha
 Micro-framework

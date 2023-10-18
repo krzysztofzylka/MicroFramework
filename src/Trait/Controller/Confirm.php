@@ -27,9 +27,12 @@ trait Confirm
         $this->layout = 'dialogbox';
         $this->title = $title;
 
-        $this->loadView([
-            'message' => $message
-        ], '/MicroFramework/ControllerActions/confirm');
+        $this->loadView(
+            [
+                'message' => $message
+            ],
+            '/MicroFramework/ControllerActions/confirm'
+        );
 
         return false;
     }

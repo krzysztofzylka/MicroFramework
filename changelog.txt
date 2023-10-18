@@ -7,6 +7,7 @@ Micro-framework
     - Fix return path in storage
     - Fix logger api
     - Confirm optimization
+    - Optimize save, insert and update
 
 v0.0.20-alpha
 Micro-framework

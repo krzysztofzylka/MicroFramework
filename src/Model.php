@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use Exception;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Enum\BindType;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
@@ -115,7 +116,7 @@ class Model
      * @param ?string $orderBy
      * @return array|false
      * @throws DatabaseException
-     * @throws \Exception
+     * @throws Exception
      */
     public function find(?array $condition = null, ?array $columns = null, ?string $orderBy = null): array|false
     {
@@ -454,23 +455,23 @@ class Model
 
         $isValid = $validate ? $this->validate($data) : true;
 
-        if ($isValid) {
-            foreach ($data as $model => $insertData) {
-                if (!is_null($protected)) {
-                    $insertData = array_intersect_key($insertData, array_flip($protected));
-                }
-
-                if (is_int($this->getId())) {
-                    $this->loadModel($model)->setId($this->getId())->update($insertData);
-                } else {
-                    $this->loadModel($model)->insert($insertData);
-                }
-            }
-
-            return true;
+        if (!$isValid) {
+            return false;
         }
 
-        return false;
+        foreach ($data as $model => $insertData) {
+            if (!is_null($protected)) {
+                $insertData = array_intersect_key($insertData, array_flip($protected));
+            }
+
+            if (is_int($this->getId())) {
+                $this->loadModel($model)->setId($this->getId())->update($insertData);
+            } else {
+                $this->loadModel($model)->insert($insertData);
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -547,6 +548,8 @@ class Model
             }
 
             if ($this->tableInstance->insert($data)) {
+                $this->setId($this->tableInstance->getId());
+
                 return $this->afterInsert();
             } else {
                 return false;

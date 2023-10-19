@@ -155,4 +155,7 @@ class index extends Controller {
         exit;
     }
 
+    public function commonFile(): void {
+    }
+
 }

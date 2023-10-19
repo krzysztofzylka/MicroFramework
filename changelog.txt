@@ -14,6 +14,7 @@ Micro-framework
     - Change example view
     - Add checkboxes to table
     - Add ajax protector (@ajax true)
+    - Twig function to download common file
 
 v0.0.20-alpha
 Micro-framework

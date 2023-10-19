@@ -7,6 +7,7 @@ use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Action;
+use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\CommonFile;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\DebugTable;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Form as FormTwigCustomFunctions;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\JS;
@@ -76,6 +77,7 @@ class View
             new DebugTable($this->environment);
             new Load($this->environment);
             new JS($this->environment);
+            new CommonFile($this->environment);
 
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);

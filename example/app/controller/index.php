@@ -22,6 +22,13 @@ class index extends Controller {
         $this->dialogboxWidth = 500;
     }
 
+    public function dialogjs(): void
+    {
+        $this->layout = 'dialogbox';
+        $this->title = 'Test js\'a';
+        $this->dialogboxWidth = 500;
+    }
+
     public function table(): void
     {
     }

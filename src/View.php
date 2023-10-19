@@ -9,6 +9,7 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Action;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\DebugTable;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Form as FormTwigCustomFunctions;
+use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\JS;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Load;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Translate;
 use krzysztofzylka\SimpleLibraries\Library\Generator;
@@ -74,6 +75,7 @@ class View
             new Action($this->environment);
             new DebugTable($this->environment);
             new Load($this->environment);
+            new JS($this->environment);
 
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
@@ -208,7 +210,8 @@ class View
             'here' => Kernel::$url ?? null,
             'isAjax' => Request::isAjaxRequest(),
             'global' => !$slim ? self::$globalVariables : null,
-            'redirectAlert' => $_SESSION['redirectAlert'] ?? null
+            'redirectAlert' => $_SESSION['redirectAlert'] ?? null,
+            'layout' => isset($this->controller->layout) ? $this->controller->layout : null
         ];
 
         if (isset($_SESSION['redirectAlert'])) {

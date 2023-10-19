@@ -2,46 +2,35 @@
 
 namespace Krzysztofzylka\MicroFramework\App\controller;
 
-use krzysztofzylka\DatabaseManager\Exception\ConditionException;
-use krzysztofzylka\DatabaseManager\Exception\SelectException;
-use krzysztofzylka\DatabaseManager\Exception\TableException;
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
-use Krzysztofzylka\MicroFramework\Extension\Account\Account;
+use Krzysztofzylka\MicroFramework\Kernel;
 
-class common_file extends Controller
+class public_files extends Controller
 {
 
     /**
-     * Download file from common file
-     * @param mixed $hash
+     * Download js file from view
+     * @param string $controller
+     * @param string $method
      * @return void
      * @throws NotFoundException
-     * @throws ConditionException
-     * @throws SelectException
-     * @throws TableException
      */
-    public function download(mixed $hash): void
+    public function js(string $controller, string $method): void
     {
-        $commonFile = $this->commonFile->getCommonFileByHash($hash);
+        $this->layout = 'none';
+        $path = Kernel::getPath('view') . '/' . htmlspecialchars($controller) . '/' . htmlspecialchars($method) . '.js';
 
-        if (!$commonFile) {
+        if (!file_exists($path)) {
             throw new NotFoundException();
         }
 
-        if (!$commonFile['common_file']['is_public']) {
-            if (Account::$accountId !== $commonFile['common_file']['account_id']) {
-                throw new NotFoundException();
-            }
-        }
+        $fileName = basename($path);
 
-        $fileName = $commonFile['common_file']['name'] . '.' . $commonFile['common_file']['file_extension'];
-        $contentType = $this->getContentType($commonFile['common_file']['file_extension']);
-
-        header("Content-length: " . $commonFile['common_file']['file_size']);
+        header("Content-length: " . filesize($path));
         header('Content-Disposition: inline; filename="' . $fileName . '"');
-        header('Content-type: ' . $contentType);
-        readfile($commonFile['common_file']['file_path']);
+        header('Content-type: text/javascript');
+        readfile($path);
         exit;
     }
 

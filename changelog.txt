@@ -11,6 +11,7 @@ Micro-framework
     - File upload
     - Download file from common file
     - Add JS loader to view
+    - Change example view
 
 v0.0.20-alpha
 Micro-framework

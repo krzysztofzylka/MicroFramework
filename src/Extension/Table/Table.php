@@ -7,6 +7,7 @@ use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Debug;
 use Krzysztofzylka\MicroFramework\Exception\DatabaseException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
+use Krzysztofzylka\MicroFramework\Extension\Table\Extra\Cell;
 use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Render;
 use Krzysztofzylka\MicroFramework\Extension\Table\Trait\Session;
 use Krzysztofzylka\MicroFramework\Model;
@@ -85,6 +86,12 @@ class Table
      * @var bool
      */
     public bool $activePagination = true;
+
+    /**
+     * Checkbox action
+     * @var bool
+     */
+    public bool $activeCheckboxAction = true;
 
     /**
      * Elements per page
@@ -183,7 +190,7 @@ class Table
      * Is ajax
      * @var bool
      */
-    public bool $isAjax = false;
+    public bool $isAjax = true;
 
     /**
      * Table is rendered
@@ -344,6 +351,18 @@ class Table
             $time_start = microtime(true);
         }
 
+        if (!empty($this->actions) && $this->activeCheckboxAction) {
+            $this->columns = [
+                '_checkbox_' => [
+                    'title' => '#',
+                    'width' => 30,
+                    'value' => function (Cell $cell) {
+                        return '<input class="form-check-input _checkbox_" type="checkbox" value="" data-id="' . $cell->data[$this->model->name]['id'] . '" />';
+                    }
+                ]
+            ] + $this->columns;
+        }
+
         $this->session();
         $this->getResults();
 
@@ -363,6 +382,7 @@ class Table
                 'activeSearch' => $this->activeSearch,
                 'page' => $this->page,
                 'pages' => $this->pages,
+                'activeCheckboxAction' => $this->activeCheckboxAction,
                 'activePagination' => $this->activePagination,
                 'activePaginationLimit' => $this->activePaginationLimit,
                 'paginationLimitDefault' => $this->paginationLimitDefault,

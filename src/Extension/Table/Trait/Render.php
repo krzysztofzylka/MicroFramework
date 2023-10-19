@@ -143,7 +143,7 @@ trait Render
     {
         $this->html .= '<div class="actions">';
         $this->html .= '<div class="row w-100">';
-        $this->html .= '<div class="col-8">';
+        $this->html .= '<div class="col-8 user-actions">';
 
         foreach ($this->actions as $action) {
             $type = $action['type'] ?? 'primary';

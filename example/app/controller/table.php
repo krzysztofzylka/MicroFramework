@@ -25,6 +25,10 @@ class table extends Controller {
                 'dialogbox' => false
             ],
             [
+                'value' => 'Action',
+                'href' => '/table/action'
+            ],
+            [
                 'value' => 'Dialogbox',
                 'href' => '/table/dialogbox',
                 'type' => 'secondary'
@@ -37,6 +41,10 @@ class table extends Controller {
         $this->layout = 'dialogbox';
         $this->title = 'Dialogbox';
         $this->loadView();
+    }
+
+    public function action(string $ids = '') {
+        $this->responseAlert('action: ' . $ids);
     }
 
 }

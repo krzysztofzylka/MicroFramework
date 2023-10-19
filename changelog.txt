@@ -16,6 +16,7 @@ Micro-framework
     - Add ajax protector (@ajax true)
     - Twig function to download common file
     - Common file, count download
+    - Database optimization
 
 v0.0.20-alpha
 Micro-framework

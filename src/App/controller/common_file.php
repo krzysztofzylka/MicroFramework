@@ -5,6 +5,7 @@ namespace Krzysztofzylka\MicroFramework\App\controller;
 use krzysztofzylka\DatabaseManager\Exception\ConditionException;
 use krzysztofzylka\DatabaseManager\Exception\SelectException;
 use krzysztofzylka\DatabaseManager\Exception\TableException;
+use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
@@ -37,6 +38,10 @@ class common_file extends Controller
 
         $fileName = $commonFile['common_file']['name'] . '.' . $commonFile['common_file']['file_extension'];
         $contentType = $this->getContentType($commonFile['common_file']['file_extension']);
+
+        (new Table('common_file'))
+            ->setId($commonFile['common_file']['id'])
+            ->updateValue('download_count', $commonFile['common_file']['download_count'] + 1);
 
         header("Content-length: " . $commonFile['common_file']['file_size']);
         header('Content-Disposition: inline; filename="' . $fileName . '"');

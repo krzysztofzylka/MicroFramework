@@ -15,6 +15,7 @@ Micro-framework
     - Add checkboxes to table
     - Add ajax protector (@ajax true)
     - Twig function to download common file
+    - Common file, count download
 
 v0.0.20-alpha
 Micro-framework

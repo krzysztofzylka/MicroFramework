@@ -13,6 +13,7 @@ Micro-framework
     - Add JS loader to view
     - Change example view
     - Add checkboxes to table
+    - Add ajax protector (@ajax true)
 
 v0.0.20-alpha
 Micro-framework

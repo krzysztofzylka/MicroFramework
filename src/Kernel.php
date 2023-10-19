@@ -36,6 +36,7 @@ use Krzysztofzylka\MicroFramework\Extra\ObjectTypeEnum;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\_Array;
 use krzysztofzylka\SimpleLibraries\Library\File;
+use krzysztofzylka\SimpleLibraries\Library\PHPDoc;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use Throwable;
 use Twig\Error\RuntimeError;
@@ -381,6 +382,12 @@ class Kernel
 
         if (!class_exists($class)) {
             throw new NotFoundException(__('micro-framework.kernel.controller_not_exists', ['controllerName' => $name]));
+        }
+
+        $ajaxProtect = (bool)(PHPDoc::getClassMethodComment($class, $method, 'ajax')[0] ?? false);
+
+        if ($ajaxProtect && !Request::isAjaxRequest()) {
+            throw new NotFoundException();
         }
 
         AuthControl::run($class, $method, isset($params['api']) && $params['api']);

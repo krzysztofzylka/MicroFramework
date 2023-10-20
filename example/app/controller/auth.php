@@ -10,7 +10,6 @@ use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Validation\Validation;
-use Krzysztofzylka\MicroFramework\Kernel;
 
 class auth extends Controller {
 

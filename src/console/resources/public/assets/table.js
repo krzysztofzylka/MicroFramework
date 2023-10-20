@@ -45,4 +45,26 @@ $.fn.table = function () {
         e.preventDefault();
         return false;
     });
+
+    $(this).find('.user-actions').on('click', 'a', (e) => {
+        let $button = $(e.currentTarget),
+            data = '',
+            href = $button.attr('href');
+
+        if ($button.attr('data-href') !== undefined) {
+            href = $button.attr('data-href');
+        } else {
+            $button.attr('data-href', href);
+        }
+
+        $('._checkbox_:checked').each(function(id,element) {
+            data += (data !== '' ? ',' : '') + $(element).attr('data-id')
+        });
+
+        if (data !== '') {
+            href += '/' + data;
+        }
+
+        $button.attr('href', href);
+    });
 };

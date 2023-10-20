@@ -4,7 +4,6 @@ namespace Krzysztofzylka\MicroFramework\Extension\Twig\Functions;
 
 use Krzysztofzylka\MicroFramework\Debug;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
-use Krzysztofzylka\MicroFramework\Kernel;
 use Twig\TwigFunction;
 
 class CommonFile

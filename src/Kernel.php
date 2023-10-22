@@ -171,10 +171,11 @@ class Kernel
 
         $url = self::$url = isset($_GET['url']) ? ('/' . $_GET['url']) : $_ENV['config_default_page'];
         $extension = File::getExtension($url);
+        $controllerName = isset($_GET['url']) ? htmlspecialchars(explode('/', $_GET['url'])[0]) : '';
 
         new Statistic();
 
-        if (!empty($extension)) {
+        if (!empty($extension) && !in_array($controllerName, ['public_files', 'common_file'])) {
             if (!file_exists($url)) {
                 http_response_code(404);
                 exit;

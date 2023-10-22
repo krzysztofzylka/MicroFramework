@@ -2,6 +2,7 @@ v0.0.22-alpha
 Micro-framework
     - Optimize imports
     - Update table file
+    - Load assets from framework resources
 
 v0.0.21-alpha
 Micro-framework

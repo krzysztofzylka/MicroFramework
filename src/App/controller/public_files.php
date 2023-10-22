@@ -5,9 +5,39 @@ namespace Krzysztofzylka\MicroFramework\App\controller;
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Kernel;
+use krzysztofzylka\SimpleLibraries\Library\File;
 
 class public_files extends Controller
 {
+
+    /**
+     * @param string ...$assetPath
+     * @return void
+     * @throws NotFoundException
+     */
+    public function assets(string ...$assetPath): void {
+        $assetPath = implode('/', $assetPath);
+        $assetPath = File::repairPath($assetPath);
+        $assetPath = str_replace(['../', '//', '\\'], '', $assetPath);
+        $assetPath = htmlspecialchars($assetPath);
+        $extension = File::getExtension($assetPath);
+
+        if (!in_array($extension, ['js', 'css'])) {
+            throw new NotFoundException();
+        }
+
+        $path = realpath(__DIR__ . '/../../Resources/assets') . '/' . $assetPath;
+
+        if (!file_exists($path)) {
+            throw new NotFoundException();
+        }
+
+        header("Content-length: " . filesize($path));
+        header('Content-Disposition: inline; filename="' . basename($path) . '"');
+        header('Content-type: ' . $this->getContentType($extension));
+        readfile($path);
+        exit;
+    }
 
     /**
      * Download js file from view

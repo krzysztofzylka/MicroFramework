@@ -14,17 +14,9 @@ class Load
         $formFunction = new TwigFunction(
             'loadAsset',
             function ($assetPath) {
-                $path = File::repairPath(Kernel::getPath('assets') . '/' . $assetPath);
-
-                if (!file_exists($path)) {
-                    return '';
-                }
-
-                $fileModifyTime = filemtime($path);
-
-                return match (File::getExtension($path)) {
-                    'js' => '<script src="/assets/' . $assetPath . '?' . $fileModifyTime . '"></script>',
-                    'css' => '<link href="/assets/' . $assetPath . '?' . $fileModifyTime . '" rel="stylesheet">',
+                return match (File::getExtension($assetPath)) {
+                    'js' => '<script src="/public_files/assets/' . $assetPath . '"></script>',
+                    'css' => '<link href="/public_files/assets/' . $assetPath . '" rel="stylesheet">',
                     default => '',
                 };
 

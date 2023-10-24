@@ -57,6 +57,7 @@ class Init
             File::copy($this->console->resourcesPath . '/public/assets/spinner.css', $this->console->path . '/public/assets/spinner.css');
             File::copy($this->console->resourcesPath . '/public/assets/spinner.js', $this->console->path . '/public/assets/spinner.js');
             File::copy($this->console->resourcesPath . '/admin_panel/view/layout.twig', $this->console->path . '/admin_panel/view/layout.twig');
+            File::copy($this->console->resourcesPath . '/storage/.gitignore', $this->console->path . '/storage/.gitignore');
         } catch (Exception $exception) {
             Prints::print('Failed copy file: ' . $exception->getMessage(), true, true);
         }

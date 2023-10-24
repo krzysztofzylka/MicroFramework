@@ -77,7 +77,7 @@ class Account
             && DatabaseManager::getDatabaseType() === DatabaseType::mysql
             && !self::$tableInstance->exists()
         ) {
-            throw new MicroFrameworkException('Account is not installed');
+            throw new DatabaseException('Account is not installed');
         }
 
         if (self::isLogged()) {

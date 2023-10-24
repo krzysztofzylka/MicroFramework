@@ -82,6 +82,18 @@ class Model
     public array $cacheData = [];
 
     /**
+     * Isolator column name
+     * @var string|null
+     */
+    public ?string $isolatorName = null;
+
+    /**
+     * Isolator value
+     * @var mixed
+     */
+    public mixed $isolator = null;
+
+    /**
      * Select required
      * @param array|null $condition
      * @param array|null $columns
@@ -122,6 +134,14 @@ class Model
     {
         if (!isset($this->tableInstance)) {
             return false;
+        }
+
+        if (!is_null($this->isolatorName)) {
+            if (!is_array($condition)) {
+                $condition = [];
+            }
+
+            $condition[$this->name . '.' . $this->isolatorName] = $this->isolator;
         }
 
         if ($this->cache) {
@@ -169,6 +189,14 @@ class Model
             if (isset($this->cacheData[$hash])) {
                 return $this->cacheData[$hash];
             }
+        }
+
+        if (!is_null($this->isolatorName)) {
+            if (!is_array($condition)) {
+                $condition = [];
+            }
+
+            $condition[$this->name . '.' . $this->isolatorName] = $this->isolator;
         }
 
         try {

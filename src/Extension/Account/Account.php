@@ -77,7 +77,7 @@ class Account
             && DatabaseManager::getDatabaseType() === DatabaseType::mysql
             && !self::$tableInstance->exists()
         ) {
-            self::install();
+            throw new MicroFrameworkException('Account is not installed');
         }
 
         if (self::isLogged()) {
@@ -94,42 +94,6 @@ class Account
             } catch (Exception) {
                 self::$storage = null;
             }
-        }
-    }
-
-    /**
-     * Install extension
-     * @return bool
-     * @throws DatabaseException
-     */
-    public function install(): bool
-    {
-        if (!isset(DatabaseManager::$connection)) {
-            return false;
-        }
-
-        try {
-            $adminColumn = new Column();
-            $adminColumn->setName('admin');
-            $adminColumn->setType(ColumnType::tinyint, 1);
-            $adminColumn->setDefault(0);
-
-            (new CreateTable())
-                ->setName('account')
-                ->addIdColumn()
-                ->addUsernameColumn()
-                ->addPasswordColumn()
-                ->addEmailColumn()
-                ->addColumn($adminColumn)
-                ->addDateCreatedColumn()
-                ->addDateModifyColumn()
-                ->execute();
-
-            self::$tableInstance = (new Table())->setName('account');
-
-            return true;
-        } catch (DatabaseManagerException) {
-            throw new DatabaseException();
         }
     }
 

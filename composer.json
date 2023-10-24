@@ -22,10 +22,12 @@
         "twig/twig": "^3.0",
         "krzysztofzylka/database-manager": "v1.0.*",
         "phpmailer/phpmailer": "^6.8",
-        "fakerphp/faker": "^v1.21.0",
         "mtdowling/cron-expression": "^1.2",
         "symfony/yaml": "^6.2",
         "krzysztofzylka/logger": "^1.1",
         "ext-memcached": "*"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^v1.21.0"
     }
 }

@@ -136,13 +136,7 @@ class Model
             return false;
         }
 
-        if (!is_null($this->isolatorName)) {
-            if (!is_array($condition)) {
-                $condition = [];
-            }
-
-            $condition[$this->name . '.' . $this->isolatorName] = $this->isolator;
-        }
+        $this->_prepareCondition($condition);
 
         if ($this->cache) {
             $hash = hash('xxh128', json_encode([$condition, $columns, $orderBy]));
@@ -183,20 +177,14 @@ class Model
             return false;
         }
 
+        $this->_prepareCondition($condition);
+
         if ($this->cache) {
             $hash = hash('xxh128', json_encode([$condition, $columns, $orderBy, $limit, $groupBy]));
 
             if (isset($this->cacheData[$hash])) {
                 return $this->cacheData[$hash];
             }
-        }
-
-        if (!is_null($this->isolatorName)) {
-            if (!is_array($condition)) {
-                $condition = [];
-            }
-
-            $condition[$this->name . '.' . $this->isolatorName] = $this->isolator;
         }
 
         try {
@@ -226,6 +214,8 @@ class Model
         if (!isset($this->tableInstance)) {
             return false;
         }
+
+        $this->_prepareCondition($condition);
 
         if ($this->cache) {
             $hash = hash('xxh128', json_encode([$condition, $groupBy]));
@@ -261,6 +251,8 @@ class Model
         if (!isset($this->tableInstance)) {
             return false;
         }
+
+        $this->_prepareCondition($condition);
 
         if ($this->cache) {
             $hash = hash('xxh128', json_encode([$condition]));
@@ -664,6 +656,22 @@ class Model
     public function setIsolator(mixed $isolator = null): void
     {
         $this->isolator = $isolator;
+    }
+
+    /**
+     * Prepare condition
+     * @param $condition
+     * @return void
+     */
+    private function _prepareCondition(&$condition): void
+    {
+        if (!is_null($this->isolatorName)) {
+            if (!is_array($condition)) {
+                $condition = [];
+            }
+
+            $condition[$this->name . '.' . $this->isolatorName] = $this->isolator;
+        }
     }
 
 }

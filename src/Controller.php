@@ -51,12 +51,6 @@ class Controller
     public ?array $data = null;
 
     /**
-     * Html generator
-     * @var Html
-     */
-    public Html $htmlGenerator;
-
-    /**
      * Is API controller
      * @var bool
      */

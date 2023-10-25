@@ -413,7 +413,6 @@ class Kernel
 
                 $controller->_autoAuth();
             } else {
-                $controller->htmlGenerator = new Html();
                 $controller->table = new Table();
                 $controller->table->controller = $controller;
                 $controller->table->data = $controller->data;

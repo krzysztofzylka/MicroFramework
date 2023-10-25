@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework\Trait;
 
 use Exception;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
+use krzysztofzylka\DatabaseManager\Enum\BindType;
 use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Controller;
@@ -96,6 +97,24 @@ trait Model
             if ($model->useTable && isset(DatabaseManager::$connection)) {
                 $model->tableInstance = new Table($model->tableName ?? $startName);
                 $model->transactionInstance = new Transaction();
+
+                foreach ($model->bindLeftJoin as $tableName => $bind) {
+                    $tableName = is_numeric($tableName) ? $bind : $tableName;
+
+                    $model->bind(BindType::leftJoin, $tableName ?? null, $bind['primaryKey'] ?? null, $bind['foreignKey'] ?? null);
+                }
+
+                foreach ($model->bindHasOne as $tableName => $bind) {
+                    $tableName = is_numeric($tableName) ? $bind : $tableName;
+
+                    $model->bind(BindType::hasOne, $tableName ?? null, $bind['primaryKey'] ?? null, $bind['foreignKey'] ?? null);
+                }
+
+                foreach ($model->bindHasMany as $tableName => $bind) {
+                    $tableName = is_numeric($tableName) ? $bind : $tableName;
+
+                    $model->bind(BindType::hasMany, $tableName ?? null, $bind['primaryKey'] ?? null, $bind['foreignKey'] ?? null);
+                }
             }
         } catch (Exception $exception) {
             $this->log(

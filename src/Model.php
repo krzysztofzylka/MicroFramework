@@ -94,6 +94,24 @@ class Model
     public mixed $isolator = null;
 
     /**
+     * Predefined bind left join
+     * @var array
+     */
+    public array $bindLeftJoin = [];
+
+    /**
+     * Predefined bind has one
+     * @var array
+     */
+    public array $bindHasOne = [];
+
+    /**
+     * Predefined bind has many
+     * @var array
+     */
+    public array $bindHasMany = [];
+
+    /**
      * Select required
      * @param array|null $condition
      * @param array|null $columns
@@ -364,6 +382,21 @@ class Model
         }
 
         $this->tableInstance->bind($bind, $tableName, $primaryKey, $foreignKey);
+
+        return $this;
+    }
+
+    /**
+     * Unbind all table
+     * @return $this
+     */
+    public function unbindAll(): self
+    {
+        if (!isset($this->tableInstance)) {
+            return $this;
+        }
+
+        $this->tableInstance->unbindAll();
 
         return $this;
     }

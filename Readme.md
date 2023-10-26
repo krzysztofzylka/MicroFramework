@@ -30,6 +30,9 @@ php vendor/krzysztofzylka/micro-framework/src/console/Console.php database updat
 ```
 5. Uruchamiamy projekt z folderu `public` w którym znajduje się plik `index.php`
 
+## Jak działa uruchamianie metody z kontrolera
+Zostało to uproszczone jak najbardziej, wystarczy wejść w link http://127.0.0.1/{nazwa kontrolera}/{metoda} oraz opcjonalnie /{param1}/{param2}[...]
+
 # Start
 
 ## Własny kontroler

@@ -684,11 +684,13 @@ class Model
     /**
      * Change isolator
      * @param mixed|null $isolator
-     * @return void
+     * @return self
      */
-    public function setIsolator(mixed $isolator = null): void
+    public function setIsolator(mixed $isolator = null): self
     {
         $this->isolator = $isolator;
+
+        return $this;
     }
 
     /**

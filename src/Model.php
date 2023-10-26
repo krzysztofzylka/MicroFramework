@@ -700,6 +700,10 @@ class Model
      */
     private function _prepareCondition(&$condition): void
     {
+        if (is_null($this->isolator)) {
+            return;
+        }
+
         if (!is_null($this->isolatorName)) {
             if (!is_array($condition)) {
                 $condition = [];

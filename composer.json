@@ -14,20 +14,7 @@
             "email": "krzysztofzylka@yahoo.com"
         }
     ],
-    "funding": [
-        {
-            "url": "https://paypal.me/jessesquires",
-            "type": "paypal"
-        },
-        {
-            "url": "https://cash.app/$jsq",
-            "type": "cash"
-        },
-        {
-            "url": "https://venmo.com/u/jsq1312",
-            "type": "venmo"
-        }
-    ],
+    "funding": {},
     "require": {
         "php": ">=8.1",
         "ext-mbstring": "*",

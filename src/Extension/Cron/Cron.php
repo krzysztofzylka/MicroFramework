@@ -79,9 +79,9 @@ class Cron
         $count = 0;
 
         foreach ($this->getCronScheduled() as $schedule) {
-            $cronFactory = CronExpression::factory($schedule['time']);
+            $cronExpression = new CronExpression($schedule['time']);
 
-            if ($cronFactory->isDue()) {
+            if ($cronExpression->isDue()) {
                 if (empty($schedule['model']) || empty($schedule['method'])) {
                     $this->log(
                         'Fail run cron',

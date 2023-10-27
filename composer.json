@@ -36,7 +36,7 @@
         "twig/twig": "^3.0",
         "krzysztofzylka/database-manager": "v1.0.*",
         "phpmailer/phpmailer": "^6.8",
-        "mtdowling/cron-expression": "^1.2",
+        "dragonmantank/cron-expression": "^v3.3.3",
         "symfony/yaml": "^6.2",
         "krzysztofzylka/logger": "^1.1",
         "ext-memcached": "*"

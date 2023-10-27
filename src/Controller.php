@@ -5,7 +5,6 @@ namespace Krzysztofzylka\MicroFramework;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\CommonFile\CommonFile;
 use Krzysztofzylka\MicroFramework\Extension\CommonFiles\CommonFiles;
-use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table as TableExtension;
 use Krzysztofzylka\MicroFramework\Trait\Alerts;
 use Krzysztofzylka\MicroFramework\Trait\Controller\Confirm;

@@ -12,6 +12,12 @@ class log extends Controller
 
     public function index()
     {
+    }
+
+    public function indexTable(): void
+    {
+        $this->layout = 'table';
+
         $logs = [];
 
         $logLimit = 500;
@@ -62,7 +68,6 @@ class log extends Controller
                 'maxChar' => 100
             ]
         ];
-        $this->loadView(['table' => $this->table->render()]);
     }
 
     public function detail(string $id)

@@ -25,7 +25,6 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Extra\AuthControl;
 use Krzysztofzylka\MicroFramework\Extension\CommonFile\CommonFile;
 use Krzysztofzylka\MicroFramework\Extension\CommonFiles\CommonFiles;
 use Krzysztofzylka\MicroFramework\Extension\Env\Env;
-use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Extension\Memcache\Memcache;
 use Krzysztofzylka\MicroFramework\Extension\Statistic\Statistic;

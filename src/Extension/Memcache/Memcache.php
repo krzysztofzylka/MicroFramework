@@ -21,6 +21,18 @@ class Memcache
     public static Memcached $memcachedInstance;
 
     /**
+     * Server ip
+     * @var string
+     */
+    public static string $serverIp = '127.0.0.1';
+
+    /**
+     * Server port
+     * @var int
+     */
+    public static int $serverPort = 11211;
+
+    /**
      * Active mamcached
      * @return void
      */
@@ -31,7 +43,7 @@ class Memcache
         }
 
         self::$memcachedInstance = new Memcached();
-        $addServer = self::$memcachedInstance->addServer('127.0.0.1', 11211);
+        $addServer = self::$memcachedInstance->addServer(self::$serverIp, self::$serverPort);
 
         if (!$addServer) {
             self::saveError();

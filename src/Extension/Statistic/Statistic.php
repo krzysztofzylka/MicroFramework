@@ -17,8 +17,22 @@ class Statistic
 
     use Log;
 
+    /**
+     * Statistic table instance
+     * @var Table
+     */
     private Table $statisticInstance;
+
+    /**
+     * Statistic ip table instance
+     * @var Table
+     */
     private Table $statisticIpInstance;
+
+    /**
+     * Statistic visits table instance
+     * @var Table
+     */
     private Table $statisticVisitsInstance;
 
     /**
@@ -89,7 +103,7 @@ class Statistic
      * @param string $ip
      * @return array
      */
-    private function geoplugin(string $ip)
+    private function geoplugin(string $ip): array
     {
         if (!$_ENV['statistics_analyze_ip']) {
             return [];

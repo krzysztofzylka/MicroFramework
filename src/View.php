@@ -13,10 +13,14 @@ use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Form as FormTwigCusto
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\JS;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Load;
 use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Translate;
+use krzysztofzylka\SimpleLibraries\Library\_Array;
 use krzysztofzylka\SimpleLibraries\Library\Generator;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Response;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader;
 
@@ -100,6 +104,9 @@ class View
      * @param Exception $exception
      * @param string $name
      * @return string
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      * @throws ViewException
      */
     public function renderError(int $code, Exception $exception, string $name = 'MicroFramework/Layout/error'): string
@@ -140,6 +147,9 @@ class View
      * @param ?string $name
      * @return string
      * @throws ViewException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function render(array $variables = [], ?string $name = null): string
     {
@@ -178,7 +188,7 @@ class View
                 Debug::$data['views'][] = [
                     'name' => $name,
                     'globalVariables' => $this->getGlobalVariables(true),
-                    'variables' => $this->specialcharsarray($this->variables)
+                    'variables' => _Array::htmlSpecialChars($this->variables)
                 ];
             }
 
@@ -196,6 +206,7 @@ class View
      * Generate global variables
      * @param bool $slim
      * @return array
+     * @throws Exception
      */
     public function getGlobalVariables(bool $slim = false): array
     {
@@ -229,19 +240,6 @@ class View
         }
 
         return $config;
-    }
-
-    private function specialcharsarray(array $array)
-    {
-        $return = [];
-
-        foreach ($array as $name => $value) {
-            $return[$name] = is_array($value)
-                ? $this->specialcharsarray($value)
-                : (is_string($value) ? htmlspecialchars($value) : $value);
-        }
-
-        return $return;
     }
 
 }

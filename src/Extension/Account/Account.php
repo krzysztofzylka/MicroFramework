@@ -3,10 +3,7 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Account;
 
 use Exception;
-use krzysztofzylka\DatabaseManager\Column;
-use krzysztofzylka\DatabaseManager\CreateTable;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
-use krzysztofzylka\DatabaseManager\Enum\ColumnType;
 use krzysztofzylka\DatabaseManager\Enum\DatabaseType;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Exception\UpdateException;
@@ -59,7 +56,7 @@ class Account
 
     /**
      * Account storage
-     * @var Storage
+     * @var ?Storage
      */
     public static ?Storage $storage = null;
 
@@ -276,6 +273,7 @@ class Account
      * Generate api_key
      * @return string|false
      * @throws UpdateException
+     * @throws Exception
      */
     public function generateApikey(): string|false
     {

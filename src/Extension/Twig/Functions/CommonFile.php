@@ -6,6 +6,9 @@ use Krzysztofzylka\MicroFramework\Debug;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use Twig\TwigFunction;
 
+/**
+ * Common file function
+ */
 class CommonFile
 {
 
@@ -27,6 +30,8 @@ class CommonFile
                 . '</a>';
 
             Debug::endTime('twig_commonFile_' . $commonFileId);
+
+            return '';
         });
 
         $environment->addFunction($formFunction);

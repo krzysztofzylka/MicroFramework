@@ -10,6 +10,9 @@ use Krzysztofzylka\MicroFramework\Trait\Log;
 use Krzysztofzylka\MicroFramework\View;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 
 /**
@@ -32,6 +35,9 @@ class Email
      * @return bool
      * @throws ViewException
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function sendEmail(
         string $address,
@@ -97,7 +103,6 @@ class Email
      */
     private function connect(PHPMailer $phpMailer, ?object $config = null): void
     {
-        /** @var Config $config */
         $config = $config ?? $_ENV;
 
         if (!is_null($config['email_predefined_config'])) {

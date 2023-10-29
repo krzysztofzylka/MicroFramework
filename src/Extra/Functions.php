@@ -17,9 +17,9 @@ function dump(...$data): void
 /**
  * Better var_dump with exit
  * @param $data
- * @return void
+ * @return never
  */
-function dumpe(...$data): void
+function dumpe(...$data): never
 {
     dump(...$data);
     exit;

@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Table\Trait;
 
+use Krzysztofzylka\MicroFramework\Exception\AccountException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 
 /**
@@ -14,6 +15,7 @@ trait Session
     /**
      * Get saved session
      * @return mixed
+     * @throws AccountException
      */
     private function getSession(): mixed
     {
@@ -32,6 +34,7 @@ trait Session
      * Save session data
      * @param array $data
      * @return void
+     * @throws AccountException
      */
     private function saveSession(array $data): void
     {

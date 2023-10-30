@@ -1,6 +1,6 @@
 <phpunit>
     <testsuites>
-        <testsuite name="MyTestSuite">
+        <testsuite name="MicroFramework">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

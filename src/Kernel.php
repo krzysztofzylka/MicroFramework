@@ -38,7 +38,6 @@ use krzysztofzylka\SimpleLibraries\Library\File;
 use krzysztofzylka\SimpleLibraries\Library\PHPDoc;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use Throwable;
-use Twig\Error\RuntimeError;
 
 /**
  * Kernel

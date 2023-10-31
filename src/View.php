@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework;
 
 use Exception;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
+use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
 use krzysztofzylka\SimpleLibraries\Library\_Array;
@@ -125,10 +126,6 @@ class View
             $nameExplode = explode('/', $name);
             $this->name = end($nameExplode);
 
-            if ($_ENV['config_view_cache']) {
-                //view cache
-            }
-
             if ($_ENV['config_debug']) {
                 Debug::endTime('view_render_' . $name);
                 Debug::$data['views'][] = [
@@ -138,7 +135,15 @@ class View
                 ];
             }
 
-            return $name . '.twig<br />';
+            $fullPath = Kernel::getPath('view') . '/' . $name . '.phtml';
+
+            if (!file_exists($fullPath)) {
+                throw new NotFoundException('View not found: ' . $name . '.phtml');
+            }
+
+            ob_start();
+            include $fullPath;
+            return ob_get_clean();
         } catch (Exception $exception) {
             if ($this->controller) {
                 throw $exception;

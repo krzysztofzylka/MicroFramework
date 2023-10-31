@@ -34,9 +34,6 @@ class Init
             File::mkdir($this->console->path . '/app/view', 0755);
             File::mkdir($this->console->path . '/public/assets', 0755);
             File::mkdir($this->console->path . '/api/controller', 0755);
-            File::mkdir($this->console->path . '/admin_panel/view', 0755);
-            File::mkdir($this->console->path . '/admin_panel/controller', 0755);
-            File::mkdir($this->console->path . '/admin_panel/model', 0755);
             File::mkdir($this->console->path . '/storage', 0755);
             File::mkdir($this->console->path . '/storage/logs', 0755);
             File::mkdir($this->console->path . '/database_updater', 0755);
@@ -48,16 +45,13 @@ class Init
         Prints::print('Copy files', true);
 
         try {
-            File::copy($this->console->resourcesPath . '/public/index.php', $this->console->path . '/public/index.php');
-            File::copy($this->console->resourcesPath . '/public/.htaccess', $this->console->path . '/public/.htaccess');
-            File::copy($this->console->resourcesPath . '/config/Config.php', $this->console->path . '/config/Config.php');
-            File::copy($this->console->resourcesPath . '/config/.gitignore', $this->console->path . '/config/.gitignore');
-            File::copy($this->console->resourcesPath . '/public/assets/dialogbox.css', $this->console->path . '/public/assets/dialogbox.css');
-            File::copy($this->console->resourcesPath . '/public/assets/dialogbox.js', $this->console->path . '/public/assets/dialogbox.js');
-            File::copy($this->console->resourcesPath . '/public/assets/spinner.css', $this->console->path . '/public/assets/spinner.css');
-            File::copy($this->console->resourcesPath . '/public/assets/spinner.js', $this->console->path . '/public/assets/spinner.js');
-            File::copy($this->console->resourcesPath . '/admin_panel/view/layout.twig', $this->console->path . '/admin_panel/view/layout.twig');
-            File::copy($this->console->resourcesPath . '/storage/.gitignore', $this->console->path . '/storage/.gitignore');
+            $fileList = [
+                'public/index.php', 'public/.htaccess', 'config/.gitignore', 'storage/.gitignore', 'package.json'
+            ];
+
+            foreach ($fileList as $filePath) {
+                File::copy($this->console->resourcesPath . '/' . $filePath, $this->console->path . '/' . $filePath);
+            }
         } catch (Exception $exception) {
             Prints::print('Failed copy file: ' . $exception->getMessage(), true, true);
         }

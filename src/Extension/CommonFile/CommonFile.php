@@ -49,6 +49,10 @@ class CommonFile
      */
     public function __construct()
     {
+        if (!$_ENV['database_enabled']) {
+            return;
+        }
+
         if (!isset($this->storage)) {
             $this->initStorage();
         }

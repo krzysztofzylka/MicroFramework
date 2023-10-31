@@ -22,7 +22,7 @@ class public_files extends Controller
         $assetPath = htmlspecialchars($assetPath);
         $extension = File::getExtension($assetPath);
 
-        if (!in_array($extension, ['js', 'css'])) {
+        if (!in_array($extension, ['js', 'jsx', 'css'])) {
             throw new NotFoundException();
         }
 

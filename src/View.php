@@ -68,9 +68,7 @@ class View
      * @param Exception $exception
      * @param string $name
      * @return string
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
+     * @throws NotFoundException
      * @throws ViewException
      */
     public function renderError(int $code, Exception $exception, string $name = 'MicroFramework/Layout/error'): string
@@ -110,6 +108,7 @@ class View
      * @param array $variables
      * @param ?string $name
      * @return string
+     * @throws NotFoundException
      * @throws ViewException
      */
     public function render(array $variables = [], ?string $name = null): string
@@ -191,6 +190,10 @@ class View
         }
 
         return $config;
+    }
+
+    public function js() {
+        echo '<script type="module" src="/public_files/js/' . $this->controller->name . '/' . $this->name . '"></script>';
     }
 
 }

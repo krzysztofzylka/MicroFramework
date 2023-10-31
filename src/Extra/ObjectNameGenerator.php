@@ -20,8 +20,6 @@ class ObjectNameGenerator
         $objectName = match($objectTypeEnum) {
             ObjectTypeEnum::APP_LOCAL => '\app\controller\\',
             ObjectTypeEnum::APP => '\Krzysztofzylka\MicroFramework\App\controller\\',
-            ObjectTypeEnum::PA => '\Krzysztofzylka\MicroFramework\AdminPanel\controller\\',
-            ObjectTypeEnum::PA_LOCAL => '\admin_panel\controller\\',
             ObjectTypeEnum::API => '\api\controller\\'
         };
 
@@ -45,9 +43,7 @@ class ObjectNameGenerator
     public static function model(string $modelName, ObjectTypeEnum $objectTypeEnum = ObjectTypeEnum::APP): string
     {
         $objectName = match($objectTypeEnum) {
-            ObjectTypeEnum::APP => '\app\model\\',
-            ObjectTypeEnum::PA => '\Krzysztofzylka\MicroFramework\AdminPanel\model\\',
-            ObjectTypeEnum::PA_LOCAL => '\admin_panel\model\\'
+            ObjectTypeEnum::APP => '\app\model\\'
         };
 
         if (!class_exists($objectName . $modelName)) {

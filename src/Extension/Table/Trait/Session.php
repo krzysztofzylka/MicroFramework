@@ -51,7 +51,7 @@ trait Session
      */
     private function getSessionName(): string
     {
-        return 'Session::Table::' . ($this->controller->params['admin_panel'] ? '1' : '0') . '::' . $this->controller->name . '::' . $this->controller->method . '::' . $this->id;
+        return 'Session::Table::' . $this->controller->name . '::' . $this->controller->method . '::' . $this->id;
     }
 
 }

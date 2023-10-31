@@ -75,9 +75,6 @@ class Kernel
         'model' => null,
         'view' => null,
         'api_controller' => null,
-        'pa_controller' => null,
-        'pa_model' => null,
-        'pa_view' => null,
         'storage' => null,
         'logs' => null,
         'database_updater' => null,
@@ -101,9 +98,6 @@ class Kernel
         self::$paths['model'] = $projectPath . '/app/model';
         self::$paths['view'] = $projectPath . '/app/view';
         self::$paths['api_controller'] = $projectPath . '/api/controller';
-        self::$paths['pa_view'] = $projectPath . '/admin_panel/view';
-        self::$paths['pa_controller'] = $projectPath . '/admin_panel/controller';
-        self::$paths['pa_model'] = $projectPath . '/admin_panel/model';
         self::$paths['storage'] = $projectPath . '/storage';
         self::$paths['logs'] = self::$paths['storage'] . '/logs';
         self::$paths['database_updater'] = $projectPath . '/database_updater';
@@ -197,17 +191,6 @@ class Kernel
                 $arguments = array_slice($explode, 3);
 
                 self::init($controller, $method, $arguments, ['api' => true]);
-            } elseif ($_ENV['admin_panel_enabled'] && $controller === $_ENV['admin_panel_url']) {
-                $controller = $explode[1] ?? $_ENV['config_default_controller'];
-                $method = $explode[2] ?? $_ENV['config_default_method'];
-                $arguments = array_slice($explode, 3);
-
-                if (empty($controller)) {
-                    $controller = $method;
-                    $method = $_ENV['config_default_method'];
-                }
-
-                self::init($controller, $method, $arguments, ['admin_panel' => true]);
             } else {
                 $method = $explode[1] ?? $_ENV['config_default_method'];
                 $arguments = array_slice($explode, 2);
@@ -316,8 +299,7 @@ class Kernel
                 $controllerMethod,
                 $controllerArguments,
                 [
-                    'api' => $params['api'] ?? false,
-                    'admin_panel' => $params['admin_panel'] ?? false
+                    'api' => $params['api'] ?? false
                 ]
             );
         }
@@ -354,23 +336,7 @@ class Kernel
             $_SESSION['controllerParams'] = $params;
         }
 
-        if (isset($params['admin_panel']) && $params['admin_panel']) {
-            if (!$_ENV['admin_panel_enabled']) {
-                throw new NotFoundException(__('micro-framework.kernel.adminpanel_disabled'));
-            } elseif (!$_ENV['auth_control']) {
-                throw new NotFoundException(__('micro-framework.kernel.authcontrol_disabled'));
-            } elseif (!Account::isLogged()) {
-                throw new NotFoundException(__('micro-framework.kernel.not_logged'));
-            } elseif (!Account::$account['account']['admin']) {
-                throw new NotFoundException(__('micro-framework.kernel.not_have_permission'));
-            }
-
-            $class = ObjectNameGenerator::controller($name, ObjectTypeEnum::PA_LOCAL);
-
-            if (!class_exists($class)) {
-                $class = ObjectNameGenerator::controller($name, ObjectTypeEnum::PA);
-            }
-        } elseif (isset($params['api']) && $params['api']) {
+        if (isset($params['api']) && $params['api']) {
             $class = ObjectNameGenerator::controller($name, ObjectTypeEnum::API);
         } else {
             $class = ObjectNameGenerator::controller($name, ObjectTypeEnum::APP_LOCAL);

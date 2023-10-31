@@ -74,28 +74,3 @@ micro-framework:
     line2: Zapraszamy ponownie za chwilę.
   confirm:
     accept: Kontynuuj
-  admin_panel:
-    menu:
-      dashboard: Dashboard
-      logs: Logi
-      account: Użytkownicy
-      integrations: Integracje
-      setting: Ustawienia
-      statistics: Statystyki
-    accounts:
-      title: Użytkownicy
-      username: Użytkownik
-      is_admin: Administrator
-      created: Utworzono
-      modify: Zmodyfikowano
-    log:
-      title: Logi
-      lp: Lp.
-      date: Data
-      level: Poziom
-      message: Treść
-    dashboard:
-      title: Dashboard
-    setting:
-      title: Ustawienia
-      clear_memcache: Wyczyść memcache

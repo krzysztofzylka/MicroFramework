@@ -21,7 +21,6 @@
         "ext-pdo": "*",
         "ext-memcached": "*",
         "krzysztofzylka/simple-libraries": "^1.0.28",
-        "twig/twig": "^3.7.1",
         "krzysztofzylka/database-manager": "^v1.0.27",
         "phpmailer/phpmailer": "^6.8",
         "dragonmantank/cron-expression": "^v3.3.3",

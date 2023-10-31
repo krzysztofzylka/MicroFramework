@@ -100,21 +100,16 @@ class Debug
     /**
      * Load debug view
      * @return void
-     * @throws ViewException
      */
     public function loadView(): void
     {
-        $view = new View();
-
-        echo $view->render([
-            'data' => self::$data,
-            'serverTable' => $this->parseServerInfo()
-        ], '/MicroFramework/Debug/debug');
+        //todo render debug
     }
 
     /**
      * Generate server table
      * @return string
+     * @throws Exception
      */
     private function parseServerInfo(): string
     {
@@ -159,8 +154,8 @@ class Debug
     /**
      * Save time
      * @param string $name
+     * @param float|null $time                 
      * @return void
-     * @throws Exception
      */
     public static function endTime(string $name, float $time = null): void
     {

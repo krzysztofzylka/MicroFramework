@@ -6,23 +6,10 @@ use Exception;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
-use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Action;
-use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\CommonFile;
-use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\DebugTable;
-use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Form as FormTwigCustomFunctions;
-use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\JS;
-use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Load;
-use Krzysztofzylka\MicroFramework\Extension\Twig\Functions\Translate;
 use krzysztofzylka\SimpleLibraries\Library\_Array;
 use krzysztofzylka\SimpleLibraries\Library\Generator;
 use krzysztofzylka\SimpleLibraries\Library\Request;
 use krzysztofzylka\SimpleLibraries\Library\Response;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
-use Twig\Extension\DebugExtension;
-use Twig\Loader\FilesystemLoader;
 
 class View
 {
@@ -32,18 +19,6 @@ class View
      * @var array
      */
     public static array $globalVariables = [];
-
-    /**
-     * Twig filesystem loader
-     * @var FilesystemLoader
-     */
-    private FilesystemLoader $filesystemLoader;
-
-    /**
-     * Twig environment
-     * @var Environment
-     */
-    private Environment $environment;
 
     /**
      * Controller
@@ -70,19 +45,7 @@ class View
     public function __construct()
     {
         try {
-            $this->filesystemLoader = new FilesystemLoader(Kernel::getPath('view'));
-            $this->filesystemLoader->addPath(__DIR__ . '/Extension/Twig/TwigFiles');
-            $this->environment = new Environment($this->filesystemLoader, ['debug' => $_ENV['config_debug']]);
-            $this->environment->addExtension(new DebugExtension());
-
-            //add custom functions
-            new Translate($this->environment);
-            new Action($this->environment);
-            new DebugTable($this->environment);
-            new Load($this->environment);
-            new JS($this->environment);
-            new CommonFile($this->environment);
-
+            //
         } catch (Exception $exception) {
             throw new ViewException($exception->getMessage(), 500);
         }
@@ -147,9 +110,6 @@ class View
      * @param ?string $name
      * @return string
      * @throws ViewException
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      */
     public function render(array $variables = [], ?string $name = null): string
     {
@@ -165,23 +125,9 @@ class View
             $nameExplode = explode('/', $name);
             $this->name = end($nameExplode);
 
-            if (isset($this->controller->params['admin_panel']) && $this->controller->params['admin_panel']) {
-                $this->filesystemLoader->prependPath(Kernel::getPath('pa_view'));
-                $this->filesystemLoader->prependPath(__DIR__ . '/AdminPanel/view');
-            }
-
-            $this->environment->addGlobal('app', $this->getGlobalVariables());
-
-            $controller = $this->controller;
-
-            //add custom functions
-            new FormTwigCustomFunctions($this->environment, $controller);
-
             if ($_ENV['config_view_cache']) {
-                $this->environment->setCache(false);
+                //view cache
             }
-
-            $render = $this->environment->render($name . '.twig', $variables);
 
             if ($_ENV['config_debug']) {
                 Debug::endTime('view_render_' . $name);
@@ -192,7 +138,7 @@ class View
                 ];
             }
 
-            return $render;
+            return $name . '.twig<br />';
         } catch (Exception $exception) {
             if ($this->controller) {
                 throw $exception;

@@ -46,7 +46,7 @@ class Init
 
         try {
             $fileList = [
-                'public/index.php', 'public/.htaccess', 'config/.gitignore', 'storage/.gitignore', 'package.json'
+                'public/index.php', 'public/.htaccess', 'config/.gitignore', 'storage/.gitignore', 'package.json', '.gitignore'
             ];
 
             foreach ($fileList as $filePath) {

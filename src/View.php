@@ -40,17 +40,10 @@ class View
     private ?string $name = null;
 
     /**
-     * Init view
-     * @throws ViewException
+     * Layout extension
+     * @var string
      */
-    public function __construct()
-    {
-        try {
-            //
-        } catch (Exception $exception) {
-            throw new ViewException($exception->getMessage(), 500);
-        }
-    }
+    protected string $layoutExtension = 'phtml';
 
     /**
      * Set controller object
@@ -134,10 +127,10 @@ class View
                 ];
             }
 
-            $fullPath = Kernel::getPath('view') . '/' . $name . '.phtml';
+            $fullPath = Kernel::getPath('view') . '/' . $name . '.' . $this->layoutExtension;
 
             if (!file_exists($fullPath)) {
-                throw new NotFoundException('View not found: ' . $name . '.phtml');
+                throw new NotFoundException('View not found: ' . $name);
             }
 
             ob_start();
@@ -192,7 +185,12 @@ class View
         return $config;
     }
 
-    public function js() {
+    /**
+     * Add javascript file
+     * @return void
+     */
+    public function js(): void
+    {
         echo '<script type="module" src="/public_files/js/' . $this->controller->name . '/' . $this->name . '"></script>';
     }
 

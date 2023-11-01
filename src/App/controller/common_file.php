@@ -69,9 +69,9 @@ class common_file extends Controller
      */
     private function getContentType(string $fileExtension): false|string
     {
-        $images = ['gif', 'png', 'webp', 'bmp', 'avif'];
+        $images = ['gif', 'png', 'webp', 'bmp', 'avif', 'pjpeg'];
         $text = ['css', 'csv'];
-        $video = ['mp4', 'webm'];
+        $video = ['mp4', 'webm', 'jpm'];
         $application = ['zip', 'xml', 'rtf', 'pdf', 'json'];
         $font = ['woff2', 'woff', 'ttf', 'otf'];
         $audio = ['wav', 'pus', 'aac'];
@@ -134,6 +134,38 @@ class common_file extends Controller
             'avi' => 'video/x-msvideo',
             'arc' => 'application/x-freearc',
             'abw' => 'application/x-abiword',
+            'x3d' => 'application/vnd.hzn-3d-crossword',
+            'mseq' => 'application/vnd.mseq',
+            'pwn' => 'application/vnd.3m.post-it-notes',
+            'ace' => 'application/x-ace-compressed',
+            'dir' => 'application/x-director',
+            'apk' => 'application/vnd.android.package-archive',
+            'aiff' => 'audio/x-aiff',
+            'atom' => 'application/atom+xml',
+            'torrent' => 'application/x-bittorrent',
+            'c' => 'text/x-c',
+            'deb' => 'application/x-debian-package',
+            'dts' => 'audio/vnd.dts',
+            'flv' => 'video/x-flv',
+            'f4v' => 'video/x-f4v',
+            'cer' => 'application/pkix-cert',
+            'java' => 'text/x-java-source',
+            'jsx' => 'text/jsx',
+            'kml' => 'application/vnd.google-earth.kml+xml',
+            'kmz' => 'application/vnd.google-earth.kmz',
+            'm4a' => 'audio/x-m4a',
+            'm4v' => 'video/x-m4v',
+            'm4p' => 'application/mp4',
+            'm4u' => 'video/vnd.mpegurl',
+            'm3u8' => 'application/vnd.apple.mpegurl',
+            'm3u' => 'audio/x-mpegurl',
+            'latex' => 'application/x-latex',
+            'kwd' => 'application/vnd.kde.kword',
+            'kon' => 'application/vnd.kde.kontour',
+            'ser' => 'application/java-serialized-object',
+            'karbon' => 'application/vnd.kde.karbon',
+            'kfo' => 'application/vnd.kde.kformula',
+            'flw' => 'application/vnd.kde.kivio',
             default => false
         };
     }

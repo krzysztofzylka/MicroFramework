@@ -7,6 +7,7 @@ use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
+use Krzysztofzylka\MicroFramework\Extension\Html\Html;
 use krzysztofzylka\SimpleLibraries\Library\_Array;
 use krzysztofzylka\SimpleLibraries\Library\Generator;
 use krzysztofzylka\SimpleLibraries\Library\Request;
@@ -44,6 +45,12 @@ class View
      * @var string
      */
     protected string $layoutExtension = 'phtml';
+
+    /**
+     * Script attributes
+     * @var array
+     */
+    protected array $scriptAttributes = [];
 
     /**
      * Set controller object
@@ -191,7 +198,7 @@ class View
      */
     public function js(): void
     {
-        echo '<script type="module" src="/public_files/js/' . $this->controller->name . '/' . $this->name . '"></script>';
+        echo '<script ' . Html::generateAttributes($this->scriptAttributes) . ' src="/public_files/js/' . $this->controller->name . '/' . $this->name . '"></script>';
     }
 
 }

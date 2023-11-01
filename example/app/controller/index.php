@@ -2,7 +2,7 @@
 
 namespace app\controller;
 
-use Krzysztofzylka\MicroFramework\Controller;
+use app\Controller;
 
 class index extends Controller
 {

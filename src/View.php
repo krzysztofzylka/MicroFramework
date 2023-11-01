@@ -195,6 +195,7 @@ class View
     /**
      * Add javascript file
      * @return void
+     * @throws MicroFrameworkException
      */
     public function js(): void
     {

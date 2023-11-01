@@ -24,11 +24,11 @@
         "krzysztofzylka/database-manager": "^v1.0.27",
         "phpmailer/phpmailer": "^6.8",
         "dragonmantank/cron-expression": "^v3.3.3",
-        "symfony/yaml": "^6.3.3",
+        "symfony/yaml": "^6.3.7",
         "krzysztofzylka/logger": "^1.1"
     },
     "require-dev": {
         "fakerphp/faker": "v1.23.0",
-        "phpunit/phpunit": "^10.4"
+        "phpunit/phpunit": "^10.4.2"
     }
 }

@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Email;
 
 use Exception;
+use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Exception\ViewException;
 use Krzysztofzylka\MicroFramework\Extension\Email\Extra\SendEmail;
 use Krzysztofzylka\MicroFramework\Extension\Email\PredefinedConfig\Gmail;
@@ -10,9 +11,6 @@ use Krzysztofzylka\MicroFramework\Trait\Log;
 use Krzysztofzylka\MicroFramework\View;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 
 /**
@@ -34,10 +32,8 @@ class Email
      * @param string $footer
      * @return bool
      * @throws ViewException
+     * @throws NotFoundException
      * @throws \PHPMailer\PHPMailer\Exception
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      */
     public function sendEmail(
         string $address,

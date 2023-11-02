@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework\Api;
 
 use Krzysztofzylka\MicroFramework\ControllerApi;
 use Krzysztofzylka\MicroFramework\Trait\Log;
+use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\Client;
 use krzysztofzylka\SimpleLibraries\Library\Json;
 
@@ -25,6 +26,7 @@ class Secure
     /**
      * Content body is json
      * @return void
+     * @throws SimpleLibraryException
      */
     public function contentIsJson(): void
     {
@@ -43,6 +45,7 @@ class Secure
      * Validate content body (json) and response 400
      * @param array $keyList
      * @return void
+     * @throws SimpleLibraryException
      */
     public function bodyValidation(array $keyList): void
     {

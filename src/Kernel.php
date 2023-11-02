@@ -196,7 +196,7 @@ class Kernel
                 self::init($controller, $method, $arguments);
             }
         } catch (Throwable $throwable) {
-            if ($throwable instanceof RuntimeError && $throwable->getPrevious()) {
+            if ($throwable->getPrevious()) {
                 $throwable = $throwable->getPrevious();
             }
 
@@ -346,6 +346,10 @@ class Kernel
 
         if (!class_exists($class)) {
             throw new NotFoundException(__('micro-framework.kernel.controller_not_exists', ['controllerName' => $name]));
+        }
+
+        if (!method_exists($class, $method)) {
+            throw new NotFoundException(__('micro-framework.kernel.method_is_controller_not_exists', ['methodName' => $method, 'controllerName' => $name]));
         }
 
         $ajaxProtect = (bool)(PHPDoc::getClassMethodComment($class, $method, 'ajax')[0] ?? false);

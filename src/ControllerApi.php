@@ -88,16 +88,8 @@ class ControllerApi extends Controller
     {
         if ($this->auth) {
             if (isset($_SERVER['PHP_AUTH_USER']) || isset($_SERVER['PHP_AUTH_PW'])) {
-                $username = isset($_SERVER['PHP_AUTH_USER']) ? htmlspecialchars($_SERVER['PHP_AUTH_USER']) : false;
-                $password = isset($_SERVER['PHP_AUTH_PW']) ? htmlspecialchars($_SERVER['PHP_AUTH_PW']) : false;
-                $auth = false;
-
-                if ($username && $password) {
-                    $auth = (new Authorization())->basic($username, $password);
-                }
-
-                if (!$auth) {
-                    $this->log('Authorization failed', 'WARNING', ['username' => $username]);
+                if (!(new Authorization())->basic($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {
+                    $this->log('Authorization failed', 'WARNING', ['username' => htmlspecialchars($_SERVER['PHP_AUTH_USER'])]);
                     $this->response->error('Not authorized', 401, 'Basic auth fail');
                 }
             } elseif (isset($_SERVER['HTTP_APIKEY'])) {
@@ -129,6 +121,7 @@ class ControllerApi extends Controller
                         'server' => $_SERVER
                     ]
                 );
+
                 $this->response->error('Not authorized', 401, 'Failed authorization type');
             }
         }

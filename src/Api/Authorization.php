@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework\Api;
 
 use Exception;
 use Krzysztofzylka\MicroFramework\Extension\Account\Account;
+use Krzysztofzylka\MicroFramework\Trait\Log;
 
 /**
  * Authorization
@@ -11,6 +12,8 @@ use Krzysztofzylka\MicroFramework\Extension\Account\Account;
  */
 class Authorization
 {
+
+    use Log;
 
     /**
      * Basic auth
@@ -21,7 +24,10 @@ class Authorization
     public function basic(string $username, string $password): bool
     {
         try {
-            return (new Account())->login($username, $password);
+            return (new Account())->login(
+                htmlspecialchars($username),
+                htmlspecialchars($password)
+            );
         } catch (Exception) {
             return false;
         }

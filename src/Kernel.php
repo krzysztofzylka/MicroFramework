@@ -352,6 +352,20 @@ class Kernel
             throw new NotFoundException(__('micro-framework.kernel.method_is_controller_not_exists', ['methodName' => $method, 'controllerName' => $name]));
         }
 
+        if (isset($params['api']) && $params['api']) {
+            $allowMethod = PHPDoc::getClassMethodComment($class, $method, 'allowMethod')[0] ?? false;
+
+            if ($allowMethod !== false) {
+                if (strtolower($_SERVER['REQUEST_METHOD']) !== strtolower($allowMethod)) {
+                    (new Response())->error(
+                        'Invalid method',
+                        400,
+                        'Accepted method: ' . $allowMethod
+                    );
+                }
+            }
+        }
+
         $ajaxProtect = (bool)(PHPDoc::getClassMethodComment($class, $method, 'ajax')[0] ?? false);
 
         if ($ajaxProtect && !Request::isAjaxRequest()) {

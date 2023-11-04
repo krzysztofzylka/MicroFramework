@@ -9,7 +9,7 @@ class index extends Controller
 
     public function index()
     {
-
+        $this->loadModel('test');
     }
 
 }

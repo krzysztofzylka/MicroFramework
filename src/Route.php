@@ -41,9 +41,8 @@ class Route
             }
 
             $class->$method(...$parameters);
-
             DebugBar::timeStop('route');
-            DebugBar::addMessage('Controller: ' . $className, 'Start route');
+
             DebugBar::addMessage($class, 'Controller object');
 
             return $class;

@@ -1,1 +1,0 @@
-alter table `common_file` add `download_count` int unsigned default 0 null after `hash`;

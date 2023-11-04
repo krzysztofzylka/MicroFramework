@@ -31,7 +31,10 @@ class Route
                 throw new NotFoundException('Controller not found');
             }
 
+            /** @var Controller $class */
             $class = new $className();
+            $class->name = $controller;
+            $class->action = $method;
 
             if (!method_exists($class, $method)) {
                 throw new NotFoundException('Method not found');
@@ -39,8 +42,9 @@ class Route
 
             $class->$method(...$parameters);
 
-            DebugBar::addMessage('Controller: ' . $className, 'Start route');
             DebugBar::timeStop('route');
+            DebugBar::addMessage('Controller: ' . $className, 'Start route');
+            DebugBar::addMessage($class, 'Controller object');
 
             return $class;
         } catch (Throwable $exception) {

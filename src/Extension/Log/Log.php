@@ -58,7 +58,7 @@ class Log
         }
 
         DebugBar::timeStart('log', 'Add log');
-        DebugBar::addMessage($logContent, ['Log', $level]);
+        DebugBar::addLogMessage($logContent, $level);
         DebugBar::timeStop('log');
 
         try {

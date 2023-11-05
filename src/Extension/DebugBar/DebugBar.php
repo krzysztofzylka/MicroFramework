@@ -6,9 +6,11 @@ use DebugBar\DataCollector\AggregatedCollector;
 use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DataCollector\LocalizationCollector;
 use DebugBar\DataCollector\MemoryCollector;
+use DebugBar\DataCollector\MessagesCollector;
 use DebugBar\DataCollector\PhpInfoCollector;
 use DebugBar\JavascriptRenderer;
 use DebugBar\StandardDebugBar;
+use Krzysztofzylka\MicroFramework\Extension\DebugBar\Collectors\ModelCollector;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\File;
@@ -104,6 +106,35 @@ class DebugBar
     }
 
     /**
+     * Add model message
+     * @param $model
+     * @return void
+     */
+    public static function addModelMessage($model): void
+    {
+        if (!self::$init) {
+            return;
+        }
+
+        self::$standardDebugBar['models']->addMessage($model);
+    }
+
+    /**
+     * Add log message
+     * @param mixed $message
+     * @param string $label
+     * @return void
+     */
+    public static function addLogMessage(mixed $message, mixed $label = ''): void
+    {
+        if (!self::$init) {
+            return;
+        }
+
+        self::$standardDebugBar['logs']->addMessage($message, $label);
+    }
+
+    /**
      * Render
      * @return string
      */
@@ -127,7 +158,9 @@ class DebugBar
         $this->copyAssets();
         self::$standardDebugBar = new StandardDebugBar();
         self::$standardDebugBarRenderer = self::$standardDebugBar->getJavascriptRenderer();
-        self::$standardDebugBar->addCollector(new ConfigCollector($_ENV));
+        self::$standardDebugBar->addCollector(new ConfigCollector($_ENV, 'ENV'));
+        self::$standardDebugBar->addCollector(new MessagesCollector('models'));
+        self::$standardDebugBar->addCollector(new MessagesCollector('logs'));
     }
 
     /**

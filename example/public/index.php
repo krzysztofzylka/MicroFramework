@@ -13,14 +13,6 @@ try {
 } catch (Throwable $exception) {
     echo $exception->getMessage();
 }
-?>
-<!DOCTYPE html>
-<html>
-<head>
-    <?= DebugBar::renderHeader() ?>
-</head>
-<body>
-    ...
-    <?= DebugBar::render() ?>
-</body>
-</html>
+
+echo DebugBar::renderHeader();
+echo DebugBar::render();

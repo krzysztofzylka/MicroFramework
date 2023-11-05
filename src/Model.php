@@ -108,5 +108,37 @@ class Model
         }
     }
 
+    /**
+     * Count
+     * @param ?array $condition
+     * @param ?string $groupBy
+     * @return int
+     * @throws HiddenException
+     */
+    public function findCount(?array $condition = null, ?string $groupBy = null): int
+    {
+        DebugBar::timeStart('findCount', 'Find count');
+        try {
+            if (!$_ENV['DATABASE']) {
+                throw new MicroFrameworkException('Database is not configured');
+            }
+
+            $find = $this->tableInstance->findCount($condition, $groupBy);
+            DebugBar::timeStop('findCount');
+
+            return $find;
+        } catch (\Throwable $exception) {
+            $message = $exception->getMessage();
+
+            if ($exception instanceof DatabaseManagerException) {
+                $message = $exception->getHiddenMessage();
+            }
+
+            DebugBar::addThrowable($exception);
+            DebugBar::addFrameworkMessage($message, 'ERROR');
+
+            throw new HiddenException($message);
+        }
+    }
 
 }

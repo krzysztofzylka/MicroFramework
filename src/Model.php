@@ -52,6 +52,12 @@ class Model
     public string|int $isolator;
 
     /**
+     * Element ID
+     * @var int|null
+     */
+    public ?int $id = null;
+
+    /**
      * Find one element
      * @param array|null $condition
      * @param array|null $columns
@@ -167,6 +173,44 @@ class Model
         $this->isolator = $isolator;
 
         return $this;
+    }
+
+    /**
+     * Save or update data
+     * @param array $data
+     * @return bool
+     * @throws HiddenException
+     */
+    public function save(array $data): bool
+    {
+        DebugBar::timeStart('save', 'Save');
+        try {
+            if (!$_ENV['DATABASE']) {
+                throw new MicroFrameworkException('Database is not configured');
+            }
+
+            if (!is_null($this->id)) {
+                $save = $this->tableInstance->insert($data);
+
+                $this->id = $this->tableInstance->getId();
+            } else {
+                $save = $this->tableInstance->setId($this->id)->update($data);
+            }
+            DebugBar::timeStop('save');
+
+            return $save;
+        } catch (Throwable $exception) {
+            $message = $exception->getMessage();
+
+            if ($exception instanceof DatabaseManagerException) {
+                $message = $exception->getHiddenMessage();
+            }
+
+            DebugBar::addThrowable($exception);
+            DebugBar::addFrameworkMessage($message, 'ERROR');
+
+            throw new HiddenException($message);
+        }
     }
 
     /**

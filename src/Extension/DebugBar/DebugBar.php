@@ -4,9 +4,11 @@ namespace Krzysztofzylka\MicroFramework\Extension\DebugBar;
 
 use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DataCollector\MessagesCollector;
+use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DebugBarException;
 use DebugBar\JavascriptRenderer;
 use DebugBar\StandardDebugBar;
+use krzysztofzylka\DatabaseManager\DatabaseManager;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\File;
@@ -174,6 +176,25 @@ class DebugBar
         self::$standardDebugBar->addCollector(new ConfigCollector($_ENV, 'ENV'));
         self::$standardDebugBar->addCollector(new MessagesCollector('models'));
         self::$standardDebugBar->addCollector(new MessagesCollector('logs'));
+    }
+
+    /**
+     * Add PDO collection
+     * @return void
+     * @throws DebugBarException
+     */
+    public static function addPdoCollection(): void
+    {
+        if (!self::$init) {
+            return;
+        }
+
+        if ($_ENV['DATABASE']) {
+            $pdoCollector = new PDOCollector();
+            $pdoCollector->addConnection(DatabaseManager::$connection->getConnection());
+
+            self::$standardDebugBar->addCollector($pdoCollector);
+        }
     }
 
     /**

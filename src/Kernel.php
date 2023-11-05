@@ -2,6 +2,11 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use DebugBar\DebugBarException;
+use krzysztofzylka\DatabaseManager\DatabaseConnect;
+use krzysztofzylka\DatabaseManager\DatabaseManager;
+use krzysztofzylka\DatabaseManager\Enum\DatabaseType;
+use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
@@ -60,6 +65,7 @@ class Kernel
             $this->loadEnv();
             $this->initConfigurations();
             $this->autoload();
+            $this->connectDatabase();
             Log::log('Start kernel');
         } catch (Throwable $exception) {
             throw new MicroFrameworkException($exception->getMessage());
@@ -133,6 +139,7 @@ class Kernel
      * Init configurations
      * @return void
      * @throws SimpleLibraryException
+     * @throws DebugBarException
      */
     private function initConfigurations(): void
     {
@@ -156,7 +163,7 @@ class Kernel
      * @return void
      * @throws NotFoundException
      */
-    public function autoload(): void
+    private function autoload(): void
     {
         spl_autoload_register(function ($class_name) {
             DebugBar::timeStart('autoload', 'Autoload class');
@@ -171,5 +178,40 @@ class Kernel
         });
     }
 
+    private function connectDatabase(): void
+    {
+        if (!$_ENV['DATABASE']) {
+            return;
+        }
+
+        DebugBar::addFrameworkMessage('Connect to database', 'Database');
+
+        DebugBar::timeStart('database', 'Connect to database');
+        $connection = new DatabaseConnect();
+        $connection->setType(
+            match ($_ENV['DATABASE_DRIVER']) {
+                'mysql' => DatabaseType::mysql,
+                'sqlite' => DatabaseType::sqlite
+            }
+        );
+        $connection->setCharset($_ENV['DATABASE_CHARSET']);
+        $connection->setHost($_ENV['DATABASE_HOST']);
+        $connection->setDatabaseName($_ENV['DATABASE_NAME']);
+        $connection->setPassword($_ENV['DATABASE_PASSWORD']);
+        $connection->setUsername($_ENV['DATABASE_USERNAME']);
+
+        try {
+            $manager = new DatabaseManager();
+            $manager->connect($connection);
+        } catch (DatabaseManagerException $exception) {
+            DebugBar::addThrowable($exception);
+            DebugBar::addFrameworkMessage($exception->getHiddenMessage(), 'ERROR');
+
+            throw $exception;
+        }
+
+        DebugBar::timeStop('database');
+        DebugBar::addPdoCollection();
+    }
 
 }

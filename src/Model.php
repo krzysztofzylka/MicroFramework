@@ -19,4 +19,5 @@ class Model
      * @var Controller
      */
     public Controller $controller;
+
 }

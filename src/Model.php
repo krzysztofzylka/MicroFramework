@@ -40,6 +40,18 @@ class Model
     public Controller $controller;
 
     /**
+     * Isolator name
+     * @var null|string
+     */
+    public ?string $isolatorName = null;
+
+    /**
+     * Isolator
+     * @var string|int
+     */
+    public string|int $isolator;
+
+    /**
      * Find one element
      * @param array|null $condition
      * @param array|null $columns
@@ -55,6 +67,7 @@ class Model
                 throw new MicroFrameworkException('Database is not configured');
             }
 
+            $this->_prepareCondition($condition);
             $find = $this->tableInstance->find($condition, $columns, $orderBy);
             DebugBar::timeStop('find');
 
@@ -91,6 +104,7 @@ class Model
                 throw new MicroFrameworkException('Database is not configured');
             }
 
+            $this->_prepareCondition($condition);
             $find = $this->tableInstance->findAll($condition, $columns, $orderBy, $limit, $groupBy);
             DebugBar::timeStop('findAll');
 
@@ -124,6 +138,7 @@ class Model
                 throw new MicroFrameworkException('Database is not configured');
             }
 
+            $this->_prepareCondition($condition);
             $find = $this->tableInstance->findCount($condition, $groupBy);
             DebugBar::timeStop('findCount');
 
@@ -140,6 +155,32 @@ class Model
 
             throw new HiddenException($message);
         }
+    }
+
+    /**
+     * Set isolator
+     * @param int|string $isolator
+     * @return self
+     */
+    public function setIsolator(int|string $isolator): self
+    {
+        $this->isolator = $isolator;
+
+        return $this;
+    }
+
+    /**
+     * Prepare condition
+     * @param ?array $condition
+     * @return void
+     */
+    private function _prepareCondition(?array &$condition): void
+    {
+        if (!is_array($condition) || is_null($this->isolator) || !$this->isolator) {
+            return;
+        }
+
+        $condition[$this->useTable . '.' . $this->isolatorName] = $this->isolator;
     }
 
 }

@@ -1,0 +1,1 @@
+{"version":1,"defects":{"KernelTest::testInitPaths":8,"KernelTest::testPaths":7,"KernelTest::testGetEnv":8,"KernelTest::testLoadEnv":5,"KernelTest::testGetDataPath":7},"times":{"KernelTest::testInitPaths":0.005,"KernelTest::testPaths":0.007,"KernelTest::testGetEnv":0.005,"KernelTest::testLoadEnv":0.002,"KernelTest::testGetProjectPath":0,"KernelTest::testGetDataPath":0.001}}

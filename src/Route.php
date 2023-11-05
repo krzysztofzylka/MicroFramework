@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use Exception;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Response;
@@ -31,13 +32,13 @@ class Route
             try {
                 /** @var Controller $class */
                 $class = new $className();
-            } catch (\Exception) {
+            } catch (Exception) {
                 $className = 'src\\Controller\\' . $controller;
 
                 try {
                     /** @var Controller $class */
                     $class = new $className();
-                } catch (\Exception) {
+                } catch (Exception) {
                     throw new NotFoundException('Controller not found');
                 }
             }

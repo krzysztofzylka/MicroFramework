@@ -4,7 +4,6 @@ namespace Krzysztofzylka\MicroFramework\Extension;
 
 /**
  * Response extension
-
  */
 class Response
 {

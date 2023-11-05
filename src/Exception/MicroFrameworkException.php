@@ -2,9 +2,11 @@
 
 namespace Krzysztofzylka\MicroFramework\Exception;
 
+use Exception;
+
 /**
  * Framework exception
  */
-class MicroFrameworkException extends \Exception
+class MicroFrameworkException extends Exception
 {
 }

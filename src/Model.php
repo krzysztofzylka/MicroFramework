@@ -7,6 +7,7 @@ use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
+use Throwable;
 
 /**
  * Class Model
@@ -58,7 +59,7 @@ class Model
             DebugBar::timeStop('find');
 
             return $find;
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $message = $exception->getMessage();
 
             if ($exception instanceof DatabaseManagerException) {
@@ -94,7 +95,7 @@ class Model
             DebugBar::timeStop('findAll');
 
             return $find;
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $message = $exception->getMessage();
 
             if ($exception instanceof DatabaseManagerException) {
@@ -127,7 +128,7 @@ class Model
             DebugBar::timeStop('findCount');
 
             return $find;
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $message = $exception->getMessage();
 
             if ($exception instanceof DatabaseManagerException) {

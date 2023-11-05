@@ -3,7 +3,6 @@
 namespace Krzysztofzylka\MicroFramework\Extension\DebugBar;
 
 use DebugBar\DataCollector\ConfigCollector;
-use DebugBar\DataCollector\LocalizationCollector;
 use DebugBar\DataCollector\MessagesCollector;
 use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DebugBarException;
@@ -13,8 +12,6 @@ use krzysztofzylka\DatabaseManager\DatabaseManager;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\File;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 /**
  * Debug bar

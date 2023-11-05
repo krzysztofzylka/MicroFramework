@@ -2,10 +2,12 @@
 
 namespace Krzysztofzylka\MicroFramework\Exception;
 
+use Exception;
+
 /**
  * Framework exception
  */
-class HiddenException extends \Exception
+class HiddenException extends Exception
 {
 
     public string $hiddenMessage = '';

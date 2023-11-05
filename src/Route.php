@@ -26,13 +26,20 @@ class Route
     {
         try {
             DebugBar::timeStart('route', 'Route start');
-            $className = 'src\\Controller\\' . $controller;
+            $className = 'Krzysztofzylka\MicroFramework\Controllers\\' . $controller;
 
             try {
                 /** @var Controller $class */
                 $class = new $className();
             } catch (\Exception) {
-                throw new NotFoundException('Controller not found');
+                $className = 'src\\Controller\\' . $controller;
+
+                try {
+                    /** @var Controller $class */
+                    $class = new $className();
+                } catch (\Exception) {
+                    throw new NotFoundException('Controller not found');
+                }
             }
 
             DebugBar::timeStart('define_variables', 'Define controller variables');

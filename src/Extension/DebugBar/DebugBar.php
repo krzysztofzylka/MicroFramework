@@ -212,33 +212,7 @@ class DebugBar
         }
 
         File::mkdir($to);
-        $this->copyDirectory($from, $to);
-    }
-
-    /**
-     * Copy directory
-     * @param $source
-     * @param $destination
-     * @return void
-     */
-    private function copyDirectory($source, $destination): void
-    {
-        if (is_dir($source) && is_dir($destination)) {
-            $iterator = new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS),
-                RecursiveIteratorIterator::SELF_FIRST
-            );
-
-            foreach ($iterator as $item) {
-                $src = $item->getPathname();
-                $dst = $destination . '/' . $iterator->getSubPathName();
-                if ($item->isDir()) {
-                    mkdir($dst);
-                } else {
-                    copy($src, $dst);
-                }
-            }
-        }
+        File::copyDirectory($from, $to);
     }
 
 }

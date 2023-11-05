@@ -2,11 +2,11 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Log;
 
-use DateTime;
 use Exception;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\Client;
+use krzysztofzylka\SimpleLibraries\Library\Date;
 use krzysztofzylka\SimpleLibraries\Library\Generator;
 
 /**
@@ -33,13 +33,13 @@ class Log
         }
 
         if (!isset(self::$session)) {
-            self::$session = (new Generator())->guid();
+            self::$session = Generator::guid();
         }
 
         $backtrace = debug_backtrace()[1];
         $logPath = Kernel::getPath('logs') . '/' . date('Y_m_d') . '.log.json';
         $logContent = [
-            'datetime' => self::getDatetime(),
+            'datetime' => Date::getSimpleDate(true),
             'message' => $message,
             'level' => $level,
             'content' => $content,
@@ -66,18 +66,6 @@ class Log
         } catch (Exception) {
             return false;
         }
-    }
-
-    /**
-     * Generate datetime
-     * @return string
-     */
-    private static function getDatetime(): string
-    {
-        return DateTime::createFromFormat(
-            'U.u',
-            sprintf('%.f', microtime(true))
-        )->format('Y-m-d H:i:s.u');
     }
 
 }

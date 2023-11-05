@@ -42,7 +42,7 @@ class View
      */
     public function render(): void
     {
-        DebugBar::addMessage('Render view ' . $this->action, 'Render view');
+        DebugBar::addFrameworkMessage('Render view ' . $this->action, 'Render view');
         DebugBar::timeStart('render_view', 'Render view');
         $path = Kernel::getPath('view') . '/' . $this->action . $this->layoutExtension;
 
@@ -59,7 +59,7 @@ class View
         include($path);
 
         DebugBar::timeStop('render_view');
-        DebugBar::addMessage($path, 'View path');
+        DebugBar::addFrameworkMessage($path, 'View path');
     }
 
 }

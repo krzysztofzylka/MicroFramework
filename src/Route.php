@@ -43,7 +43,7 @@ class Route
             $class->$method(...$parameters);
             DebugBar::timeStop('route');
 
-            DebugBar::addMessage($class, 'Controller object');
+            DebugBar::addFrameworkMessage($class, 'Controller object');
 
             return $class;
         } catch (Throwable $exception) {

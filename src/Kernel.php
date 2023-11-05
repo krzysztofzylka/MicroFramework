@@ -80,7 +80,7 @@ class Kernel
             $method = $url[1] ?? $_ENV['DEFAULT_METHOD'];
             $parameters = array_slice($url, 2);
             DebugBar::timeStop('run');
-            DebugBar::addMessage(['controller' => $controller, 'method' => $method, 'parameters' => $parameters, 'url' => $url], 'Run route');
+            DebugBar::addFrameworkMessage(['controller' => $controller, 'method' => $method, 'parameters' => $parameters, 'url' => $url], 'Run route');
             $route = new Route();
             $route->start($controller, $method, $parameters);
         } catch (Throwable $exception) {

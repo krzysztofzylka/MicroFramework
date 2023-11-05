@@ -40,7 +40,7 @@ class Controller
      */
     public function loadModel(string ...$model): Model
     {
-        DebugBar::addMessage('Load model\'s ' . implode(', ', $model), 'Load model');
+        DebugBar::addFrameworkMessage('Load model\'s ' . implode(', ', $model), 'Load model');
 
         $model = count($model) > 1 ? $model : $model[0];
 
@@ -94,7 +94,7 @@ class Controller
         $view->render();
 
         DebugBar::timeStop('view');
-        DebugBar::addMessage($view, 'Load view');
+        DebugBar::addFrameworkMessage($view, 'Load view');
 
         return true;
     }

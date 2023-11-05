@@ -2,15 +2,11 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\DebugBar;
 
-use DebugBar\DataCollector\AggregatedCollector;
 use DebugBar\DataCollector\ConfigCollector;
-use DebugBar\DataCollector\LocalizationCollector;
-use DebugBar\DataCollector\MemoryCollector;
 use DebugBar\DataCollector\MessagesCollector;
-use DebugBar\DataCollector\PhpInfoCollector;
+use DebugBar\DebugBarException;
 use DebugBar\JavascriptRenderer;
 use DebugBar\StandardDebugBar;
-use Krzysztofzylka\MicroFramework\Extension\DebugBar\Collectors\ModelCollector;
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\File;
@@ -51,6 +47,21 @@ class DebugBar
         }
 
         self::$standardDebugBar['messages']->addMessage($message, $label);
+    }
+
+    /**
+     * Add message
+     * @param mixed $message
+     * @param mixed $label
+     * @return void
+     */
+    public static function addFrameworkMessage(mixed $message, mixed $label = ''): void
+    {
+        if (!self::$init) {
+            return;
+        }
+
+        self::$standardDebugBar['framework']->addMessage($message, $label);
     }
 
     /**
@@ -151,6 +162,7 @@ class DebugBar
      * Init
      * @return void
      * @throws SimpleLibraryException
+     * @throws DebugBarException
      */
     public function init(): void
     {
@@ -158,6 +170,7 @@ class DebugBar
         $this->copyAssets();
         self::$standardDebugBar = new StandardDebugBar();
         self::$standardDebugBarRenderer = self::$standardDebugBar->getJavascriptRenderer();
+        self::$standardDebugBar->addCollector(new MessagesCollector('framework'));
         self::$standardDebugBar->addCollector(new ConfigCollector($_ENV, 'ENV'));
         self::$standardDebugBar->addCollector(new MessagesCollector('models'));
         self::$standardDebugBar->addCollector(new MessagesCollector('logs'));

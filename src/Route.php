@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework;
 
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
+use Krzysztofzylka\MicroFramework\Extension\Response;
 use Throwable;
 
 /**
@@ -30,12 +31,15 @@ class Route
             try {
                 /** @var Controller $class */
                 $class = new $className();
-            } catch (\Exception $exception) {
+            } catch (\Exception) {
                 throw new NotFoundException('Controller not found');
             }
 
+            DebugBar::timeStart('define_variables', 'Define controller variables');
             $class->name = $controller;
             $class->action = $method;
+            $class->response = new Response();
+            DebugBar::timeStop('define_variables');
 
             if (!method_exists($class, $method)) {
                 throw new NotFoundException('Method not found');

@@ -7,6 +7,7 @@ use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
+use Krzysztofzylka\MicroFramework\Extension\Response;
 use krzysztofzylka\SimpleLibraries\Library\Strings;
 
 /**
@@ -38,6 +39,12 @@ class Controller
      * @var array
      */
     public array $models = [];
+
+    /**
+     * Response class
+     * @var Response
+     */
+    public Response $response;
 
     /**
      * Load models

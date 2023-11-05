@@ -18,7 +18,7 @@ class index extends Controller
     {
         DebugBar::timeStart('controller');
         $this->loadModel('test');
-        $this->set('variable', 'test');
+        $this->set('variable', 'Test variable');
         DebugBar::addMessage($this->Test->findAll(), 'Find');
         $this->loadView();
         DebugBar::timeStop('controller');

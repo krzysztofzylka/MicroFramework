@@ -27,12 +27,13 @@ class Route
             DebugBar::timeStart('route', 'Route start');
             $className = 'src\\Controller\\' . $controller;
 
-            if (!class_exists($className)) {
+            try {
+                /** @var Controller $class */
+                $class = new $className();
+            } catch (\Exception $exception) {
                 throw new NotFoundException('Controller not found');
             }
 
-            /** @var Controller $class */
-            $class = new $className();
             $class->name = $controller;
             $class->action = $method;
 

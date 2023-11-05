@@ -11,7 +11,8 @@ try {
     $kernel = new \Krzysztofzylka\MicroFramework\Kernel(__DIR__ . '/..');
     $kernel->run();
 } catch (Throwable $exception) {
-    echo $exception->getMessage();
+    ob_clean();
+    die($exception->getMessage());
 }
 
 echo DebugBar::renderHeader();

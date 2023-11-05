@@ -16,6 +16,10 @@ use krzysztofzylka\SimpleLibraries\Library\Generator;
 class Log
 {
 
+    /**
+     * Session GUID
+     * @var string
+     */
     public static string $session;
 
     /**

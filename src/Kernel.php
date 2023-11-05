@@ -6,6 +6,7 @@ use DebugBar\DebugBarException;
 use krzysztofzylka\DatabaseManager\DatabaseConnect;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Enum\DatabaseType;
+use krzysztofzylka\DatabaseManager\Exception\ConnectException;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
@@ -178,6 +179,13 @@ class Kernel
         });
     }
 
+    /**
+     * Connect to database
+     * @return void
+     * @throws DatabaseManagerException
+     * @throws DebugBarException
+     * @throws ConnectException
+     */
     private function connectDatabase(): void
     {
         if (!$_ENV['DATABASE']) {

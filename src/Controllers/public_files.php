@@ -6,6 +6,9 @@ use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Kernel;
 
+/**
+ * Public files controller
+ */
 class public_files extends Controller
 {
 

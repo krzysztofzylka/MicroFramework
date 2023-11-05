@@ -2,7 +2,11 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Table;
+use Krzysztofzylka\MicroFramework\Exception\HiddenException;
+use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
+use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 
 /**
  * Class Model
@@ -33,5 +37,40 @@ class Model
      * @var Controller
      */
     public Controller $controller;
+
+    /**
+     * Find one element
+     * @param array|null $condition
+     * @param array|null $columns
+     * @param ?string $orderBy
+     * @return array
+     * @throws HiddenException
+     */
+    public function find(?array $condition = null, ?array $columns = null, ?string $orderBy = null): array
+    {
+
+        DebugBar::timeStart('find', 'Find');
+        try {
+            if (!$_ENV['DATABASE']) {
+                throw new MicroFrameworkException('Database is not configured');
+            }
+
+            $find = $this->tableInstance->find($condition, $columns, $orderBy);
+            DebugBar::timeStop('find');
+
+            return $find;
+        } catch (\Throwable $exception) {
+            $message = $exception->getMessage();
+
+            if ($exception instanceof DatabaseManagerException) {
+                $message = $exception->getHiddenMessage();
+            }
+
+            DebugBar::addThrowable($exception);
+            DebugBar::addFrameworkMessage($message, 'ERROR');
+
+            throw new HiddenException($message);
+        }
+    }
 
 }

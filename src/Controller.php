@@ -7,6 +7,7 @@ use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
+use krzysztofzylka\SimpleLibraries\Library\Strings;
 
 /**
  * Class Controller
@@ -31,6 +32,12 @@ class Controller
      * @var array
      */
     public array $viewVariables = [];
+
+    /**
+     * Loaded models
+     * @var array
+     */
+    public array $models = [];
 
     /**
      * Load models
@@ -76,6 +83,7 @@ class Controller
             $modelClass->tableInstance = new Table($modelClass->useTable);
         }
 
+        $this->models[Strings::camelizeString($model)] = $modelClass;
         DebugBar::timeStop('load_model');
         DebugBar::addModelMessage($modelClass);
         return $modelClass;
@@ -114,6 +122,23 @@ class Controller
     public function set($name, $value): void
     {
         $this->viewVariables[$name] = $value;
+    }
+
+    /**
+     * Magic __get
+     * @param string $name
+     * @return mixed|Model
+     */
+    public function __get(string $name): mixed
+    {
+        if (in_array($name, array_keys($this->models))) {
+            return $this->models[$name];
+        }
+
+        return trigger_error(
+            'Undefined model',
+            E_USER_WARNING
+        );
     }
 
 }

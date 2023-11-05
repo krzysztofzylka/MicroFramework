@@ -62,4 +62,13 @@ class View
         DebugBar::addFrameworkMessage($path, 'View path');
     }
 
+    /**
+     * Generate js
+     * @return string
+     */
+    public function js(): string
+    {
+        return '<script src="' . $_ENV['URL'] . '/public_files/js/' . $this->action . '"></script>';
+    }
+
 }

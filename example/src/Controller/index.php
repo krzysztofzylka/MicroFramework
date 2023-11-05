@@ -19,7 +19,7 @@ class index extends Controller
         DebugBar::timeStart('controller');
         $this->loadModel('test');
         $this->set('variable', 'test');
-        DebugBar::addMessage($this->Test->find(), 'Find');
+        DebugBar::addMessage($this->Test->findAll(), 'Find');
         $this->loadView();
         DebugBar::timeStop('controller');
     }

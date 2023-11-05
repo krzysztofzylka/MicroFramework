@@ -48,7 +48,6 @@ class Model
      */
     public function find(?array $condition = null, ?array $columns = null, ?string $orderBy = null): array
     {
-
         DebugBar::timeStart('find', 'Find');
         try {
             if (!$_ENV['DATABASE']) {
@@ -72,5 +71,42 @@ class Model
             throw new HiddenException($message);
         }
     }
+
+    /**
+     * Find all elements
+     * @param array|null $condition
+     * @param array|null $columns
+     * @param ?string $orderBy
+     * @param ?string $limit
+     * @param ?string $groupBy
+     * @return array
+     * @throws HiddenException
+     */
+    public function findAll(?array $condition = null, ?array $columns = null, ?string $orderBy = null, ?string $limit = null, ?string $groupBy = null): array
+    {
+        DebugBar::timeStart('findAll', 'Find all');
+        try {
+            if (!$_ENV['DATABASE']) {
+                throw new MicroFrameworkException('Database is not configured');
+            }
+
+            $find = $this->tableInstance->findAll($condition, $columns, $orderBy, $limit, $groupBy);
+            DebugBar::timeStop('findAll');
+
+            return $find;
+        } catch (\Throwable $exception) {
+            $message = $exception->getMessage();
+
+            if ($exception instanceof DatabaseManagerException) {
+                $message = $exception->getHiddenMessage();
+            }
+
+            DebugBar::addThrowable($exception);
+            DebugBar::addFrameworkMessage($message, 'ERROR');
+
+            throw new HiddenException($message);
+        }
+    }
+
 
 }

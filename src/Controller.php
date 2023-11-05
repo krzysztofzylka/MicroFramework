@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework;
 
 use Exception;
+use krzysztofzylka\DatabaseManager\Table;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
@@ -69,6 +70,11 @@ class Controller
         $modelClass = new $className();
         $modelClass->name = $model;
         $modelClass->controller = $this;
+
+        if ($_ENV['DATABASE'] && $modelClass->useTable !== false) {
+            $modelClass->useTable = $modelClass->useTable ?? $modelClass->name;
+            $modelClass->tableInstance = new Table($modelClass->useTable);
+        }
 
         DebugBar::timeStop('load_model');
         DebugBar::addModelMessage($modelClass);

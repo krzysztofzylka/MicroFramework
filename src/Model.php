@@ -2,6 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use krzysztofzylka\DatabaseManager\Table;
+
 /**
  * Class Model
  */
@@ -13,6 +15,18 @@ class Model
      * @var string
      */
     public string $name;
+
+    /**
+     * Use table
+     * @var string|false|null
+     */
+    public mixed $useTable = null;
+
+    /**
+     * Database table instance
+     * @var Table
+     */
+    public Table $tableInstance;
 
     /**
      * Controller

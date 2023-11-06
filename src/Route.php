@@ -27,22 +27,7 @@ class Route
     {
         try {
             DebugBar::timeStart('route', 'Route start');
-            $className = 'Krzysztofzylka\MicroFramework\Controllers\\' . $controller;
-
-            try {
-                /** @var Controller $class */
-                $class = new $className();
-            } catch (Exception) {
-                $className = 'src\\Controller\\' . $controller;
-
-                try {
-                    /** @var Controller $class */
-                    $class = new $className();
-                } catch (Exception) {
-                    throw new NotFoundException('Controller not found');
-                }
-            }
-
+            $class = $this->loadControllerClass($controller);
             DebugBar::timeStart('define_variables', 'Define controller variables');
             $class->name = $controller;
             $class->action = $method;
@@ -61,6 +46,30 @@ class Route
             return $class;
         } catch (Throwable $exception) {
             throw $exception;
+        }
+    }
+
+    /**
+     * Load controller class
+     * @param string $controller
+     * @return Controller
+     * @throws NotFoundException
+     */
+    private function loadControllerClass(string $controller): Controller
+    {
+        $className = 'Krzysztofzylka\MicroFramework\Controllers\\' . $controller;
+
+        try {
+            return new $className();
+        } catch (Exception) {
+        }
+
+        $className = 'src\\Controller\\' . $controller;
+
+        try {
+            return new $className();
+        } catch (Exception) {
+            throw new NotFoundException('Controller not found');
         }
     }
 

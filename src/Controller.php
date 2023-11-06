@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework;
 
 use Exception;
 use krzysztofzylka\DatabaseManager\Table;
+use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
@@ -84,6 +85,7 @@ class Controller
         $modelClass = new $className();
         $modelClass->name = $model;
         $modelClass->controller = $this;
+        $modelClass->transactionInstance = new Transaction();
 
         if ($_ENV['DATABASE'] && $modelClass->useTable !== false) {
             $modelClass->useTable = $modelClass->useTable ?? $modelClass->name;

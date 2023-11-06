@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework;
 
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Table;
+use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
@@ -56,6 +57,12 @@ class Model
      * @var int|null
      */
     public ?int $id = null;
+
+    /**
+     * Transaction instance
+     * @var Transaction
+     */
+    public Transaction $transactionInstance;
 
     /**
      * Find one element

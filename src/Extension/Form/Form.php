@@ -69,6 +69,10 @@ class Form
         return $this->formHtml;
     }
 
+    /**
+     * Success
+     * @return bool
+     */
     public function success(): bool
     {
         if (!$this->controller->data || empty($this->controller->data) || !empty($this->validation)) {

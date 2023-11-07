@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework\Component;
 
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
+use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Kernel;
 
 /**
@@ -32,10 +33,27 @@ class Loader
         DebugBar::timeStop('component');
     }
 
-    Public function initComponents()
+    /**
+     * Initialize components
+     * @return void
+     * @throws \Exception
+     */
+    Public function initComponents(): void
     {
         foreach (self::$config['components'] as $component) {
             DebugBar::addComponentsMessage($component, 'Init component');
+
+            try {
+                /** @var Component $componentClass */
+                $componentClass = new $component();
+                $componentClass->init();
+            } catch (\Throwable $exception) {
+                Log::log('Fail initialize component ' . $component, 'ERROR');
+                DebugBar::addComponentsMessage('Fail initialize component ' . $component, 'ERROR');
+                DebugBar::addThrowable($exception);
+
+                continue;
+            }
         }
     }
 

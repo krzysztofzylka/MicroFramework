@@ -1,10 +1,16 @@
 <?php
 
-
 namespace Krzysztofzylka\MicroFramework\Component;
-abstract class Component {
 
-    public function init() {
-    }
+/**
+ * Component interface
+ */
+interface Component {
+
+    /**
+     * Initialize
+     * @return void
+     */
+    public function init(): void;
 
 }

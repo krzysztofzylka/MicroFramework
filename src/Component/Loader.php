@@ -20,18 +20,34 @@ class Loader
     public static array $config = [];
 
     /**
+     * Components
+     * @var array
+     */
+    public static array $components = [];
+
+    /**
+     * Is ini
+     * @var bool
+     */
+    public static bool $init = false;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        DebugBar::timeStart('component', 'Load components');
-        self::$config = json_decode(file_get_contents(Kernel::getPath('components_config')), true);
-        DebugBar::timeStop('component');
-        DebugBar::addComponentsMessage(self::$config, 'Config');
+        if (!self::$init) {
+            DebugBar::timeStart('component', 'Load components');
+            self::$config = json_decode(file_get_contents(Kernel::getPath('components_config')), true);
+            DebugBar::timeStop('component');
+            DebugBar::addComponentsMessage(self::$config, 'Config');
 
-        DebugBar::timeStart('component', 'Init components');
-        $this->initComponents();
-        DebugBar::timeStop('component');
+            DebugBar::timeStart('component', 'Init components');
+            $this->initComponents();
+            DebugBar::timeStop('component');
+
+            self::$init = true;
+        }
     }
 
     /**
@@ -47,6 +63,7 @@ class Loader
             try {
                 /** @var Component $componentClass */
                 $componentClass = new $component();
+                self::$components[$component] = $componentClass;
                 $componentClass->init();
             } catch (\Throwable $exception) {
                 Log::log('Fail initialize component ' . $component, 'ERROR');
@@ -65,20 +82,17 @@ class Loader
      */
     Public function initAfterComponents(): void
     {
-        foreach (self::$config['components'] as $component) {
+        foreach (self::$components as $componentClass) {
             try {
-                /** @var Component $componentClass */
-                $componentClass = new $component();
-
                 if (!method_exists($componentClass, 'afterInit')) {
                     continue;
                 }
 
-                DebugBar::addComponentsMessage($component, 'Init after component');
+                DebugBar::addComponentsMessage($componentClass, 'Init after component');
                 $componentClass->afterInit();
             } catch (\Throwable $exception) {
-                Log::log('Fail initialize after component ' . $component, 'ERROR');
-                DebugBar::addComponentsMessage('Fail initialize after component ' . $component, 'ERROR');
+                Log::log('Fail initialize after component', 'ERROR');
+                DebugBar::addComponentsMessage('Fail initialize after component', 'ERROR');
                 DebugBar::addThrowable($exception);
 
                 continue;

@@ -24,6 +24,12 @@ class Kernel
 {
 
     /**
+     * Loader instance
+     * @var Loader
+     */
+    private Loader $loaderInstance;
+
+    /**
      * Paths
      * @var array
      */
@@ -70,7 +76,7 @@ class Kernel
             $this->initConfigurations();
             $this->autoload();
             $this->connectDatabase();
-            new Loader();
+            $this->loaderInstance = new Loader();
             Log::log('Start kernel');
         } catch (Throwable $exception) {
             throw new MicroFrameworkException($exception->getMessage());
@@ -94,6 +100,7 @@ class Kernel
             DebugBar::addFrameworkMessage(['controller' => $controller, 'method' => $method, 'parameters' => $parameters, 'url' => $url], 'Run route');
             $route = new Route();
             $route->start($controller, $method, $parameters);
+            $this->loaderInstance->initAfterComponents();
         } catch (Throwable $exception) {
             Log::log($exception->getMessage(), 'ERROR');
             DebugBar::addThrowable($exception);

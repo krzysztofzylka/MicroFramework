@@ -10,7 +10,6 @@ include('../../vendor/autoload.php');
 try {
     $kernel = new \Krzysztofzylka\MicroFramework\Kernel(__DIR__ . '/..');
     $kernel->run();
-    (new \Krzysztofzylka\MicroFramework\Component\Loader())->initAfterComponents();
 } catch (Throwable $exception) {
     ob_clean();
     die($exception->getMessage());

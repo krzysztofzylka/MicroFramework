@@ -65,6 +65,18 @@ class Model
     public Transaction $transactionInstance;
 
     /**
+     * Validation errors
+     * @var array
+     */
+    public array $validationErrors = [];
+
+    /**
+     * Validation schema
+     * @var string|null
+     */
+    public ?string $validationSchema = null;
+
+    /**
      * Find one element
      * @param array|null $condition
      * @param array|null $columns
@@ -218,6 +230,27 @@ class Model
 
             throw new HiddenException($message);
         }
+    }
+
+    /**
+     * Form validation
+     * @return array
+     */
+    public function formValidation(): array
+    {
+        return [];
+    }
+
+    /**
+     * Set ID
+     * @param int|null $id
+     * @return $this
+     */
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**

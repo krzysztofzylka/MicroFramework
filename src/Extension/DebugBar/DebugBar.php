@@ -149,6 +149,21 @@ class DebugBar
     }
 
     /**
+     * Add log message
+     * @param mixed $message
+     * @param string $label
+     * @return void
+     */
+    public static function addFormMessage(mixed $message, mixed $label = ''): void
+    {
+        if (!self::$init) {
+            return;
+        }
+
+        self::$standardDebugBar['forms']->addMessage($message, $label);
+    }
+
+    /**
      * Render
      * @return string
      */
@@ -177,6 +192,7 @@ class DebugBar
         self::$standardDebugBar->addCollector(new ConfigCollector($_ENV, 'ENV'));
         self::$standardDebugBar->addCollector(new MessagesCollector('models'));
         self::$standardDebugBar->addCollector(new MessagesCollector('logs'));
+        self::$standardDebugBar->addCollector(new MessagesCollector('forms'));
     }
 
     /**

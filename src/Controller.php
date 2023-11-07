@@ -48,6 +48,12 @@ class Controller
     public Response $response;
 
     /**
+     * $_POST data
+     * @var array|null
+     */
+    public ?array $data = null;
+
+    /**
      * Load models
      * @param string ...$model
      * @return Model

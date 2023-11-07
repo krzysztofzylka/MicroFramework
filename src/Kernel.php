@@ -32,6 +32,7 @@ class Kernel
         'model' => null,
         'view' => null,
         'env' => null,
+        'local_env' => null,
         'logs' => null,
         'assets' => null
     ];
@@ -110,6 +111,7 @@ class Kernel
         self::$paths['model'] = $this->projectPath . '/src/Model';
         self::$paths['view'] = $this->projectPath . '/src/View';
         self::$paths['env'] = $this->projectPath . '/.env';
+        self::$paths['local_env'] = $this->projectPath . '/local.env';
         self::$paths['logs'] = $this->projectPath . '/storage/logs';
         self::$paths['assets'] = $this->projectPath . '/public/assets';
 
@@ -134,6 +136,10 @@ class Kernel
     {
         (new Extension\Env\Env(__DIR__ . '/Default/.env'))->load();
         (new Extension\Env\Env(self::$paths['env']))->load();
+
+        if (file_exists(self::$paths['local_env'])) {
+            (new Extension\Env\Env(self::$paths['local_env']))->load();
+        }
     }
 
     /**

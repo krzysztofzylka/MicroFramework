@@ -5,7 +5,9 @@ namespace Krzysztofzylka\MicroFramework;
 use Exception;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
+use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Extension\Response;
+use krzysztofzylka\SimpleLibraries\Library\Request;
 use Throwable;
 
 /**
@@ -32,7 +34,12 @@ class Route
             $class->name = $controller;
             $class->action = $method;
             $class->response = new Response();
+            $class->data = isset($_POST) ? (new Request())->getAllPostEscapeData() : null;
             DebugBar::timeStop('define_variables');
+
+            if (!is_null($class->data)) {
+                DebugBar::addFrameworkMessage($class->data, 'Post data');
+            }
 
             if (!method_exists($class, $method)) {
                 throw new NotFoundException('Method not found');
@@ -69,6 +76,8 @@ class Route
         try {
             return new $className();
         } catch (Exception) {
+            Log::log('Fail load controller', 'ERROR', ['exception' => $exception->getMessage()]);
+
             throw new NotFoundException('Controller not found');
         }
     }

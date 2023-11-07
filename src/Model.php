@@ -196,7 +196,7 @@ class Model
                 throw new MicroFrameworkException('Database is not configured');
             }
 
-            if (!is_null($this->id)) {
+            if (is_null($this->id)) {
                 $save = $this->tableInstance->insert($data);
 
                 $this->id = $this->tableInstance->getId();
@@ -227,7 +227,7 @@ class Model
      */
     private function _prepareCondition(?array &$condition): void
     {
-        if (!is_array($condition) || is_null($this->isolator) || !$this->isolator) {
+        if (!is_array($condition) || !isset($this->isolator) || is_null($this->isolator) || !$this->isolator) {
             return;
         }
 

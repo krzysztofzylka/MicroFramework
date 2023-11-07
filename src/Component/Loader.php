@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework\Component;
 
+use Exception;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Kernel;
@@ -36,7 +37,7 @@ class Loader
     /**
      * Initialize components
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     Public function initComponents(): void
     {
@@ -50,6 +51,34 @@ class Loader
             } catch (\Throwable $exception) {
                 Log::log('Fail initialize component ' . $component, 'ERROR');
                 DebugBar::addComponentsMessage('Fail initialize component ' . $component, 'ERROR');
+                DebugBar::addThrowable($exception);
+
+                continue;
+            }
+        }
+    }
+
+    /**
+     * Initialize components after view
+     * @return void
+     * @throws Exception
+     */
+    Public function initAfterComponents(): void
+    {
+        foreach (self::$config['components'] as $component) {
+            try {
+                /** @var Component $componentClass */
+                $componentClass = new $component();
+
+                if (!method_exists($componentClass, 'afterInit')) {
+                    continue;
+                }
+
+                DebugBar::addComponentsMessage($component, 'Init after component');
+                $componentClass->afterInit();
+            } catch (\Throwable $exception) {
+                Log::log('Fail initialize after component ' . $component, 'ERROR');
+                DebugBar::addComponentsMessage('Fail initialize after component ' . $component, 'ERROR');
                 DebugBar::addThrowable($exception);
 
                 continue;

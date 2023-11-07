@@ -103,6 +103,10 @@ class DebugBar
      */
     public static function addThrowable($exception): void
     {
+        if (!self::$init) {
+            return;
+        }
+
         self::$standardDebugBar['exceptions']->addThrowable($exception);
     }
 

@@ -36,6 +36,24 @@ class View
     public string $layoutExtension = '.phtml';
 
     /**
+     * Header
+     * @var string
+     */
+    public static string $header = '';
+
+    /**
+     * Body
+     * @var string
+     */
+    public static string $body = '';
+
+    /**
+     * Footer
+     * @var string
+     */
+    public static string $footer = '';
+
+    /**
      * Render view
      * @return void
      * @throws NotFoundException

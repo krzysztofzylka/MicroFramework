@@ -8,6 +8,7 @@ use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Enum\DatabaseType;
 use krzysztofzylka\DatabaseManager\Exception\ConnectException;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
+use Krzysztofzylka\MicroFramework\Component\Loader;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
@@ -34,7 +35,8 @@ class Kernel
         'env' => null,
         'local_env' => null,
         'logs' => null,
-        'assets' => null
+        'assets' => null,
+        'components_config' => null
     ];
 
     /**
@@ -68,6 +70,7 @@ class Kernel
             $this->initConfigurations();
             $this->autoload();
             $this->connectDatabase();
+            new Loader();
             Log::log('Start kernel');
         } catch (Throwable $exception) {
             throw new MicroFrameworkException($exception->getMessage());
@@ -114,11 +117,18 @@ class Kernel
         self::$paths['local_env'] = $this->projectPath . '/local.env';
         self::$paths['logs'] = $this->projectPath . '/storage/logs';
         self::$paths['assets'] = $this->projectPath . '/public/assets';
+        self::$paths['components_config'] = $this->projectPath . '/component.json';
 
-        foreach (self::$paths as $path) {
+        foreach (self::$paths as $key => $path) {
             if (str_contains($path, '.')) {
                 if (!file_exists($path)) {
-                    File::touch($path);
+                    $value = null;
+
+                    if ($key === 'components_config') {
+                        $value = json_encode(['components' => []]);
+                    }
+
+                    File::touch($path, $value);
                 }
             } else {
                 if (!is_dir($path)) {

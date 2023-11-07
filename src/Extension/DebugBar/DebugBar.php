@@ -168,6 +168,21 @@ class DebugBar
     }
 
     /**
+     * Add components message
+     * @param mixed $message
+     * @param string $label
+     * @return void
+     */
+    public static function addComponentsMessage(mixed $message, mixed $label = ''): void
+    {
+        if (!self::$init) {
+            return;
+        }
+
+        self::$standardDebugBar['components']->addMessage($message, $label);
+    }
+
+    /**
      * Render
      * @return string
      */
@@ -197,6 +212,7 @@ class DebugBar
         self::$standardDebugBar->addCollector(new MessagesCollector('models'));
         self::$standardDebugBar->addCollector(new MessagesCollector('logs'));
         self::$standardDebugBar->addCollector(new MessagesCollector('forms'));
+        self::$standardDebugBar->addCollector(new MessagesCollector('components'));
     }
 
     /**

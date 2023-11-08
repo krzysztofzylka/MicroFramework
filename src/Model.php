@@ -2,6 +2,8 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use krzysztofzylka\DatabaseManager\Condition;
+use krzysztofzylka\DatabaseManager\Enum\BindType;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
@@ -77,6 +79,18 @@ class Model
     public ?string $validationSchema = null;
 
     /**
+     * Bind left join
+     * @var array
+     */
+    public array $bindLeftJoin = [];
+
+    /**
+     * Auto bind
+     * @var bool
+     */
+    private bool $autoBind = false;
+
+    /**
      * Find one element
      * @param array|null $condition
      * @param array|null $columns
@@ -87,7 +101,10 @@ class Model
     public function find(?array $condition = null, ?array $columns = null, ?string $orderBy = null): array
     {
         DebugBar::timeStart('find', 'Find');
+
         try {
+            $this->_prepareBind();
+
             if (!$_ENV['DATABASE']) {
                 throw new MicroFrameworkException('Database is not configured');
             }
@@ -124,7 +141,10 @@ class Model
     public function findAll(?array $condition = null, ?array $columns = null, ?string $orderBy = null, ?string $limit = null, ?string $groupBy = null): array
     {
         DebugBar::timeStart('findAll', 'Find all');
+
         try {
+            $this->_prepareBind();
+
             if (!$_ENV['DATABASE']) {
                 throw new MicroFrameworkException('Database is not configured');
             }
@@ -158,7 +178,10 @@ class Model
     public function findCount(?array $condition = null, ?string $groupBy = null): int
     {
         DebugBar::timeStart('findCount', 'Find count');
+
         try {
+            $this->_prepareBind();
+
             if (!$_ENV['DATABASE']) {
                 throw new MicroFrameworkException('Database is not configured');
             }
@@ -254,6 +277,21 @@ class Model
     }
 
     /**
+     * Bind table
+     * @param BindType|array $bind
+     * @param string|null $tableName
+     * @param string|null $primaryKey
+     * @param string|null $foreignKey
+     * @param array|Condition|null $condition
+     * @return $this
+     */
+    public function bind(BindType|array $bind, string $tableName = null, ?string $primaryKey = null, ?string $foreignKey = null, null|array|Condition $condition = null) : self {
+        $this->tableInstance->bind($bind, $tableName, $primaryKey, $foreignKey, $condition);
+
+        return $this;
+    }
+
+    /**
      * Prepare condition
      * @param ?array $condition
      * @return void
@@ -265,6 +303,39 @@ class Model
         }
 
         $condition[$this->useTable . '.' . $this->isolatorName] = $this->isolator;
+    }
+
+    /**
+     * Prepare bind
+     * @return void
+     */
+    private function _prepareBind(): void
+    {
+        if ($this->autoBind) {
+            return;
+        }
+
+        foreach ($this->bindLeftJoin as $bind => $bindData) {
+            $primaryKey = null;
+            $secondaryKey = null;
+
+            if (is_numeric($bind)) {
+                $bind = $bindData;
+                $bindData = [];
+            }
+
+            if (isset($bindData['primaryKey'])) {
+                $primaryKey = $bindData['primaryKey'];
+            }
+
+            if (isset($bindData['secondaryKey'])) {
+                $secondaryKey = $bindData['secondaryKey'];
+            }
+
+            $this->bind(BindType::leftJoin, $bind, $primaryKey, $secondaryKey);
+        }
+
+        $this->autoBind = true;
     }
 
 }

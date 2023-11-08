@@ -98,7 +98,7 @@ class Controller
             $modelClass->tableInstance = new Table($modelClass->useTable);
         }
 
-        $this->models[Strings::camelizeString($model)] = $modelClass;
+        $this->models[Strings::camelizeString($model, '_')] = $modelClass;
         DebugBar::timeStop('load_model');
         DebugBar::addModelMessage($modelClass);
         return $modelClass;
@@ -112,7 +112,7 @@ class Controller
      */
     public function loadView(?string $action = null): bool
     {
-        DebugBar::timeStart('view', 'Load view');
+        DebugBar::timeStart('view_' . spl_object_hash($this), 'Load view');
         $action = $action ?? ($this->name . '/' . $this->action);
 
         /** @var View $view */
@@ -122,7 +122,7 @@ class Controller
         $view->action = $action;
         $view->render();
 
-        DebugBar::timeStop('view');
+        DebugBar::timeStop('view_' . spl_object_hash($this));
         DebugBar::addFrameworkMessage($view, 'Load view');
 
         return true;

@@ -28,7 +28,7 @@ class Route
     public function start(string $controller, string $method, array $parameters = []): Controller
     {
         try {
-            DebugBar::timeStart('route', 'Route start');
+            DebugBar::timeStart('route_' . spl_object_hash($this), 'Route start');
             $class = $this->loadControllerClass($controller);
             DebugBar::timeStart('define_variables', 'Define controller variables');
             $class->name = $controller;
@@ -46,7 +46,7 @@ class Route
             }
 
             $class->$method(...$parameters);
-            DebugBar::timeStop('route');
+            DebugBar::timeStop('route_' . spl_object_hash($this));
 
             DebugBar::addFrameworkMessage($class, 'Controller object');
 

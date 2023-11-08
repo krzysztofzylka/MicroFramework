@@ -33,6 +33,7 @@ class Loader
 
     /**
      * Constructor
+     * @throws Exception
      */
     public function __construct()
     {
@@ -64,7 +65,7 @@ class Loader
                 /** @var Component $componentClass */
                 $componentClass = new $component();
                 self::$components[$component] = $componentClass;
-                $componentClass->init();
+                $componentClass->componentInit();
             } catch (\Throwable $exception) {
                 Log::log('Fail initialize component ' . $component, 'ERROR');
                 DebugBar::addComponentsMessage('Fail initialize component ' . $component, 'ERROR');
@@ -89,7 +90,7 @@ class Loader
                 }
 
                 DebugBar::addComponentsMessage($componentClass, 'Init after component');
-                $componentClass->afterInit();
+                $componentClass->componentInitAfter();
             } catch (\Throwable $exception) {
                 Log::log('Fail initialize after component', 'ERROR');
                 DebugBar::addComponentsMessage('Fail initialize after component', 'ERROR');

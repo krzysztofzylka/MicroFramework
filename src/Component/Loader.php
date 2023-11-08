@@ -85,10 +85,6 @@ class Loader
     {
         foreach (self::$components as $componentClass) {
             try {
-                if (!method_exists($componentClass, 'afterInit')) {
-                    continue;
-                }
-
                 DebugBar::addComponentsMessage($componentClass, 'Init after component');
                 $componentClass->componentInitAfter();
             } catch (\Throwable $exception) {

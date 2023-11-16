@@ -5,6 +5,7 @@ namespace Krzysztofzylka\MicroFramework;
 use krzysztofzylka\DatabaseManager\Condition;
 use krzysztofzylka\DatabaseManager\Enum\BindType;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
+use krzysztofzylka\DatabaseManager\Exception\DeleteException;
 use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;
@@ -241,6 +242,39 @@ class Model
             DebugBar::timeStop('save');
 
             return $save;
+        } catch (Throwable $exception) {
+            $message = $exception->getMessage();
+
+            if ($exception instanceof DatabaseManagerException) {
+                $message = $exception->getHiddenMessage();
+            }
+
+            DebugBar::addThrowable($exception);
+            DebugBar::addFrameworkMessage($message, 'ERROR');
+
+            throw new HiddenException($message);
+        }
+    }
+
+    /**
+     * Delete
+     * @param int $id
+     * @return bool
+     * @throws HiddenException
+     */
+    public function del(int $id)
+    {
+        DebugBar::timeStart('delete', 'Delete');
+        try {
+            if (!$_ENV['DATABASE']) {
+                throw new MicroFrameworkException('Database is not configured');
+            }
+
+            $delete = $this->tableInstance->delete($id);
+
+            DebugBar::timeStop('delete');
+
+            return $delete;
         } catch (Throwable $exception) {
             $message = $exception->getMessage();
 

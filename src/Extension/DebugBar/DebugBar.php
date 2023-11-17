@@ -23,7 +23,7 @@ class DebugBar
      * Is init
      * @var bool
      */
-    private static bool $init = false;
+    public static bool $init = false;
 
     /**
      * StandardDebugBar instance

@@ -59,6 +59,7 @@ class View
     {
         $this->smarty = new Smarty();
         $this->smarty->caching = false;
+        $this->smarty->force_compile = true;
     }
 
     /**

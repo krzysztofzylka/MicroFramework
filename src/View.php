@@ -7,8 +7,8 @@ use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
-use Smarty;
-use SmartyException;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * View class
@@ -17,10 +17,10 @@ class View
 {
 
     /**
-     * Smarty instance
-     * @var Smarty
+     * Variables
+     * @var array
      */
-    private Smarty $smarty;
+    public array $variables = [];
 
     /**
      * View path
@@ -35,10 +35,16 @@ class View
     private string $action;
 
     /**
-     * Is function loaded
-     * @var bool
+     * Twig file system loader instance
+     * @var FilesystemLoader
      */
-    private bool $functionLoaded = false;
+    public FilesystemLoader $twigFileSystemLoader;
+
+    /**
+     * Twig environment instance
+     * @var Environment
+     */
+    public Environment $twigEnvironment;
 
     /**
      * Funkcje globalne
@@ -57,27 +63,14 @@ class View
      */
     public function __construct()
     {
-        $this->smarty = new Smarty();
-        $this->smarty->caching = false;
-        $this->smarty->force_compile = true;
-    }
+        $this->twigFileSystemLoader = new FilesystemLoader();
+        $this->twigFileSystemLoader->addPath(Kernel::getPath('view'));
 
-    /**
-     * Load variables
-     * @param array $variables
-     * @return void
-     */
-    public function loadVariables(array $variables): void
-    {
-        DebugBar::timeStart('render_view_variables', 'Render view variables');
+        $this->twigEnvironment = new Environment($this->twigFileSystemLoader, [
+            'cache' => Kernel::getPath('storage') . '/cache/twig',
+        ]);
 
-        foreach ($variables as $key => $value) {
-            $this->smarty->assign($key, $value);
-
-            DebugBar::addViewMessage($value, $key);
-        }
-
-        DebugBar::timeStop('render_view_variables');
+        $this->twigEnvironment->setCache(false);
     }
 
     /**
@@ -93,19 +86,26 @@ class View
         DebugBar::timeStart('render_view_' . spl_object_hash($this), 'Render view');
         self::$GLOBAL_VARIABLES['action'] = $this->action;
 
-        $this->loadVariables(['APP' => self::$GLOBAL_VARIABLES]);
+        DebugBar::addViewMessage($this->action, 'action');
+        DebugBar::addViewMessage($this->variables, 'variables');
+        DebugBar::addViewMessage(self::$GLOBAL_VARIABLES, 'global_variables');
 
-        $path = $this->filePath ?? (Kernel::getPath('view') . '/' . $this->action . '.tpl');
 
-        if (!file_exists($path)) {
+        $path = $this->action . '.twig';
+
+        if ($this->filePath ?? false) {
+            $path = basename($this->filePath);
+            $this->twigFileSystemLoader->setPaths(dirname($this->filePath));
+        }
+
+        if (!file_exists($this->filePath ?? (Kernel::getPath('view') . '/' . $path))) {
             throw new NotFoundException('View file not found: ' . $path);
         }
 
         try {
-            $this->loadFunctions();
-            $this->smarty->display($path);
-        } catch (SmartyException $exception) {
-            Log::log('Smarty exception', 'ERR', ['exception' => $exception->getMessage()]);
+            echo $this->twigEnvironment->render($path, $this->variables + ['APP' => self::$GLOBAL_VARIABLES]);
+        } catch (Exception $exception) {
+            Log::log('View template exception', 'ERR', ['exception' => $exception->getMessage()]);
 
             throw new MicroFrameworkException($exception->getMessage());
         }
@@ -137,36 +137,12 @@ class View
     }
 
     /**
-     * Get smarty instance
-     * @return Smarty
-     */
-    public function getSmarty(): Smarty
-    {
-        return $this->smarty;
-    }
-
-    /**
      * Get action
      * @return string
      */
     public function getAction(): string
     {
         return $this->action;
-    }
-
-    /**
-     * Load functions
-     * @return void
-     */
-    private function loadFunctions(): void
-    {
-        if ($this->functionLoaded) {
-            return;
-        }
-
-        $this->getSmarty()->addPluginsDir(__DIR__ . '/Extension/View/Plugins');
-
-        $this->functionLoaded = true;
     }
 
     /**

@@ -41,6 +41,7 @@ class Kernel
         'model' => null,
         'view' => null,
         'env' => null,
+        'storage' => null,
         'local_env' => null,
         'logs' => null,
         'assets' => null,
@@ -124,7 +125,8 @@ class Kernel
         self::$paths['view'] = $this->projectPath . '/src/View';
         self::$paths['env'] = $this->projectPath . '/.env';
         self::$paths['local_env'] = $this->projectPath . '/local.env';
-        self::$paths['logs'] = $this->projectPath . '/storage/logs';
+        self::$paths['storage'] = $this->projectPath . '/storage';
+        self::$paths['logs'] = self::$paths['storage'] . '/logs';
         self::$paths['assets'] = $this->projectPath . '/public/assets';
         self::$paths['components_config'] = $this->projectPath . '/component.json';
 

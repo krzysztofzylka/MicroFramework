@@ -120,8 +120,8 @@ class Controller
 
         /** @var View $view */
         $view = new $_ENV['CLASS_VIEW']();
+        $view->variables = $this->viewVariables;
         $view->setAction($action);
-        $view->loadVariables($this->viewVariables);
         $view->render();
 
         DebugBar::timeStop('view_' . spl_object_hash($this));

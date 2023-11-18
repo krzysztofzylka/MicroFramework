@@ -2,6 +2,10 @@
 
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 ob_start();
 session_start();
 
@@ -12,7 +16,7 @@ try {
     $kernel->run();
 } catch (Throwable $exception) {
     ob_clean();
-    die($exception->getMessage());
+    dumpData($exception);
 }
 
 echo DebugBar::renderHeader();

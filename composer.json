@@ -22,6 +22,7 @@
         "ext-memcached": "*",
         "krzysztofzylka/simple-libraries": "^1.0.33",
         "krzysztofzylka/database-manager": "^v1.0.27",
-        "maximebf/debugbar": ">=1.0.0"
+        "maximebf/debugbar": ">=1.0.0",
+        "smarty/smarty": "^4.3"
     }
 }

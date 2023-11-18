@@ -5,6 +5,7 @@ namespace Krzysztofzylka\MicroFramework;
 use Exception;
 use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
+use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
@@ -109,6 +110,8 @@ class Controller
      * @param string|null $action
      * @return bool
      * @throws NotFoundException
+     * @throws MicroFrameworkException
+     * @throws Exception
      */
     public function loadView(?string $action = null): bool
     {
@@ -117,9 +120,8 @@ class Controller
 
         /** @var View $view */
         $view = new $_ENV['CLASS_VIEW']();
-        $view->controller = $this;
-        $view->variables = $this->viewVariables;
-        $view->action = $action;
+        $view->setAction($action);
+        $view->loadVariables($this->viewVariables);
         $view->render();
 
         DebugBar::timeStop('view_' . spl_object_hash($this));

@@ -17,6 +17,8 @@ use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
 use krzysztofzylka\SimpleLibraries\Library\File;
 use Throwable;
 
+include_once(__DIR__ . '/Extension/Functions/functions.php');
+
 /**
  * Kernel
  */
@@ -191,10 +193,17 @@ class Kernel
     {
         spl_autoload_register(function ($class_name) {
             DebugBar::timeStart('autoload', 'Autoload class');
+            if (file_exists(__DIR__ . '/Extension/View/Plugins/' . $class_name . '.php')) {
+                include(__DIR__ . '/Extension/View/Plugins/' . $class_name . '.php');
+                DebugBar::timeStop('autoload');
+
+                return;
+            }
+
             $path = File::repairPath($this->projectPath . DIRECTORY_SEPARATOR . $class_name . '.php');
 
             if (!file_exists($path)) {
-                throw new NotFoundException();
+                throw new NotFoundException($class_name);
             }
 
             include($path);

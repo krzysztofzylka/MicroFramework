@@ -2,8 +2,13 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use Exception;
+use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
+use Krzysztofzylka\MicroFramework\Extension\Log\Log;
+use Smarty;
+use SmartyException;
 
 /**
  * View class
@@ -12,115 +17,175 @@ class View
 {
 
     /**
-     * Controller instance
-     * @var Controller
+     * Smarty instance
+     * @var Smarty
      */
-    public Controller $controller;
+    private Smarty $smarty;
 
     /**
-     * Variables for view
-     * @var array
+     * View path
+     * @var string
      */
-    public array $variables = [];
+    private string $filePath;
 
     /**
      * Action
-     * @var ?string
-     */
-    public ?string $action;
-
-    /**
-     * Layout extension
      * @var string
      */
-    public string $layoutExtension = '.phtml';
+    private string $action;
 
     /**
-     * Custom file path
-     * @var string|null
+     * Is function loaded
+     * @var bool
      */
-    public ?string $filePath = null;
+    private bool $functionLoaded = false;
 
     /**
-     * Header
-     * @var string
+     * Funkcje globalne
+     * @var array
      */
-    public static string $header = '';
+    public static array $GLOBAL_VARIABLES = [
+        'template' => [
+            'header' => '',
+            'body' => '',
+            'footer' => ''
+        ]
+    ];
 
     /**
-     * Body
-     * @var string
+     * Constructor
      */
-    public static string $body = '';
+    public function __construct()
+    {
+        $this->smarty = new Smarty();
+        $this->smarty->caching = false;
+    }
 
     /**
-     * Footer
-     * @var string
+     * Load variables
+     * @param array $variables
+     * @return void
      */
-    public static string $footer = '';
+    public function loadVariables(array $variables): void
+    {
+        DebugBar::timeStart('render_view_variables', 'Render view variables');
 
-    /**
-     * Debug id
-     * @var string
-     */
-    private string $debugId = '';
+        foreach ($variables as $key => $value) {
+            $this->smarty->assign($key, $value);
+
+            DebugBar::addViewMessage($value, $key);
+        }
+
+        DebugBar::timeStop('render_view_variables');
+    }
 
     /**
      * Render view
      * @return void
      * @throws NotFoundException
+     * @throws MicroFrameworkException
+     * @throws Exception
      */
     public function render(): void
     {
         DebugBar::addFrameworkMessage('Render view ' . ($this->filePath ?? $this->action), 'Render view');
         DebugBar::timeStart('render_view_' . spl_object_hash($this), 'Render view');
+        self::$GLOBAL_VARIABLES['action'] = $this->action;
 
-        $path = $this->filePath ?? (Kernel::getPath('view') . '/' . $this->action . $this->layoutExtension);
+        $this->loadVariables(['APP' => self::$GLOBAL_VARIABLES]);
+
+        $path = $this->filePath ?? (Kernel::getPath('view') . '/' . $this->action . '.tpl');
 
         if (!file_exists($path)) {
             throw new NotFoundException('View file not found: ' . $path);
         }
 
-        DebugBar::timeStart('render_view_variables', 'Render view variables');
-        foreach ($this->variables as $key => $value) {
-            $$key = $value;
-        }
-        DebugBar::timeStop('render_view_variables');
+        try {
+            $this->loadFunctions();
+            $this->smarty->display($path);
+        } catch (SmartyException $exception) {
+            Log::log('Smarty exception', 'ERR', ['exception' => $exception->getMessage()]);
 
-        include($path);
+            throw new MicroFrameworkException($exception->getMessage());
+        }
 
         DebugBar::timeStop('render_view_' . spl_object_hash($this));
         DebugBar::addFrameworkMessage($path, 'View path');
     }
 
     /**
-     * Generate js
-     * @return string
+     * @param string $filePath
+     * @return View
      */
-    public function js(): string
+    public function setFilePath(string $filePath): self
     {
-        return '<script src="' . $_ENV['URL'] . '/public_files/js/' . $this->action . '"></script>';
+        $this->filePath = $filePath;
+
+        return $this;
     }
 
     /**
-     * Render action
-     * @param string $controller
-     * @param string $method
-     * @param array $parameters
-     * @return string
-     * @throws NotFoundException
-     * @throws \Throwable
+     * @param string $action
+     * @return self
      */
-    public function renderAction(string $controller, string $method, array $parameters = []): string
+    public function setAction(string $action): self
     {
-        DebugBar::timeStart('renderAction', 'Render action');
-        ob_start();
-        $router = new Route();
-        $router->start($controller, $method, $parameters);
-        $data = ob_get_clean();
-        DebugBar::timeStop('renderAction');
+        $this->action = $action;
 
-        return $data;
+        return $this;
+    }
+
+    /**
+     * Get smarty instance
+     * @return Smarty
+     */
+    public function getSmarty(): Smarty
+    {
+        return $this->smarty;
+    }
+
+    /**
+     * Get action
+     * @return string
+     */
+    public function getAction(): string
+    {
+        return $this->action;
+    }
+
+    /**
+     * Load functions
+     * @return void
+     */
+    private function loadFunctions(): void
+    {
+        if ($this->functionLoaded) {
+            return;
+        }
+
+        $this->getSmarty()->addPluginsDir(__DIR__ . '/Extension/View/Plugins');
+
+        $this->functionLoaded = true;
+    }
+
+    /**
+     * Add JS script
+     * @param string $url
+     * @return void
+     */
+    public static function addJsScript(string $url): void
+    {
+        self::$GLOBAL_VARIABLES['template']['header'] .= '<script src=\'' . $url . '\'></script>';
+    }
+
+    /**
+     * Add CSS script
+     * @param string $url
+     * @return void
+     */
+    public static function addCssScript(string $url): void
+    {
+        self::$GLOBAL_VARIABLES['template']['header'] .= '<link rel=\'stylesheet\' href=\'' . $url . '\'>';
     }
 
 }

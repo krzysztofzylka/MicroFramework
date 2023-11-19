@@ -5,7 +5,6 @@ namespace Krzysztofzylka\MicroFramework;
 use krzysztofzylka\DatabaseManager\Condition;
 use krzysztofzylka\DatabaseManager\Enum\BindType;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
-use krzysztofzylka\DatabaseManager\Exception\DeleteException;
 use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;

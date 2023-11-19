@@ -8,6 +8,7 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Twig\Environment;
+use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
 
 /**
@@ -60,6 +61,7 @@ class View
 
     /**
      * Constructor
+     * @throws LoaderError
      */
     public function __construct()
     {

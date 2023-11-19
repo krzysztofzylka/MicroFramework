@@ -6,6 +6,7 @@ use Exception;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Kernel;
+use Throwable;
 
 /**
  * Component loader
@@ -56,7 +57,7 @@ class Loader
      * @return void
      * @throws Exception
      */
-    Public function initComponents(): void
+    public function initComponents(): void
     {
         foreach (self::$config['components'] as $component) {
             DebugBar::addComponentsMessage($component, 'Init component');
@@ -66,7 +67,7 @@ class Loader
                 $componentClass = new $component();
                 self::$components[$component] = $componentClass;
                 $componentClass->componentInit();
-            } catch (\Throwable $exception) {
+            } catch (Throwable $exception) {
                 Log::log('Fail initialize component ' . $component, 'ERROR');
                 DebugBar::addComponentsMessage('Fail initialize component ' . $component, 'ERROR');
                 DebugBar::addThrowable($exception);
@@ -81,13 +82,13 @@ class Loader
      * @return void
      * @throws Exception
      */
-    Public function initAfterComponents(): void
+    public function initAfterComponents(): void
     {
         foreach (self::$components as $componentClass) {
             try {
                 DebugBar::addComponentsMessage($componentClass, 'Init after component');
                 $componentClass->componentInitAfter();
-            } catch (\Throwable $exception) {
+            } catch (Throwable $exception) {
                 Log::log('Fail initialize after component', 'ERROR');
                 DebugBar::addComponentsMessage('Fail initialize after component', 'ERROR');
                 DebugBar::addThrowable($exception);

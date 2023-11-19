@@ -318,7 +318,8 @@ class Model
      * @param array|Condition|null $condition
      * @return $this
      */
-    public function bind(BindType|array $bind, string $tableName = null, ?string $primaryKey = null, ?string $foreignKey = null, null|array|Condition $condition = null) : self {
+    public function bind(BindType|array $bind, string $tableName = null, ?string $primaryKey = null, ?string $foreignKey = null, null|array|Condition $condition = null): self
+    {
         $this->tableInstance->bind($bind, $tableName, $primaryKey, $foreignKey, $condition);
 
         return $this;

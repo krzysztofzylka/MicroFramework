@@ -49,7 +49,7 @@ class Env
             $value = $explode[1];
 
             if (str_starts_with($value, '"') && str_ends_with($value, '"') || str_starts_with($value, "'") && str_ends_with($value, "'")) {
-                $value = (string)substr($value, 1, -1);
+                $value = substr($value, 1, -1);
             } else {
                 if (intval($value) && substr_count($value, '.') === 0) {
                     $value = (int)$value;

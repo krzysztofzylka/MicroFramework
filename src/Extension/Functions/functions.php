@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Dump data
+ * @param ...$data
+ * @return void
+ */
 function dumpData(...$data): void
 {
     echo '<pre>';
@@ -7,6 +12,11 @@ function dumpData(...$data): void
     echo '</pre>';
 }
 
+/**
+ * Dump data with exit
+ * @param ...$data
+ * @return never
+ */
 function dumpeData(...$data): never
 {
     ob_clean();

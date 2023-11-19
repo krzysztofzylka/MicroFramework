@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework\Exception;
 
 use Exception;
+use Throwable;
 
 /**
  * Framework exception

@@ -92,7 +92,6 @@ class View
         DebugBar::addViewMessage($this->variables, 'variables');
         DebugBar::addViewMessage(self::$GLOBAL_VARIABLES, 'global_variables');
 
-
         $path = $this->action . '.twig';
 
         if ($this->filePath ?? false) {

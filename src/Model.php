@@ -26,7 +26,7 @@ class Model
 
     /**
      * Use table
-     * @var string|false|null
+     * @var mixed
      */
     public mixed $useTable = null;
 
@@ -261,7 +261,7 @@ class Model
      * @return bool
      * @throws HiddenException
      */
-    public function del(int $id)
+    public function del(int $id): bool
     {
         DebugBar::timeStart('delete', 'Delete');
         try {

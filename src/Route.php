@@ -27,33 +27,29 @@ class Route
      */
     public function start(string $controller, string $method, array $parameters = []): Controller
     {
-        try {
-            DebugBar::timeStart('route_' . spl_object_hash($this), 'Route start');
-            $class = $this->loadControllerClass($controller);
-            DebugBar::timeStart('define_variables', 'Define controller variables');
-            $class->name = $controller;
-            $class->action = $method;
-            $class->response = new Response();
-            $class->data = isset($_POST) ? (new Request())->getAllPostEscapeData() : null;
-            DebugBar::timeStop('define_variables');
+        DebugBar::timeStart('route_' . spl_object_hash($this), 'Route start');
+        $class = $this->loadControllerClass($controller);
+        DebugBar::timeStart('define_variables', 'Define controller variables');
+        $class->name = $controller;
+        $class->action = $method;
+        $class->response = new Response();
+        $class->data = Request::isPost() ? (new Request())->getAllPostEscapeData() : null;
+        DebugBar::timeStop('define_variables');
 
-            if (!is_null($class->data)) {
-                DebugBar::addFrameworkMessage($class->data, 'Post data');
-            }
-
-            if (!method_exists($class, $method)) {
-                throw new NotFoundException('Method not found');
-            }
-
-            $class->$method(...$parameters);
-            DebugBar::timeStop('route_' . spl_object_hash($this));
-
-            DebugBar::addFrameworkMessage($class, 'Controller object');
-
-            return $class;
-        } catch (Throwable $exception) {
-            throw $exception;
+        if (!is_null($class->data)) {
+            DebugBar::addFrameworkMessage($class->data, 'Post data');
         }
+
+        if (!method_exists($class, $method)) {
+            throw new NotFoundException('Method not found');
+        }
+
+        $class->$method(...$parameters);
+        DebugBar::timeStop('route_' . spl_object_hash($this));
+
+        DebugBar::addFrameworkMessage($class, 'Controller object');
+
+        return $class;
     }
 
     /**
@@ -61,6 +57,7 @@ class Route
      * @param string $controller
      * @return Controller
      * @throws NotFoundException
+     * @throws Exception
      */
     private function loadControllerClass(string $controller): Controller
     {

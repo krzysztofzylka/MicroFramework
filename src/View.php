@@ -31,9 +31,9 @@ class View
 
     /**
      * Action
-     * @var string
+     * @var ?string
      */
-    private string $action;
+    private ?string $action = null;
 
     /**
      * Twig file system loader instance

@@ -196,7 +196,6 @@ class Kernel
     private function autoload(): void
     {
         spl_autoload_register(function ($class_name) {
-            DebugBar::timeStart('autoload', 'Autoload class');
             if (file_exists(__DIR__ . '/Extension/View/Plugins/' . $class_name . '.php')) {
                 include(__DIR__ . '/Extension/View/Plugins/' . $class_name . '.php');
                 DebugBar::timeStop('autoload');
@@ -211,7 +210,6 @@ class Kernel
             }
 
             include($path);
-            DebugBar::timeStop('autoload');
         });
     }
 

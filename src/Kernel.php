@@ -44,6 +44,7 @@ class Kernel
         'storage' => null,
         'local_env' => null,
         'logs' => null,
+        'src' => null,
         'assets' => null,
         'components_config' => null
     ];
@@ -120,9 +121,10 @@ class Kernel
     private function initPaths(): void
     {
         self::$paths['public'] = $this->projectPath . '/public';
-        self::$paths['controller'] = $this->projectPath . '/src/Controller';
-        self::$paths['model'] = $this->projectPath . '/src/Model';
-        self::$paths['view'] = $this->projectPath . '/src/View';
+        self::$paths['src'] = $this->projectPath . '/src';
+        self::$paths['controller'] = self::$paths['src']  . '/Controller';
+        self::$paths['model'] = self::$paths['src']  . '/Model';
+        self::$paths['view'] = self::$paths['src']  . '/View';
         self::$paths['env'] = $this->projectPath . '/.env';
         self::$paths['local_env'] = $this->projectPath . '/local.env';
         self::$paths['storage'] = $this->projectPath . '/storage';

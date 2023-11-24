@@ -92,9 +92,9 @@ class Controller
         $modelClass = new $className();
         $modelClass->name = $model;
         $modelClass->controller = $this;
-        $modelClass->transactionInstance = new Transaction();
 
         if ($_ENV['DATABASE'] && $modelClass->useTable !== false) {
+            $modelClass->transactionInstance = new Transaction();
             $modelClass->useTable = $modelClass->useTable ?? $modelClass->name;
             $modelClass->tableInstance = new Table($modelClass->useTable);
         }

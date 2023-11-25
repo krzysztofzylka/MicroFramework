@@ -1,5 +1,5 @@
 {
-    "name": "microframework/micro-framework",
+    "name": "micro-framework/micro-framework",
     "description": "Very fast micro PHP framework",
     "type": "library",
     "license": "MIT",

@@ -362,7 +362,7 @@ class Model
                 $primaryKey = $bindData['primaryKey'];
             }
 
-            if (isset($bindData['secondaryKey'])) {
+            if (isset($bindData['foreignKey'])) {
                 $foreignKey = $bindData['foreignKey'];
             }
 

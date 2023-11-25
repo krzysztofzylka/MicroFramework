@@ -351,7 +351,7 @@ class Model
 
         foreach ($this->bindLeftJoin as $bind => $bindData) {
             $primaryKey = null;
-            $secondaryKey = null;
+            $foreignKey = null;
 
             if (is_numeric($bind)) {
                 $bind = $bindData;
@@ -363,10 +363,10 @@ class Model
             }
 
             if (isset($bindData['secondaryKey'])) {
-                $secondaryKey = $bindData['secondaryKey'];
+                $foreignKey = $bindData['foreignKey'];
             }
 
-            $this->bind(BindType::leftJoin, $bind, $primaryKey, $secondaryKey);
+            $this->bind(BindType::leftJoin, $bind, $primaryKey, $foreignKey);
         }
 
         $this->autoBind = true;

@@ -10,6 +10,7 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Extension\Response;
+use krzysztofzylka\SimpleLibraries\Library\Generator;
 use krzysztofzylka\SimpleLibraries\Library\Strings;
 
 /**
@@ -64,22 +65,23 @@ class Controller
     public function loadModel(string ...$model): Model
     {
         DebugBar::addFrameworkMessage('Load model\'s ' . implode(', ', $model), 'Load model');
+        $debugHash = Generator::uniqHash();
 
         $model = count($model) > 1 ? $model : $model[0];
 
         if (is_array($model)) {
-            DebugBar::timeStart('load_model_group', 'Load models ' . implode(', ', $model));
+            DebugBar::timeStart('load_model_group' . $debugHash, 'Load models ' . implode(', ', $model));
 
             foreach ($model as $m) {
                 $modelClass = $this->loadModel($m);
             }
 
-            DebugBar::timeStop('load_model_group');
+            DebugBar::timeStop('load_model_group' . $debugHash);
 
             return $modelClass;
         }
 
-        DebugBar::timeStart('load_model', 'Load model ' . $model);
+        DebugBar::timeStart('load_model' . $debugHash, 'Load model ' . $model);
         $className = 'src\Model\\' . $model;
 
         if (!class_exists($className)) {
@@ -100,7 +102,7 @@ class Controller
         }
 
         $this->models[Strings::camelizeString($model, '_')] = $modelClass;
-        DebugBar::timeStop('load_model');
+        DebugBar::timeStop('load_model' . $debugHash);
         DebugBar::addModelMessage($modelClass);
         return $modelClass;
     }

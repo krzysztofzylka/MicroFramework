@@ -17,11 +17,6 @@ class index extends Controller
      */
     public function index(): void
     {
-        $xml = new XmlViewGenerator();
-        $xml->loadXmlFile(__DIR__ . '/file.xml');
-        $xml->loadNodeDescriptionsFromXSD(__DIR__ . '/schemat.xsd');
-
-        die($xml->render());
         DebugBar::timeStart('controller');
         $this->loadModel('test');
         $this->set('variable', 'Test variable');

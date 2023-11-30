@@ -14,22 +14,23 @@
             "email": "krzysztofzylka@yahoo.com"
         }
     ],
+    "scripts": {
+        "post-install-cmd": [
+            "cp src/Console/microframework.php vendor/bin/microframework"
+        ],
+        "post-update-cmd": [
+            "cp src/Console/microframework.php vendor/bin/microframework"
+        ]
+    },
     "funding": [],
     "require": {
         "php": ">=8.1",
         "ext-mbstring": "*",
         "ext-pdo": "*",
         "ext-memcached": "*",
-        "krzysztofzylka/simple-libraries": "^1.0.28",
-        "twig/twig": "^3.7.1",
+        "krzysztofzylka/simple-libraries": "^1.0.33",
         "krzysztofzylka/database-manager": "^v1.0.27",
-        "phpmailer/phpmailer": "^6.8",
-        "dragonmantank/cron-expression": "^v3.3.3",
-        "symfony/yaml": "^6.3.3",
-        "krzysztofzylka/logger": "^1.1"
-    },
-    "require-dev": {
-        "fakerphp/faker": "v1.23.0",
-        "phpunit/phpunit": "^10.4"
+        "maximebf/debugbar": ">=1.0.0",
+        "twig/twig": "^3.7"
     }
 }

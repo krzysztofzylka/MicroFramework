@@ -2,28 +2,22 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
-use Krzysztofzylka\MicroFramework\Exception\ViewException;
-use Krzysztofzylka\MicroFramework\Extension\CommonFile\CommonFile;
-use Krzysztofzylka\MicroFramework\Extension\CommonFiles\CommonFiles;
-use Krzysztofzylka\MicroFramework\Extension\Table\Table as TableExtension;
-use Krzysztofzylka\MicroFramework\Trait\Alerts;
-use Krzysztofzylka\MicroFramework\Trait\Controller\Confirm;
-use Krzysztofzylka\MicroFramework\Trait\Log;
-use krzysztofzylka\SimpleLibraries\Library\_Array;
-use krzysztofzylka\SimpleLibraries\Library\Redirect;
+use Exception;
+use krzysztofzylka\DatabaseManager\Table;
+use krzysztofzylka\DatabaseManager\Transaction;
+use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
+use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
+use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
+use Krzysztofzylka\MicroFramework\Extension\Log\Log;
+use Krzysztofzylka\MicroFramework\Extension\Response;
+use krzysztofzylka\SimpleLibraries\Library\Generator;
+use krzysztofzylka\SimpleLibraries\Library\Strings;
 
 /**
- * Controller
- * @package Controller
+ * Class Controller
  */
 class Controller
 {
-
-    use Confirm;
-
-    use Log;
-    use \Krzysztofzylka\MicroFramework\Trait\Model;
-    use Alerts;
 
     /**
      * Controller name
@@ -32,65 +26,10 @@ class Controller
     public string $name;
 
     /**
-     * Method
+     * Controller action
      * @var string
      */
-    public string $method;
-
-    /**
-     * Arguments
-     * @var array
-     */
-    public array $arguments;
-
-    /**
-     * POST data
-     * @var ?array
-     */
-    public ?array $data = null;
-
-    /**
-     * Is API controller
-     * @var bool
-     */
-    public bool $isApi = false;
-
-    /**
-     * Layout<br>
-     * null (default) / dialogbox / table / none
-     * @var ?string
-     */
-    public ?string $layout = null;
-
-    /**
-     * Page title (for dialogbox)
-     * @var string
-     */
-    public string $title = '';
-
-    /**
-     * Dialogbox width
-     * @var int
-     */
-    public int $dialogboxWidth = 500;
-
-    /**
-     * Params
-     * @var array
-     */
-    public array $params = [];
-
-    /**
-     * Table method
-     * @var TableExtension
-     */
-    public TableExtension $table;
-
-    /**
-     * View is loaded
-     * @var bool
-     */
-    public bool $viewLoaded = false;
+    public string $action;
 
     /**
      * View variables
@@ -99,34 +38,107 @@ class Controller
     public array $viewVariables = [];
 
     /**
-     * Common file
-     * @var CommonFile
+     * Loaded models
+     * @var array
      */
-    public CommonFile $commonFile;
+    public array $models = [];
+
+    /**
+     * Response class
+     * @var Response
+     */
+    public Response $response;
+
+    /**
+     * $_POST data
+     * @var array|null
+     */
+    public ?array $data = null;
+
+    /**
+     * Load models
+     * @param string ...$model
+     * @return Model
+     * @throws NotFoundException
+     * @throws Exception
+     */
+    public function loadModel(string ...$model): Model
+    {
+        DebugBar::addFrameworkMessage('Load model\'s ' . implode(', ', $model), 'Load model');
+        $debugHash = Generator::uniqHash();
+
+        $model = count($model) > 1 ? $model : $model[0];
+
+        if (is_array($model)) {
+            DebugBar::timeStart('load_model_group' . $debugHash, 'Load models ' . implode(', ', $model));
+
+            foreach ($model as $m) {
+                $modelClass = $this->loadModel($m);
+            }
+
+            DebugBar::timeStop('load_model_group' . $debugHash);
+
+            return $modelClass;
+        }
+
+        DebugBar::timeStart('load_model' . $debugHash, 'Load model ' . $model);
+        $className = 'src\Model\\' . $model;
+
+        if (!class_exists($className)) {
+            Log::log('Model ' . $model . ' not found', 'ERR');
+
+            throw new NotFoundException('Model ' . $model . ' not found');
+        }
+
+        /** @var Model $modelClass */
+        $modelClass = new $className();
+        $modelClass->name = $model;
+        $modelClass->controller = $this;
+
+        if ($_ENV['DATABASE'] && $modelClass->useTable !== false) {
+            $modelClass->transactionInstance = new Transaction();
+            $modelClass->useTable = $modelClass->useTable ?? $modelClass->name;
+            $modelClass->tableInstance = new Table($modelClass->useTable);
+        }
+
+        $this->models[Strings::camelizeString($model, '_')] = $modelClass;
+        DebugBar::timeStop('load_model' . $debugHash);
+        DebugBar::addModelMessage($modelClass);
+        return $modelClass;
+    }
 
     /**
      * Load view
-     * @param array $variables
-     * @param ?string $name
-     * @return void
-     * @throws ViewException
+     * @param string|null $action
+     * @return bool
+     * @throws NotFoundException
+     * @throws MicroFrameworkException
+     * @throws Exception
      */
-    public function loadView(array $variables = [], ?string $name = null): void
+    public function loadView(?string $action = null): bool
     {
-        $view = new View();
-        $view->setController($this);
-        $this->viewLoaded = true;
+        DebugBar::timeStart('view_' . spl_object_hash($this), 'Load view');
+        $action = $action ?? ($this->name . '/' . $this->action);
 
-        echo $view->render(array_merge($this->viewVariables, $variables), $name ?? $this->method);
+        /** @var View $view */
+        $view = new $_ENV['CLASS_VIEW']();
+        $view->variables = $this->viewVariables;
+        $view->setAction($action);
+        $view->render();
+
+        DebugBar::timeStop('view_' . spl_object_hash($this));
+        DebugBar::addFrameworkMessage($view, 'Load view');
+
+        return true;
     }
 
     /**
      * Set view variable
-     * @param string $name
-     * @param mixed $value
+     * @param $name
+     * @param $value
      * @return void
      */
-    public function set(string $name, mixed $value): void
+    public function set($name, $value): void
     {
         $this->viewVariables[$name] = $value;
     }
@@ -138,25 +150,14 @@ class Controller
      */
     public function __get(string $name): mixed
     {
-        if (_Array::inArrayKeys($name, $this->models)) {
+        if (in_array($name, array_keys($this->models))) {
             return $this->models[$name];
         }
 
-        return trigger_error(__('micro-framework.controller.undefined_property', ['name' => $name]), E_USER_WARNING);
-    }
-
-    /**
-     * Redirect
-     * @param string $url
-     * @return never
-     */
-    public function redirect(string $url): never
-    {
-        if (str_starts_with($url, '/')) {
-            Redirect::redirect($_ENV['config_page_url'] . substr($url, 1));
-        }
-
-        Redirect::redirect($url);
+        return trigger_error(
+            'Undefined model',
+            E_USER_WARNING
+        );
     }
 
 }

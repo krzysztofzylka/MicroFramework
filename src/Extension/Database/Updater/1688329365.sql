@@ -1,1 +1,0 @@
-alter table `database_updater` modify `name` varchar(15) not null;

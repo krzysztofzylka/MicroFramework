@@ -2,18 +2,17 @@
 
 namespace Krzysztofzylka\MicroFramework\Exception;
 
+use Exception;
+
 /**
  * Not found exception
- * @package Exception
  */
-class NotFoundException extends MicroFrameworkException
+class NotFoundException extends Exception
 {
 
-    public function __construct(string $message = 'Object not found.')
+    public function __construct(string $message = "")
     {
-        $this->setHiddenMessage($message);
-
-        parent::__construct(__('micro-framework.exceptions.not_found.object_not_found'), 404);
+        parent::__construct($message, 404);
     }
 
 }

@@ -1,9 +1,0 @@
-{% extends "MicroFramework/Layout/dashboard/paLayout.twig" %}
-
-{% block contentTitle %}
-    {{ __('micro-framework.admin_panel.log.title') }}
-{% endblock %}
-
-{% block content %}
-    {{ action('/log/indexTable', 'table') | raw }}
-{% endblock %}

@@ -1,11 +1,11 @@
 {
-    "name": "micro-framework/micro-framework",
+    "name": "krzysztofzylka/micro-framework",
     "description": "Very fast micro PHP framework",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "microframework\\MicroFramework\\": "src/"
+            "Krzysztofzylka\\MicroFramework\\": "src/"
         }
     },
     "authors": [

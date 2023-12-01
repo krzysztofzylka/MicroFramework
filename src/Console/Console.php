@@ -4,6 +4,8 @@ namespace Krzysztofzylka\MicroFramework\Console;
 
 use Krzysztofzylka\MicroFramework\Kernel;
 use krzysztofzylka\SimpleLibraries\Library\Console\Args as ConsoleLibrary;
+use krzysztofzylka\SimpleLibraries\Library\Console\Generator\Help;
+use krzysztofzylka\SimpleLibraries\Library\Console\Generator\Table;
 use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
 use krzysztofzylka\SimpleLibraries\Library\File;
 
@@ -39,6 +41,10 @@ class Console
         $this->args = ConsoleLibrary::getArgs($_SERVER['argv']);
         $this->path = $_SERVER['PWD'];
         $this->frameworkPath = $this->getFrameworkPath();
+
+        if (isset($this->args['params']['projectPath'])) {
+            $this->path = $this->args['params']['projectPath'];
+        }
     }
 
     /**
@@ -51,6 +57,19 @@ class Console
             case 'init':
                 $path = $this->path . (isset($this->args['args'][1]) ? ('/' . $this->args['args'][1]) : '');
                 $this->initializeProject($path);
+                break;
+            case 'component':
+                switch ($this->args['args'][1]) {
+                    case 'list':
+                        $this->getProjectComponentList();
+                        break;
+                    default:
+                        $this->renderHelp();
+                }
+                break;
+            case 'help':
+            default:
+                $this->renderHelp();
                 break;
         }
     }
@@ -100,6 +119,48 @@ class Console
         }
 
         $this->print('Success initialize project', 'green');
+    }
+
+    /**
+     * Project component lists
+     * @return void
+     */
+    private function getProjectComponentList(): void
+    {
+        $componentFile = $this->path . '/component.json';
+
+        if (!file_exists($componentFile)) {
+            $this->print('Not found component.json', 'red', true);
+        }
+
+        $components = json_decode(file_get_contents($componentFile), true);
+        $componentList = [];
+
+        foreach ($components['components'] as $component) {
+            $componentList[] = [
+                'path' => $component
+            ];
+        }
+
+        $table = new Table();
+        $table->setData($componentList);
+        $table->addColumn('Component', 'path');
+        $table->render();
+    }
+
+    /**
+     * Render help
+     * @return void
+     */
+    private function renderHelp(): void
+    {
+        $help = new Help();
+        $help->addHeader('Help');
+        $help->addHelp('init', 'Initialize project');
+        $help->addHelp('component list', 'Component list');
+        $help->addHeader('Parameters');
+        $help->addHelp('-projectPath <path>', 'Define project path');
+        $help->render();
     }
 
 }

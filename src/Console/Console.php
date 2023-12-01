@@ -63,6 +63,9 @@ class Console
                     case 'list':
                         $this->getProjectComponentList();
                         break;
+                    case 'install':
+                        $this->installProjectComponent();
+                        break;
                     default:
                         $this->renderHelp();
                 }
@@ -149,6 +152,51 @@ class Console
     }
 
     /**
+     * Install component
+     * @return void
+     */
+    private function installProjectComponent(): void
+    {
+        $componentName = $this->args['args'][2];
+        $secured = isset($this->args['params']['secure']) ? (string)$this->args['params']['secure'] !== 'false' : true;
+
+        $this->print('Install component: ' . $componentName);
+
+        if (!$secured) {
+            $this->print('Unsecured installer', 'yellow');
+        }
+
+        try {
+            $packageName = $componentName;
+            $this->print('Require composer package: ' . $packageName);
+            $command = 'cd ../; composer require ' . $packageName;
+            shell_exec($command);
+            $packagePath = realpath(__DIR__ . '/../../vendor/' . $packageName);
+
+            if (!file_exists($packagePath)) {
+                $this->print('Failed install component', 'red', true);
+            }
+
+            $composerData = json_decode(file_get_contents($packagePath . '/composer.json'), true);
+            $class = "\\" . array_key_first($composerData['autoload']['psr-4']) . 'Component';
+            $componentList = json_decode(file_get_contents($this->path . '/component.json'), true);
+
+            if (class_exists($class) && !in_array($class, $componentList['components'])) {
+                $this->print('Add component to list');
+
+                $componentList['components'][] = $class;
+
+                file_put_contents($this->path . '/component.json', json_encode($componentList));
+            }
+        } catch (\Throwable $exception) {
+            $this->print('Failed install component', 'red');
+            $this->print($exception->getMessage(), 'red', true);
+        }
+
+        $this->print('Success install component', 'green');
+    }
+
+    /**
      * Render help
      * @return void
      */
@@ -158,6 +206,7 @@ class Console
         $help->addHeader('Help');
         $help->addHelp('init', 'Initialize project');
         $help->addHelp('component list', 'Component list');
+        $help->addHelp('component install <name> [-secure false]', 'Install component');
         $help->addHeader('Parameters');
         $help->addHelp('-projectPath <path>', 'Define project path');
         $help->render();

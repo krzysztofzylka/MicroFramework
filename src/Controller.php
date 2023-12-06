@@ -104,6 +104,7 @@ class Controller
         $this->models[Strings::camelizeString($model, '_')] = $modelClass;
         DebugBar::timeStop('load_model' . $debugHash);
         DebugBar::addModelMessage($modelClass);
+
         return $modelClass;
     }
 

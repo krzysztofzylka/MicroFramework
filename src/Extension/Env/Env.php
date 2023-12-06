@@ -30,11 +30,16 @@ class Env
      */
     public function load(): void
     {
-        if (!$this->filePath) {
+        if (!$this->filePath || !file_exists($this->filePath)) {
             return;
         }
 
         $contents = file_get_contents($this->filePath);
+
+        if ($contents === false) {
+            return;
+        }
+
         $contents = explode(PHP_EOL, $contents);
 
         foreach ($contents as $content) {
@@ -45,15 +50,20 @@ class Env
             }
 
             $explode = explode('=', $content, 2);
+
+            if (count($explode) < 2) {
+                continue;
+            }
+
             $name = $explode[0];
             $value = $explode[1];
 
             if (str_starts_with($value, '"') && str_ends_with($value, '"') || str_starts_with($value, "'") && str_ends_with($value, "'")) {
                 $value = substr($value, 1, -1);
             } else {
-                if (intval($value) && substr_count($value, '.') === 0) {
+                if (preg_match("/^\d+$/", $value)) {
                     $value = (int)$value;
-                } elseif (floatval($value) && substr_count($value, '.') === 1) {
+                } elseif (preg_match("/^\d+\.\d+$/", $value)) {
                     $value = (float)$value;
                 }
 

@@ -96,7 +96,7 @@ class Kernel
     {
         try {
             DebugBar::timeStart('run', 'Generate run data');
-            $url = explode('/', $_GET['url'] ?? '');
+            $url = explode('/', htmlspecialchars($_GET['url'] ?? '', ENT_QUOTES));
             $controller = $url[0] ?: $_ENV['DEFAULT_CONTROLLER'];
             $method = $url[1] ?? $_ENV['DEFAULT_METHOD'];
             $parameters = array_slice($url, 2);

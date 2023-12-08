@@ -91,12 +91,13 @@ class Model
     private bool $autoBind = false;
 
     /**
-     * Find one element
-     * @param array|null $condition
-     * @param array|null $columns
-     * @param ?string $orderBy
-     * @return array
-     * @throws HiddenException
+     * Find records based on the specified condition, columns, and order.
+     *
+     * @param array|null $condition Optional. The condition to filter the records. Default is null.
+     * @param array|null $columns Optional. The columns to select from the records. Default is null.
+     * @param string|null $orderBy Optional. The column to order the records by. Default is null.
+     * @return array The records that match the condition, columns, and order.
+     * @throws HiddenException If an error occurs during the find operation.
      */
     public function find(?array $condition = null, ?array $columns = null, ?string $orderBy = null): array
     {
@@ -169,11 +170,12 @@ class Model
     }
 
     /**
-     * Count
-     * @param ?array $condition
-     * @param ?string $groupBy
-     * @return int
-     * @throws HiddenException
+     * Find the count of elements matching the condition
+     *
+     * @param array|null $condition The condition to filter the elements (optional)
+     * @param ?string $groupBy The column(s) to group by (optional)
+     * @return int The count of elements matching the condition
+     * @throws HiddenException Thrown if there is an error in the database operation
      */
     public function findCount(?array $condition = null, ?string $groupBy = null): int
     {
@@ -206,8 +208,9 @@ class Model
     }
 
     /**
-     * Set isolator
-     * @param int|string $isolator
+     * Set the isolator value
+     *
+     * @param int|string $isolator The isolator value to be set
      * @return self
      */
     public function setIsolator(int|string $isolator): self
@@ -218,9 +221,9 @@ class Model
     }
 
     /**
-     * Save or update data
-     * @param array $data
-     * @return bool
+     * Save data
+     * @param array $data The data to be saved
+     * @return bool True if data is saved successfully, false otherwise
      * @throws HiddenException
      */
     public function save(array $data): bool
@@ -256,10 +259,11 @@ class Model
     }
 
     /**
-     * Delete
-     * @param int $id
-     * @return bool
-     * @throws HiddenException
+     * Delete an element by ID
+     *
+     * @param int $id The ID of the element to delete
+     * @return bool True if the element was deleted successfully, false otherwise
+     * @throws HiddenException If an error occurs during the deletion process
      */
     public function del(int $id): bool
     {
@@ -289,7 +293,9 @@ class Model
     }
 
     /**
-     * Form validation
+     * Perform form validation and return an array of validation errors,
+     * if any. Returns an empty array if there are no validation errors.
+     *
      * @return array
      */
     public function formValidation(): array
@@ -298,9 +304,10 @@ class Model
     }
 
     /**
-     * Set ID
-     * @param int|null $id
-     * @return $this
+     * Set the ID value of the object
+     *
+     * @param int|null $id The ID value to set. Pass null to unset the ID.
+     * @return self The current object with the updated ID value.
      */
     public function setId(?int $id): self
     {
@@ -310,13 +317,15 @@ class Model
     }
 
     /**
-     * Bind table
-     * @param BindType|array $bind
-     * @param string|null $tableName
-     * @param string|null $primaryKey
-     * @param string|null $foreignKey
-     * @param array|Condition|null $condition
-     * @return $this
+     * Bind a table instance to the query builder.
+     *
+     * @param BindType|array $bind The bind type or an array of bind types.
+     * @param string|null $tableName The name of the table to bind to. If null, the previously bound table name will be used.
+     * @param ?string $primaryKey The primary key column name. If null, the previously bound primary key will be used.
+     * @param ?string $foreignKey The foreign key column name. If null, the previously bound foreign key will be used.
+     * @param null|array|Condition $condition The condition to apply to the table binding. This can be either an array or a Condition object. If null, no condition will be applied.
+     *
+     * @return self Returns the query builder instance.
      */
     public function bind(BindType|array $bind, string $tableName = null, ?string $primaryKey = null, ?string $foreignKey = null, null|array|Condition $condition = null): self
     {
@@ -326,8 +335,11 @@ class Model
     }
 
     /**
-     * Prepare condition
-     * @param ?array $condition
+     * Prepare the condition array for find operation.
+     * If the condition is an array and the isolator property is set, add the isolator name and value to the condition array.
+     *
+     * @param array|null &$condition The condition array to be prepared.
+     *
      * @return void
      */
     private function _prepareCondition(?array &$condition): void
@@ -340,8 +352,7 @@ class Model
     }
 
     /**
-     * Prepare bind
-     * @return void
+     * Prepare the bind values
      */
     private function _prepareBind(): void
     {

@@ -66,9 +66,11 @@ class Kernel
     }
 
     /**
-     * Init controller
-     * @param string $projectPath project path
-     * @throws MicroFrameworkException
+     * Constructor method
+     * Initializes the object with the provided project path and performs the necessary setup tasks.
+     * @param string $projectPath The path to the project
+     * @return void
+     * @throws MicroFrameworkException If an error occurs during initialization
      */
     public function __construct(string $projectPath)
     {
@@ -88,9 +90,11 @@ class Kernel
     }
 
     /**
-     * Run kernel
+     * Run the application
      * @return void
-     * @throws Throwable
+     * @throws SimpleLibraryException if an error occurs in the routing process
+     * @throws DebugBarException if an error occurs in the DebugBar initialization
+     * @throws Throwable if an unhandled exception occurs during the execution of the controller method
      */
     public function run(): void
     {
@@ -114,9 +118,9 @@ class Kernel
     }
 
     /**
-     * Set paths
+     * Initializes paths
      * @return void
-     * @throws SimpleLibraryException
+     * @throws SimpleLibraryException if there is an error in creating a file
      */
     private function initPaths(): void
     {
@@ -152,7 +156,8 @@ class Kernel
     }
 
     /**
-     * Load ENV file
+     * Load environment variables
+     * Loads the environment variables from various .env files.
      * @return void
      */
     private function loadEnv(): void
@@ -166,10 +171,11 @@ class Kernel
     }
 
     /**
-     * Init configurations
+     * Initializes the configurations of the application.
+     * This method sets the timezone and error reporting settings based on the environment variables.
      * @return void
-     * @throws SimpleLibraryException
      * @throws DebugBarException
+     * @throws SimpleLibraryException
      */
     private function initConfigurations(): void
     {
@@ -189,9 +195,10 @@ class Kernel
     }
 
     /**
-     * Autoload
+     * Autoloads classes.
+     * This method registers an anonymous function as an autoloader using spl_autoload_register().
      * @return void
-     * @throws NotFoundException
+     * @throws NotFoundException if the file for the specified class is not found.
      */
     private function autoload(): void
     {
@@ -214,11 +221,12 @@ class Kernel
     }
 
     /**
-     * Connect to database
+     * Connects to the database.
+     * This method establishes a connection to the database based on the environment variables.
      * @return void
+     * @throws ConnectException
      * @throws DatabaseManagerException
      * @throws DebugBarException
-     * @throws ConnectException
      */
     private function connectDatabase(): void
     {

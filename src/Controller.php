@@ -56,11 +56,10 @@ class Controller
     public ?array $data = null;
 
     /**
-     * Load models
-     * @param string ...$model
-     * @return Model
-     * @throws NotFoundException
-     * @throws Exception
+     * Loads a model or a group of models.
+     * @param string ...$model The name(s) of the model(s) to load.
+     * @return Model The loaded model instance.
+     * @throws NotFoundException If the specified model is not found.
      */
     public function loadModel(string ...$model): Model
     {
@@ -109,12 +108,11 @@ class Controller
     }
 
     /**
-     * Load view
-     * @param string|null $action
-     * @return bool
-     * @throws NotFoundException
+     * Loads a view for the current controller.
+     * @param string|null $action (optional) The action name to load. If not specified, the default action will be used.
+     * @return bool Returns true on success.
      * @throws MicroFrameworkException
-     * @throws Exception
+     * @throws NotFoundException
      */
     public function loadView(?string $action = null): bool
     {
@@ -134,12 +132,12 @@ class Controller
     }
 
     /**
-     * Set view variable
-     * @param $name
-     * @param $value
+     * Sets a value for a view variable.
+     * @param string $name The name of the variable.
+     * @param mixed $value The value of the variable.
      * @return void
      */
-    public function set($name, $value): void
+    public function set(string $name, mixed $value): void
     {
         $this->viewVariables[$name] = $value;
     }

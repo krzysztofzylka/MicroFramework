@@ -17,13 +17,12 @@ class Route
 {
 
     /**
-     * Start route
-     * @param string $controller controller name
-     * @param string $method method name
-     * @param array $parameters additional parameters
-     * @return Controller
-     * @throws NotFoundException
-     * @throws Throwable
+     * Starts the execution of a controller method.
+     * @param string $controller The name of the controller.
+     * @param string $method The name of the method to be executed.
+     * @param array $parameters An optional array of parameters to be passed to the method.
+     * @return Controller The controller object.
+     * @throws NotFoundException When the specified method does not exist in the controller.
      */
     public function start(string $controller, string $method, array $parameters = []): Controller
     {
@@ -53,10 +52,10 @@ class Route
     }
 
     /**
-     * Load controller class
-     * @param string $controller
-     * @return Controller
-     * @throws NotFoundException
+     * Loads the controller class based on the given controller name.
+     * @param string $controller The name of the controller.
+     * @return Controller The loaded controller object.
+     * @throws NotFoundException When the specified controller or its namespace is not found or fails to instantiate.
      * @throws Exception
      */
     private function loadControllerClass(string $controller): Controller

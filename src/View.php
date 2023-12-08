@@ -14,8 +14,7 @@ use Twig\Loader\FilesystemLoader;
 /**
  * Class View
  *
- * The View class is responsible for rendering views with the help of the Twig templating engine.
- */
+ * This class represents a view in*/
 class View
 {
 

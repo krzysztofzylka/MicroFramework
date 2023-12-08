@@ -12,7 +12,9 @@ use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
 
 /**
- * View class
+ * Class View
+ *
+ * The View class is responsible for rendering views with the help of the Twig templating engine.
  */
 class View
 {
@@ -48,7 +50,7 @@ class View
     public Environment $twigEnvironment;
 
     /**
-     * Funkcje globalne
+     * Global Variables
      * @var array
      */
     public static array $GLOBAL_VARIABLES = [
@@ -76,7 +78,7 @@ class View
     }
 
     /**
-     * Render view
+     * Renders the view
      * @return void
      * @throws NotFoundException
      * @throws MicroFrameworkException
@@ -116,8 +118,9 @@ class View
     }
 
     /**
-     * @param string $filePath
-     * @return View
+     * Sets the file path.
+     * @param string $filePath The file path to set.
+     * @return self
      */
     public function setFilePath(string $filePath): self
     {
@@ -127,7 +130,8 @@ class View
     }
 
     /**
-     * @param string $action
+     * Sets the action.
+     * @param string $action The action to set.
      * @return self
      */
     public function setAction(string $action): self
@@ -138,8 +142,8 @@ class View
     }
 
     /**
-     * Get action
-     * @return string
+     * Retrieves the action value.
+     * @return string The action value.
      */
     public function getAction(): string
     {
@@ -147,23 +151,33 @@ class View
     }
 
     /**
-     * Add JS script
-     * @param string $url
+     * Adds a JavaScript script to the header.
+     * @param string $url The URL of the JavaScript file.
      * @return void
      */
     public static function addJsScript(string $url): void
     {
-        self::$GLOBAL_VARIABLES['template']['header'] .= '<script src=\'' . $url . '\'></script>';
+        self::addToHeader("<script src='$url'></script>");
     }
 
     /**
-     * Add CSS script
-     * @param string $url
+     * Adds a CSS script to the header.
+     * @param string $url The URL of the CSS script.
      * @return void
      */
     public static function addCssScript(string $url): void
     {
-        self::$GLOBAL_VARIABLES['template']['header'] .= '<link rel=\'stylesheet\' href=\'' . $url . '\'>';
+        self::addToHeader("<link rel='stylesheet\' href='$url' />");
+    }
+
+    /**
+     * Add data to the header in the global variables.
+     * @param string $data The data to be added to the header.
+     * @return void
+     */
+    public static function addToHeader(string $data): void
+    {
+        self::$GLOBAL_VARIABLES['template']['header'] .= $data;
     }
 
 }

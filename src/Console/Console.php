@@ -3,11 +3,13 @@
 namespace Krzysztofzylka\MicroFramework\Console;
 
 use Krzysztofzylka\MicroFramework\Kernel;
+use Krzysztofzylka\Reflection\Reflection;
 use krzysztofzylka\SimpleLibraries\Library\Console\Args as ConsoleLibrary;
 use krzysztofzylka\SimpleLibraries\Library\Console\Generator\Help;
 use krzysztofzylka\SimpleLibraries\Library\Console\Generator\Table;
 use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
 use krzysztofzylka\SimpleLibraries\Library\File;
+use ReflectionException;
 
 /**
  * Console class
@@ -80,11 +82,11 @@ class Console
     /**
      * Get microframework path
      * @return string
+     * @throws ReflectionException
      */
     private function getFrameworkPath(): string
     {
-        $reflection = new \ReflectionClass(Kernel::class);
-        return dirname($reflection->getFileName());
+        return Reflection::getDirectoryPath(Kernel::class);
     }
 
     /**

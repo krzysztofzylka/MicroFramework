@@ -9,6 +9,7 @@ use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Enum\DatabaseType;
 use krzysztofzylka\DatabaseManager\Exception\ConnectException;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
+use Krzysztofzylka\Env\Env;
 use Krzysztofzylka\MicroFramework\Component\Loader;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
@@ -158,14 +159,15 @@ class Kernel
      * Load environment variables
      * Loads the environment variables from various .env files.
      * @return void
+     * @throws Exception
      */
     private function loadEnv(): void
     {
-        (new Extension\Env\Env(__DIR__ . '/Default/.env'))->load();
-        (new Extension\Env\Env(self::$paths['env']))->load();
+        (new Env(__DIR__ . '/Default/.env'))->load();
+        (new Env(self::$paths['env']))->load();
 
         if (file_exists(self::$paths['local_env'])) {
-            (new Extension\Env\Env(self::$paths['local_env']))->load();
+            (new Env(self::$paths['local_env']))->load();
         }
     }
 

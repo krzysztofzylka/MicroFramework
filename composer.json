@@ -35,6 +35,7 @@
         "krzysztofzylka/request": "^1.0.0",
         "krzysztofzylka/file": "^1.0.0",
         "krzysztofzylka/console": "^1.0.0",
+        "krzysztofzylka/env": "^1.0.0",
         "maximebf/debugbar": ">=1.0.0",
         "twig/twig": "^3.7"
     }

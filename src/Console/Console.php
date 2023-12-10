@@ -4,11 +4,11 @@ namespace Krzysztofzylka\MicroFramework\Console;
 
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\Reflection\Reflection;
-use krzysztofzylka\SimpleLibraries\Library\Console\Args as ConsoleLibrary;
-use krzysztofzylka\SimpleLibraries\Library\Console\Generator\Help;
-use krzysztofzylka\SimpleLibraries\Library\Console\Generator\Table;
-use krzysztofzylka\SimpleLibraries\Library\Console\Prints;
-use krzysztofzylka\SimpleLibraries\Library\File;
+use krzysztofzylka\Console\Args as ConsoleLibrary;
+use krzysztofzylka\Console\Generator\Help;
+use krzysztofzylka\Console\Generator\Table;
+use krzysztofzylka\Console\Prints;
+use Krzysztofzylka\File\File;
 use ReflectionException;
 
 /**

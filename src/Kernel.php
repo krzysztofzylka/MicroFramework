@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework;
 
 use DebugBar\DebugBarException;
+use Exception;
 use krzysztofzylka\DatabaseManager\DatabaseConnect;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
 use krzysztofzylka\DatabaseManager\Enum\DatabaseType;
@@ -13,8 +14,7 @@ use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
-use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
-use krzysztofzylka\SimpleLibraries\Library\File;
+use Krzysztofzylka\File\File;
 use Throwable;
 
 include_once(__DIR__ . '/Extension/Functions/functions.php');
@@ -92,7 +92,6 @@ class Kernel
     /**
      * Run the application
      * @return void
-     * @throws SimpleLibraryException if an error occurs in the routing process
      * @throws DebugBarException if an error occurs in the DebugBar initialization
      * @throws Throwable if an unhandled exception occurs during the execution of the controller method
      */
@@ -120,7 +119,7 @@ class Kernel
     /**
      * Initializes paths
      * @return void
-     * @throws SimpleLibraryException if there is an error in creating a file
+     * @throws Exception
      */
     private function initPaths(): void
     {
@@ -149,7 +148,7 @@ class Kernel
                 }
             } else {
                 if (!is_dir($path)) {
-                    File::mkdir($path, 0755);
+                    File::mkdir($path);
                 }
             }
         }
@@ -175,7 +174,6 @@ class Kernel
      * This method sets the timezone and error reporting settings based on the environment variables.
      * @return void
      * @throws DebugBarException
-     * @throws SimpleLibraryException
      */
     private function initConfigurations(): void
     {

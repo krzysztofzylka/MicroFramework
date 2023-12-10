@@ -2,12 +2,11 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Log;
 
+use DateTime;
 use Exception;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Kernel;
-use krzysztofzylka\SimpleLibraries\Library\Client;
-use krzysztofzylka\SimpleLibraries\Library\Date;
-use krzysztofzylka\SimpleLibraries\Library\Generator;
+use Krzysztofzylka\Generator\Generator;
 
 /**
  * Logs
@@ -37,17 +36,20 @@ class Log
         }
 
         if (!isset(self::$session)) {
-            self::$session = Generator::guid();
+            self::$session = Generator::uuid();
         }
 
         $backtrace = debug_backtrace()[1];
         $logPath = Kernel::getPath('logs') . '/' . date('Y_m_d') . '.log.json';
         $logContent = [
-            'datetime' => Date::getSimpleDate(true),
+            'datetime' => DateTime::createFromFormat(
+                    'U.u',
+                    sprintf('%.f', microtime(true))
+                )->format('Y-m-d H:i:s.u'),
             'message' => $message,
             'level' => $level,
             'content' => $content,
-            'ip' => Client::getIP(),
+            'ip' => self::getClientIP(),
             'file' => $backtrace['file'] ?? null,
             'class' => $backtrace['class'] ?? null,
             'function' => $backtrace['function'] ?? null,
@@ -70,6 +72,23 @@ class Log
         } catch (Exception) {
             return false;
         }
+    }
+
+    /**
+     * Retrieves the client's IP address.
+     * @return ?string The client's IP address or null if not found.
+     */
+    private static function getClientIP(): ?string
+    {
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            return $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            return $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
+            return $_SERVER['REMOTE_ADDR'];
+        }
+
+        return null;
     }
 
 }

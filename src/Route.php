@@ -3,12 +3,12 @@
 namespace Krzysztofzylka\MicroFramework;
 
 use Exception;
+use Krzysztofzylka\Arrays\Arrays;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Extension\Response;
-use krzysztofzylka\SimpleLibraries\Library\Request;
-use Throwable;
+use Krzysztofzylka\Request\Request;
 
 /**
  * Route
@@ -32,7 +32,7 @@ class Route
         $class->name = $controller;
         $class->action = $method;
         $class->response = new Response();
-        $class->data = Request::isPost() ? (new Request())->getAllPostEscapeData() : null;
+        $class->data = Request::isPost() ? Arrays::escape($_POST) : null;
         DebugBar::timeStop('define_variables');
 
         if (!is_null($class->data)) {

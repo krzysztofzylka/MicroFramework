@@ -2,16 +2,15 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
-use Exception;
 use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
+use Krzysztofzylka\Generator\Generator;
+use Krzysztofzylka\Strings\Strings;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Extension\Response;
-use krzysztofzylka\SimpleLibraries\Library\Generator;
-use krzysztofzylka\SimpleLibraries\Library\Strings;
 
 /**
  * Class Controller

@@ -8,10 +8,10 @@ use DebugBar\DataCollector\PDO\PDOCollector;
 use DebugBar\DebugBarException;
 use DebugBar\JavascriptRenderer;
 use DebugBar\StandardDebugBar;
+use Exception;
 use krzysztofzylka\DatabaseManager\DatabaseManager;
+use Krzysztofzylka\File\File;
 use Krzysztofzylka\MicroFramework\Kernel;
-use krzysztofzylka\SimpleLibraries\Exception\SimpleLibraryException;
-use krzysztofzylka\SimpleLibraries\Library\File;
 
 /**
  * Debug bar
@@ -213,7 +213,6 @@ class DebugBar
     /**
      * Init
      * @return void
-     * @throws SimpleLibraryException
      * @throws DebugBarException
      */
     public function init(): void
@@ -253,7 +252,7 @@ class DebugBar
     /**
      * Copy assets
      * @return void
-     * @throws SimpleLibraryException
+     * @throws Exception
      */
     private function copyAssets(): void
     {

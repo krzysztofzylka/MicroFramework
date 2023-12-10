@@ -28,9 +28,13 @@
         "ext-mbstring": "*",
         "ext-pdo": "*",
         "ext-memcached": "*",
-        "krzysztofzylka/simple-libraries": "^1.0.35",
         "krzysztofzylka/database-manager": "^v1.0.27",
         "krzysztofzylka/reflection": "^1.0.0",
+        "krzysztofzylka/generator": "^1.0.0",
+        "krzysztofzylka/strings": "^1.0.0",
+        "krzysztofzylka/request": "^1.0.0",
+        "krzysztofzylka/file": "^1.0.0",
+        "krzysztofzylka/console": "^1.0.0",
         "maximebf/debugbar": ">=1.0.0",
         "twig/twig": "^3.7"
     }

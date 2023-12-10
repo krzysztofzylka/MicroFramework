@@ -16,8 +16,14 @@ class Response
      */
     public function json(array $data, ?int $statusCode = null): never
     {
-        $response = new \krzysztofzylka\SimpleLibraries\Library\Response();
-        $response->json($data, $statusCode);
+        ob_end_clean();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!is_null($statusCode)) {
+            http_response_code($statusCode);
+        }
+
+        die(json_encode($data));
     }
 
 }

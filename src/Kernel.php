@@ -249,6 +249,7 @@ class Kernel
         $connection->setDatabaseName($_ENV['DATABASE_NAME']);
         $connection->setPassword($_ENV['DATABASE_PASSWORD']);
         $connection->setUsername($_ENV['DATABASE_USERNAME']);
+        $connection->setPort($_ENV['DATABASE_PORT']);
 
         try {
             $manager = new DatabaseManager();

@@ -1,6 +1,6 @@
 **1.0.3**
 ```text
-
+- Fix CSS linking syntax in View.php
 ```
 
 **1.0.2**

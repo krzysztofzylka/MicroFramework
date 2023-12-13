@@ -166,7 +166,7 @@ class View
      */
     public static function addCssScript(string $url): void
     {
-        self::addToHeader("<link rel='stylesheet\' href='$url' />");
+        self::addToHeader("<link rel='stylesheet' href='$url' />");
     }
 
     /**

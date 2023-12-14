@@ -1,6 +1,6 @@
 **1.0.4**
 ```text
-- Add `response` method to Controller.php
+- Add `redirect` method to Controller.php
 ```
 
 **1.0.3**

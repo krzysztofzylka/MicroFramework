@@ -18,7 +18,7 @@
 - Update library versions and use Reflection
 - Update comments
 - Fix ENV
-- Fix multiple bugs1.0.1
+- Fix multiple bugs
 ```
 
 <details>

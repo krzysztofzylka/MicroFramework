@@ -1,3 +1,8 @@
+**1.0.4**
+```text
+- Add `response` method to Controller.php
+```
+
 **1.0.3**
 ```text
 - Fix CSS linking syntax in View.php

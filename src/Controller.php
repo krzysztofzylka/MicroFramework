@@ -160,4 +160,16 @@ class Controller
         );
     }
 
+    /**
+     * Redirects the user to the specified URL.
+     * @param string $url The URL to redirect to.
+     * @return never This method never returns as it terminates the script execution.
+     */
+    public function redirect(string $url) : never
+    {
+        header('location: ' . $url);
+
+        exit;
+    }
+
 }

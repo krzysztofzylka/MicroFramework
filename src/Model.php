@@ -230,6 +230,42 @@ class Model
     }
 
     /**
+     * Finds and returns whether records exist based on the provided condition.
+     * @param array|null $condition The condition of the query.
+     * @return bool True if records exist; otherwise, false.
+     * @throws HiddenException
+     */
+    public function findIsset(?array $condition = null): bool
+    {
+        DebugBar::timeStart('findIsset', 'Find isset');
+
+        try {
+            $this->_prepareBind();
+
+            if (!$_ENV['DATABASE']) {
+                throw new MicroFrameworkException('Database is not configured');
+            }
+
+            $this->_prepareCondition($condition);
+            $find = $this->tableInstance->findIsset($condition);
+            DebugBar::timeStop('findIsset');
+
+            return $find;
+        } catch (Throwable $exception) {
+            $message = $exception->getMessage();
+
+            if ($exception instanceof DatabaseManagerException) {
+                $message = $exception->getHiddenMessage();
+            }
+
+            DebugBar::addThrowable($exception);
+            DebugBar::addFrameworkMessage($message, 'ERROR');
+
+            throw new HiddenException($message);
+        }
+    }
+
+    /**
      * Set the isolator value
      *
      * @param int|string $isolator The isolator value to be set

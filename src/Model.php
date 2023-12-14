@@ -9,6 +9,7 @@ use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
+use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Throwable;
 
@@ -127,6 +128,27 @@ class Model
 
             throw new HiddenException($message);
         }
+    }
+
+    /**
+     * Finds and returns records based on the provided condition and columns.
+     * If no records are found, throws a NotFoundException.
+     * @param array|null $condition The condition of the query.
+     * @param array|null $columns The columns to select from the table.
+     * @param string|null $orderBy The column to use for ordering the results.
+     * @return array The array of found records.
+     * @throws HiddenException
+     * @throws NotFoundException if no records are found.
+     */
+    public function findOrThrow(?array $condition = null, ?array $columns = null, ?string $orderBy = null): array
+    {
+        $find = $this->find($condition, $columns, $orderBy);
+
+        if (!$find) {
+            throw new NotFoundException();
+        }
+
+        return $find;
     }
 
     /**

@@ -2,6 +2,7 @@
 ```text
 - Fix CSS linking syntax in View.php
 - Available change database port
+- Add 'findOrThrow' method in Model.php
 ```
 
 **1.0.2**

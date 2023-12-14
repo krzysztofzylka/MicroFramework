@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use Exception;
 use krzysztofzylka\DatabaseManager\Table;
 use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\Generator\Generator;
@@ -59,6 +60,7 @@ class Controller
      * @param string ...$model The name(s) of the model(s) to load.
      * @return Model The loaded model instance.
      * @throws NotFoundException If the specified model is not found.
+     * @throws Exception
      */
     public function loadModel(string ...$model): Model
     {

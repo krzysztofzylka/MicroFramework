@@ -207,6 +207,10 @@ class DebugBar
             return '';
         }
 
+        if (!isset(self::$standardDebugBar['ENV'])) {
+            self::$standardDebugBar->addCollector(new ConfigCollector($_ENV, 'ENV'));
+        }
+
         return self::$standardDebugBarRenderer->render();
     }
 
@@ -222,7 +226,6 @@ class DebugBar
         self::$standardDebugBar = new StandardDebugBar();
         self::$standardDebugBarRenderer = self::$standardDebugBar->getJavascriptRenderer();
         self::$standardDebugBar->addCollector(new MessagesCollector('framework'));
-        self::$standardDebugBar->addCollector(new ConfigCollector($_ENV, 'ENV'));
         self::$standardDebugBar->addCollector(new MessagesCollector('models'));
         self::$standardDebugBar->addCollector(new MessagesCollector('logs'));
         self::$standardDebugBar->addCollector(new MessagesCollector('forms'));

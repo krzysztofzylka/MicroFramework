@@ -3,9 +3,11 @@
 namespace Krzysztofzylka\MicroFramework\Component;
 
 use Exception;
+use Krzysztofzylka\Env\Env;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Kernel;
+use Krzysztofzylka\Reflection\Reflection;
 use Throwable;
 
 /**
@@ -63,6 +65,12 @@ class Loader
             DebugBar::addComponentsMessage($component, 'Init component');
 
             try {
+                $envFile = Reflection::getDirectoryPath($component) . '/.env';
+
+                if (file_exists($envFile)) {
+                    (new Env($envFile))->load();
+                }
+
                 /** @var Component $componentClass */
                 $componentClass = new $component();
                 self::$components[$component] = $componentClass;

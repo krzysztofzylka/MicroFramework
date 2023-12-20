@@ -23,16 +23,7 @@ class public_files extends Controller
     {
         $path = Kernel::getPath('view') . '/' . htmlspecialchars($controller) . '/' . htmlspecialchars($method) . '.js';
 
-        if (!file_exists($path)) {
-            throw new NotFoundException();
-        }
-
-        $fileName = basename($path);
-
-        header("Content-length: " . filesize($path));
-        header('Content-Disposition: inline; filename="' . $fileName . '"');
-        header('Content-type: text/javascript');
-        die(readfile($path));
+        $this->response->fileContents($path, 'text/javascript');
     }
 
     /**
@@ -46,16 +37,7 @@ class public_files extends Controller
     {
         $path = Kernel::getPath('view') . '/' . htmlspecialchars($controller) . '/' . htmlspecialchars($method) . '.vue';
 
-        if (!file_exists($path)) {
-            throw new NotFoundException();
-        }
-
-        $fileName = basename($path);
-
-        header("Content-length: " . filesize($path));
-        header('Content-Disposition: inline; filename="' . $fileName . '"');
-        header('Content-type: text/javascript');
-        die(readfile($path));
+        $this->response->fileContents($path, 'text/javascript');
     }
 
 }

@@ -37,6 +37,7 @@ class Kernel
      * @var array
      */
     private static array $paths = [
+        'project' => null,
         'public' => null,
         'controller' => null,
         'model' => null,
@@ -124,6 +125,7 @@ class Kernel
      */
     private function initPaths(): void
     {
+        self::$paths['project'] = $this->projectPath;
         self::$paths['public'] = $this->projectPath . '/public';
         self::$paths['src'] = $this->projectPath . '/src';
         self::$paths['controller'] = self::$paths['src']  . '/Controller';

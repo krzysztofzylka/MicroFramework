@@ -80,11 +80,16 @@ class Kernel
 
             $this->projectPath = realpath($projectPath);
             $this->initPaths();
+            $this->loaderInstance = new Loader();
             $this->loadEnv();
             $this->initConfigurations();
             $this->autoload();
             $this->connectDatabase();
-            $this->loaderInstance = new Loader();
+
+            DebugBar::timeStart('component', 'Init components');
+            $this->loaderInstance->initComponents();
+            DebugBar::timeStop('component');
+
             Log::log('Start kernel');
         } catch (Throwable $exception) {
             throw new MicroFrameworkException($exception->getMessage());

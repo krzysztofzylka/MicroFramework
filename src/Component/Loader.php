@@ -45,12 +45,18 @@ class Loader
             self::$config = json_decode(file_get_contents(Kernel::getPath('components_config')), true);
             DebugBar::timeStop('component');
             DebugBar::addComponentsMessage(self::$config, 'Config');
-
-            DebugBar::timeStart('component', 'Init components');
-            $this->initComponents();
-            DebugBar::timeStop('component');
-
             self::$init = true;
+
+            foreach (self::$config['components'] as $component) {
+                try {
+                    $envFile = Reflection::getDirectoryPath($component) . '/.env';
+
+                    if (file_exists($envFile)) {
+                        (new Env($envFile))->load();
+                    }
+                } catch (Throwable) {
+                }
+            }
         }
     }
 
@@ -65,12 +71,6 @@ class Loader
             DebugBar::addComponentsMessage($component, 'Init component');
 
             try {
-                $envFile = Reflection::getDirectoryPath($component) . '/.env';
-
-                if (file_exists($envFile)) {
-                    (new Env($envFile))->load();
-                }
-
                 /** @var Component $componentClass */
                 $componentClass = new $component();
                 self::$components[$component] = $componentClass;

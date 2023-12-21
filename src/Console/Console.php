@@ -2,14 +2,17 @@
 
 namespace Krzysztofzylka\MicroFramework\Console;
 
+use Krzysztofzylka\MicroFramework\Controller;
+use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\Reflection\Reflection;
-use krzysztofzylka\Console\Args as ConsoleLibrary;
-use krzysztofzylka\Console\Generator\Help;
-use krzysztofzylka\Console\Generator\Table;
-use krzysztofzylka\Console\Prints;
+use Krzysztofzylka\Console\Args as ConsoleLibrary;
+use Krzysztofzylka\Console\Generator\Help;
+use Krzysztofzylka\Console\Generator\Table;
+use Krzysztofzylka\Console\Prints;
 use Krzysztofzylka\File\File;
 use ReflectionException;
+use Cron\CronExpression;
 
 /**
  * Console class
@@ -55,13 +58,13 @@ class Console
      */
     public function run(): void
     {
-        switch ($this->args['args'][0]) {
+        switch ($this->args['args'][0] ?? null) {
             case 'init':
                 $path = $this->path . (isset($this->args['args'][1]) ? ('/' . $this->args['args'][1]) : '');
                 $this->initializeProject($path);
                 break;
             case 'component':
-                switch ($this->args['args'][1]) {
+                switch ($this->args['args'][1] ?? null) {
                     case 'list':
                         $this->getProjectComponentList();
                         break;
@@ -72,10 +75,63 @@ class Console
                         $this->renderHelp();
                 }
                 break;
+            case 'cron':
+                switch ($this->args['args'][1] ?? null) {
+                    case 'run':
+                        $this->cronRun();
+                        break;
+                    default:
+                        $this->renderHelp();
+                }
+                break;
             case 'help':
             default:
                 $this->renderHelp();
                 break;
+        }
+    }
+
+    private function cronRun(): void
+    {
+        $this->print('Cron start');
+        $cronFile = File::repairPath($this->path . '/cron.json');
+
+        if (!file_exists($cronFile)) {
+            $this->print('Not found cron.json file in ' . $this->path, 'red', true);
+        }
+
+        try {
+            new Kernel($this->path);
+
+            $cron = json_decode(file_get_contents($cronFile), true);
+
+            foreach ($cron as $key => $schedule) {
+                $this->print('Execute schedule ' . $key);
+                $cronExpression = new CronExpression($schedule['time']);
+
+                if ($cronExpression->isDue()) {
+                    if (!isset($schedule['model']) || !isset($schedule['method'])) {
+                        $this->print('Shedule not found model and method params', 'yellow');
+
+                        continue;
+                    }
+
+                    try {
+                        $controller = new Controller();
+                        $model = $controller->loadModel($schedule['model']);
+                        call_user_func_array([$model, $schedule['method']], json_decode($schedule['args'] ?? '{}', true));
+                        $this->print('Success', 'green');
+                    } catch (\Throwable $throwable) {
+                        Log::log('Failed execute schedule', 'ERROR', ['message' => $throwable->getMessage()]);
+                        $this->print('Failed execute schedule', 'yellow');
+
+                        continue;
+                    }
+                }
+            }
+        } catch (\Throwable $throwable) {
+            Log::log('Cron error', 'ERROR', ['message' => $throwable->getMessage()]);
+            $this->print('Failed read cron.json file', 'red', true);
         }
     }
 
@@ -207,6 +263,7 @@ class Console
         $help = new Help();
         $help->addHeader('Help');
         $help->addHelp('init', 'Initialize project');
+        $help->addHelp('cron run', 'Run CRON');
         $help->addHelp('component list', 'Component list');
         $help->addHelp('component install <name> [-secure false]', 'Install component');
         $help->addHeader('Parameters');

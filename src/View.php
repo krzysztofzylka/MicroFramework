@@ -77,6 +77,13 @@ class View
         $view->render();
     }
 
+    /**
+     * Renders an error page.
+     * @param \Throwable $throwable The throwable that caused the error.
+     * @return void
+     * @throws MicroFrameworkException
+     * @throws NotFoundException
+     */
     public static function renderErrorPage(\Throwable $throwable): void
     {
         ob_clean();

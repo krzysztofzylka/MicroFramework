@@ -61,6 +61,50 @@ class View
     ];
 
     /**
+     * Loads a view file and renders it with the specified variables.
+     * @param string $filePath The path to the view file.
+     * @param array $variables The variables to pass to the view file (default: []).
+     * @return void
+     * @throws MicroFrameworkException
+     * @throws NotFoundException
+     */
+    public static function simpleLoad(string $filePath, array $variables = []): void
+    {
+        $view = new View();
+        $view->setFilePath($filePath);
+        $view->variables = $variables;
+
+        $view->render();
+    }
+
+    public static function renderErrorPage(\Throwable $throwable): void
+    {
+        ob_clean();
+        $code = $throwable->getCode() > 0 ? $throwable->getCode() : 500;
+        $message = match ($code) {
+            500 => 'Internal Server Error',
+            409 => 'Conflict',
+            408 => 'Request Timeout',
+            406 => 'Not Acceptable',
+            405 => 'Method Not Allowed',
+            404 => 'Not Found',
+            403 => 'Forbidden',
+            401 => 'Unauthorized',
+            400 => 'Bad Request'
+        };
+
+        self::simpleLoad(
+            __DIR__ . '/Template/error.twig',
+            [
+                'message' => $message,
+                'error_message' => $_ENV['DEBUG'] ? $throwable->getMessage() : '',
+                'code' => $code,
+                'url' => $_ENV['URL'] . $_ENV['DEFAULT_CONTROLLER'] . '/' . $_ENV['DEFAULT_METHOD']
+            ]
+        );
+    }
+
+    /**
      * Constructor
      * @throws LoaderError
      */

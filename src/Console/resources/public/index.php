@@ -1,6 +1,7 @@
 <?php
 
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
+use Krzysztofzylka\MicroFramework\View;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -15,7 +16,7 @@ try {
     $kernel = new \Krzysztofzylka\MicroFramework\Kernel(__DIR__ . '/..');
     $kernel->run();
 } catch (Throwable $exception) {
-    die($exception);
+    View::renderErrorPage($exception);
 }
 
 echo DebugBar::renderHeader();

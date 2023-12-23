@@ -11,6 +11,7 @@ use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
+use Krzysztofzylka\MicroFramework\Extension\ModelHelper;
 use Throwable;
 
 /**
@@ -18,6 +19,8 @@ use Throwable;
  */
 class Model
 {
+
+    use ModelHelper;
 
     /**
      * Model name
@@ -439,6 +442,23 @@ class Model
         }
 
         $this->autoBind = true;
+    }
+
+    /**
+     * Magic __get
+     * @param string $name
+     * @return mixed|Model
+     */
+    public function __get(string $name): mixed
+    {
+        if (in_array($name, array_keys($this->models))) {
+            return $this->models[$name];
+        }
+
+        return trigger_error(
+            'Undefined model',
+            E_USER_WARNING
+        );
     }
 
 }

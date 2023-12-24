@@ -71,18 +71,6 @@ class Model
     public Transaction $transactionInstance;
 
     /**
-     * Validation errors
-     * @var array
-     */
-    public array $validationErrors = [];
-
-    /**
-     * Validation schema
-     * @var string|null
-     */
-    public ?string $validationSchema = null;
-
-    /**
      * Bind left join
      * @var array
      */
@@ -351,17 +339,6 @@ class Model
 
             throw new HiddenException($message);
         }
-    }
-
-    /**
-     * Perform form validation and return an array of validation errors,
-     * if any. Returns an empty array if there are no validation errors.
-     *
-     * @return array
-     */
-    public function formValidation(): array
-    {
-        return [];
     }
 
     /**

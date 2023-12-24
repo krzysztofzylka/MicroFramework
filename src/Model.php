@@ -84,7 +84,6 @@ class Model
 
     /**
      * Find records based on the specified condition, columns, and order.
-     *
      * @param array|null $condition Optional. The condition to filter the records. Default is null.
      * @param array|null $columns Optional. The columns to select from the records. Default is null.
      * @param string|null $orderBy Optional. The column to order the records by. Default is null.
@@ -184,7 +183,6 @@ class Model
 
     /**
      * Find the count of elements matching the condition
-     *
      * @param array|null $condition The condition to filter the elements (optional)
      * @param ?string $groupBy The column(s) to group by (optional)
      * @return int The count of elements matching the condition
@@ -258,7 +256,6 @@ class Model
 
     /**
      * Set the isolator value
-     *
      * @param int|string $isolator The isolator value to be set
      * @return self
      */
@@ -309,7 +306,6 @@ class Model
 
     /**
      * Delete an element by ID
-     *
      * @param int $id The ID of the element to delete
      * @return bool True if the element was deleted successfully, false otherwise
      * @throws HiddenException If an error occurs during the deletion process
@@ -343,7 +339,6 @@ class Model
 
     /**
      * Set the ID value of the object
-     *
      * @param int|null $id The ID value to set. Pass null to unset the ID.
      * @return self The current object with the updated ID value.
      */
@@ -356,13 +351,11 @@ class Model
 
     /**
      * Bind a table instance to the query builder.
-     *
      * @param BindType|array $bind The bind type or an array of bind types.
      * @param string|null $tableName The name of the table to bind to. If null, the previously bound table name will be used.
      * @param ?string $primaryKey The primary key column name. If null, the previously bound primary key will be used.
      * @param ?string $foreignKey The foreign key column name. If null, the previously bound foreign key will be used.
      * @param null|array|Condition $condition The condition to apply to the table binding. This can be either an array or a Condition object. If null, no condition will be applied.
-     *
      * @return self Returns the query builder instance.
      */
     public function bind(BindType|array $bind, string $tableName = null, ?string $primaryKey = null, ?string $foreignKey = null, null|array|Condition $condition = null): self
@@ -375,9 +368,7 @@ class Model
     /**
      * Prepare the condition array for find operation.
      * If the condition is an array and the isolator property is set, add the isolator name and value to the condition array.
-     *
      * @param array|null &$condition The condition array to be prepared.
-     *
      * @return void
      */
     private function _prepareCondition(?array &$condition): void

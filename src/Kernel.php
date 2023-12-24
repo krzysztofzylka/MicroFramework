@@ -244,19 +244,19 @@ class Kernel
         DebugBar::addFrameworkMessage('Connect to database', 'Database');
 
         DebugBar::timeStart('database', 'Connect to database');
-        $connection = new DatabaseConnect();
-        $connection->setType(
-            match ($_ENV['DATABASE_DRIVER']) {
-                'mysql' => DatabaseType::mysql,
-                'sqlite' => DatabaseType::sqlite
-            }
-        );
-        $connection->setCharset($_ENV['DATABASE_CHARSET']);
-        $connection->setHost($_ENV['DATABASE_HOST']);
-        $connection->setDatabaseName($_ENV['DATABASE_NAME']);
-        $connection->setPassword($_ENV['DATABASE_PASSWORD']);
-        $connection->setUsername($_ENV['DATABASE_USERNAME']);
-        $connection->setPort($_ENV['DATABASE_PORT']);
+        $connection = DatabaseConnect::create()
+            ->setType(
+                match ($_ENV['DATABASE_DRIVER']) {
+                    'mysql' => DatabaseType::mysql,
+                    'sqlite' => DatabaseType::sqlite
+                }
+            )
+            ->setCharset($_ENV['DATABASE_CHARSET'])
+            ->setHost($_ENV['DATABASE_HOST'])
+            ->setDatabaseName($_ENV['DATABASE_NAME'])
+            ->setPassword($_ENV['DATABASE_PASSWORD'])
+            ->setUsername($_ENV['DATABASE_USERNAME'])
+            ->setPort($_ENV['DATABASE_PORT']);
 
         try {
             $manager = new DatabaseManager();

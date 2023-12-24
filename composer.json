@@ -26,7 +26,7 @@
     "require": {
         "php": ">=8.1",
         "ext-pdo": "*",
-        "krzysztofzylka/database-manager": "^v1.0.29",
+        "krzysztofzylka/database-manager": "^v1.0.30",
         "krzysztofzylka/reflection": "^1.0.0",
         "krzysztofzylka/generator": "^1.0.0",
         "krzysztofzylka/strings": "^1.0.0",

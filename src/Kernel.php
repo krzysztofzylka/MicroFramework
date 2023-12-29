@@ -16,6 +16,7 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\File\File;
+use Krzysztofzylka\MicroFramework\Extension\Response;
 use Throwable;
 
 include_once(__DIR__ . '/Extension/Functions/functions.php');
@@ -77,7 +78,6 @@ class Kernel
     public function __construct(string $projectPath)
     {
         try {
-
             $this->projectPath = realpath($projectPath);
             $this->initPaths();
             $this->loaderInstance = new Loader();
@@ -107,6 +107,22 @@ class Kernel
         try {
             DebugBar::timeStart('run', 'Generate run data');
             $url = explode('/', htmlspecialchars($_GET['url'] ?? '', ENT_QUOTES));
+            $filePath = self::getPath('public') . '/' . File::repairPath(str_replace('../', '', implode('/', $url)));
+
+            if (str_contains(end($url), '.')) {
+                if (!file_exists($filePath)) {
+                    throw new NotFoundException();
+                }
+
+                $extension = File::getExtension($filePath);
+                $allowExtension = ['ico', 'txt', 'js', 'img', 'png'];
+
+                if (in_array($extension, $allowExtension)) {
+                    $response = new Response();
+                    $response->fileContents($filePath);
+                }
+            }
+
             $controller = $url[0] ?: $_ENV['DEFAULT_CONTROLLER'];
             $method = $url[1] ?? $_ENV['DEFAULT_METHOD'];
             $parameters = array_slice($url, 2);

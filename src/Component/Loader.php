@@ -20,19 +20,38 @@ class Loader
      * Components
      * @var array
      */
-    public static array $config = [];
+    private static array $config = [];
 
     /**
      * Components
      * @var array
      */
-    public static array $components = [];
+    private static array $components = [];
 
     /**
      * Is ini
      * @var bool
      */
     public static bool $init = false;
+
+    /**
+     * Get component config
+     * @return array
+     */
+    public static function getConfig(): array
+    {
+        return self::$config;
+    }
+
+    /**
+     * Component is loaded
+     * @param string $name
+     * @return bool
+     */
+    public static function componentIsLoaded(string $name): bool
+    {
+        return array_key_exists($name, self::$components);
+    }
 
     /**
      * Constructor

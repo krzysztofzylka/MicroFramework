@@ -1,64 +1,20 @@
 <html>
-    <head>
-        <title>Error {{ code }}</title>
-        <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@600;900&display=swap" rel="stylesheet">
-        <style>
-            body {
-                background-color: #95c2de;
-            }
-
-            .mainbox {
-                background-color: #95c2de;
-                margin: auto;
-                height: 600px;
-                width: 600px;
-                position: relative;
-            }
-
-            .err {
-                color: #ffffff;
-                font-family: 'Nunito Sans', sans-serif;
-                font-size: 11rem;
-                position:absolute;
-                left: 25%;
-                top: 8%;
-            }
-
-            .msg {
-                text-align: center;
-                font-family: 'Nunito Sans', sans-serif;
-                font-size: 1.6rem;
-                position:absolute;
-                left: 15%;
-                top: 45%;
-                width: 75%;
-            }
-
-            .debug {
-                text-align: center;
-                font-family: 'Nunito Sans', sans-serif;
-                font-size: 1.6rem;
-                position:absolute;
-                left: 15%;
-                top: 70%;
-                width: 75%;
-            }
-
-            a {
-                text-decoration: none;
-                color: white;
-            }
-
-            a:hover {
-                text-decoration: underline;
-            }
-        </style>
-    </head>
-    <body>
-    <div class="mainbox">
-        <div class="err">{{ code }}</div>
-        <div class="msg">{{ message }}<p>Back to <a href="{{ url }}">home page</a></p></div>
-        <div class="debug">{{ error_message }}</div>
+<head>
+    <title>Error {{ code }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<main class="h-screen w-full flex flex-col justify-center items-center bg-[#1A2238]">
+    <h1 class="text-9xl font-extrabold text-white tracking-widest">{{ code }}</h1>
+    <div class="bg-[#FF6A3D] px-2 rounded rotate-12 absolute">
+        {{ message }}
     </div>
-    </body>
+    <button class="mt-5">
+        <a class="relative inline-block text-sm font-medium text-[#FF6A3D] group active:text-orange-500 focus:outline-none focus:ring" href="{{ url }}">
+            <span class="absolute inset-0 transition-transform translate-x-0.5 translate-y-0.5 bg-[#FF6A3D] group-hover:translate-y-0 group-hover:translate-x-0"></span>
+            <span class="relative block px-8 py-3 bg-[#1A2238] border border-current">Go Home</span>
+        </a>
+    </button>
+</main>
+</body>
 </html>

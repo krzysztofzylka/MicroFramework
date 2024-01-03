@@ -125,6 +125,11 @@ class View
         ]);
 
         $this->twigEnvironment->setCache(false);
+
+        $renderFunction = new \Twig\TwigFunction('render', function (string $action, array $variables = []) {
+            View::simpleLoad(Kernel::getPath('view') . '/' . $action, $variables);
+        });
+        $this->twigEnvironment->addFunction($renderFunction);
     }
 
     /**

@@ -89,8 +89,6 @@ class Kernel
             DebugBar::timeStart('component', 'Init components');
             $this->loaderInstance->initComponents();
             DebugBar::timeStop('component');
-
-            Log::log('Start kernel');
         } catch (Throwable $exception) {
             throw new MicroFrameworkException($exception->getMessage());
         }

@@ -92,6 +92,10 @@ class Model
      */
     public function find(?array $condition = null, ?array $columns = null, ?string $orderBy = null): array
     {
+        if (!isset($this->tableInstance)) {
+            return [];
+        }
+
         DebugBar::timeStart('find', 'Find');
 
         try {
@@ -153,6 +157,10 @@ class Model
      */
     public function findAll(?array $condition = null, ?array $columns = null, ?string $orderBy = null, ?string $limit = null, ?string $groupBy = null): array
     {
+        if (!isset($this->tableInstance)) {
+            return [];
+        }
+
         DebugBar::timeStart('findAll', 'Find all');
 
         try {
@@ -190,6 +198,10 @@ class Model
      */
     public function findCount(?array $condition = null, ?string $groupBy = null): int
     {
+        if (!isset($this->tableInstance)) {
+            return 0;
+        }
+
         DebugBar::timeStart('findCount', 'Find count');
 
         try {
@@ -226,6 +238,10 @@ class Model
      */
     public function findIsset(?array $condition = null): bool
     {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
         DebugBar::timeStart('findIsset', 'Find isset');
 
         try {
@@ -274,7 +290,12 @@ class Model
      */
     public function save(array $data): bool
     {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
         DebugBar::timeStart('save', 'Save');
+
         try {
             if (!$_ENV['DATABASE']) {
                 throw new MicroFrameworkException('Database is not configured');
@@ -312,7 +333,12 @@ class Model
      */
     public function del(int $id): bool
     {
+        if (!isset($this->tableInstance)) {
+            return false;
+        }
+
         DebugBar::timeStart('delete', 'Delete');
+
         try {
             if (!$_ENV['DATABASE']) {
                 throw new MicroFrameworkException('Database is not configured');
@@ -360,6 +386,10 @@ class Model
      */
     public function bind(BindType|array $bind, string $tableName = null, ?string $primaryKey = null, ?string $foreignKey = null, null|array|Condition $condition = null): self
     {
+        if (!isset($this->tableInstance)) {
+            return $this;
+        }
+
         $this->tableInstance->bind($bind, $tableName, $primaryKey, $foreignKey, $condition);
 
         return $this;

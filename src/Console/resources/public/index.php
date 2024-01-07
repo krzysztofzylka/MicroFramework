@@ -10,7 +10,7 @@ error_reporting(E_ALL);
 ob_start();
 session_start();
 
-include('../../vendor/autoload.php');
+include('../vendor/autoload.php');
 
 try {
     $kernel = new \Krzysztofzylka\MicroFramework\Kernel(__DIR__ . '/..');

@@ -39,7 +39,7 @@ class Log
             self::$session = Generator::uuid();
         }
 
-        $backtrace = debug_backtrace()[1];
+        $backtrace = debug_backtrace()[1] ?? debug_backtrace()[0];
         $logPath = Kernel::getPath('logs') . '/' . date('Y_m_d') . '.log.json';
         $logContent = [
             'datetime' => DateTime::createFromFormat(

@@ -105,24 +105,8 @@ class Kernel
         try {
             DebugBar::timeStart('run', 'Generate run data');
             $url = explode('/', htmlspecialchars($_GET['url'] ?? '', ENT_QUOTES));
-            $filePath = self::getPath('public') . '/' . File::repairPath(str_replace('../', '', implode('/', $url)));
-
-            if (str_contains(end($url), '.')) {
-                if (!file_exists($filePath)) {
-                    throw new NotFoundException();
-                }
-
-                $extension = File::getExtension($filePath);
-                $allowExtension = ['ico', 'txt', 'js', 'img', 'png'];
-
-                if (in_array($extension, $allowExtension)) {
-                    $response = new Response();
-                    $response->fileContents($filePath);
-                }
-            }
-
             $controller = $url[0] ?: $_ENV['DEFAULT_CONTROLLER'];
-            $method = $url[1] ?? $_ENV['DEFAULT_METHOD'];
+            $method = (isset($url[1]) && !empty($url[1])) ? $url[1] : $_ENV['DEFAULT_METHOD'];
             $parameters = array_slice($url, 2);
             DebugBar::timeStop('run');
             DebugBar::addFrameworkMessage(['controller' => $controller, 'method' => $method, 'parameters' => $parameters, 'url' => $url], 'Run route');

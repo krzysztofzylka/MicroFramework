@@ -39,7 +39,7 @@ class Route
             DebugBar::addFrameworkMessage($class->data, 'Post data');
         }
 
-        if (!method_exists($class, $method)) {
+        if (!method_exists($class, $method) && !method_exists($class, '__call')) {
             throw new NotFoundException('Method not found');
         }
 

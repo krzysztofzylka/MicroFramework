@@ -15,7 +15,12 @@ try {
     ob_start();
     $kernel = new \Krzysztofzylka\MicroFramework\Kernel(__DIR__ . '/..');
     $kernel->run();
-    \Krzysztofzylka\MicroFramework\View::simpleLoad('../template/template.twig', ['content' => ob_get_clean()]);
+
+    if (isset($_GET['dialogbox'])) {
+        exit;
+    } else {
+        \Krzysztofzylka\MicroFramework\View::simpleLoad('../template/template.twig', ['content' => ob_get_clean()]);
+    }
 } catch (Throwable $exception) {
     \Krzysztofzylka\MicroFramework\View::renderErrorPage($exception);
 }

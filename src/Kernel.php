@@ -13,6 +13,7 @@ use Krzysztofzylka\Env\Env;
 use Krzysztofzylka\MicroFramework\Component\Loader;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
+use Krzysztofzylka\MicroFramework\Extension\Ajax\Ajax;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\File\File;
@@ -110,6 +111,7 @@ class Kernel
             $parameters = array_slice($url, 2);
             DebugBar::timeStop('run');
             DebugBar::addFrameworkMessage(['controller' => $controller, 'method' => $method, 'parameters' => $parameters, 'url' => $url], 'Run route');
+            Ajax::load();
             $route = new Route();
             $route->start($controller, $method, $parameters);
             $this->loaderInstance->initAfterComponents();

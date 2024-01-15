@@ -53,6 +53,12 @@ class Controller
     public string $dialogboxTitle = '';
 
     /**
+     * Dialogbox width
+     * @var int
+     */
+    public int $dialogboxWidth = 600;
+
+    /**
      * Loads a view for the current controller.
      * @param string|null $action (optional) The action name to load. If not specified, the default action will be used.
      * @return bool Returns true on success.
@@ -70,8 +76,10 @@ class Controller
         $view->setAction($action);
 
         View::$GLOBAL_VARIABLES['dialogbox'] = [
-            'title' => $this->dialogboxTitle
+            'title' => $this->dialogboxTitle,
+            'width' => $this->dialogboxWidth
         ];
+        View::$GLOBAL_VARIABLES['dialogbox']['json_config'] = json_encode(View::$GLOBAL_VARIABLES['dialogbox']);
 
         $view->render();
 

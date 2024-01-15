@@ -236,4 +236,27 @@ class View
         self::$GLOBAL_VARIABLES['template']['header'] .= $data;
     }
 
+    /**
+     * Load template
+     * @param string $name
+     * @param array $variables
+     * @return void
+     * @throws MicroFrameworkException
+     * @throws NotFoundException
+     */
+    public static function loadTemplate(string $name, array $variables): void
+    {
+        $path = Kernel::getPath('template') . '/' . $name . '.twig';
+
+        if (!file_exists($path)) {
+            $path = __DIR__ . '/Template/' . $name . '.twig';
+        }
+
+        if (!file_exists($path)) {
+            throw new NotFoundException('Not found ' . $name . ' template');
+        }
+
+        self::simpleLoad($path, $variables);
+    }
+
 }

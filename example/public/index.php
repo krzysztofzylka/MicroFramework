@@ -12,18 +12,8 @@ session_start();
 include('../../vendor/autoload.php');
 
 try {
-    ob_start();
     $kernel = new \Krzysztofzylka\MicroFramework\Kernel(__DIR__ . '/..');
     $kernel->run();
-
-    if (isset($_GET['dialogbox'])) {
-        exit;
-    } else {
-        \Krzysztofzylka\MicroFramework\View::simpleLoad('../template/template.twig', ['content' => ob_get_clean()]);
-    }
 } catch (Throwable $exception) {
     \Krzysztofzylka\MicroFramework\View::renderErrorPage($exception);
 }
-
-echo DebugBar::renderHeader();
-echo DebugBar::render();

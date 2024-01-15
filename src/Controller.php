@@ -47,6 +47,12 @@ class Controller
     public ?array $data = null;
 
     /**
+     * Dialogbox title
+     * @var string
+     */
+    public string $dialogboxTitle = '';
+
+    /**
      * Loads a view for the current controller.
      * @param string|null $action (optional) The action name to load. If not specified, the default action will be used.
      * @return bool Returns true on success.
@@ -62,6 +68,11 @@ class Controller
         $view = new $_ENV['CLASS_VIEW']();
         $view->variables = $this->viewVariables;
         $view->setAction($action);
+
+        View::$GLOBAL_VARIABLES['dialogbox'] = [
+            'title' => $this->dialogboxTitle
+        ];
+
         $view->render();
 
         DebugBar::timeStop('view_' . spl_object_hash($this));

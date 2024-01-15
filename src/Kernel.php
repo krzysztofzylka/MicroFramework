@@ -174,6 +174,10 @@ class Kernel
         if (file_exists(self::$paths['local_env'])) {
             (new Env(self::$paths['local_env']))->load();
         }
+
+        if ($_ENV['URL'] === true) {
+            $_ENV['URL'] = 'http://' . $_SERVER['HTTP_HOST'] . '/';
+        }
     }
 
     /**

@@ -11,18 +11,9 @@ $.fn.ajaxlink = function (event, data = null) {
                         scriptContent = lines[0],
                         jsonString = scriptContent.replace("<script>var config =", "").replace(";</script>", "").trim().slice(1, -1),
                         config = JSON.parse(jsonString);
-                    // var config = JSON.parse(jsonString);
-
-                    // var htmlObject = $($.parseHTML(result));
-                    // var config = htmlObject.filter("script");
-                    // config = eval(config);
-
-                    // console.log(config)
-                    // console.log(config)
-                    // console.log(configScript);
-                    // if (typeof result === 'object') {
-                    //     $(this).ajaxlink('response', result);
-                    // } else {
+                    if (typeof result === 'object') {
+                        $(this).ajaxlink('response', result);
+                    } else {
                         $(document).dialogbox({
                             content: result,
                             autoOpen: true,
@@ -30,7 +21,7 @@ $.fn.ajaxlink = function (event, data = null) {
                             controller: data,
                             width: config.width
                         });
-                    // }
+                    }
 
                     spinner.hide();
                 },

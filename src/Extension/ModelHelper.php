@@ -74,6 +74,10 @@ trait ModelHelper
             $modelClass->transactionInstance = new Transaction();
             $modelClass->useTable = $modelClass->useTable ?? $modelClass->name;
             $modelClass->tableInstance = new Table($modelClass->useTable);
+
+            if ($this instanceof Model && $this->isolatorName === $modelClass->isolatorName) {
+                $modelClass->isolator = $this->isolator;
+            }
         }
 
         $this->models[Strings::camelizeString($model, '_')] = $modelClass;

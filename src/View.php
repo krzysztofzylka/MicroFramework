@@ -144,24 +144,26 @@ class View
         DebugBar::addFrameworkMessage('Render view ' . ($this->filePath ?? $this->action), 'Render view');
         DebugBar::timeStart('render_view_' . spl_object_hash($this), 'Render view');
         self::$GLOBAL_VARIABLES['action'] = $this->action;
-
-        DebugBar::addViewMessage($this->action, 'action');
-        DebugBar::addViewMessage($this->variables, 'variables');
-        DebugBar::addViewMessage(self::$GLOBAL_VARIABLES, 'global_variables');
-
         $path = $this->action . '.twig';
+        $variables = $this->variables + ['APP' => self::$GLOBAL_VARIABLES];
 
         if ($this->filePath ?? false) {
             $path = basename($this->filePath);
             $this->twigFileSystemLoader->setPaths(dirname($this->filePath));
         }
 
+        DebugBar::addViewMessage([
+            'path' => $path,
+            'action' => $this->action,
+            'variables' => $variables
+        ], 'View');
+
         if (!file_exists($this->filePath ?? (Kernel::getPath('view') . '/' . $path))) {
             throw new NotFoundException('View file not found: ' . $path);
         }
 
         try {
-            echo $this->twigEnvironment->render($path, $this->variables + ['APP' => self::$GLOBAL_VARIABLES]);
+            echo $this->twigEnvironment->render($path, $variables);
         } catch (Exception $exception) {
             Log::log('View template exception', 'ERR', ['exception' => $exception->getMessage()]);
 
@@ -169,7 +171,6 @@ class View
         }
 
         DebugBar::timeStop('render_view_' . spl_object_hash($this));
-        DebugBar::addFrameworkMessage($path, 'View path');
     }
 
     /**

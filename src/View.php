@@ -54,7 +54,8 @@ class View
      */
     public static array $GLOBAL_VARIABLES = [
         'template' => [
-            'header' => '',
+            'header' => '<script src="https://cdn.tailwindcss.com"></script>' . PHP_EOL . '<link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />' . PHP_EOL . '<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+',
             'body' => '',
             'footer' => ''
         ]
@@ -213,7 +214,7 @@ class View
      */
     public static function addJsScript(string $url): void
     {
-        self::addToHeader("<script src='$url'></script>");
+        self::addToHeader("<script src='$url'></script>" . PHP_EOL);
     }
 
     /**
@@ -223,7 +224,7 @@ class View
      */
     public static function addCssScript(string $url): void
     {
-        self::addToHeader("<link rel='stylesheet' href='$url' />");
+        self::addToHeader("<link rel='stylesheet' href='$url' />" . PHP_EOL);
     }
 
     /**

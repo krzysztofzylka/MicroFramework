@@ -2,11 +2,13 @@
 
 namespace src\Controller;
 
+use Krzysztofzylka\Generator\Generator;
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
+use Krzysztofzylka\MicroFramework\Extension\Table\Table;
 
 class index extends Controller
 {
@@ -57,6 +59,25 @@ class index extends Controller
         }
 
         $this->loadView();
+    }
+
+    public function table(): void
+    {
+        $table = new Table();
+        $table->addColumn('a', 'Test');
+        $table->addColumn('b', 'Test2');
+        $data = [];
+
+        for ($i=0; $i<=50; $i++) {
+            $data[] = [
+                'a' => 'a' . $i,
+                'b' => 'b' . $i
+            ];
+        }
+
+        $table->setData($data);
+
+        echo $table;
     }
 
 }

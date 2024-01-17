@@ -12,6 +12,35 @@ class Response
 {
 
     /**
+     * Response ajax toast
+     * @param string $message
+     * @param string $title
+     * @param string $type
+     * @param bool $dialogboxClose
+     * @param bool $dialogboxReload
+     * @return never
+     */
+    public function toast(
+        string $message,
+        string $title = '',
+        string $type = '',
+        bool $dialogboxClose = false,
+        bool $dialogboxReload = false
+    ): never
+    {
+        $this->json([
+            'layout' => 'toast',
+            'type' => $type,
+            'message' => $message,
+            'title' => $title,
+            'dialog' => [
+                'close' => (int)$dialogboxClose,
+                'reload' => (int)$dialogboxReload
+            ]
+        ]);
+    }
+
+    /**
      * Response JSON data
      * @param array $data
      * @param int|null $statusCode

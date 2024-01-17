@@ -13,6 +13,7 @@ use Krzysztofzylka\Env\Env;
 use Krzysztofzylka\MicroFramework\Component\Loader;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
+use Krzysztofzylka\MicroFramework\Extension\Ajax\Ajax;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\File\File;
@@ -49,7 +50,8 @@ class Kernel
         'logs' => null,
         'src' => null,
         'assets' => null,
-        'components_config' => null
+        'components_config' => null,
+        'template' => null
     ];
 
     /**
@@ -108,11 +110,25 @@ class Kernel
             $controller = $url[0] ?: $_ENV['DEFAULT_CONTROLLER'];
             $method = (isset($url[1]) && !empty($url[1])) ? $url[1] : $_ENV['DEFAULT_METHOD'];
             $parameters = array_slice($url, 2);
+            View::$GLOBAL_VARIABLES['here'] = '/' . $controller . '/' . $method . ($parameters ? ('/' . implode('/', $parameters)) : '');
             DebugBar::timeStop('run');
             DebugBar::addFrameworkMessage(['controller' => $controller, 'method' => $method, 'parameters' => $parameters, 'url' => $url], 'Run route');
+            Ajax::load();
             $route = new Route();
+            ob_start();
             $route->start($controller, $method, $parameters);
+            $content = ob_get_clean();
             $this->loaderInstance->initAfterComponents();
+
+            if (isset($_GET['dialogbox'])) {
+                View::loadTemplate('empty', ['content' => $content]);
+            } else {
+                View::loadTemplate('template', ['content' => $content]);
+
+                if ($_ENV['DEBUG']) {
+                    echo DebugBar::renderHeader() . DebugBar::render();
+                }
+            }
         } catch (Throwable $exception) {
             Log::log($exception->getMessage(), 'ERROR');
             DebugBar::addThrowable($exception);
@@ -138,6 +154,7 @@ class Kernel
         self::$paths['local_env'] = $this->projectPath . '/local.env';
         self::$paths['storage'] = $this->projectPath . '/storage';
         self::$paths['logs'] = self::$paths['storage'] . '/logs';
+        self::$paths['template'] = $this->projectPath . '/template';
         self::$paths['assets'] = $this->projectPath . '/public/assets';
         self::$paths['components_config'] = $this->projectPath . '/component.json';
 

@@ -1,0 +1,21 @@
+.ui-dialog {
+    padding: 0;
+}
+
+.ui-widget-header {
+    border: 0;
+    background: none;
+    color: #000000;
+    font-weight: normal;
+}
+
+.ui-dialog-titlebar {
+    justify-content: normal!important;
+    border: none;
+    border-bottom: 1px solid silver;
+}
+
+.ui-dialog-titlebar-close {
+    border: none;
+    font-size: 50px;
+}

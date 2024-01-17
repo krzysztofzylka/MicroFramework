@@ -7,6 +7,7 @@ use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Response;
+use Krzysztofzylka\Request\Request;
 
 /**
  * Class Controller
@@ -47,6 +48,18 @@ class Controller
     public ?array $data = null;
 
     /**
+     * Dialogbox title
+     * @var string
+     */
+    public string $dialogboxTitle = '';
+
+    /**
+     * Dialogbox width
+     * @var int
+     */
+    public int $dialogboxWidth = 800;
+
+    /**
      * Loads a view for the current controller.
      * @param string|null $action (optional) The action name to load. If not specified, the default action will be used.
      * @return bool Returns true on success.
@@ -62,6 +75,13 @@ class Controller
         $view = new $_ENV['CLASS_VIEW']();
         $view->variables = $this->viewVariables;
         $view->setAction($action);
+
+        View::$GLOBAL_VARIABLES['dialogbox'] = [
+            'title' => $this->dialogboxTitle,
+            'width' => $this->dialogboxWidth
+        ];
+        View::$GLOBAL_VARIABLES['dialogbox']['json_config'] = json_encode(View::$GLOBAL_VARIABLES['dialogbox']);
+
         $view->render();
 
         DebugBar::timeStop('view_' . spl_object_hash($this));
@@ -105,6 +125,10 @@ class Controller
      */
     public function redirect(string $url) : never
     {
+        if (Request::isAjaxRequest()) {
+            $this->response->json(['layout' => 'redirect', 'url' => $url]);
+        }
+
         header('location: ' . $url);
 
         exit;

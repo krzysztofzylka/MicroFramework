@@ -27,4 +27,9 @@ class index extends Controller
         DebugBar::timeStop('controller');
     }
 
+    public function response(): void
+    {
+        $this->redirect('/index/index');
+    }
+
 }

@@ -7,6 +7,7 @@ use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Response;
+use Krzysztofzylka\Request\Request;
 
 /**
  * Class Controller
@@ -56,7 +57,7 @@ class Controller
      * Dialogbox width
      * @var int
      */
-    public int $dialogboxWidth = 600;
+    public int $dialogboxWidth = 800;
 
     /**
      * Loads a view for the current controller.
@@ -124,6 +125,10 @@ class Controller
      */
     public function redirect(string $url) : never
     {
+        if (Request::isAjaxRequest()) {
+            $this->response->json(['layout' => 'redirect', 'url' => $url]);
+        }
+
         header('location: ' . $url);
 
         exit;

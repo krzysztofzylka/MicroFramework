@@ -1,4 +1,4 @@
-let _bootstrapLayout = 'bootstrap';
+let _bootstrapLayout = 'tailwind';
 
 $.fn.dialogbox = function (event = 'create', config = {}) {
     if (typeof event === 'object') {
@@ -23,8 +23,6 @@ $.fn.dialogbox = function (event = 'create', config = {}) {
     if (config.load && config.load[0] === '/') {
         config.load = config.load + '&dialogbox=1';
     }
-
-    // console.log(event, config);
 
     switch (event) {
         case 'load':
@@ -78,7 +76,7 @@ $.fn.dialogbox = function (event = 'create', config = {}) {
             config.dialogClasses = {};
 
             switch (_bootstrapLayout) {
-                case 'bootstrap':
+                case 'tailwind':
                     config.dialogClasses = {
                         "ui-dialog": "relative bg-white rounded-lg shadow dark:bg-gray-700",
                         "ui-dialog-titlebar": "flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600",

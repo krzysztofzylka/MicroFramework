@@ -7,13 +7,14 @@ $.fn.ajaxlink = function (event, data = null) {
                 url: data + '?dialogbox=true',
                 async: true,
                 success: (result) => {
-                    let lines = result.split('\n'),
-                        scriptContent = lines[0],
-                        jsonString = scriptContent.replace("<script>var config =", "").replace(";</script>", "").trim().slice(1, -1),
-                        config = JSON.parse(jsonString);
                     if (typeof result === 'object') {
                         $(this).ajaxlink('response', result);
                     } else {
+                        let lines = result.split('\n'),
+                            scriptContent = lines[0],
+                            jsonString = scriptContent.replace("<script>var config =", "").replace(";</script>", "").trim().slice(1, -1),
+                            config = JSON.parse(jsonString);
+
                         $(document).dialogbox({
                             content: result,
                             autoOpen: true,
@@ -95,68 +96,67 @@ $.fn.ajaxlink = function (event, data = null) {
         //         // spinner.hide();
         //     }
         //     break;
-        // case 'response':
-        //     if (data.type === 'formValidatorErrorResponse') {
-        //         $.each(data.list, function (name, value) {
-        //             console.log(name, value);
-        //             let $element = $(data.formElement).find('[name="' + name + '"]');
-        //
-        //             if (!value[0]) {
-        //                 $element.removeClass('is-invalid');
-        //                 $element.parent().find('.invalid-feedback').remove();
-        //                 $element.parent().find('.text-muted').removeClass('d-none');
-        //             } else {
-        //                 $element.addClass('is-invalid');
-        //
-        //                 if (typeof value[1] === 'string') {
-        //                     if ($element.parent().find('.invalid-feedback').length === 0) {
-        //                         $element.parent().append('<div class="invalid-feedback">' + value[1] + '</div>');
-        //                     } else {
-        //                         $element.parent().find('.invalid-feedback').html(value[1]);
-        //                     }
-        //
-        //                     $element.parent().find('.text-muted').addClass('d-none');
-        //                 }
-        //             }
-        //         });
-        //
-        //         return;
-        //     }
-        //
-        //     switch (data.ajaxLoaderConfig.layout) {
-        //         case 'toast':
-        //             if (data.ajaxLoaderConfig.redirect !== false) {
-        //                 $(this).ajaxlink('redirect', data.ajaxLoaderConfig.redirect);
-        //
-        //                 return;
-        //             }
-        //
-        //             $(this).ajaxlink('toast', data);
-        //             break;
-        //         default:
-        //             VanillaToasts.create({
-        //                 text: 'Nie udało się wykonać akcji',
-        //                 type: 'error',
-        //                 title: 'Błąd',
-        //                 timeout: 3000
-        //             });
-        //             break;
-        //     }
-        //
-        //
-        //     if (data.ajaxLoaderConfig.dialog.close) {
-        //         console.log('close', $(this));
-        //         $(this).closest('.ui-dialog-content').dialogbox('destroy');
-        //     } else if (data.ajaxLoaderConfig.dialog.reload) {
-        //         $(this).closest('.ui-dialog-content').dialogbox('reload');
-        //     }
-        //
-        //     if (data.ajaxLoaderConfig.pageReload) {
-        //         let mainLoad = $('body:first').attr('data-load');
-        //
-        //         $('main:first').load(mainLoad + '&dialogbox=1');
-        //     }
-        //     break;
+        case 'response':
+            // if (data.type === 'formValidatorErrorResponse') {
+            //     $.each(data.list, function (name, value) {
+            //         console.log(name, value);
+            //         let $element = $(data.formElement).find('[name="' + name + '"]');
+            //
+            //         if (!value[0]) {
+            //             $element.removeClass('is-invalid');
+            //             $element.parent().find('.invalid-feedback').remove();
+            //             $element.parent().find('.text-muted').removeClass('d-none');
+            //         } else {
+            //             $element.addClass('is-invalid');
+            //
+            //             if (typeof value[1] === 'string') {
+            //                 if ($element.parent().find('.invalid-feedback').length === 0) {
+            //                     $element.parent().append('<div class="invalid-feedback">' + value[1] + '</div>');
+            //                 } else {
+            //                     $element.parent().find('.invalid-feedback').html(value[1]);
+            //                 }
+            //
+            //                 $element.parent().find('.text-muted').addClass('d-none');
+            //             }
+            //         }
+            //     });
+            //
+            //     return;
+            // }
+
+            switch (data.layout) {
+                case 'redirect':
+                    console.log(data);
+                    $(this).ajaxlink('redirect', data.url);
+
+                    break;
+                case 'toast':
+                    $(this).ajaxlink('toast', data);
+                    break;
+                default:
+                    VanillaToasts.create({
+                        text: 'Nie udało się wykonać akcji',
+                        type: 'error',
+                        title: 'Błąd',
+                        timeout: 3000
+                    });
+                    break;
+            }
+
+
+            if (data.dialog.close) {
+                console.log('close', $(this));
+                $(this).closest('.ui-dialog-content').dialogbox('destroy');
+            } else if (data.dialog.reload) {
+                $(this).closest('.ui-dialog-content').dialogbox('reload');
+            }
+
+            if (data.pageReload) {
+                let mainLoad = $('body:first').attr('data-load');
+
+                $('main:first').load(mainLoad + '&dialogbox=1');
+            }
+            break;
         // case 'toast':
         //     switch (data.type) {
         //         case 'WARNING':
@@ -193,9 +193,9 @@ $.fn.ajaxlink = function (event, data = null) {
         //             });
         //     }
         //     break;
-        // case 'redirect':
-        //     document.location = data;
-        //     break;
+        case 'redirect':
+            document.location = data;
+            break;
         // case '_getConfig':
         //     let indexOf = data.indexOf("data-config='");
         //

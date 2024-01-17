@@ -31,7 +31,7 @@ class RenderFooter
     {
         $dataCount = $this->tableInstance->getDataCount();
 
-        if ($this->tableInstance->getPage() === $this->tableInstance->getPage()) {
+        if ($this->tableInstance->getPage() === $this->tableInstance->getPages()) {
             $maxCount = $dataCount;
         } else {
             $maxCount = $this->tableInstance->getPage() * $this->tableInstance->getPageLimit();

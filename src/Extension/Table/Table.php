@@ -194,7 +194,7 @@ class Table
     public function getData(bool $full = true): array
     {
         if (!$full) {
-            return array_slice($this->data, (($this->page - 1) * $this->pageLimit), 10);
+            return array_slice($this->data, (($this->page - 1) * $this->pageLimit), $this->pageLimit);
         }
 
         return $this->data;
@@ -246,7 +246,11 @@ class Table
      */
     public function setPage(int $page): void
     {
-        $this->page = $page;
+        if ($page > $this->getPages()) {
+            $page = $this->getPages();
+        }
+
+        $this->page = max($page, 1);
     }
 
     /**

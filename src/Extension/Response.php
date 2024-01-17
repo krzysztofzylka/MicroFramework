@@ -11,13 +11,32 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 class Response
 {
 
-    public function toast(string $message, string $title = '', string $type = '')
+    /**
+     * Response ajax toast
+     * @param string $message
+     * @param string $title
+     * @param string $type
+     * @param bool $dialogboxClose
+     * @param bool $dialogboxReload
+     * @return never
+     */
+    public function toast(
+        string $message,
+        string $title = '',
+        string $type = '',
+        bool $dialogboxClose = false,
+        bool $dialogboxReload = false
+    ): never
     {
         $this->json([
             'layout' => 'toast',
             'type' => $type,
             'message' => $message,
-            'title' => $title
+            'title' => $title,
+            'dialog' => [
+                'close' => (int)$dialogboxClose,
+                'reload' => (int)$dialogboxReload
+            ]
         ]);
     }
 

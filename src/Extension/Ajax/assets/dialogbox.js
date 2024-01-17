@@ -41,7 +41,7 @@ $.fn.dialogbox = function (event = 'create', config = {}) {
                 }
             });
 
-            $(this).attr('data-controller', config.load.replace('index.php?controller=', '').replace('&dialogbox=1', ''));
+            $(this).attr('data-controller', config.load.replace('index.php?controller=', '').replaceAll('&dialogbox=1', ''));
             $(this).trigger('dialogLoad', this);
             break;
         case 'open':
@@ -118,7 +118,7 @@ $.fn.dialogbox = function (event = 'create', config = {}) {
             }
 
             if (config.controller) {
-                $dialog.attr('data-controller', config.controller.replace('index.php?controller=', '').replace('&dialogbox=1', ''));
+                $dialog.attr('data-controller', config.controller.replace('index.php?controller=', '').replaceAll('&dialogbox=1', ''));
             }
 
             $(this).trigger('dialogCreate', this);

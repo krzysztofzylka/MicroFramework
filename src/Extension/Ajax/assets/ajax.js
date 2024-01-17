@@ -10,18 +10,26 @@ $.fn.ajaxlink = function (event, data = null) {
                     if (typeof result === 'object') {
                         $(this).ajaxlink('response', result);
                     } else {
-                        let lines = result.split('\n'),
-                            scriptContent = lines[0],
-                            jsonString = scriptContent.replace("<script>var config =", "").replace(";</script>", "").trim().slice(1, -1),
-                            config = JSON.parse(jsonString);
+                        try {
+                            let lines = result.split('\n'),
+                                scriptContent = lines[0],
+                                jsonString = scriptContent.replace("<script>var config =", "").replace(";</script>", "").trim().slice(1, -1),
+                                config = JSON.parse(jsonString);
 
-                        $(document).dialogbox({
-                            content: result,
-                            autoOpen: true,
-                            title: config.title,
-                            controller: data,
-                            width: config.width
-                        });
+                            $(document).dialogbox({
+                                content: result,
+                                autoOpen: true,
+                                title: config.title,
+                                controller: data,
+                                width: config.width
+                            });
+                        } catch (e) {
+                            VanillaToasts.create({
+                                text: 'Nie udało się załadować dialogboxa',
+                                type: 'error',
+                                timeout: 3000
+                            });
+                        }
                     }
 
                     spinner.hide();
@@ -42,91 +50,57 @@ $.fn.ajaxlink = function (event, data = null) {
                 }
             });
             break;
-        // case 'form':
-        //     // spinner.show();
-        //
-        //     if ($(this).is('form')) {
-        //         let config = {
-        //             action: $(this).attr("action"),
-        //             data: $(this).serialize()
-        //         }
-        //
-        //         $.ajax({
-        //             url: config.action,
-        //             type: 'POST',
-        //             data: config.data,
-        //         }).done((result) => {
-        //             if (typeof result === 'object') {
-        //                 result.formElement = data;
-        //                 $(this).find('.is-invalid').removeClass('is-invalid');
-        //                 $(this).find('.invalid-feedback').remove();
-        //                 $(this).find('.text-muted').removeClass('d-none');
-        //                 $(this).ajaxlink('response', result);
-        //             } else {
-        //                 VanillaToasts.create({
-        //                     text: 'Wystąpił błąd poczas pobrania danych z formularza',
-        //                     type: 'error',
-        //                     title: 'Błąd',
-        //                     timeout: 3000
-        //                 });
-        //                 console.log('Wystąpił błąd poczas pobrania danych z formularza', result);
-        //             }
-        //
-        //             // spinner.hide();
-        //         }).fail((e) => {
-        //             VanillaToasts.create({
-        //                 text: 'Wystąpił błąd poczas pobrania danych z formularza',
-        //                 type: 'error',
-        //                 title: 'Błąd',
-        //                 timeout: 3000
-        //             });
-        //             console.log('Wystąpił błąd poczas pobrania danych z formularza', e);
-        //
-        //             // spinner.hide();
-        //         });
-        //     } else {
-        //         VanillaToasts.create({
-        //             text: 'Wystąpił błąd poczas pobrania danych z formularza',
-        //             type: 'error',
-        //             title: 'Błąd',
-        //             timeout: 3000
-        //         });
-        //         console.log('Wystąpił błąd poczas pobrania danych z formularza', 'not form');
-        //
-        //         // spinner.hide();
-        //     }
-        //     break;
-        case 'response':
-            // if (data.type === 'formValidatorErrorResponse') {
-            //     $.each(data.list, function (name, value) {
-            //         console.log(name, value);
-            //         let $element = $(data.formElement).find('[name="' + name + '"]');
-            //
-            //         if (!value[0]) {
-            //             $element.removeClass('is-invalid');
-            //             $element.parent().find('.invalid-feedback').remove();
-            //             $element.parent().find('.text-muted').removeClass('d-none');
-            //         } else {
-            //             $element.addClass('is-invalid');
-            //
-            //             if (typeof value[1] === 'string') {
-            //                 if ($element.parent().find('.invalid-feedback').length === 0) {
-            //                     $element.parent().append('<div class="invalid-feedback">' + value[1] + '</div>');
-            //                 } else {
-            //                     $element.parent().find('.invalid-feedback').html(value[1]);
-            //                 }
-            //
-            //                 $element.parent().find('.text-muted').addClass('d-none');
-            //             }
-            //         }
-            //     });
-            //
-            //     return;
-            // }
+        case 'form':
+            spinner.show();
 
+            if ($(this).is('form')) {
+                let config = {
+                    action: $(this).attr("action"),
+                    data: $(this).serialize()
+                }
+
+                $.ajax({
+                    url: config.action + '?dialogbox=1',
+                    type: 'POST',
+                    data: config.data,
+                }).done((result) => {
+                    if (typeof result === 'object') {
+                        $(this).ajaxlink('response', result);
+                    } else {
+                        if ($(this).closest('.ui-dialog-content').length > 0) {
+                            $(this).closest('.ui-dialog-content').html(result);
+                        } else {
+                            $(this).closest('.content').html(result);
+                        }
+                    }
+
+                    spinner.hide();
+                }).fail((e) => {
+                    VanillaToasts.create({
+                        text: 'Wystąpił błąd poczas pobrania danych z formularza',
+                        type: 'error',
+                        title: 'Błąd',
+                        timeout: 3000
+                    });
+                    console.log('Wystąpił błąd poczas pobrania danych z formularza', e);
+
+                    spinner.hide();
+                });
+            } else {
+                VanillaToasts.create({
+                    text: 'Wystąpił błąd poczas pobrania danych z formularza',
+                    type: 'error',
+                    title: 'Błąd',
+                    timeout: 3000
+                });
+                console.log('Wystąpił błąd poczas pobrania danych z formularza', 'not form');
+
+                spinner.hide();
+            }
+            break;
+        case 'response':
             switch (data.layout) {
                 case 'redirect':
-                    console.log(data);
                     $(this).ajaxlink('redirect', data.url);
 
                     break;
@@ -143,10 +117,8 @@ $.fn.ajaxlink = function (event, data = null) {
                     break;
             }
 
-
             try {
                 if (data.dialog.close) {
-                    console.log('close', $(this));
                     $(this).closest('.ui-dialog-content').dialogbox('destroy');
                 } else if (data.dialog.reload) {
                     $(this).closest('.ui-dialog-content').dialogbox('reload');
@@ -202,18 +174,6 @@ $.fn.ajaxlink = function (event, data = null) {
         case 'redirect':
             document.location = data;
             break;
-        // case '_getConfig':
-        //     let indexOf = data.indexOf("data-config='");
-        //
-        //     if (indexOf === -1) {
-        //         return {};
-        //     }
-        //
-        //     let firstLine = data.split('\n')[0];
-        //
-        //     return JSON.parse(firstLine.substring(
-        //         indexOf + "data-config='".length,
-        //         firstLine.lastIndexOf("'")))
     }
 }
 

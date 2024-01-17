@@ -110,6 +110,7 @@ class Kernel
             $controller = $url[0] ?: $_ENV['DEFAULT_CONTROLLER'];
             $method = (isset($url[1]) && !empty($url[1])) ? $url[1] : $_ENV['DEFAULT_METHOD'];
             $parameters = array_slice($url, 2);
+            View::$GLOBAL_VARIABLES['here'] = '/' . $controller . '/' . $method . ($parameters ? ('/' . implode('/', $parameters)) : '');
             DebugBar::timeStop('run');
             DebugBar::addFrameworkMessage(['controller' => $controller, 'method' => $method, 'parameters' => $parameters, 'url' => $url], 'Run route');
             Ajax::load();

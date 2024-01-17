@@ -23,6 +23,7 @@ class index extends Controller
         $this->loadModel('test');
         $this->set('variable', 'Test variable');
         DebugBar::addMessage($this->Test->findAll(), 'Find');
+        $this->set('time', time());
         $this->loadView();
         DebugBar::timeStop('controller');
     }
@@ -35,6 +36,27 @@ class index extends Controller
     public function toast(): void
     {
         $this->response->toast('test');
+    }
+
+    public function toastreload(): void
+    {
+        $this->response->toast('test', dialogboxReload: true);
+    }
+
+    public function form(): void
+    {
+        $this->dialogboxTitle = 'Form';
+        $this->dialogboxWidth = 400;
+
+        if ($this->data) {
+            var_dump($this->data);
+
+            if ($this->data['test'] === 'close') {
+                $this->response->toast('success', dialogboxClose: true);
+            }
+        }
+
+        $this->loadView();
     }
 
 }

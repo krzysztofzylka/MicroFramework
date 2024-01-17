@@ -144,55 +144,61 @@ $.fn.ajaxlink = function (event, data = null) {
             }
 
 
-            if (data.dialog.close) {
-                console.log('close', $(this));
-                $(this).closest('.ui-dialog-content').dialogbox('destroy');
-            } else if (data.dialog.reload) {
-                $(this).closest('.ui-dialog-content').dialogbox('reload');
+            try {
+                if (data.dialog.close) {
+                    console.log('close', $(this));
+                    $(this).closest('.ui-dialog-content').dialogbox('destroy');
+                } else if (data.dialog.reload) {
+                    $(this).closest('.ui-dialog-content').dialogbox('reload');
+                }
+            } catch (e) {
             }
 
-            if (data.pageReload) {
-                let mainLoad = $('body:first').attr('data-load');
+            try {
+                if (data.pageReload) {
+                    let mainLoad = $('body:first').attr('data-load');
 
-                $('main:first').load(mainLoad + '&dialogbox=1');
+                    $('main:first').load(mainLoad + '&dialogbox=1');
+                }
+            } catch (e) {
             }
             break;
-        // case 'toast':
-        //     switch (data.type) {
-        //         case 'WARNING':
-        //             VanillaToasts.create({
-        //                 text: data.message,
-        //                 type: 'warning',
-        //                 title: data.title ?? null,
-        //                 timeout: 3000
-        //             });
-        //             break;
-        //         case 'OK':
-        //             VanillaToasts.create({
-        //                 text: data.message,
-        //                 type: 'success',
-        //                 title: data.title ?? null,
-        //                 timeout: 3000
-        //             });
-        //             break;
-        //         case 'ERROR':
-        //         case 'ERR':
-        //             VanillaToasts.create({
-        //                 text: data.message,
-        //                 type: 'error',
-        //                 title: data.title ?? null,
-        //                 timeout: 3000
-        //             });
-        //             break;
-        //         default:
-        //             VanillaToasts.create({
-        //                 text: data.message,
-        //                 type: 'success',
-        //                 title: data.title ?? null,
-        //                 timeout: 3000
-        //             });
-        //     }
-        //     break;
+        case 'toast':
+            switch (data.type) {
+                case 'WARNING':
+                    VanillaToasts.create({
+                        text: data.message,
+                        type: 'warning',
+                        title: data.title ?? null,
+                        timeout: 3000
+                    });
+                    break;
+                case 'OK':
+                    VanillaToasts.create({
+                        text: data.message,
+                        type: 'success',
+                        title: data.title ?? null,
+                        timeout: 3000
+                    });
+                    break;
+                case 'ERROR':
+                case 'ERR':
+                    VanillaToasts.create({
+                        text: data.message,
+                        type: 'error',
+                        title: data.title ?? null,
+                        timeout: 3000
+                    });
+                    break;
+                default:
+                    VanillaToasts.create({
+                        text: data.message,
+                        type: 'success',
+                        title: data.title ?? null,
+                        timeout: 3000
+                    });
+            }
+            break;
         case 'redirect':
             document.location = data;
             break;

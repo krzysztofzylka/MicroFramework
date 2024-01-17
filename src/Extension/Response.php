@@ -11,6 +11,16 @@ use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 class Response
 {
 
+    public function toast(string $message, string $title = '', string $type = '')
+    {
+        $this->json([
+            'layout' => 'toast',
+            'type' => $type,
+            'message' => $message,
+            'title' => $title
+        ]);
+    }
+
     /**
      * Response JSON data
      * @param array $data

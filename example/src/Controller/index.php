@@ -32,4 +32,9 @@ class index extends Controller
         $this->redirect('/index/index');
     }
 
+    public function toast(): void
+    {
+        $this->response->toast('test');
+    }
+
 }

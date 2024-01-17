@@ -403,8 +403,12 @@ class Model
      */
     private function _prepareCondition(?array &$condition): void
     {
-        if (!is_array($condition) || !isset($this->isolator) || is_null($this->isolator) || !$this->isolator) {
+        if (!isset($this->isolator) || !$this->isolator) {
             return;
+        }
+
+        if (!is_array($condition)) {
+            $condition = [];
         }
 
         $condition[$this->useTable . '.' . $this->isolatorName] = $this->isolator;

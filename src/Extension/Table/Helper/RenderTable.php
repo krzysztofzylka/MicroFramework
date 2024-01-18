@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework\Extension\Table\Helper;
 
 use Krzysztofzylka\HtmlGenerator\HtmlGenerator;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;
+use Krzysztofzylka\MicroFramework\Extension\Table\Cell;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
 
 class RenderTable
@@ -47,7 +48,7 @@ class RenderTable
         $columns = [];
 
         foreach ($this->tableInstance->getColumns() as $column) {
-            $columns[] = (string)HtmlGenerator::createTag(
+            $columnTag = HtmlGenerator::createTag(
                 'th',
                 $column['name'],
                 'px-6 py-' . ($this->tableInstance->isSlim() ? '2' : '3'),
@@ -55,6 +56,12 @@ class RenderTable
                     'scope' => 'col'
                 ]
             );
+
+            if (isset($column['attributes'])) {
+                $columnTag->addAttributes($column['attributes']);
+            }
+
+            $columns[] = (string)$columnTag;
         }
 
         $trTag = HtmlGenerator::createTag(
@@ -81,19 +88,28 @@ class RenderTable
         foreach ($this->tableInstance->getData(false) as $data) {
             $tdTags = [];
 
-            foreach (array_keys($this->tableInstance->getColumns()) as $columnDataKey) {
-                $value = '';
+            foreach ($this->tableInstance->getColumns() as $columnDataKey => $column) {
+                $value = null;
 
-                if (isset($data[$columnDataKey])) {
+                if (isset($column['value']) && is_string($column['value'])) {
+                    $value = $column['value'];
+                } elseif (isset($data[$columnDataKey]) && is_null($value)) {
                     $value = $data[$columnDataKey];
-                } elseif (!is_null($this->tableInstance->getModel())) {
+                } elseif (!is_null($this->tableInstance->getModel()) && is_null($value)) {
                     $generatedArray = '["' . implode('"]["', explode('.', $columnDataKey)) . '"]';
                     $value = @eval('return $data' . $generatedArray . ';');
                 }
 
+                if (isset($column['value']) and is_callable($column['value'])) {
+                    $cell = new Cell();
+                    $cell->value = $value;
+
+                    $value = $column['value']($cell);
+                }
+
                 $tdTags[] = HtmlGenerator::createTag(
                     'td',
-                    $value,
+                    $value ?? '',
                     'px-6 py-' . ($this->tableInstance->isSlim() ? '2' : '4')
                 );
             }

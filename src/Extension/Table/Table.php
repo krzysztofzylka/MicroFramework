@@ -465,10 +465,12 @@ class Table
      * @param string $name
      * @return void
      */
-    public function addColumn(string $key, string $name): void
+    public function addColumn(string $key, string $name, null|callable|string $value = null, array $attributes = []): void
     {
         $this->columns[$key] = [
-            'name' => $name
+            'name' => $name,
+            'attributes' => $attributes,
+            'value' => $value
         ];
     }
 

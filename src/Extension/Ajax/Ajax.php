@@ -25,9 +25,9 @@ class Ajax
                 $sourcePath = __DIR__ . '/assets/' . $asset;
                 $destinationPath = Kernel::getPath('assets') . '/ajax/' . $asset;
 
-//                if (!file_exists($destinationPath) || filemtime($sourcePath) < filemtime($destinationPath)) {
+                if (!file_exists($destinationPath) || filemtime($sourcePath) < filemtime($destinationPath)) {
                     File::copy($sourcePath, $destinationPath);
-//                }
+                }
 
                 switch ($extension) {
                     case 'css':

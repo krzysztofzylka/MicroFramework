@@ -17,7 +17,7 @@ use Krzysztofzylka\MicroFramework\Extension\Ajax\Ajax;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\File\File;
-use Krzysztofzylka\MicroFramework\Extension\Response;
+use Krzysztofzylka\Request\Request;
 use Throwable;
 
 include_once(__DIR__ . '/Extension/Functions/functions.php');

@@ -174,6 +174,54 @@ $.fn.ajaxlink = function (event, data = null) {
         case 'redirect':
             document.location = data;
             break;
+        case 'table':
+            spinner.show();
+
+            try {
+                let params = {},
+                    config = JSON.parse($(this).attr('data-action')),
+                    table = data.closest('#' + config.id);
+
+                if ($(data).is('form')) {
+                    $.each($(data).serializeArray(), function(index, element) {
+                        params[element.name] = element.value;
+                    });
+
+                    config.params = params;
+                }
+
+                //console.log({'data': data, 'config': config, 'table': table});
+
+                $.ajax({
+                    url: config.here,
+                    type: 'POST',
+                    data: config,
+                }).done((result) => {
+                    $('#' + config.id).replaceWith(result);
+
+                    spinner.hide();
+                }).fail((e) => {
+                    VanillaToasts.create({
+                        text: 'Wystąpił błąd poczas pobrania danych z formularza',
+                        type: 'error',
+                        title: 'Błąd',
+                        timeout: 3000
+                    });
+                    console.log('Wystąpił błąd poczas pobrania danych z formularza', e);
+
+                    spinner.hide();
+                });
+            } catch (e) {
+                spinner.hide();
+
+                VanillaToasts.create({
+                    text: 'Nie udało się wykonać akcji',
+                    type: 'error',
+                    title: 'Błąd',
+                    timeout: 3000
+                });
+            }
+            break;
     }
 }
 
@@ -182,6 +230,19 @@ $(function () {
         e.preventDefault();
 
         $(this).ajaxlink('main', $(this).attr('href'));
+    });
+
+    $(document).on('click', '.ajaxtable', function (e) {
+        e.preventDefault();
+
+        $(this).ajaxlink('table', $(this));
+    });
+
+    $(document).on('submit', '.ajaxtableform', function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        $(this).ajaxlink('table', $(this));
     });
 
     $(document).on('submit', 'form[action]:not(.disableAjax)', function (event) {

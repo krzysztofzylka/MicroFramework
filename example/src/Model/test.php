@@ -7,6 +7,4 @@ use Krzysztofzylka\MicroFramework\Model;
 class test extends Model
 {
 
-    public mixed $useTable = false;
-
 }

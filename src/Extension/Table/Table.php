@@ -9,6 +9,7 @@ use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderFooter;
 use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderHeader;
 use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderTable;
+use Krzysztofzylka\MicroFramework\Extension\Table\Helper\TableReminder;
 use Krzysztofzylka\MicroFramework\View;
 use Krzysztofzylka\Request\Request;
 
@@ -65,6 +66,15 @@ class Table
      * @var bool
      */
     protected bool $isAjaxAction = false;
+
+    public function __construct()
+    {
+        $data = TableReminder::getData($this);
+
+        if (isset($data['page'])) {
+           $this->page = $data['page'];
+        }
+    }
 
     /**
      * Get table ID
@@ -266,6 +276,8 @@ class Table
         }
 
         $this->page = max($page, 1);
+
+        TableReminder::saveData($this, ['page' => $this->page]);
     }
 
     /**

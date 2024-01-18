@@ -73,6 +73,15 @@ class Table
      */
     protected ?string $search = null;
 
+    /**
+     * Slim table
+     * @var bool
+     */
+    protected bool $slim = true;
+
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $data = TableReminder::getData($this);
@@ -395,6 +404,25 @@ class Table
         $this->search = $search;
 
         TableReminder::saveData($this, ['search' => $this->search]);
+    }
+
+    /**
+     * Set slim
+     * @param bool $slim
+     * @return void
+     */
+    public function setSlim(bool $slim): void
+    {
+        $this->slim = $slim;
+    }
+
+    /**
+     * Get slim
+     * @return bool
+     */
+    public function isSlim(): bool
+    {
+        return $this->slim;
     }
 
 }

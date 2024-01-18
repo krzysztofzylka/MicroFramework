@@ -48,7 +48,7 @@ class RenderTable
             $columns[] = (string)HtmlGenerator::createTag(
                 'th',
                 $column['name'],
-                'px-6 py-3',
+                'px-6 py-' . ($this->tableInstance->isSlim() ? '2' : '3'),
                 [
                     'scope' => 'col'
                 ]
@@ -88,7 +88,7 @@ class RenderTable
                 $tdTags[] = HtmlGenerator::createTag(
                     'td',
                      $value,
-                    'px-6 py-4'
+                    'px-6 py-' . ($this->tableInstance->isSlim() ? '2' : '4')
                 );
             }
 

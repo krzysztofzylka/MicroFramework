@@ -3,6 +3,7 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Table\Helper;
 
 use Krzysztofzylka\HtmlGenerator\HtmlGenerator;
+use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
 
 class RenderFooter
@@ -66,16 +67,34 @@ class RenderFooter
     /**
      * Render pagination
      * @return string
+     * @throws HiddenException
      */
     private function renderPagination(): string
     {
-        $liTags = [$this->renderPaginationLi('<', 'rounded-s-lg')];
+        $previousDisabled = false;
+        $nextDisabled = false;
 
-        for ($page = 1; $page <= $this->tableInstance->getPages(); $page++) {
-            $liTags[] = $this->renderPaginationLi($page, '', $page === $this->tableInstance->getPage());
+        if ($this->tableInstance->getPage() === 1) {
+            $previousDisabled = true;
         }
 
-        $liTags[] = $this->renderPaginationLi('>', 'rounded-e-lg');
+        if ($this->tableInstance->getPage() === $this->tableInstance->getPages()) {
+            $nextDisabled = true;
+        }
+
+        $liTags = [$this->renderPaginationLi('<<', 'rounded-s-lg', false, $previousDisabled), $this->renderPaginationLi('<', '', false, $previousDisabled)];
+
+        $current_page = $this->tableInstance->getPage();
+        $total_pages = $this->tableInstance->getPages();
+        $start = ($current_page - 3 > 0) ? $current_page - 3 : 1;
+        $end = ($current_page + 3 <= $total_pages) ? $current_page + 3 : $total_pages;
+
+        for ($page = $start; $page <= $end; $page++) {
+            $liTags[] = $this->renderPaginationLi($page, '', $page === $current_page);
+        }
+
+        $liTags[] = $this->renderPaginationLi('>', '', false, $nextDisabled);
+        $liTags[] = $this->renderPaginationLi('>>', 'rounded-e-lg', false, $nextDisabled);
 
         return HtmlGenerator::createTag(
             'ul',
@@ -89,9 +108,11 @@ class RenderFooter
      * @param string $value
      * @param string $hrefClass
      * @param bool $currentPage
+     * @param bool $disabled
      * @return string
+     * @throws HiddenException
      */
-    private function renderPaginationLi(string $value, string $hrefClass = '', bool $currentPage = false): string
+    private function renderPaginationLi(string $value, string $hrefClass = '', bool $currentPage = false, bool $disabled = false): string
     {
         $pageValue = $value;
 
@@ -99,12 +120,16 @@ class RenderFooter
             $pageValue = $this->tableInstance->getPage() - 1;
         } elseif ($pageValue === '>') {
             $pageValue = $this->tableInstance->getPage() + 1;
+        } elseif ($pageValue === '<<') {
+            $pageValue = 1;
+        } elseif ($pageValue === '>>') {
+            $pageValue = $this->tableInstance->getPages();
         }
 
         $aTag = HtmlGenerator::createTag(
             'a',
             $value,
-            'flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ajaxtable ' . $hrefClass,
+            'flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white '  . ($disabled ? 'opacity-50 cursor-not-allowed' : 'ajaxtable'). ' ' . $hrefClass,
             [
                 'data-action' => RenderAction::generate($this->tableInstance, 'pagination', ['page' => $pageValue])
             ]

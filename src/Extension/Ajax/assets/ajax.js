@@ -214,6 +214,8 @@ $.fn.ajaxlink = function (event, data = null) {
             } catch (e) {
                 spinner.hide();
 
+                console.log(e)
+
                 VanillaToasts.create({
                     text: 'Nie udało się wykonać akcji',
                     type: 'error',

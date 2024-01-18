@@ -65,7 +65,24 @@ class index extends Controller
 
     public function table(): void
     {
+//        (new CreateTable())
+//            ->setName('test')
+//            ->addIdColumn()
+//            ->addSimpleVarcharColumn('a', 100)
+//            ->addSimpleVarcharColumn('b')
+//            ->addDateModifyColumn()
+//            ->addDateCreatedColumn()
+//            ->execute();
+
         $this->loadModel('test');
+
+//        for ($i=0; $i<=600; $i++) {
+//            $this->Test->setId(null)->save([
+//                'a' => Generator::uniqId(50),
+//                'b' => Generator::uniqId(50)
+//            ]);
+//        }
+
         $table = new Table();
         $table->addColumn('test.a', 'Test', null, ['width' => '200px']);
         $table->addColumn('test.b', 'Test2', function (Cell $cell) {

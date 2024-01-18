@@ -94,6 +94,12 @@ class Table
     protected ?Model $model = null;
 
     /**
+     * order by
+     * @var ?string
+     */
+    protected ?string $orderBy = null;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -125,7 +131,7 @@ class Table
             $this->setData($this->getModel()->findAll(
                 $this->getConditions(),
                 null,
-                null,
+                $this->getOrderBy(),
                 $this->generateLimit()
             ));
         } elseif (!$full) {
@@ -515,6 +521,25 @@ class Table
     public function addCondition(Condition $condition): void
     {
         $this->conditions[] = $condition;
+    }
+
+    /**
+     * Get order by
+     * @return string|null
+     */
+    public function getOrderBy(): ?string
+    {
+        return $this->orderBy;
+    }
+
+    /**
+     * Set order by
+     * @param string|null $orderBy
+     * @return void
+     */
+    public function setOrderBy(?string $orderBy): void
+    {
+        $this->orderBy = $orderBy;
     }
 
 }

@@ -5,7 +5,6 @@ namespace Krzysztofzylka\MicroFramework\Extension\Table\Helper;
 use Krzysztofzylka\HtmlGenerator\HtmlGenerator;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
-use Krzysztofzylka\Strings\Strings;
 
 class RenderTable
 {
@@ -94,7 +93,7 @@ class RenderTable
 
                 $tdTags[] = HtmlGenerator::createTag(
                     'td',
-                     $value,
+                    $value,
                     'px-6 py-' . ($this->tableInstance->isSlim() ? '2' : '4')
                 );
             }

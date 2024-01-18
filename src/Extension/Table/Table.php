@@ -23,6 +23,11 @@ class Table
 {
 
     /**
+     * Conditions
+     * @var array
+     */
+    public array $conditions = [];
+    /**
      * Table id
      * @var string|null
      */
@@ -89,12 +94,6 @@ class Table
     protected ?Model $model = null;
 
     /**
-     * Conditions
-     * @var array
-     */
-    public array $conditions = [];
-
-    /**
      * Constructor
      */
     public function __construct()
@@ -102,7 +101,7 @@ class Table
         $data = TableReminder::getData($this);
 
         if (isset($data['page'])) {
-           $this->page = $data['page'];
+            $this->page = $data['page'];
         }
 
         if (isset($data['search'])) {
@@ -111,26 +110,227 @@ class Table
     }
 
     /**
-     * Get table ID
-     * @return string The object's ID.
+     * Get data
+     * @param bool $full
+     * @return array
+     * @throws HiddenException
      */
-    public function getId(): string
+    public function getData(bool $full = true): array
     {
-        if (is_null($this->id)) {
-            $this->setId('table_' . str_replace('/', '_', substr(View::$GLOBAL_VARIABLES['here'], 1)));
+        if (!is_null($this->search)) {
+            $this->setData($this->search($this->data, $this->search));
         }
 
-        return $this->id;
+        if (!is_null($this->getModel())) {
+            $this->setData($this->getModel()->findAll(
+                $this->getConditions(),
+                null,
+                null,
+                $this->generateLimit()
+            ));
+        } elseif (!$full) {
+            return array_slice($this->data, (($this->page - 1) * $this->pageLimit), $this->pageLimit);
+        }
+
+        return $this->data;
     }
 
     /**
-     * Set table ID
-     * @param string|null $id The ID to set for the object. Set to null if the automatic generate ID.
+     * Set data
+     * @param array $data
+     * @return void
+     * @throws HiddenException
+     */
+    public function setData(array $data): void
+    {
+        $this->data = $data;
+
+        $this->setPages(ceil($this->getDataCount() / $this->pageLimit));
+    }
+
+    /**
+     * Search method
+     * @param array $data
+     * @param string $search
+     * @return array
+     */
+    protected function search(array $data, string $search): array
+    {
+        if (!is_null($this->getModel())) {
+            foreach (array_keys($this->getColumns()) as $columnKey) {
+                $this->conditions['OR'][] = new Condition($columnKey, 'LIKE', '%' . htmlspecialchars($this->getSearch()) . '%');
+            }
+
+            return [];
+        }
+
+        $matches = [];
+        $regex = '/' . preg_quote($search, '/') . '/i';
+
+        foreach ($data as $row) {
+            foreach ($row as $value) {
+                if (preg_match($regex, $value)) {
+                    $matches[] = $row;
+                    break; // Przerywamy wewnętrzną pętlę po pierwszym dopasowaniu
+                }
+            }
+        }
+
+        return $matches;
+    }
+
+    /**
+     * Get model
+     * @return Model|null
+     */
+    public function getModel(): ?Model
+    {
+        return $this->model;
+    }
+
+    /**
+     * Set model
+     * @param Model|null $model
      * @return void
      */
-    public function setId(?string $id): void
+    public function setModel(?Model $model): void
     {
-        $this->id = $id;
+        $this->model = $model;
+    }
+
+    /**
+     * Get columns
+     * @return array
+     */
+    public function getColumns(): array
+    {
+        return $this->columns;
+    }
+
+    /**
+     * Get search
+     * @return string|null
+     */
+    public function getSearch(): ?string
+    {
+        return $this->search;
+    }
+
+    /**
+     * Set search
+     * @param string|null $search
+     * @return void
+     */
+    public function setSearch(?string $search): void
+    {
+        if (!is_null($search) && empty($search)) {
+            $search = null;
+        }
+
+        $this->search = $search;
+
+        TableReminder::saveData($this, ['search' => $this->search]);
+    }
+
+    /**
+     * Get conditions
+     * @return array
+     */
+    public function getConditions(): array
+    {
+        return $this->conditions;
+    }
+
+    protected function generateLimit(): string
+    {
+        return (($this->getPage() - 1) * $this->getPageLimit()) . ', ' . $this->getPageLimit();
+    }
+
+    /**
+     * Get actual page
+     * @return int
+     */
+    public function getPage(): int
+    {
+        return $this->page;
+    }
+
+    /**
+     * Set actual page
+     * @param int $page
+     * @return void
+     * @throws HiddenException
+     */
+    public function setPage(int $page): void
+    {
+        if ($page > $this->getPages()) {
+            $page = $this->getPages();
+        }
+
+        $this->page = max($page, 1);
+
+        TableReminder::saveData($this, ['page' => $this->page]);
+    }
+
+    /**
+     * Get page limit
+     * @return int
+     */
+    public function getPageLimit(): int
+    {
+        return $this->pageLimit;
+    }
+
+    /**
+     * Set page limit
+     * @param int $pageLimit
+     * @return void
+     */
+    public function setPageLimit(int $pageLimit): void
+    {
+        $this->pageLimit = $pageLimit;
+    }
+
+    /**
+     * Get pages count
+     * @return int
+     * @throws HiddenException
+     */
+    public function getPages(): int
+    {
+        if (is_null($this->pages)) {
+            $this->setPages(ceil($this->getDataCount() / $this->pageLimit));
+        }
+
+        return $this->pages ?? 1;
+    }
+
+    /**
+     * Set pages count
+     * @param int $pages
+     * @return void
+     */
+    public function setPages(int $pages): void
+    {
+        $this->pages = max($pages, 1);
+
+        if ($this->getPage() > $this->pages) {
+            $this->setPage($this->pages);
+        }
+    }
+
+    /**
+     * Get data count
+     * @return int
+     * @throws HiddenException
+     */
+    public function getDataCount(): int
+    {
+        if (!is_null($this->getModel())) {
+            return $this->getModel()->findCount($this->getConditions());
+        }
+
+        return count($this->data);
     }
 
     /**
@@ -180,6 +380,52 @@ class Table
     }
 
     /**
+     * Ajax actions
+     * @return void
+     */
+    protected function ajaxAction(): void
+    {
+        if (!Request::isPost() || !Request::isAjaxRequest() || Request::getPostData('layout') !== 'table') {
+            return;
+        }
+
+        $this->isAjaxAction = true;
+        $params = Request::getPostData('params');
+
+        switch (Request::getPostData('action')) {
+            case 'pagination':
+                $this->setPage($params['page']);
+                break;
+            case 'search':
+                $this->setSearch($params['table-search']);
+                break;
+        }
+    }
+
+    /**
+     * Get table ID
+     * @return string The object's ID.
+     */
+    public function getId(): string
+    {
+        if (is_null($this->id)) {
+            $this->setId('table_' . str_replace('/', '_', substr(View::$GLOBAL_VARIABLES['here'], 1)));
+        }
+
+        return $this->id;
+    }
+
+    /**
+     * Set table ID
+     * @param string|null $id The ID to set for the object. Set to null if the automatic generate ID.
+     * @return void
+     */
+    public function setId(?string $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
      * Get actions
      * @return ?array
      */
@@ -214,15 +460,6 @@ class Table
     }
 
     /**
-     * Get columns
-     * @return array
-     */
-    public function getColumns(): array
-    {
-        return $this->columns;
-    }
-
-    /**
      * Add column
      * @param string $key
      * @param string $name
@@ -246,212 +483,12 @@ class Table
     }
 
     /**
-     * Get data
-     * @param bool $full
-     * @return array
-     * @throws HiddenException
+     * Get slim
+     * @return bool
      */
-    public function getData(bool $full = true): array
+    public function isSlim(): bool
     {
-        if (!is_null($this->search)) {
-            $this->setData($this->search($this->data, $this->search));
-        }
-
-        if (!is_null($this->getModel())) {
-            $this->setData($this->getModel()->findAll(
-                $this->getConditions(),
-                null,
-                null,
-                $this->generateLimit()
-            ));
-        } elseif (!$full) {
-            return array_slice($this->data, (($this->page - 1) * $this->pageLimit), $this->pageLimit);
-        }
-
-        return $this->data;
-    }
-
-    protected function generateLimit(): string
-    {
-        return (($this->getPage() - 1) * $this->getPageLimit()) . ', ' . $this->getPageLimit();
-    }
-
-    /**
-     * Search method
-     * @param array $data
-     * @param string $search
-     * @return array
-     */
-    protected function search(array $data, string $search): array
-    {
-        if (!is_null($this->getModel())) {
-            foreach (array_keys($this->getColumns()) as $columnKey) {
-                $this->conditions['OR'][] = new Condition($columnKey, 'LIKE', '%' . htmlspecialchars($this->getSearch()) . '%');
-            }
-
-            return [];
-        }
-
-        $matches = [];
-        $regex = '/' . preg_quote($search, '/') . '/i';
-
-        foreach ($data as $row) {
-            foreach ($row as $value) {
-                if (preg_match($regex, $value)) {
-                    $matches[] = $row;
-                    break; // Przerywamy wewnętrzną pętlę po pierwszym dopasowaniu
-                }
-            }
-        }
-
-        return $matches;
-    }
-
-    /**
-     * Set data
-     * @param array $data
-     * @return void
-     * @throws HiddenException
-     */
-    public function setData(array $data): void
-    {
-        $this->data = $data;
-
-        $this->setPages(ceil($this->getDataCount() / $this->pageLimit));
-    }
-
-    /**
-     * Get page limit
-     * @return int
-     */
-    public function getPageLimit(): int
-    {
-        return $this->pageLimit;
-    }
-
-    /**
-     * Set page limit
-     * @param int $pageLimit
-     * @return void
-     */
-    public function setPageLimit(int $pageLimit): void
-    {
-        $this->pageLimit = $pageLimit;
-    }
-
-    /**
-     * Get actual page
-     * @return int
-     */
-    public function getPage(): int
-    {
-        return $this->page;
-    }
-
-    /**
-     * Set actual page
-     * @param int $page
-     * @return void
-     */
-    public function setPage(int $page): void
-    {
-        if ($page > $this->getPages()) {
-            $page = $this->getPages();
-        }
-
-        $this->page = max($page, 1);
-
-        TableReminder::saveData($this, ['page' => $this->page]);
-    }
-
-    /**
-     * Get pages count
-     * @return int
-     * @throws HiddenException
-     */
-    public function getPages(): int
-    {
-        if (is_null($this->pages)) {
-            $this->setPages(ceil($this->getDataCount() / $this->pageLimit));
-        }
-
-        return $this->pages ?? 1;
-    }
-
-    /**
-     * Set pages count
-     * @param int $pages
-     * @return void
-     */
-    public function setPages(int $pages): void
-    {
-        $this->pages = max($pages, 1);
-
-        if ($this->getPage() > $this->pages) {
-            $this->setPage($this->pages);
-        }
-    }
-
-    /**
-     * Get data count
-     * @return int
-     * @throws HiddenException
-     */
-    public function getDataCount(): int
-    {
-        if (!is_null($this->getModel())) {
-            return $this->getModel()->findCount($this->getConditions());
-        }
-
-        return count($this->data);
-    }
-
-    /**
-     * Ajax actions
-     * @return void
-     */
-    protected function ajaxAction(): void
-    {
-        if (!Request::isPost() || !Request::isAjaxRequest() || Request::getPostData('layout') !== 'table') {
-            return;
-        }
-
-        $this->isAjaxAction = true;
-        $params = Request::getPostData('params');
-
-        switch (Request::getPostData('action')) {
-            case 'pagination':
-                $this->setPage($params['page']);
-                break;
-            case 'search':
-                $this->setSearch($params['table-search']);
-                break;
-        }
-    }
-
-    /**
-     * Get search
-     * @return string|null
-     */
-    public function getSearch(): ?string
-    {
-        return $this->search;
-    }
-
-    /**
-     * Set search
-     * @param string|null $search
-     * @return void
-     */
-    public function setSearch(?string $search): void
-    {
-        if (!is_null($search) && empty($search)) {
-            $search = null;
-        }
-
-        $this->search = $search;
-
-        TableReminder::saveData($this, ['search' => $this->search]);
+        return $this->slim;
     }
 
     /**
@@ -462,43 +499,6 @@ class Table
     public function setSlim(bool $slim): void
     {
         $this->slim = $slim;
-    }
-
-    /**
-     * Get slim
-     * @return bool
-     */
-    public function isSlim(): bool
-    {
-        return $this->slim;
-    }
-
-    /**
-     * Get model
-     * @return Model|null
-     */
-    public function getModel(): ?Model
-    {
-        return $this->model;
-    }
-
-    /**
-     * Set model
-     * @param Model|null $model
-     * @return void
-     */
-    public function setModel(?Model $model): void
-    {
-        $this->model = $model;
-    }
-
-    /**
-     * Get conditions
-     * @return array
-     */
-    public function getConditions(): array
-    {
-        return $this->conditions;
     }
 
     /**

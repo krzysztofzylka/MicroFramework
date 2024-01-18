@@ -42,14 +42,14 @@ class RenderFooter
         $spanTag = HtmlGenerator::createTag(
             'span',
             'Showing '
-                . HtmlGenerator::createTag(
-                    'span',
-                $fromCount. '-' . $maxCount,
-                    'font-semibold text-gray-900 dark:text-white'
-                )
-                . ' of '
-                . HtmlGenerator::createTag(
-                    'span',
+            . HtmlGenerator::createTag(
+                'span',
+                $fromCount . '-' . $maxCount,
+                'font-semibold text-gray-900 dark:text-white'
+            )
+            . ' of '
+            . HtmlGenerator::createTag(
+                'span',
                 $dataCount,
                 'font-semibold text-gray-900 dark:text-white'
             ),

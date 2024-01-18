@@ -67,12 +67,22 @@ class Table
      */
     protected bool $isAjaxAction = false;
 
+    /**
+     * Search data
+     * @var string|null
+     */
+    protected ?string $search = null;
+
     public function __construct()
     {
         $data = TableReminder::getData($this);
 
         if (isset($data['page'])) {
            $this->page = $data['page'];
+        }
+
+        if (isset($data['search'])) {
+            $this->search = $data['search'];
         }
     }
 
@@ -218,11 +228,38 @@ class Table
      */
     public function getData(bool $full = true): array
     {
+        if (!is_null($this->search)) {
+            $this->setData($this->search($this->data, $this->search));
+        }
+
         if (!$full) {
             return array_slice($this->data, (($this->page - 1) * $this->pageLimit), $this->pageLimit);
         }
 
         return $this->data;
+    }
+
+    /**
+     * Search method
+     * @param array $data
+     * @param string $search
+     * @return array
+     */
+    protected function search(array $data, string $search): array
+    {
+        $matches = [];
+        $regex = '/' . preg_quote($search, '/') . '/i';
+
+        foreach ($data as $row) {
+            foreach ($row as $value) {
+                if (preg_match($regex, $value)) {
+                    $matches[] = $row;
+                    break; // Przerywamy wewnętrzną pętlę po pierwszym dopasowaniu
+                }
+            }
+        }
+
+        return $matches;
     }
 
     /**
@@ -297,6 +334,10 @@ class Table
     public function setPages(int $pages): void
     {
         $this->pages = max($pages, 1);
+
+        if ($this->getPage() > $this->pages) {
+            $this->setPage($this->pages);
+        }
     }
 
     /**
@@ -325,7 +366,35 @@ class Table
             case 'pagination':
                 $this->setPage($params['page']);
                 break;
+            case 'search':
+                $this->setSearch($params['table-search']);
+                break;
         }
+    }
+
+    /**
+     * Get search
+     * @return string|null
+     */
+    public function getSearch(): ?string
+    {
+        return $this->search;
+    }
+
+    /**
+     * Set search
+     * @param string|null $search
+     * @return void
+     */
+    public function setSearch(?string $search): void
+    {
+        if (!is_null($search) && empty($search)) {
+            $search = null;
+        }
+
+        $this->search = $search;
+
+        TableReminder::saveData($this, ['search' => $this->search]);
     }
 
 }

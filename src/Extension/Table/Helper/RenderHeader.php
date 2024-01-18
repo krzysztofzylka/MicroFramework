@@ -4,6 +4,7 @@ namespace Krzysztofzylka\MicroFramework\Extension\Table\Helper;
 
 use Krzysztofzylka\HtmlGenerator\HtmlGenerator;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
+use Krzysztofzylka\MicroFramework\View;
 use Random\RandomException;
 
 class RenderHeader
@@ -57,13 +58,26 @@ class RenderHeader
             [
                 'type' => 'text',
                 'id' => 'table-search',
-                'placeholder' => 'Search'
+                'placeholder' => 'Search',
+                'name' => 'table-search',
+                'value' => $this->tableInstance->getSearch() ?? ''
+            ]
+        );
+
+        $formTag = HtmlGenerator::createTag(
+            'form',
+            $inputTag,
+            'p-0 m-0 ajaxtableform',
+            [
+                'action' => View::$GLOBAL_VARIABLES['here'],
+                'data-action' => RenderAction::generate($this->tableInstance, 'search'),
+                'method' => 'POST'
             ]
         );
 
         return HtmlGenerator::createTag(
             'div',
-            $svgIcon . $inputTag,
+            $svgIcon . $formTag,
             'relative'
         );
     }

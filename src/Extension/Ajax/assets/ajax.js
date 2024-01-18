@@ -178,9 +178,19 @@ $.fn.ajaxlink = function (event, data = null) {
             spinner.show();
 
             try {
-                config = JSON.parse($(this).attr('data-action'));
-                table = data.closest('#' + config.id);
-                // console.log({'data': data, 'config': config, 'table': table});
+                let params = {},
+                    config = JSON.parse($(this).attr('data-action')),
+                    table = data.closest('#' + config.id);
+
+                if ($(data).is('form')) {
+                    $.each($(data).serializeArray(), function(index, element) {
+                        params[element.name] = element.value;
+                    });
+
+                    config.params = params;
+                }
+
+                //console.log({'data': data, 'config': config, 'table': table});
 
                 $.ajax({
                     url: config.here,
@@ -224,6 +234,13 @@ $(function () {
 
     $(document).on('click', '.ajaxtable', function (e) {
         e.preventDefault();
+
+        $(this).ajaxlink('table', $(this));
+    });
+
+    $(document).on('submit', '.ajaxtableform', function (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
 
         $(this).ajaxlink('table', $(this));
     });

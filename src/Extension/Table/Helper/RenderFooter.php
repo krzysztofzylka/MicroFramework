@@ -37,12 +37,14 @@ class RenderFooter
             $maxCount = $this->tableInstance->getPage() * $this->tableInstance->getPageLimit();
         }
 
+        $fromCount = $maxCount === 0 ? 0 : (($this->tableInstance->getPage() - 1) * $this->tableInstance->getPageLimit() + 1);
+
         $spanTag = HtmlGenerator::createTag(
             'span',
             'Showing '
                 . HtmlGenerator::createTag(
                     'span',
-                    (($this->tableInstance->getPage() - 1) * $this->tableInstance->getPageLimit() + 1). '-' . $maxCount,
+                $fromCount. '-' . $maxCount,
                     'font-semibold text-gray-900 dark:text-white'
                 )
                 . ' of '
@@ -85,7 +87,6 @@ class RenderFooter
     /**
      * Render pagination li
      * @param string $value
-     * @param string $href
      * @param string $hrefClass
      * @param bool $currentPage
      * @return string

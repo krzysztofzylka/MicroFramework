@@ -103,6 +103,7 @@ class RenderTable
                 if (isset($column['value']) and is_callable($column['value'])) {
                     $cell = new Cell();
                     $cell->value = $value;
+                    $cell->data = $data;
 
                     $value = $column['value']($cell);
                 }

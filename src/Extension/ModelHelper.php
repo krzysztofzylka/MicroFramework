@@ -75,7 +75,7 @@ trait ModelHelper
             $modelClass->useTable = $modelClass->useTable ?? $modelClass->name;
             $modelClass->tableInstance = new Table($modelClass->useTable);
 
-            if ($this instanceof Model && $this->isolatorName === $modelClass->isolatorName) {
+            if (isset($this->isolator) && $this instanceof Model && $this->isolatorName === $modelClass->isolatorName) {
                 $modelClass->isolator = $this->isolator;
             }
         }

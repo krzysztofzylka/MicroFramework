@@ -419,7 +419,8 @@ class Table
     public function getId(): string
     {
         if (is_null($this->id)) {
-            $this->setId('table_' . str_replace('/', '_', substr(View::$GLOBAL_VARIABLES['here'], 1)));
+            $this->setId('table_' . str_replace(['/', '&dialogbox=1'], ['_', ''], substr(View::$GLOBAL_VARIABLES['here'], 1)));
+
         }
 
         return $this->id;

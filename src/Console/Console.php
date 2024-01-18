@@ -119,7 +119,7 @@ class Console
                     try {
                         $controller = new Controller();
                         $model = $controller->loadModel($schedule['model']);
-                        call_user_func_array([$model, $schedule['method']], json_decode($schedule['args'] ?? '{}', true));
+                        call_user_func_array([$model, $schedule['method']], $schedule['args'] ?? []);
                         $this->print('Success', 'green');
                     } catch (\Throwable $throwable) {
                         Log::log('Failed execute schedule', 'ERROR', ['message' => $throwable->getMessage()]);

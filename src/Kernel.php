@@ -102,7 +102,7 @@ class Kernel
      * @throws DebugBarException if an error occurs in the DebugBar initialization
      * @throws Throwable if an unhandled exception occurs during the execution of the controller method
      */
-    public function run(): void
+    public function run(?string $template = null): void
     {
         try {
             DebugBar::timeStart('run', 'Generate run data');
@@ -123,7 +123,7 @@ class Kernel
             if (isset($_GET['dialogbox']) || Request::isAjaxRequest()) {
                 View::loadTemplate('empty', ['content' => $content]);
             } else {
-                View::loadTemplate('template', ['content' => $content]);
+                View::loadTemplate($template ?? 'template', ['content' => $content]);
 
                 if ($_ENV['DEBUG']) {
                     echo DebugBar::renderHeader() . DebugBar::render();

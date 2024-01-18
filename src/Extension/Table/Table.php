@@ -241,6 +241,10 @@ class Table
         return $this->conditions;
     }
 
+    /**
+     * Generate limit
+     * @return string
+     */
     protected function generateLimit(): string
     {
         return (($this->getPage() - 1) * $this->getPageLimit()) . ', ' . $this->getPageLimit();

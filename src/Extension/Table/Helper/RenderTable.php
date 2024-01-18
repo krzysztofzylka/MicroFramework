@@ -96,13 +96,17 @@ class RenderTable
                 } elseif (isset($data[$columnDataKey]) && is_null($value)) {
                     $value = $data[$columnDataKey];
                 } elseif (!is_null($this->tableInstance->getModel()) && is_null($value)) {
-                    $generatedArray = '["' . implode('"]["', explode('.', $columnDataKey)) . '"]';
-                    $value = @eval('return $data' . $generatedArray . ';');
+                    try {
+                        $generatedArray = '["' . implode('"]["', explode('.', $columnDataKey)) . '"]';
+                        $value = @eval('return $data' . $generatedArray . ';');
+                    } catch (\Throwable) {
+                    }
                 }
 
                 if (isset($column['value']) and is_callable($column['value'])) {
                     $cell = new Cell();
-                    $cell->value = $value;
+                    $cell->value = $value ?? '';
+                    $cell->data = $data;
 
                     $value = $column['value']($cell);
                 }

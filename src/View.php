@@ -132,7 +132,13 @@ class View
         $this->twigEnvironment->setCache(false);
 
         $renderFunction = new \Twig\TwigFunction('render', function (string $action, array $variables = []) {
-            View::simpleLoad(Kernel::getPath('view') . '/' . $action, $variables);
+            $dir = Kernel::getPath('view');
+
+            if (str_starts_with($action, '/')) {
+                $dir = Kernel::getPath('project');
+            }
+
+            View::simpleLoad($dir . '/' . $action, $variables);
         });
         $this->twigEnvironment->addFunction($renderFunction);
     }
@@ -146,8 +152,15 @@ class View
      */
     public function render(): void
     {
-        DebugBar::addFrameworkMessage('Render view ' . ($this->filePath ?? $this->action), 'Render view');
         DebugBar::timeStart('render_view_' . spl_object_hash($this), 'Render view');
+
+        DebugBar::addFrameworkMessage([
+            'filePath' => $this->filePath ?? null,
+            'action' => $this->action,
+            'basename' => basename($this->filePath ?? ''),
+            'path' => basename($this->filePath ?? '')
+        ], 'Render view');
+
         self::$GLOBAL_VARIABLES['action'] = $this->action;
         $path = $this->action . '.twig';
         $variables = $this->variables + ['APP' => self::$GLOBAL_VARIABLES];

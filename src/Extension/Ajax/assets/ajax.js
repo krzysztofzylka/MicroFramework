@@ -180,7 +180,7 @@ $.fn.ajaxlink = function (event, data = null) {
             try {
                 config = JSON.parse($(this).attr('data-action'));
                 table = data.closest('#' + config.id);
-                console.log({'data': data, 'config': config, 'table': table});
+                // console.log({'data': data, 'config': config, 'table': table});
 
                 $.ajax({
                     url: config.here,

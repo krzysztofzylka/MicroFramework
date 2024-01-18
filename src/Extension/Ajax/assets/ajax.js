@@ -127,10 +127,11 @@ $.fn.ajaxlink = function (event, data = null) {
             }
 
             try {
-                if (data.pageReload) {
-                    let mainLoad = $('body:first').attr('data-load');
+                if (data.reloadPage) {
+                    let $content = $('.content'),
+                        mainLoad = $content.attr('data-load');
 
-                    $('main:first').load(mainLoad + '&dialogbox=1');
+                    $content.load(mainLoad + '&dialogbox=1');
                 }
             } catch (e) {
             }

@@ -25,7 +25,8 @@ class Response
         string $title = '',
         string $type = '',
         bool $dialogboxClose = false,
-        bool $dialogboxReload = false
+        bool $dialogboxReload = false,
+        bool $reloadPage = false
     ): never
     {
         $this->json([
@@ -36,7 +37,8 @@ class Response
             'dialog' => [
                 'close' => (int)$dialogboxClose,
                 'reload' => (int)$dialogboxReload
-            ]
+            ],
+            'reloadPage' => (int)$reloadPage
         ]);
     }
 

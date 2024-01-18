@@ -6,7 +6,7 @@
     </head>
     <body class="bg-white dark:bg-slate-800 dark:text-white p-3">
     {{ APP.template.body | raw }}
-        <div class="content">
+        <div class="content" data-load="{{ APP.here }}">
             {{ content | raw }}
         </div>
         {{ APP.template.footer | raw }}

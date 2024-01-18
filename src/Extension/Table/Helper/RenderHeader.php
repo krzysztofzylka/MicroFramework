@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Table\Helper;
 
+use Krzysztofzylka\Generator\Generator;
 use Krzysztofzylka\HtmlGenerator\HtmlGenerator;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
 use Krzysztofzylka\MicroFramework\View;
@@ -19,6 +20,7 @@ class RenderHeader
     /**
      * Constructor
      * @param Table $tableInstance
+     * @throws RandomException
      */
     public function __construct(Table $tableInstance)
     {
@@ -28,7 +30,6 @@ class RenderHeader
     /**
      * Render header
      * @return string
-     * @throws RandomException
      */
     public function render(): string
     {
@@ -42,39 +43,38 @@ class RenderHeader
     /**
      * Render actions
      * @return string
-     * @throws RandomException
      */
     private function renderActions(): string
     {
-        if (is_null($this->tableInstance->getActions())) {
-            return HtmlGenerator::createTag(
-                'div',
-                '',
-                'w-full md:w-1/2'
-            );
-        }
-
-        $span = HtmlGenerator::createTag(
-            'span',
-            'Action'
-        );
-
-        $svgIcon = '<svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/></svg>';
-
-        $button = HtmlGenerator::createTag(
-            'button',
-            $span . $svgIcon,
-            'inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700',
-            [
-                'id' => 'action-button',
-                'data-dropdown-toggle' => 'table-action-' . $this->tableInstance->getId(),
-                'type' => 'button'
-            ]
-        );
+//        if (is_null($this->tableInstance->getActions())) {
+//            return HtmlGenerator::createTag(
+//                'div',
+//                '',
+//                'w-full md:w-1/2'
+//            );
+//        }
+//
+//        $span = HtmlGenerator::createTag(
+//            'span',
+//            'Action'
+//        );
+//
+//        $svgIcon = '<svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/></svg>';
+//
+//        $button = HtmlGenerator::createTag(
+//            'button',
+//            $span . $svgIcon,
+//            'inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700',
+//            [
+//                'id' => 'action-button',
+//                'data-dropdown-toggle' => $this->actionButtonId,
+//                'type' => 'button'
+//            ]
+//        );
 
         return HtmlGenerator::createTag(
             'div',
-            $button . $this->renderActionButtons(),
+            $this->renderActionButtons(),
             'w-full md:w-1/2'
         );
     }
@@ -82,45 +82,41 @@ class RenderHeader
     /**
      * Render action buttons
      * @return string
-     * @throws RandomException
      */
     private function renderActionButtons(): string
     {
         $buttons = [];
 
         foreach ($this->tableInstance->getActions() as $href => $action) {
-            $url = HtmlGenerator::createTag(
+            $buttons[] = HtmlGenerator::createTag(
                 'a',
                 $action['name'],
-                'block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white ' . $action['class'],
+                'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 ' . $action['class'],
                 [
                     'href' => $href
                 ]
             );
-
-            $buttons[] = (string)HtmlGenerator::createTag(
-                'li',
-                $url
-            );
         }
 
-        $ul = HtmlGenerator::createTag(
-            'ul',
-            implode(PHP_EOL, $buttons),
-            'py-1 text-sm text-gray-700 dark:text-gray-200',
-            [
-                'aria-labelledby' => 'dropdownActionButton'
-            ]
-        );
-
-        return HtmlGenerator::createTag(
-            'div',
-            $ul,
-            'z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600',
-            [
-                'id' => 'table-action-' . $this->tableInstance->getId()
-            ]
-        );
+        return implode('', $buttons);
+//
+//        $ul = HtmlGenerator::createTag(
+//            'ul',
+//            implode(PHP_EOL, $buttons),
+//            'py-1 text-sm text-gray-700 dark:text-gray-200',
+//            [
+//                'aria-labelledby' => 'dropdownActionButton'
+//            ]
+//        );
+//
+//        return HtmlGenerator::createTag(
+//            'div',
+//            $ul,
+//            'z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600',
+//            [
+//                'id' => 'table-action-' . $this->tableInstance->getId()
+//            ]
+//        );
     }
 
     /**

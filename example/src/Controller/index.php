@@ -84,12 +84,27 @@ class index extends Controller
 //        }
 
         $table = new Table();
+        $table->addAction(
+            'Generate new data',
+            '/index/tableGenerate',
+            'ajaxlink'
+        );
         $table->addColumn('test.a', 'Test', null, ['width' => '200px']);
         $table->addColumn('test.b', 'Test2', function (Cell $cell) {
             return 'nowy tekst: ' . $cell->value;
         });
         $table->setModel($this->Test);
         echo $table;
+    }
+
+    public function tableGenerate()
+    {
+        $this->loadModel('test')->save([
+            'a' => Generator::uniqId(50),
+            'b' => Generator::uniqId(50)
+        ]);
+
+        $this->response->toast('success', reloadPage: true);
     }
 
 }

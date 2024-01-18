@@ -87,7 +87,7 @@ class RenderHeader
     {
         $buttons = [];
 
-        foreach ($this->tableInstance->getActions() as $href => $action) {
+        foreach ($this->tableInstance->getActions() ?? [] as $href => $action) {
             $buttons[] = HtmlGenerator::createTag(
                 'a',
                 $action['name'],

@@ -110,6 +110,10 @@ class View
                 'url' => $_ENV['URL'] . $_ENV['DEFAULT_CONTROLLER'] . '/' . $_ENV['DEFAULT_METHOD']
             ]
         );
+
+        if ($_ENV['DEBUG']) {
+            echo DebugBar::renderHeader() . DebugBar::render();
+        }
     }
 
     /**

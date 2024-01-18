@@ -3,13 +3,16 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Table;
 
 use Exception;
+use krzysztofzylka\DatabaseManager\Condition;
 use Krzysztofzylka\HtmlGenerator\HtmlGenerator;
+use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderFooter;
 use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderHeader;
 use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderTable;
 use Krzysztofzylka\MicroFramework\Extension\Table\Helper\TableReminder;
+use Krzysztofzylka\MicroFramework\Model;
 use Krzysztofzylka\MicroFramework\View;
 use Krzysztofzylka\Request\Request;
 
@@ -59,7 +62,7 @@ class Table
      * Pages
      * @var int
      */
-    protected int $pages = 1;
+    protected ?int $pages = null;
 
     /**
      * Is ajax action
@@ -78,6 +81,18 @@ class Table
      * @var bool
      */
     protected bool $slim = true;
+
+    /**
+     * Model
+     * @var Model|null
+     */
+    protected ?Model $model = null;
+
+    /**
+     * Conditions
+     * @var array
+     */
+    public array $conditions = [];
 
     /**
      * Constructor
@@ -234,6 +249,7 @@ class Table
      * Get data
      * @param bool $full
      * @return array
+     * @throws HiddenException
      */
     public function getData(bool $full = true): array
     {
@@ -241,11 +257,23 @@ class Table
             $this->setData($this->search($this->data, $this->search));
         }
 
-        if (!$full) {
+        if (!is_null($this->getModel())) {
+            $this->setData($this->getModel()->findAll(
+                $this->getConditions(),
+                null,
+                null,
+                $this->generateLimit()
+            ));
+        } elseif (!$full) {
             return array_slice($this->data, (($this->page - 1) * $this->pageLimit), $this->pageLimit);
         }
 
         return $this->data;
+    }
+
+    protected function generateLimit(): string
+    {
+        return (($this->getPage() - 1) * $this->getPageLimit()) . ', ' . $this->getPageLimit();
     }
 
     /**
@@ -256,6 +284,14 @@ class Table
      */
     protected function search(array $data, string $search): array
     {
+        if (!is_null($this->getModel())) {
+            foreach (array_keys($this->getColumns()) as $columnKey) {
+                $this->conditions['OR'][] = new Condition($columnKey, 'LIKE', '%' . htmlspecialchars($this->getSearch()) . '%');
+            }
+
+            return [];
+        }
+
         $matches = [];
         $regex = '/' . preg_quote($search, '/') . '/i';
 
@@ -275,11 +311,13 @@ class Table
      * Set data
      * @param array $data
      * @return void
+     * @throws HiddenException
      */
     public function setData(array $data): void
     {
         $this->data = $data;
-        $this->setPages(ceil(count($data) / $this->pageLimit));
+
+        $this->setPages(ceil($this->getDataCount() / $this->pageLimit));
     }
 
     /**
@@ -329,10 +367,15 @@ class Table
     /**
      * Get pages count
      * @return int
+     * @throws HiddenException
      */
     public function getPages(): int
     {
-        return $this->pages;
+        if (is_null($this->pages)) {
+            $this->setPages(ceil($this->getDataCount() / $this->pageLimit));
+        }
+
+        return $this->pages ?? 1;
     }
 
     /**
@@ -352,9 +395,14 @@ class Table
     /**
      * Get data count
      * @return int
+     * @throws HiddenException
      */
     public function getDataCount(): int
     {
+        if (!is_null($this->getModel())) {
+            return $this->getModel()->findCount($this->getConditions());
+        }
+
         return count($this->data);
     }
 
@@ -423,6 +471,44 @@ class Table
     public function isSlim(): bool
     {
         return $this->slim;
+    }
+
+    /**
+     * Get model
+     * @return Model|null
+     */
+    public function getModel(): ?Model
+    {
+        return $this->model;
+    }
+
+    /**
+     * Set model
+     * @param Model|null $model
+     * @return void
+     */
+    public function setModel(?Model $model): void
+    {
+        $this->model = $model;
+    }
+
+    /**
+     * Get conditions
+     * @return array
+     */
+    public function getConditions(): array
+    {
+        return $this->conditions;
+    }
+
+    /**
+     * Add condition
+     * @param Condition $condition
+     * @return void
+     */
+    public function addCondition(Condition $condition): void
+    {
+        $this->conditions[] = $condition;
     }
 
 }

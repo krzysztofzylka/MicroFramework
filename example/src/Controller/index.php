@@ -2,6 +2,7 @@
 
 namespace src\Controller;
 
+use krzysztofzylka\DatabaseManager\CreateTable;
 use Krzysztofzylka\Generator\Generator;
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;
@@ -63,20 +64,11 @@ class index extends Controller
 
     public function table(): void
     {
+        $this->loadModel('test');
         $table = new Table();
-        $table->addColumn('a', 'Test');
-        $table->addColumn('b', 'Test2');
-        $data = [];
-
-        for ($i=0; $i<=50; $i++) {
-            $data[] = [
-                'a' => 'a' . $i,
-                'b' => 'b' . $i
-            ];
-        }
-
-        $table->setData($data);
-
+        $table->addColumn('test.a', 'Test');
+        $table->addColumn('test.b', 'Test2');
+        $table->setModel($this->Test);
         echo $table;
     }
 

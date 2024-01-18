@@ -3,7 +3,9 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Table\Helper;
 
 use Krzysztofzylka\HtmlGenerator\HtmlGenerator;
+use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Extension\Table\Table;
+use Krzysztofzylka\Strings\Strings;
 
 class RenderTable
 {
@@ -26,6 +28,7 @@ class RenderTable
     /**
      * Render table
      * @return string
+     * @throws HiddenException
      */
     public function render(): string
     {
@@ -70,6 +73,7 @@ class RenderTable
     /**
      * Render table body
      * @return string
+     * @throws HiddenException
      */
     private function renderBody(): string
     {
@@ -83,6 +87,9 @@ class RenderTable
 
                 if (isset($data[$columnDataKey])) {
                     $value = $data[$columnDataKey];
+                } elseif (!is_null($this->tableInstance->getModel())) {
+                    $generatedArray = '["' . implode('"]["', explode('.', $columnDataKey)) . '"]';
+                    $value = @eval('return $data' . $generatedArray . ';');
                 }
 
                 $tdTags[] = HtmlGenerator::createTag(

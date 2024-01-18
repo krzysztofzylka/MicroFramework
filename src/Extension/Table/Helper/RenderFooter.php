@@ -67,13 +67,13 @@ class RenderFooter
      */
     private function renderPagination(): string
     {
-        $liTags = [$this->renderPaginationLi('<', '#', 'rounded-s-lg')];
+        $liTags = [$this->renderPaginationLi('<', 'rounded-s-lg')];
 
         for ($page = 1; $page <= $this->tableInstance->getPages(); $page++) {
-            $liTags[] = $this->renderPaginationLi($page, '#', '', $page === $this->tableInstance->getPage());
+            $liTags[] = $this->renderPaginationLi($page, '', $page === $this->tableInstance->getPage());
         }
 
-        $liTags[] = $this->renderPaginationLi('>', '#', 'rounded-e-lg');
+        $liTags[] = $this->renderPaginationLi('>', 'rounded-e-lg');
 
         return HtmlGenerator::createTag(
             'ul',
@@ -90,14 +90,22 @@ class RenderFooter
      * @param bool $currentPage
      * @return string
      */
-    private function renderPaginationLi(string $value, string $href, string $hrefClass = '', bool $currentPage = false): string
+    private function renderPaginationLi(string $value, string $hrefClass = '', bool $currentPage = false): string
     {
+        $pageValue = $value;
+
+        if ($pageValue === '<') {
+            $pageValue = $this->tableInstance->getPage() - 1;
+        } elseif ($pageValue === '>') {
+            $pageValue = $this->tableInstance->getPage() + 1;
+        }
+
         $aTag = HtmlGenerator::createTag(
             'a',
             $value,
-            'flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ' . $hrefClass,
+            'flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ajaxtable ' . $hrefClass,
             [
-                'href' => $href
+                'data-action' => RenderAction::generate($this->tableInstance, 'pagination', ['page' => $pageValue])
             ]
         );
 

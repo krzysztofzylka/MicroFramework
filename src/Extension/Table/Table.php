@@ -3,14 +3,14 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Table;
 
 use Exception;
-use Krzysztofzylka\Generator\Generator;
 use Krzysztofzylka\HtmlGenerator\HtmlGenerator;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderFooter;
 use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderHeader;
 use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderTable;
-use Random\RandomException;
+use Krzysztofzylka\MicroFramework\View;
+use Krzysztofzylka\Request\Request;
 
 /**
  * Table
@@ -61,14 +61,19 @@ class Table
     protected int $pages = 1;
 
     /**
+     * Is ajax action
+     * @var bool
+     */
+    protected bool $isAjaxAction = false;
+
+    /**
      * Get table ID
      * @return string The object's ID.
-     * @throws RandomException
      */
     public function getId(): string
     {
         if (is_null($this->id)) {
-            $this->setId(Generator::uuid());
+            $this->setId('table_' . str_replace('/', '_', substr(View::$GLOBAL_VARIABLES['here'], 1)));
         }
 
         return $this->id;
@@ -102,17 +107,27 @@ class Table
      */
     public function render(): string
     {
+        $this->ajaxAction();
+
         try {
-            return HtmlGenerator::createTag(
+            $tableContent = HtmlGenerator::createTag(
                 'div',
                 (new RenderHeader($this))->render()
-                    . (new RenderTable($this))->render()
-                    . (new RenderFooter($this))->render(),
+                . (new RenderTable($this))->render()
+                . (new RenderFooter($this))->render(),
                 'bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden',
                 [
                     'id' => $this->getId()
                 ]
             );
+
+            if ($this->isAjaxAction) {
+                ob_clean();
+                echo $tableContent;
+                exit;
+            }
+
+            return $tableContent;
         } catch (\Throwable $throwable) {
             Log::log('Failed table render', 'ERR', ['exception' => $throwable->getMessage()]);
 
@@ -279,6 +294,26 @@ class Table
     public function getDataCount(): int
     {
         return count($this->data);
+    }
+
+    /**
+     * Ajax actions
+     * @return void
+     */
+    protected function ajaxAction(): void
+    {
+        if (!Request::isPost() || !Request::isAjaxRequest() || Request::getPostData('layout') !== 'table') {
+            return;
+        }
+
+        $this->isAjaxAction = true;
+        $params = Request::getPostData('params');
+
+        switch (Request::getPostData('action')) {
+            case 'pagination':
+                $this->setPage($params['page']);
+                break;
+        }
     }
 
 }

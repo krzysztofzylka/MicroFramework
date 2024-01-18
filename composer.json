@@ -34,7 +34,7 @@
         "krzysztofzylka/file": "^1.0.0",
         "krzysztofzylka/console": "^1.0.0",
         "krzysztofzylka/env": "^1.0.0",
-        "krzysztofzylka/html-generator": "^2.0.4",
+        "krzysztofzylka/html-generator": "^2.0.5",
         "maximebf/debugbar": ">=1.0.0",
         "twig/twig": "^3.7",
         "dragonmantank/cron-expression": "^v3.3.3"

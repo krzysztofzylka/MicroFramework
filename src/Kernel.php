@@ -120,7 +120,7 @@ class Kernel
             $content = ob_get_clean();
             $this->loaderInstance->initAfterComponents();
 
-            if (isset($_GET['dialogbox'])) {
+            if (isset($_GET['dialogbox']) || Request::isAjaxRequest()) {
                 View::loadTemplate('empty', ['content' => $content]);
             } else {
                 View::loadTemplate('template', ['content' => $content]);

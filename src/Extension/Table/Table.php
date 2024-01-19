@@ -164,7 +164,9 @@ class Table
     {
         if (!is_null($this->getModel())) {
             foreach (array_keys($this->getColumns()) as $columnKey) {
-                $this->conditions['OR'][] = new Condition($columnKey, 'LIKE', '%' . htmlspecialchars($this->getSearch()) . '%');
+                if (str_contains($columnKey, '.')) {
+                    $this->conditions['OR'][] = new Condition($columnKey, 'LIKE', '%' . htmlspecialchars($this->getSearch()) . '%');
+                }
             }
 
             return [];

@@ -387,6 +387,18 @@ class Table
                 exit;
             }
 
+            DebugBar::addFrameworkMessage([
+                'id' => $this->getId(),
+                'model' => is_null($this->getModel()) ? false : $this->getModel()->name,
+                'pages' => $this->getPages(),
+                'page' => $this->getPage(),
+                'dataCount' => $this->getDataCount(),
+                'orderBy' => $this->getOrderBy(),
+                'search' => $this->getSearch(),
+                'conditions' => $this->getConditions(),
+                'actions' => $this->getActions(),
+                'columns' => $this->getColumns()
+            ], 'Render table');
             DebugBar::timeStop($debugId);
             return $tableContent;
         } catch (\Throwable $throwable) {

@@ -4,9 +4,11 @@ namespace Krzysztofzylka\MicroFramework\Extension\Table;
 
 use Exception;
 use krzysztofzylka\DatabaseManager\Condition;
+use Krzysztofzylka\Generator\Generator;
 use Krzysztofzylka\HtmlGenerator\HtmlGenerator;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
+use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderFooter;
 use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderHeader;
@@ -363,6 +365,8 @@ class Table
      */
     public function render(): string
     {
+        $debugId = Generator::uniqId();
+        DebugBar::timeStart($debugId, 'Render table');
         $this->ajaxAction();
 
         try {
@@ -383,6 +387,7 @@ class Table
                 exit;
             }
 
+            DebugBar::timeStop($debugId);
             return $tableContent;
         } catch (\Throwable $throwable) {
             Log::log('Failed table render', 'ERR', ['exception' => $throwable->getMessage()]);

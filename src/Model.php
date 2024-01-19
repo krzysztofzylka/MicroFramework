@@ -396,6 +396,23 @@ class Model
     }
 
     /**
+     * Magic __get
+     * @param string $name
+     * @return mixed|Model
+     */
+    public function __get(string $name): mixed
+    {
+        if (in_array($name, array_keys($this->models))) {
+            return $this->models[$name];
+        }
+
+        return trigger_error(
+            'Undefined model',
+            E_USER_WARNING
+        );
+    }
+
+    /**
      * Prepare the condition array for find operation.
      * If the condition is an array and the isolator property is set, add the isolator name and value to the condition array.
      * @param array|null &$condition The condition array to be prepared.
@@ -444,23 +461,6 @@ class Model
         }
 
         $this->autoBind = true;
-    }
-
-    /**
-     * Magic __get
-     * @param string $name
-     * @return mixed|Model
-     */
-    public function __get(string $name): mixed
-    {
-        if (in_array($name, array_keys($this->models))) {
-            return $this->models[$name];
-        }
-
-        return trigger_error(
-            'Undefined model',
-            E_USER_WARNING
-        );
     }
 
 }

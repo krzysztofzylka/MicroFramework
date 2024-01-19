@@ -10,6 +10,10 @@ use Exception;
 class NotFoundException extends Exception
 {
 
+    /**
+     * Constructor
+     * @param string $message
+     */
     public function __construct(string $message = "")
     {
         parent::__construct($message, 404);

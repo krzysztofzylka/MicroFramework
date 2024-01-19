@@ -25,18 +25,6 @@ class View
     public array $variables = [];
 
     /**
-     * View path
-     * @var string
-     */
-    private string $filePath;
-
-    /**
-     * Action
-     * @var ?string
-     */
-    private ?string $action = null;
-
-    /**
      * Twig file system loader instance
      * @var FilesystemLoader
      */
@@ -47,6 +35,18 @@ class View
      * @var Environment
      */
     public Environment $twigEnvironment;
+
+    /**
+     * View path
+     * @var string
+     */
+    private string $filePath;
+
+    /**
+     * Action
+     * @var ?string
+     */
+    private ?string $action = null;
 
     /**
      * Global Variables
@@ -130,16 +130,7 @@ class View
 
         $this->twigEnvironment->setCache(false);
 
-        $renderFunction = new \Twig\TwigFunction('render', function (string $action, array $variables = []) {
-            $dir = Kernel::getPath('view');
-
-            if (str_starts_with($action, '/')) {
-                $dir = Kernel::getPath('project');
-            }
-
-            View::simpleLoad($dir . '/' . $action, $variables);
-        });
-        $this->twigEnvironment->addFunction($renderFunction);
+        $this->loadTwigRenderFunction();
     }
 
     /**
@@ -275,5 +266,24 @@ class View
 
         self::simpleLoad($path, $variables);
     }
+
+    /**
+     * Load twig render function
+     * @return void
+     */
+    private function loadTwigRenderFunction(): void
+    {
+        $renderFunction = new \Twig\TwigFunction('render', function (string $action, array $variables = []) {
+            $dir = Kernel::getPath('view');
+
+            if (str_starts_with($action, '/')) {
+                $dir = Kernel::getPath('project');
+            }
+
+            View::simpleLoad($dir . '/' . $action, $variables);
+        });
+        $this->twigEnvironment->addFunction($renderFunction);
+    }
+
 
 }

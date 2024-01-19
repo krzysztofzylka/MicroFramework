@@ -27,6 +27,7 @@ class RenderFooter
     /**
      * Render footer
      * @return string
+     * @throws HiddenException
      */
     public function render(): string
     {

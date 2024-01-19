@@ -26,18 +26,4 @@ class public_files extends Controller
         $this->response->fileContents($path, 'text/javascript');
     }
 
-    /**
-     * Download vue file from view
-     * @param string $controller
-     * @param string $method
-     * @return void
-     * @throws NotFoundException
-     */
-    public function vue(string $controller, string $method): void
-    {
-        $path = Kernel::getPath('view') . '/' . htmlspecialchars($controller) . '/' . htmlspecialchars($method) . '.vue';
-
-        $this->response->fileContents($path, 'text/javascript');
-    }
-
 }

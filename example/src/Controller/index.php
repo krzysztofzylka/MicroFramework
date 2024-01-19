@@ -22,14 +22,12 @@ class index extends Controller
      */
     public function index(): void
     {
-        DebugBar::timeStart('controller');
         $this->dialogboxTitle = 'Test dialogbox';
         $this->loadModel('test');
         $this->set('variable', 'Test variable');
         DebugBar::addMessage($this->Test->findAll(), 'Find');
         $this->set('time', time());
         $this->loadView();
-        DebugBar::timeStop('controller');
     }
 
     public function response(): void

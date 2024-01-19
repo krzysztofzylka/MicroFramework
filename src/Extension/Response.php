@@ -18,6 +18,7 @@ class Response
      * @param string $type
      * @param bool $dialogboxClose
      * @param bool $dialogboxReload
+     * @param bool $reloadPage
      * @return never
      */
     public function toast(

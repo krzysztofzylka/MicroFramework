@@ -484,6 +484,7 @@ class Table
      * @param string $name
      * @param callable|string|null $value
      * @param array $attributes
+     * @param string|null $textAlign
      * @return void
      */
     public function addColumn(

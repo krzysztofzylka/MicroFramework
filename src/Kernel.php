@@ -11,6 +11,7 @@ use krzysztofzylka\DatabaseManager\Exception\ConnectException;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use Krzysztofzylka\Env\Env;
 use Krzysztofzylka\MicroFramework\Component\Loader;
+use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Ajax\Ajax;
@@ -98,8 +99,10 @@ class Kernel
 
     /**
      * Run the application
+     * @param string|null $template
      * @return void
-     * @throws DebugBarException if an error occurs in the DebugBar initialization
+     * @throws MicroFrameworkException
+     * @throws NotFoundException
      * @throws Throwable if an unhandled exception occurs during the execution of the controller method
      */
     public function run(?string $template = null): void
@@ -130,7 +133,8 @@ class Kernel
                 }
             }
         } catch (Throwable $exception) {
-            Log::log($exception->getMessage(), 'ERROR');
+            $exceptionMessage = $exception instanceof HiddenException ? $exception->getHiddenMessage() : $exception->getMessage();
+            Log::log($exceptionMessage, 'ERROR');
             DebugBar::addThrowable($exception);
 
             throw $exception;
@@ -185,15 +189,15 @@ class Kernel
      */
     private function loadEnv(): void
     {
+        if ($_ENV['URL'] === true) {
+            $_ENV['URL'] = 'http://' . $_SERVER['HTTP_HOST'] . '/';
+        }
+
         (new Env(__DIR__ . '/Default/.env'))->load();
         (new Env(self::$paths['env']))->load();
 
         if (file_exists(self::$paths['local_env'])) {
             (new Env(self::$paths['local_env']))->load();
-        }
-
-        if ($_ENV['URL'] === true) {
-            $_ENV['URL'] = 'http://' . $_SERVER['HTTP_HOST'] . '/';
         }
     }
 
@@ -213,6 +217,7 @@ class Kernel
             ini_set('display_errors', 1);
             ini_set('display_startup_errors', 1);
             error_reporting(E_ALL);
+
             (new DebugBar())->init();
         } else {
             ini_set('display_errors', 0);

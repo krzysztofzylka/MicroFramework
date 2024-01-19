@@ -11,7 +11,11 @@ use Throwable;
 class HiddenException extends Exception
 {
 
-    public string $hiddenMessage = '';
+    /**
+     * Hidden message
+     * @var string
+     */
+    protected string $hiddenMessage = '';
 
     /**
      * Get hidden message
@@ -22,11 +26,17 @@ class HiddenException extends Exception
         return $this->hiddenMessage;
     }
 
+    /**
+     * Constructor
+     * @param string $message
+     * @param int $code
+     * @param Throwable|null $previous
+     */
     public function __construct(string $message = "", int $code = 0, ?Throwable $previous = null)
     {
         $this->hiddenMessage = $message;
 
-        parent::__construct('An error occured', $code, $previous);
+        parent::__construct('An error occurred', $code, $previous);
     }
 
 }

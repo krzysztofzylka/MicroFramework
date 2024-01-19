@@ -43,7 +43,10 @@ class Route
             throw new NotFoundException('Method not found');
         }
 
+
+        DebugBar::timeStart('controller_' . spl_object_hash($class), 'Init controller');
         $class->$method(...$parameters);
+        DebugBar::timeStop('controller_' . spl_object_hash($class));
         DebugBar::timeStop('route_' . spl_object_hash($this));
 
         DebugBar::addFrameworkMessage($class, 'Controller object');

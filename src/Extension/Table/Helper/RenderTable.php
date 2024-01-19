@@ -111,11 +111,17 @@ class RenderTable
                     $value = $column['value']($cell);
                 }
 
-                $tdTags[] = HtmlGenerator::createTag(
+                $tdTag = HtmlGenerator::createTag(
                     'td',
                     $value ?? '',
                     'px-6 py-' . ($this->tableInstance->isSlim() ? '2' : '4')
                 );
+
+                if (isset($column['textAlign']) && $column['textAlign']) {
+                    $tdTag->addAttribute('style', 'text-align: ' . $column['textAlign'] . ';');
+                }
+
+                $tdTags[] = (string)$tdTag;
             }
 
             $dataTags[] = HtmlGenerator::createTag(

@@ -371,7 +371,7 @@ class Table
                 (new RenderHeader($this))->render()
                 . (new RenderTable($this))->render()
                 . (new RenderFooter($this))->render(),
-                'bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden',
+                'bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden overflow-x-auto',
                 [
                     'id' => $this->getId()
                 ]
@@ -394,6 +394,7 @@ class Table
     /**
      * Ajax actions
      * @return void
+     * @throws HiddenException
      */
     protected function ajaxAction(): void
     {
@@ -476,14 +477,23 @@ class Table
      * Add column
      * @param string $key
      * @param string $name
+     * @param callable|string|null $value
+     * @param array $attributes
      * @return void
      */
-    public function addColumn(string $key, string $name, null|callable|string $value = null, array $attributes = []): void
+    public function addColumn(
+        string $key,
+        string $name,
+        null|callable|string $value = null,
+        array $attributes = [],
+        ?string $textAlign = null
+    ): void
     {
         $this->columns[$key] = [
             'name' => $name,
             'attributes' => $attributes,
-            'value' => $value
+            'value' => $value,
+            'textAlign' => $textAlign
         ];
     }
 

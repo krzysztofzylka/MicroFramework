@@ -91,7 +91,16 @@ class index extends Controller
         );
         $table->addColumn('test.a', 'Test', null, ['width' => '200px']);
         $table->addColumn('test.b', 'Test2', function (Cell $cell) {
-            return 'nowy tekst: ' . $cell->value;
+            return $cell->html->link($cell->value, '#');
+        });
+        $table->addColumn('badge', 'Badge', function (Cell $cell) {
+            return $cell->html->badge('badge test', 'red', true);
+        }, ['width' => '200px'], textAlign: 'center');
+        $table->addColumn('progress', 'Progress', function (Cell $cell) {
+            return $cell->html->progressbar(82, 'yellow');
+        }, textAlign: 'right');
+        $table->addColumn('textcolor', 'Text color', function (Cell $cell) {
+            return $cell->html->textColor('color', 'green');
         });
         $table->setModel($this->Test);
         echo $table;

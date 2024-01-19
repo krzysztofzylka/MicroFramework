@@ -5,10 +5,10 @@ namespace Krzysztofzylka\MicroFramework;
 use Exception;
 use Krzysztofzylka\Arrays\Arrays;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
-use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Loader;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Extension\Response;
+use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
 use Krzysztofzylka\Request\Request;
 
 /**

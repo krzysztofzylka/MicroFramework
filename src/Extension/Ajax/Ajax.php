@@ -3,8 +3,8 @@
 namespace Krzysztofzylka\MicroFramework\Extension\Ajax;
 
 use Krzysztofzylka\File\File;
-use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Kernel;
+use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\View;
 
 class Ajax

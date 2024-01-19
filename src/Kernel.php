@@ -10,14 +10,14 @@ use krzysztofzylka\DatabaseManager\Enum\DatabaseType;
 use krzysztofzylka\DatabaseManager\Exception\ConnectException;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use Krzysztofzylka\Env\Env;
+use Krzysztofzylka\File\File;
 use Krzysztofzylka\MicroFramework\Component\Loader;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Ajax\Ajax;
-use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
-use Krzysztofzylka\File\File;
+use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
 use Krzysztofzylka\Request\Request;
 use Throwable;
 

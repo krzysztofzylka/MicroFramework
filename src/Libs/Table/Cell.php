@@ -1,8 +1,8 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\Extension\Table;
+namespace Krzysztofzylka\MicroFramework\Libs\Table;
 
-use Krzysztofzylka\MicroFramework\Extension\Table\Helper\Html;
+use Krzysztofzylka\MicroFramework\Libs\Table\Helper\Html;
 
 /**
  * Table cell

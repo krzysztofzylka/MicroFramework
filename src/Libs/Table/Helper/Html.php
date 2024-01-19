@@ -1,6 +1,6 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\Extension\Table\Helper;
+namespace Krzysztofzylka\MicroFramework\Libs\Table\Helper;
 
 use Krzysztofzylka\HtmlGenerator\HtmlGenerator;
 

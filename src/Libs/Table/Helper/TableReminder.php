@@ -1,8 +1,8 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\Extension\Table\Helper;
+namespace Krzysztofzylka\MicroFramework\Libs\Table\Helper;
 
-use Krzysztofzylka\MicroFramework\Extension\Table\Table;
+use Krzysztofzylka\MicroFramework\Libs\Table\Table;
 
 class TableReminder
 {

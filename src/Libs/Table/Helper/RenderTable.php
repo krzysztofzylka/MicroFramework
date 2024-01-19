@@ -1,11 +1,11 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\Extension\Table\Helper;
+namespace Krzysztofzylka\MicroFramework\Libs\Table\Helper;
 
 use Krzysztofzylka\HtmlGenerator\HtmlGenerator;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;
-use Krzysztofzylka\MicroFramework\Extension\Table\Cell;
-use Krzysztofzylka\MicroFramework\Extension\Table\Table;
+use Krzysztofzylka\MicroFramework\Libs\Table\Cell;
+use Krzysztofzylka\MicroFramework\Libs\Table\Table;
 
 class RenderTable
 {

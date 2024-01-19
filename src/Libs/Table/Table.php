@@ -1,6 +1,6 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\Extension\Table;
+namespace Krzysztofzylka\MicroFramework\Libs\Table;
 
 use Exception;
 use krzysztofzylka\DatabaseManager\Condition;
@@ -10,10 +10,10 @@ use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
-use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderFooter;
-use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderHeader;
-use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderTable;
-use Krzysztofzylka\MicroFramework\Extension\Table\Helper\TableReminder;
+use Krzysztofzylka\MicroFramework\Libs\Table\Helper\RenderFooter;
+use Krzysztofzylka\MicroFramework\Libs\Table\Helper\RenderHeader;
+use Krzysztofzylka\MicroFramework\Libs\Table\Helper\RenderTable;
+use Krzysztofzylka\MicroFramework\Libs\Table\Helper\TableReminder;
 use Krzysztofzylka\MicroFramework\Model;
 use Krzysztofzylka\MicroFramework\View;
 use Krzysztofzylka\Request\Request;
@@ -402,6 +402,7 @@ class Table
             DebugBar::timeStop($debugId);
             return $tableContent;
         } catch (\Throwable $throwable) {
+            DebugBar::addThrowable($throwable);
             Log::log('Failed table render', 'ERR', ['exception' => $throwable->getMessage()]);
 
             throw new MicroFrameworkException('Failed table render');

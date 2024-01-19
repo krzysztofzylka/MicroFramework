@@ -2,7 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension;
 
-use Krzysztofzylka\MicroFramework\Extension\Table\Table;
+use Krzysztofzylka\MicroFramework\Libs\Table\Table;
 
 class Loader
 {

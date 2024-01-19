@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use Krzysztofzylka\MicroFramework\Extension\Loader;
 use Krzysztofzylka\MicroFramework\Extension\ModelHelper;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
@@ -40,6 +41,12 @@ class Controller
      * @var Response
      */
     public Response $response;
+
+    /**
+     * Loader class
+     * @var Loader
+     */
+    public Loader $loader;
 
     /**
      * $_POST data

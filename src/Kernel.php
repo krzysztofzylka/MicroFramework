@@ -189,15 +189,15 @@ class Kernel
      */
     private function loadEnv(): void
     {
-        if ($_ENV['URL'] === true) {
-            $_ENV['URL'] = 'http://' . $_SERVER['HTTP_HOST'] . '/';
-        }
-
         (new Env(__DIR__ . '/Default/.env'))->load();
         (new Env(self::$paths['env']))->load();
 
         if (file_exists(self::$paths['local_env'])) {
             (new Env(self::$paths['local_env']))->load();
+        }
+
+        if ($_ENV['URL'] === true) {
+            $_ENV['URL'] = 'http://' . $_SERVER['HTTP_HOST'] . '/';
         }
     }
 

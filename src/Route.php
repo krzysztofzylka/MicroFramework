@@ -6,6 +6,7 @@ use Exception;
 use Krzysztofzylka\Arrays\Arrays;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
+use Krzysztofzylka\MicroFramework\Extension\Loader;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Extension\Response;
 use Krzysztofzylka\Request\Request;
@@ -32,6 +33,7 @@ class Route
         $class->name = $controller;
         $class->action = $method;
         $class->response = new Response();
+        $class->loader = new Loader();
         $class->data = Request::isPost() ? Arrays::escape($_POST) : null;
         DebugBar::timeStop('define_variables');
 

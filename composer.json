@@ -26,17 +26,17 @@
     "require": {
         "php": ">=8.2",
         "ext-pdo": "*",
-        "krzysztofzylka/database-manager": "^v1.0.30",
-        "krzysztofzylka/reflection": "^1.0.0",
+        "krzysztofzylka/database-manager": "^v1.0.31",
+        "krzysztofzylka/reflection": "^1.0.1",
         "krzysztofzylka/generator": "^1.0.0",
         "krzysztofzylka/strings": "^1.0.0",
-        "krzysztofzylka/request": "^1.0.0",
-        "krzysztofzylka/file": "^1.0.0",
-        "krzysztofzylka/console": "^1.0.0",
-        "krzysztofzylka/env": "^1.0.0",
+        "krzysztofzylka/request": "^1.0.1",
+        "krzysztofzylka/file": "^1.0.1",
+        "krzysztofzylka/console": "^1.0.1",
+        "krzysztofzylka/env": "^1.0.1",
         "krzysztofzylka/html-generator": "^2.0.5",
-        "maximebf/debugbar": ">=1.0.0",
-        "twig/twig": "^3.7",
+        "maximebf/debugbar": ">=1.19.1",
+        "twig/twig": "^3.8",
         "dragonmantank/cron-expression": "^v3.3.3"
     }
 }

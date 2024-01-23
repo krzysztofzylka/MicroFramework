@@ -7,9 +7,8 @@ use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
-use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Loader\FilesystemLoader;
+use Krzysztofzylka\MicroFramework\Libs\Twig\Twig;
+use Throwable;
 
 /**
  * Class View
@@ -17,36 +16,6 @@ use Twig\Loader\FilesystemLoader;
  * This class represents a view in*/
 class View
 {
-
-    /**
-     * Variables
-     * @var array
-     */
-    public array $variables = [];
-
-    /**
-     * Twig file system loader instance
-     * @var FilesystemLoader
-     */
-    public FilesystemLoader $twigFileSystemLoader;
-
-    /**
-     * Twig environment instance
-     * @var Environment
-     */
-    public Environment $twigEnvironment;
-
-    /**
-     * View path
-     * @var string
-     */
-    private string $filePath;
-
-    /**
-     * Action
-     * @var ?string
-     */
-    private ?string $action = null;
 
     /**
      * Global Variables
@@ -61,6 +30,30 @@ class View
             'footer' => ''
         ]
     ];
+
+    /**
+     * Variables
+     * @var array
+     */
+    public array $variables = [];
+
+    /**
+     * View path
+     * @var string
+     */
+    private string $filePath;
+
+    /**
+     * Action
+     * @var ?string
+     */
+    private ?string $action = null;
+
+    /**
+     * Twig instance
+     * @var Twig
+     */
+    private Twig $twig;
 
     /**
      * Loads a view file and renders it with the specified variables.
@@ -81,12 +74,12 @@ class View
 
     /**
      * Renders an error page.
-     * @param \Throwable $throwable The throwable that caused the error.
+     * @param Throwable $throwable The throwable that caused the error.
      * @return void
      * @throws MicroFrameworkException
      * @throws NotFoundException
      */
-    public static function renderErrorPage(\Throwable $throwable): void
+    public static function renderErrorPage(Throwable $throwable): void
     {
         ob_clean();
         $code = $throwable->getCode() > 0 ? $throwable->getCode() : 500;
@@ -119,20 +112,10 @@ class View
 
     /**
      * Constructor
-     * @throws LoaderError
      */
     public function __construct()
     {
-        $this->twigFileSystemLoader = new FilesystemLoader();
-        $this->twigFileSystemLoader->addPath(Kernel::getPath('view'));
-
-        $this->twigEnvironment = new Environment($this->twigFileSystemLoader, [
-            'cache' => Kernel::getPath('storage') . '/cache/twig',
-        ]);
-
-        $this->twigEnvironment->setCache(false);
-
-        $this->loadTwigRenderFunction();
+        $this->twig = new Twig();
     }
 
     /**
@@ -159,7 +142,7 @@ class View
 
         if ($this->filePath ?? false) {
             $path = basename($this->filePath);
-            $this->twigFileSystemLoader->setPaths(dirname($this->filePath));
+            $this->twig->setPaths(dirname($this->filePath));
         }
 
         DebugBar::addViewMessage([
@@ -173,7 +156,7 @@ class View
         }
 
         try {
-            echo $this->twigEnvironment->render($path, $variables);
+            echo $this->twig->render($path, $variables);
         } catch (Exception $exception) {
             Log::log('View template exception', 'ERR', ['exception' => $exception->getMessage()]);
 
@@ -268,24 +251,5 @@ class View
 
         self::simpleLoad($path, $variables);
     }
-
-    /**
-     * Load twig render function
-     * @return void
-     */
-    private function loadTwigRenderFunction(): void
-    {
-        $renderFunction = new \Twig\TwigFunction('render', function (string $action, array $variables = []) {
-            $dir = Kernel::getPath('view');
-
-            if (str_starts_with($action, '/')) {
-                $dir = Kernel::getPath('project');
-            }
-
-            View::simpleLoad($dir . '/' . $action, $variables);
-        });
-        $this->twigEnvironment->addFunction($renderFunction);
-    }
-
 
 }

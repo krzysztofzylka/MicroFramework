@@ -1,10 +1,11 @@
+{% import '_macro/tailwind.twig' as tailwind %}
 {{ variable }}<br />
-<a class="ajaxlink" href="/index/index">Dialogbox</a><br />
-<a class="ajaxlink" href="/index/response">Response</a><br />
-<a class="ajaxlink" href="/index/toast">Toast</a><br />
-<a class="ajaxlink" href="/index/toastreload">Dialogbox reload</a><br />
-<a class="ajaxlink" href="/index/form">Dialogbox with form</a><br />
-<a href="/index/table">Table</a>
+{{ tailwind.link('Dialogbox', '/index/index', 'ajaxlink') }}<br />
+{{ tailwind.link('Response', '/index/response', 'ajaxlink') }}<br />
+{{ tailwind.link('Toast', '/index/toast', 'ajaxlink') }}<br />
+{{ tailwind.link('Dialogbox reload', '/index/toastreload', 'ajaxlink') }}<br />
+{{ tailwind.link('Dialogbox with form', '/index/form', 'ajaxlink') }}<br />
+{{ tailwind.link('Table', '/index/table') }}<br />
 
 <hr />
 Time: {{ time }}

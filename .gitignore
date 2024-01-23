@@ -1,6 +1,10 @@
 /vendor/
-composer.lock
 .idea
-example/storage/logs/*
 /src/.phpdoc
 composer.phar
+composer.lock
+docker-compose.yml
+example/local.env
+example/storage/logs/*
+example/public/assets/ajax
+example/public/vendor

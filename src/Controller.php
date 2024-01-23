@@ -73,14 +73,15 @@ class Controller
      * @throws MicroFrameworkException
      * @throws NotFoundException
      */
-    public function loadView(?string $action = null): bool
+    public function loadView(?array $variables = [], ?string $action = null): bool
     {
         DebugBar::timeStart('view_' . spl_object_hash($this), 'Load view');
+        
         $action = $action ?? ($this->name . '/' . $this->action);
 
         /** @var View $view */
         $view = new $_ENV['CLASS_VIEW']();
-        $view->variables = $this->viewVariables;
+        $view->variables = array_merge($this->viewVariables, $variables);
         $view->setAction($action);
 
         View::$GLOBAL_VARIABLES['dialogbox'] = [

@@ -2,17 +2,17 @@
 
 namespace Krzysztofzylka\MicroFramework\Console;
 
-use Krzysztofzylka\MicroFramework\Controller;
-use Krzysztofzylka\MicroFramework\Extension\Log\Log;
-use Krzysztofzylka\MicroFramework\Kernel;
-use Krzysztofzylka\Reflection\Reflection;
+use Cron\CronExpression;
 use Krzysztofzylka\Console\Args as ConsoleLibrary;
 use Krzysztofzylka\Console\Generator\Help;
 use Krzysztofzylka\Console\Generator\Table;
 use Krzysztofzylka\Console\Prints;
 use Krzysztofzylka\File\File;
+use Krzysztofzylka\MicroFramework\Controller;
+use Krzysztofzylka\MicroFramework\Kernel;
+use Krzysztofzylka\MicroFramework\Libs\Log\Log;
+use Krzysztofzylka\Reflection\Reflection;
 use ReflectionException;
-use Cron\CronExpression;
 
 /**
  * Console class

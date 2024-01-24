@@ -1,6 +1,6 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\Extension\Log;
+namespace Krzysztofzylka\MicroFramework\Libs\Log;
 
 use DateTime;
 use Exception;
@@ -10,7 +10,6 @@ use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
 
 /**
  * Logs
- * @package Extension\Log
  */
 class Log
 {

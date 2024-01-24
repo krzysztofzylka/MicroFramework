@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework;
 
+use Exception;
 use krzysztofzylka\DatabaseManager\Condition;
 use krzysztofzylka\DatabaseManager\Enum\BindType;
 use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
@@ -12,6 +13,7 @@ use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\ModelHelper;
 use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
+use Krzysztofzylka\MicroFramework\Libs\Log\Log;
 use Throwable;
 
 /**
@@ -461,6 +463,19 @@ class Model
         }
 
         $this->autoBind = true;
+    }
+
+    /**
+     * Logs a message.
+     * @param string $message The message to be logged.
+     * @param string $level The log level of the message (default: 'INFO').
+     * @param array $content Additional content to be logged (default: []).
+     * @return bool Returns true if the message was successfully logged, false otherwise.
+     * @throws Exception
+     */
+    public function log(string $message, string $level = 'INFO', array $content = []): bool
+    {
+        return Log::log($message, $level, $content);
     }
 
 }

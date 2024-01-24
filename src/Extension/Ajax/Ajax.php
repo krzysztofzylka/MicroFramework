@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework\Extension\Ajax;
 
+use Exception;
 use Krzysztofzylka\File\File;
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
@@ -10,6 +11,10 @@ use Krzysztofzylka\MicroFramework\View;
 class Ajax
 {
 
+    /**
+     * Init ajax
+     * @throws Exception
+     */
     public static function load(): void
     {
         View::addJsScript('https://code.jquery.com/jquery-3.7.1.min.js');

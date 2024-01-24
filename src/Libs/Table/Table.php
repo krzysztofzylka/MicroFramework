@@ -17,6 +17,7 @@ use Krzysztofzylka\MicroFramework\Libs\Table\Helper\TableReminder;
 use Krzysztofzylka\MicroFramework\Model;
 use Krzysztofzylka\MicroFramework\View;
 use Krzysztofzylka\Request\Request;
+use Throwable;
 
 /**
  * Table
@@ -161,6 +162,7 @@ class Table
      * @param array $data
      * @param string $search
      * @return array
+     * @throws Throwable
      */
     protected function search(array $data, string $search): array
     {
@@ -179,12 +181,22 @@ class Table
 
         foreach ($data as $row) {
             foreach ($row as $value) {
-                if (preg_match($regex, $value)) {
-                    $matches[] = $row;
-                    break; // Przerywamy wewnętrzną pętlę po pierwszym dopasowaniu
+                try {
+                    if (is_string($value) && preg_match($regex, $value)) {
+                        $matches[] = $row;
+
+                        break;
+                    }
+                } catch (Throwable $throwable) {
+                    DebugBar::addThrowable($throwable);
+                    Log::log('Table search fail', 'INFO', ['value' => $value, 'regex' => $regex, 'search' => $search]);
+                    TableReminder::clear($this);
+
+                    throw $throwable;
                 }
             }
         }
+
 
         return $matches;
     }
@@ -401,7 +413,7 @@ class Table
             ], 'Render table');
             DebugBar::timeStop($debugId);
             return $tableContent;
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             DebugBar::addThrowable($throwable);
             Log::log('Failed table render', 'ERR', ['exception' => $throwable->getMessage()]);
 

@@ -10,7 +10,7 @@ use Krzysztofzylka\MicroFramework\View;
 class Ajax
 {
 
-    public static function load()
+    public static function load(): void
     {
         View::addJsScript('https://code.jquery.com/jquery-3.7.1.min.js');
         View::addJsScript('https://code.jquery.com/ui/1.13.1/jquery-ui.min.js');

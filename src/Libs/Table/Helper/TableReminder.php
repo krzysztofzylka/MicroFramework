@@ -8,6 +8,16 @@ class TableReminder
 {
 
     /**
+     * Clear data
+     * @param Table $tableInstance
+     * @return void
+     */
+    public static function clear(Table $tableInstance): void
+    {
+        unset($_SESSION[self::generateKey($tableInstance)]);
+    }
+
+    /**
      * Save data
      * @param Table $tableInstance
      * @param array $newData

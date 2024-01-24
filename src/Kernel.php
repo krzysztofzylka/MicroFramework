@@ -197,7 +197,11 @@ class Kernel
         }
 
         if ($_ENV['URL'] === true) {
-            $_ENV['URL'] = 'http://' . $_SERVER['HTTP_HOST'] . '/';
+            $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
+
+            $_ENV['URL'] = $protocol . '://' . $_SERVER['HTTP_HOST'] . '/';
+        } elseif (str_ends_with($_ENV['URL'], '/')) {
+            $_ENV['URL'] .= '/';
         }
     }
 

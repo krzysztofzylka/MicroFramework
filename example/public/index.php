@@ -13,5 +13,6 @@ try {
     $kernel = new \Krzysztofzylka\MicroFramework\Kernel(__DIR__ . '/..');
     $kernel->run();
 } catch (Throwable $exception) {
+    \Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar::addThrowable($exception);
     \Krzysztofzylka\MicroFramework\View::renderErrorPage($exception);
 }

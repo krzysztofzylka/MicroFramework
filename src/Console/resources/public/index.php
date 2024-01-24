@@ -3,10 +3,6 @@
 use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\View;
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 ob_start();
 session_start();
 
@@ -16,6 +12,8 @@ try {
     $kernel = new \Krzysztofzylka\MicroFramework\Kernel(__DIR__ . '/..');
     $kernel->run();
 } catch (Throwable $exception) {
+    DebugBar::addThrowable($exception);
+
     View::renderErrorPage($exception);
 }
 

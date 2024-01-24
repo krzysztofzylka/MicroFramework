@@ -78,7 +78,7 @@ $.fn.dialogbox = function (event = 'create', config = {}) {
             switch (_bootstrapLayout) {
                 case 'tailwind':
                     config.dialogClasses = {
-                        "ui-dialog": "relative bg-white rounded-lg shadow dark:bg-gray-700",
+                        "ui-dialog": "absolute bg-white rounded-lg shadow dark:bg-gray-700",
                         "ui-dialog-titlebar": "flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600",
                         "ui-dialog-title": "text-xl font-semibold text-gray-900 dark:text-white",
                         "ui-dialog-titlebar-close": "text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white",
@@ -93,6 +93,7 @@ $.fn.dialogbox = function (event = 'create', config = {}) {
                 title: config.title,
                 width: config.width,
                 classes: config.dialogClasses,
+                position: { my: "center", at: "center", of: window },
                 resize: function () {
                     switch (_bootstrapLayout) {
                         case 'bootstrap':

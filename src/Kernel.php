@@ -12,7 +12,6 @@ use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use Krzysztofzylka\Env\Env;
 use Krzysztofzylka\File\File;
 use Krzysztofzylka\MicroFramework\Component\Loader;
-use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Ajax\Ajax;
@@ -92,8 +91,10 @@ class Kernel
             DebugBar::timeStart('component', 'Init components');
             $this->loaderInstance->initComponents();
             DebugBar::timeStop('component');
-        } catch (Throwable $exception) {
-            throw new MicroFrameworkException($exception->getMessage());
+        } catch (Throwable $throwable) {
+            Log::throwableLog($throwable, 'Init kernel failed');
+
+            throw new MicroFrameworkException($throwable->getMessage());
         }
     }
 
@@ -133,8 +134,7 @@ class Kernel
                 }
             }
         } catch (Throwable $exception) {
-            $exceptionMessage = $exception instanceof HiddenException ? $exception->getHiddenMessage() : $exception->getMessage();
-            Log::log($exceptionMessage, 'ERROR');
+            Log::throwableLog($exception, 'Run kernel error');
             DebugBar::addThrowable($exception);
 
             throw $exception;
@@ -292,6 +292,7 @@ class Kernel
         } catch (DatabaseManagerException $exception) {
             DebugBar::addThrowable($exception);
             DebugBar::addFrameworkMessage($exception->getHiddenMessage(), 'ERROR');
+            Log::throwableLog($exception, 'Connect database error');
 
             throw $exception;
         }

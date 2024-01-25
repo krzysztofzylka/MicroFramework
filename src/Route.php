@@ -77,7 +77,8 @@ class Route
         try {
             return new $className();
         } catch (Exception $exception) {
-            Log::log('Fail load controller', 'ERROR', ['exception' => $exception->getMessage()]);
+            Log::throwableLog($exception, 'Load controller error');
+            DebugBar::addThrowable($exception);
 
             throw new NotFoundException('Controller not found');
         }

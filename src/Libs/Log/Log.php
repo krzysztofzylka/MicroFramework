@@ -5,8 +5,10 @@ namespace Krzysztofzylka\MicroFramework\Libs\Log;
 use DateTime;
 use Exception;
 use Krzysztofzylka\Generator\Generator;
+use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
+use Throwable;
 
 /**
  * Logs
@@ -71,6 +73,43 @@ class Log
         } catch (Exception) {
             return false;
         }
+    }
+
+    /**
+     * Log throwable error
+     * @param Throwable $throwable
+     * @param string|null $message
+     * @return bool
+     * @throws Exception
+     */
+    public static function throwableLog(Throwable $throwable, ?string $message = 'Throwable error'): bool
+    {
+        $data = self::generateDataForThrowable($throwable);
+
+        if ($throwable->getPrevious() instanceof Throwable) {
+            $data['previous'] = self::generateDataForThrowable($throwable->getPrevious());
+        }
+
+
+        return self::log(
+            $message,
+            'ERROR',
+            $data
+        );
+    }
+
+    /**
+     * @param Throwable $throwable
+     * @return array
+     */
+    private static function generateDataForThrowable(Throwable $throwable): array
+    {
+        return [
+            'message' => $throwable->getMessage(),
+            'hidden' => $throwable instanceof HiddenException ? $throwable->getHiddenMessage() : null,
+            'code' => $throwable->getCode(),
+            'trace' => $throwable->getTraceAsString()
+        ];
     }
 
     /**

@@ -158,7 +158,8 @@ class View
         try {
             echo $this->twig->render($path, $variables);
         } catch (Exception $exception) {
-            Log::log('View template exception', 'ERR', ['exception' => $exception->getMessage()]);
+            Log::throwableLog($exception, 'View template exception');
+            DebugBar::addThrowable($exception);
 
             throw new MicroFrameworkException($exception->getMessage());
         }

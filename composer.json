@@ -16,12 +16,15 @@
     ],
     "scripts": {
         "post-install-cmd": [
-            "cp src/Console/microframework.php vendor/bin/microframework"
+            "cp bin/microframework vendor/bin/microframework"
         ],
         "post-update-cmd": [
-            "cp src/Console/microframework.php vendor/bin/microframework"
+            "cp bin/microframework vendor/bin/microframework"
         ]
     },
+    "bin": [
+        "bin/microframework"
+    ],
     "funding": [],
     "require": {
         "php": ">=8.2",

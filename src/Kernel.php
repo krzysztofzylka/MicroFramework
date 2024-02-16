@@ -29,6 +29,12 @@ class Kernel
 {
 
     /**
+     * Silent mode
+     * @var bool
+     */
+    public static bool $silent = false;
+
+    /**
      * Loader instance
      * @var Loader
      */
@@ -162,20 +168,22 @@ class Kernel
         self::$paths['assets'] = $this->projectPath . '/public/assets';
         self::$paths['components_config'] = $this->projectPath . '/component.json';
 
-        foreach (self::$paths as $key => $path) {
-            if (str_contains($path, '.')) {
-                if (!file_exists($path)) {
-                    $value = null;
+        if (!self::$silent) {
+            foreach (self::$paths as $key => $path) {
+                if (str_contains($path, '.')) {
+                    if (!file_exists($path)) {
+                        $value = null;
 
-                    if ($key === 'components_config') {
-                        $value = json_encode(['components' => []]);
+                        if ($key === 'components_config') {
+                            $value = json_encode(['components' => []]);
+                        }
+
+                        File::touch($path, $value);
                     }
-
-                    File::touch($path, $value);
-                }
-            } else {
-                if (!is_dir($path)) {
-                    File::mkdir($path);
+                } else {
+                    if (!is_dir($path)) {
+                        File::mkdir($path);
+                    }
                 }
             }
         }

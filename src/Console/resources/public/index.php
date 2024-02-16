@@ -1,6 +1,6 @@
 <?php
 
-use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
+use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\View;
 
 ob_start();

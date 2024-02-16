@@ -1,6 +1,6 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\Libs\DebugBar;
+namespace Krzysztofzylka\MicroFramework\Extension\DebugBar;
 
 use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DataCollector\MessagesCollector;

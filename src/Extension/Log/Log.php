@@ -1,13 +1,13 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\Libs\Log;
+namespace Krzysztofzylka\MicroFramework\Extension\Log;
 
 use DateTime;
 use Exception;
 use Krzysztofzylka\Generator\Generator;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;
+use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Kernel;
-use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
 use Throwable;
 
 /**

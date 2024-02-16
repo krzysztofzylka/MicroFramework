@@ -11,9 +11,9 @@ use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
+use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
+use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Extension\ModelHelper;
-use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
-use Krzysztofzylka\MicroFramework\Libs\Log\Log;
 use Throwable;
 
 /**

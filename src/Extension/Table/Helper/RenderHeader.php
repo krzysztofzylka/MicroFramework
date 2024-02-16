@@ -1,9 +1,9 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\Libs\Table\Helper;
+namespace Krzysztofzylka\MicroFramework\Extension\Table\Helper;
 
 use Krzysztofzylka\HtmlGenerator\HtmlGenerator;
-use Krzysztofzylka\MicroFramework\Libs\Table\Table;
+use Krzysztofzylka\MicroFramework\Extension\Table\Table;
 use Krzysztofzylka\MicroFramework\View;
 
 class RenderHeader

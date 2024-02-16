@@ -1,11 +1,12 @@
 <?php
 
+namespace Krzysztofzylka\MicroFramework\Extension\Twig\CustomFunctions;
+
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\MicroFramework\View;
 use Twig\Environment;
 
-return new class()
-{
+return new class() {
 
     public function load(Environment $twigEnvironment): void
     {

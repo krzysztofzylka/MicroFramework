@@ -1,6 +1,6 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\Libs\Table;
+namespace Krzysztofzylka\MicroFramework\Extension\Table;
 
 use Exception;
 use krzysztofzylka\DatabaseManager\Condition;
@@ -8,12 +8,12 @@ use Krzysztofzylka\Generator\Generator;
 use Krzysztofzylka\HtmlGenerator\HtmlGenerator;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
-use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
-use Krzysztofzylka\MicroFramework\Libs\Log\Log;
-use Krzysztofzylka\MicroFramework\Libs\Table\Helper\RenderFooter;
-use Krzysztofzylka\MicroFramework\Libs\Table\Helper\RenderHeader;
-use Krzysztofzylka\MicroFramework\Libs\Table\Helper\RenderTable;
-use Krzysztofzylka\MicroFramework\Libs\Table\Helper\TableReminder;
+use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
+use Krzysztofzylka\MicroFramework\Extension\Log\Log;
+use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderFooter;
+use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderHeader;
+use Krzysztofzylka\MicroFramework\Extension\Table\Helper\RenderTable;
+use Krzysztofzylka\MicroFramework\Extension\Table\Helper\TableReminder;
 use Krzysztofzylka\MicroFramework\Model;
 use Krzysztofzylka\MicroFramework\View;
 use Krzysztofzylka\Request\Request;

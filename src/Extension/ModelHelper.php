@@ -8,8 +8,8 @@ use krzysztofzylka\DatabaseManager\Transaction;
 use Krzysztofzylka\Generator\Generator;
 use Krzysztofzylka\MicroFramework\Controller;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
-use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
-use Krzysztofzylka\MicroFramework\Libs\Log\Log;
+use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
+use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Model;
 use Krzysztofzylka\Strings\Strings;
 

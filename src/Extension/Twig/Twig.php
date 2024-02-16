@@ -1,11 +1,11 @@
 <?php
 
-namespace Krzysztofzylka\MicroFramework\Libs\Twig;
+namespace Krzysztofzylka\MicroFramework\Extension\Twig;
 
 use Krzysztofzylka\File\File;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
+use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Kernel;
-use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;

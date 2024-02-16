@@ -4,9 +4,9 @@ namespace Krzysztofzylka\MicroFramework\Component;
 
 use Exception;
 use Krzysztofzylka\Env\Env;
+use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
+use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Kernel;
-use Krzysztofzylka\MicroFramework\Libs\DebugBar\DebugBar;
-use Krzysztofzylka\MicroFramework\Libs\Log\Log;
 use Krzysztofzylka\Reflection\Reflection;
 use Throwable;
 

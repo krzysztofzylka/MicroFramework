@@ -211,6 +211,14 @@ class Kernel
         }
 
         if ($_ENV['URL'] === true) {
+            if (!isset($_SERVER['HTTPS'])) {
+                $_SERVER['HTTPS'] = 'off';
+            }
+
+            if (!isset($_SERVER['SERVER_PORT'])) {
+                $_SERVER['SERVER_PORT'] = 80;
+            }
+
             $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
 
             $_ENV['URL'] = $protocol . '://' . $_SERVER['HTTP_HOST'] . '/';

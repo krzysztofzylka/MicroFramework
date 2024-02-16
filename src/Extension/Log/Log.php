@@ -4,6 +4,8 @@ namespace Krzysztofzylka\MicroFramework\Extension\Log;
 
 use DateTime;
 use Exception;
+use krzysztofzylka\DatabaseManager\DatabaseManager;
+use krzysztofzylka\DatabaseManager\Exception\DatabaseManagerException;
 use Krzysztofzylka\Generator\Generator;
 use Krzysztofzylka\MicroFramework\Exception\HiddenException;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
@@ -99,14 +101,24 @@ class Log
     }
 
     /**
+     * Generate data from throwable
      * @param Throwable $throwable
      * @return array
      */
     private static function generateDataForThrowable(Throwable $throwable): array
     {
+        $last_sql = '';
+
+        if ($throwable instanceof DatabaseManagerException) {
+            $last_sql = DatabaseManager::getLastSql();
+        }
+
         return [
             'message' => $throwable->getMessage(),
-            'hidden' => $throwable instanceof HiddenException ? $throwable->getHiddenMessage() : null,
+            'hidden' => $throwable instanceof HiddenException || $throwable instanceof DatabaseManagerException
+                ? $throwable->getHiddenMessage()
+                : null,
+            'last_sql' => $last_sql,
             'code' => $throwable->getCode(),
             'trace' => $throwable->getTraceAsString()
         ];

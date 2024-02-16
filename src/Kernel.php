@@ -15,6 +15,7 @@ use Krzysztofzylka\MicroFramework\Component\Loader;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Exception\NotFoundException;
 use Krzysztofzylka\MicroFramework\Extension\Ajax\Ajax;
+use Krzysztofzylka\MicroFramework\Extension\Authorization\Account;
 use Krzysztofzylka\MicroFramework\Extension\DebugBar\DebugBar;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\Request\Request;
@@ -94,6 +95,10 @@ class Kernel
             $this->initConfigurations();
             $this->autoload();
             $this->connectDatabase();
+
+            if ($_ENV['DATABASE']) {
+                Account::init();
+            }
 
             DebugBar::timeStart('component', 'Init components');
             $this->loaderInstance->initComponents();

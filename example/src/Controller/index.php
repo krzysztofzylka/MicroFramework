@@ -23,7 +23,6 @@ class index extends Controller
         $this->dialogboxTitle = 'Test dialogbox';
         $this->loadModel('test');
         $this->set('variable', 'Test variable');
-        DebugBar::addMessage($this->Test->findAll(), 'Find');
         $this->set('time', time());
         $this->loadView();
     }
@@ -61,23 +60,7 @@ class index extends Controller
 
     public function table(): void
     {
-//        (new CreateTable())
-//            ->setName('test')
-//            ->addIdColumn()
-//            ->addSimpleVarcharColumn('a', 100)
-//            ->addSimpleVarcharColumn('b')
-//            ->addDateModifyColumn()
-//            ->addDateCreatedColumn()
-//            ->execute();
-
         $this->loadModel('test');
-
-//        for ($i=0; $i<=600; $i++) {
-//            $this->Test->setId(null)->save([
-//                'a' => Generator::uniqId(50),
-//                'b' => Generator::uniqId(50)
-//            ]);
-//        }
 
         $table = $this->loader->table();
         $table->addAction(

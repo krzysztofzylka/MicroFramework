@@ -1,46 +1,53 @@
-# MicroFramework
-MicroFramework to lekki framework PHP oparty na architekturze MVC z zintegrowanymi rozszerzeniami ułatwiającymi inicjowanie i zarządzanie projektem. Framework ten został zaprojektowany z myślą o elastyczności, co pozwala programistom szybko skonfigurować i zorganizować projekty w efektywny sposób.
+# <h1 align="center">MicroFramework</h1>
 
-# Dlaczego MicroFramework?
-**Prostota Użycia:**
-MicroFramework skupia się na prostocie, dzięki czemu zarówno początkujący, jak i doświadczeni programiści mogą z nim pracować bezproblemowo.
+MicroFramework to lekki framework PHP oparty na architekturze MVC, integrujący rozszerzenia ułatwiające inicjowanie i zarządzanie projektem. Zaprojektowany z myślą o elastyczności, umożliwia programistom szybką konfigurację i efektywne organizowanie projektów.
 
-**Rozszerzenia:**
-Framework obsługuje dodatkowe komponenty, które znacznie poszerzają jego możliwości. Niezależnie od tego, czy potrzebujesz obsługi formularzy czy dynamicznego ładowania modeli, MicroFramework spełni Twoje oczekiwania.
+## Dlaczego warto wybrać MicroFramework?
 
-**Szybki Start:** 
-Komenda init pozwala szybko utworzyć nowy projekt z predefiniowaną strukturą katalogów, oszczędzając czas i wysiłek.
+- **Prostota użycia:** Dzięki skupieniu na prostocie, zarówno początkujący, jak i doświadczeni programiści mogą łatwo pracować z frameworkiem.
+- **Rozszerzenia:** Obsługa dodatkowych komponentów znacznie rozszerza możliwości frameworka, spełniając oczekiwania w zakresie obsługi formularzy czy dynamicznego ładowania modeli.
+- **Szybki start:** Komenda `init` umożliwia szybkie utworzenie nowego projektu z predefiniowaną strukturą katalogów.
+- **Modułowość:** Projektowanie z myślą o modularności pozwala na łatwe dodawanie lub usuwanie komponentów.
 
-**Modułowość:**
-MicroFramework został zaprojektowany z myślą o modularności, co pozwala dodawać lub usuwać komponenty w zależności od wymagań projektu.
+## Instalacja
 
-# Instalacja
-MicroFramework może być łatwo zainstalowany za pomocą Composera. Wystarczy uruchomić poniższą komendę w katalogu swojego projektu:
+Za pomocą Composera MicroFramework można łatwo zainstalować, wykonując poniższą komendę w katalogu projektu:
 ```bash
 composer require krzysztofzylka/micro-framework
 ```
 
 ## Inicjalizacja
-MicroFramework ułatwia inicjowanie projektów. Skorzystaj z poniższej komendy, aby utworzyć nowy projekt:
+
+Ułatwia inicjowanie projektów. Aby utworzyć nowy projekt, użyj komendy:
 ```bash
 php vendor/bin/microframework init <project directory>
 ```
 
-## Struktura
-- `public` folder publiczny
-- `public/assets` dodatkowe pliki dla witryny
+## Używanie konsoli
+
+Poznaj komendy konsoli, używając:
+```bash
+php vendor/bin/microframework
+```
+Dzięki temu poznasz wszystkie dostępne komendy.
+
+## Struktura projektu
+
+- `public` - folder publiczny
+- `public/assets` - zasoby witryny
 - `src/Controller` - kontrolery
 - `src/Model` - modele
 - `src/View` - widoki
-- `storage` - magazyn danych
+- `storage` - przechowywanie danych
 - `storage/log` - logi
+- `migrations` - migracje (obecnie tylko pliki PHP)
 - `.env` - konfiguracja globalna
-- `component.json` - plik z konfiguracją komponentów
-- `local.env` - lokalna konfiguracja
+- `component.json` - konfiguracja komponentów
+- `local.env` - konfiguracja lokalna
 
+## Współtworzenie
 
-# Współtworzenie
-Zapraszamy do współtworzenia! Jeśli masz sugestie, raporty błędów lub chciałbyś przyczynić się do rozwoju MicroFramework, otwórz nowe zgłoszenie (issue) lub prześlij pull request.
+Zachęcamy do współtworzenia! Masz sugestie, znalazłeś błędy, chcesz pomóc w rozwoju? Otwórz issue lub prześlij pull request.
 
-# Pomoc
+## Pomoc
 Wszelkie problemy oraz pytania należy zadawać przez zakładkę discussions w github pod linkiem: https://github.com/krzysztofzylka/MicroFramework/discussions

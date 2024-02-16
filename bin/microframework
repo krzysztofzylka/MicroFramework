@@ -1,0 +1,9 @@
+#!/usr/bin/env php
+<?php
+ob_start();
+
+require(__DIR__ . '/../autoload.php');
+
+$console = new \Krzysztofzylka\MicroFramework\Console\Console();
+$console->run();
+?>

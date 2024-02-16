@@ -9,6 +9,8 @@ use Krzysztofzylka\Console\Generator\Table;
 use Krzysztofzylka\Console\Prints;
 use Krzysztofzylka\File\File;
 use Krzysztofzylka\MicroFramework\Controller;
+use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
+use Krzysztofzylka\MicroFramework\Extension\Database\Database;
 use Krzysztofzylka\MicroFramework\Extension\Log\Log;
 use Krzysztofzylka\MicroFramework\Kernel;
 use Krzysztofzylka\Reflection\Reflection;
@@ -79,6 +81,15 @@ class Console
                 switch ($this->args['args'][1] ?? null) {
                     case 'run':
                         $this->cronRun();
+                        break;
+                    default:
+                        $this->renderHelp();
+                }
+                break;
+            case 'migration':
+                switch ($this->args['args'][1] ?? null) {
+                    case 'run':
+                        $this->migrationRun();
                         break;
                     default:
                         $this->renderHelp();
@@ -399,6 +410,7 @@ class Console
         $help->addHeader('Help');
         $help->addHelp('init', 'Initialize project');
         $help->addHelp('cron run', 'Run CRON');
+        $help->addHelp('migration run', 'Run migration');
         $help->addHelp('component list', 'Component list');
         #$help->addHelp('component install <name> [-secure false]', 'Install component');
         $help->addHeader('Make');
@@ -408,6 +420,34 @@ class Console
         $help->addHeader('Parameters');
         $help->addHelp('-projectPath <path>', 'Define project path');
         $help->render();
+    }
+
+    /**
+     * Database
+     * @return void
+     * @throws MicroFrameworkException
+     */
+    private function migrationRun(): void
+    {
+        $this->print('Run migrations');
+
+        Kernel::$silent = true;
+        new Kernel($this->path);
+
+        if (!$_ENV['DATABASE']) {
+            $this->print('Database is disabled', color: 'red', exit: true);
+        }
+
+        $migration = new Database();
+
+        try {
+            $migration->run();
+        } catch (\Throwable $exception) {
+            $this->print('Migration failed', exit: true, color: 'red');
+        }
+
+        $this->print('Successfully', color: 'green', exit: true);
+
     }
 
 }

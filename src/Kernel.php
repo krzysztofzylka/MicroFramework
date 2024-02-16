@@ -57,7 +57,8 @@ class Kernel
         'src' => null,
         'assets' => null,
         'components_config' => null,
-        'template' => null
+        'template' => null,
+        'migrations' => null
     ];
 
     /**
@@ -97,10 +98,14 @@ class Kernel
             DebugBar::timeStart('component', 'Init components');
             $this->loaderInstance->initComponents();
             DebugBar::timeStop('component');
+        } catch (DatabaseManagerException $exception) {
+            Log::throwableLog($exception, 'Database error');
+
+            throw new MicroFrameworkException($exception->getHiddenMessage(), $exception->getCode(), $exception);
         } catch (Throwable $throwable) {
             Log::throwableLog($throwable, 'Init kernel failed');
 
-            throw new MicroFrameworkException($throwable->getMessage());
+            throw new MicroFrameworkException($throwable->getMessage(), $throwable->getCode(), $throwable);
         }
     }
 
@@ -165,6 +170,7 @@ class Kernel
         self::$paths['storage'] = $this->projectPath . '/storage';
         self::$paths['logs'] = self::$paths['storage'] . '/logs';
         self::$paths['template'] = $this->projectPath . '/template';
+        self::$paths['migrations'] = $this->projectPath . '/migrations';
         self::$paths['assets'] = $this->projectPath . '/public/assets';
         self::$paths['components_config'] = $this->projectPath . '/component.json';
 
@@ -298,9 +304,7 @@ class Kernel
             $manager = new DatabaseManager();
             $manager->connect($connection);
         } catch (DatabaseManagerException $exception) {
-            DebugBar::addThrowable($exception);
-            DebugBar::addFrameworkMessage($exception->getHiddenMessage(), 'ERROR');
-            Log::throwableLog($exception, 'Connect database error');
+            Log::log('Database connect error', 'ERR', ['hidden_message' => $exception->getHiddenMessage()]);
 
             throw $exception;
         }

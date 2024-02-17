@@ -111,19 +111,6 @@ class DebugBar
     }
 
     /**
-     * Render header
-     * @return string
-     */
-    public static function renderHeader(): string
-    {
-        if (!self::$init) {
-            return '';
-        }
-
-        return self::$standardDebugBarRenderer->renderHead();
-    }
-
-    /**
      * Add model message
      * @param $model
      * @return void

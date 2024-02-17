@@ -146,7 +146,7 @@ class Kernel
                 View::loadTemplate($template ?? 'template', ['content' => $content]);
 
                 if ($_ENV['DEBUG']) {
-                    echo DebugBar::renderHeader() . DebugBar::render();
+                    echo DebugBar::render();
                 }
             }
         } catch (Throwable $exception) {

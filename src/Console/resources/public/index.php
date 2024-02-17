@@ -13,9 +13,5 @@ try {
     $kernel->run();
 } catch (Throwable $exception) {
     DebugBar::addThrowable($exception);
-
     View::renderErrorPage($exception);
 }
-
-echo DebugBar::renderHeader();
-echo DebugBar::render();

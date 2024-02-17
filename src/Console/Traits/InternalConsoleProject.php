@@ -30,12 +30,14 @@ trait InternalConsoleProject
 
             File::copyDirectory($this->frameworkPath . '/Console/resources/public', $path . '/public');
             File::copyDirectory($this->frameworkPath . '/Console/resources/resources', $path . '/resources', 0777);
+
+            new Kernel($path);
+
             File::copy($this->frameworkPath . '/Console/resources/.gitignore', $path . '/.gitignore');
             File::copy($this->frameworkPath . '/Console/resources/package.json', $path . '/package.json');
             File::copy($this->frameworkPath . '/Console/resources/tailwind.config.js', $path . '/tailwind.config.js');
             File::copy($this->frameworkPath . '/Console/resources/src/public/css/tailwind.css', $path . '/src/public/css/tailwind.css');
 
-            new Kernel($path);
         } catch (\Throwable $exception) {
             $this->print('Fail initialize project', 'red');
             $this->print($exception->getMessage(), 'red', true);

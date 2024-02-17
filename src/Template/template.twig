@@ -2,10 +2,9 @@
     <head>
         <title>FourFramework</title>
         {{ APP.template.header | raw }}
-        <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-white dark:bg-slate-800 dark:text-white p-3">
-    {{ APP.template.body | raw }}
+        {{ APP.template.body | raw }}
         <div class="content" data-load="{{ APP.here }}">
             {{ content | raw }}
         </div>

@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "autoprefixer": "^10.4.17",
+    "grunt-contrib-concat": "^2.1.0",
+    "grunt-contrib-cssmin": "^5.0.0",
+    "grunt-contrib-uglify": "^5.2.2",
+    "grunt-shell": "^4.0.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "grunt": "^1.6.1"
+  }
+}

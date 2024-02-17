@@ -23,9 +23,9 @@ class View
      */
     public static array $GLOBAL_VARIABLES = [
         'template' => [
-            'header' => '<script src="https://cdn.tailwindcss.com"></script>'
-                . PHP_EOL . '<link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />'
-                . PHP_EOL . '<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>',
+            'header' => '<link href="/theme.css" rel="stylesheet" />'
+                . PHP_EOL . '<link href="/app.css" rel="stylesheet" />'
+                . PHP_EOL . '<script src="/app.js"></script>',
             'body' => '',
             'footer' => ''
         ]
@@ -95,6 +95,7 @@ class View
             400 => 'Bad Request'
         };
 
+        header("HTTP/1.1 " . $code . " " . $message);
         self::simpleLoad(
             __DIR__ . '/Template/error.twig',
             [
@@ -106,7 +107,7 @@ class View
         );
 
         if ($_ENV['DEBUG']) {
-            echo DebugBar::renderHeader() . DebugBar::render();
+            echo DebugBar::render();
         }
     }
 

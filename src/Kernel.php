@@ -59,7 +59,8 @@ class Kernel
         'assets' => null,
         'components_config' => null,
         'template' => null,
-        'migrations' => null
+        'migrations' => null,
+        'resources' => null
     ];
 
     /**
@@ -133,7 +134,6 @@ class Kernel
             View::$GLOBAL_VARIABLES['here'] = '/' . $controller . '/' . $method . ($parameters ? ('/' . implode('/', $parameters)) : '');
             DebugBar::timeStop('run');
             DebugBar::addFrameworkMessage(['controller' => $controller, 'method' => $method, 'parameters' => $parameters, 'url' => $url], 'Run route');
-            Ajax::load();
             $route = new Route();
             ob_start();
             $route->start($controller, $method, $parameters);
@@ -146,7 +146,7 @@ class Kernel
                 View::loadTemplate($template ?? 'template', ['content' => $content]);
 
                 if ($_ENV['DEBUG']) {
-                    echo DebugBar::renderHeader() . DebugBar::render();
+                    echo DebugBar::render();
                 }
             }
         } catch (Throwable $exception) {
@@ -173,10 +173,14 @@ class Kernel
         self::$paths['env'] = $this->projectPath . '/.env';
         self::$paths['local_env'] = $this->projectPath . '/local.env';
         self::$paths['storage'] = $this->projectPath . '/storage';
+        self::$paths['tmp'] = self::$paths['storage'] . '/tmp';
         self::$paths['logs'] = self::$paths['storage'] . '/logs';
         self::$paths['template'] = $this->projectPath . '/template';
         self::$paths['migrations'] = $this->projectPath . '/migrations';
+        self::$paths['resources'] = $this->projectPath . '/resources';
         self::$paths['assets'] = $this->projectPath . '/public/assets';
+        self::$paths['css'] = self::$paths['src']  . '/public/css';
+        self::$paths['js'] = self::$paths['src']  . '/public/js';
         self::$paths['components_config'] = $this->projectPath . '/component.json';
 
         if (!self::$silent) {
@@ -222,6 +226,10 @@ class Kernel
 
             if (!isset($_SERVER['SERVER_PORT'])) {
                 $_SERVER['SERVER_PORT'] = 80;
+            }
+
+            if (!isset($_SERVER['HTTP_HOST'])) {
+                $_SERVER['HTTP_HOST'] = '';
             }
 
             $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";

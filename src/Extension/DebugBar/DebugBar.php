@@ -111,19 +111,6 @@ class DebugBar
     }
 
     /**
-     * Render header
-     * @return string
-     */
-    public static function renderHeader(): string
-    {
-        if (!self::$init) {
-            return '';
-        }
-
-        return self::$standardDebugBarRenderer->renderHead();
-    }
-
-    /**
      * Add model message
      * @param $model
      * @return void
@@ -222,7 +209,6 @@ class DebugBar
     public function init(): void
     {
         self::$init = true;
-        $this->copyAssets();
         self::$standardDebugBar = new StandardDebugBar();
         self::$standardDebugBarRenderer = self::$standardDebugBar->getJavascriptRenderer();
         self::$standardDebugBar->addCollector(new MessagesCollector('framework'));
@@ -250,24 +236,6 @@ class DebugBar
 
             self::$standardDebugBar->addCollector($pdoCollector);
         }
-    }
-
-    /**
-     * Copy assets
-     * @return void
-     * @throws Exception
-     */
-    private function copyAssets(): void
-    {
-        $from = __DIR__ . '/../../../vendor/maximebf/debugbar/src/DebugBar/Resources';
-        $to = Kernel::getPath('assets') . '/../vendor/maximebf/debugbar/src/DebugBar/Resources';
-
-        if (file_exists($to)) {
-            return;
-        }
-
-        File::mkdir($to);
-        File::copyDirectory($from, $to);
     }
 
 }

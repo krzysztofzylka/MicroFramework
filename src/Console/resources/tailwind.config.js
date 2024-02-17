@@ -3,7 +3,7 @@ module.exports = {
   content: [
     "./src/**/*.js",
     './src/**/*.twig',
-    './templates/**/*.twig',
+    './template/**/*.twig',
     './resources/**/*.twig',
     "./resources/**/*.js"
   ],

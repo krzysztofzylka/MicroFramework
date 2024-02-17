@@ -59,7 +59,8 @@ class Kernel
         'assets' => null,
         'components_config' => null,
         'template' => null,
-        'migrations' => null
+        'migrations' => null,
+        'resources' => null
     ];
 
     /**
@@ -173,10 +174,14 @@ class Kernel
         self::$paths['env'] = $this->projectPath . '/.env';
         self::$paths['local_env'] = $this->projectPath . '/local.env';
         self::$paths['storage'] = $this->projectPath . '/storage';
+        self::$paths['tmp'] = self::$paths['storage'] . '/tmp';
         self::$paths['logs'] = self::$paths['storage'] . '/logs';
         self::$paths['template'] = $this->projectPath . '/template';
         self::$paths['migrations'] = $this->projectPath . '/migrations';
+        self::$paths['resources'] = $this->projectPath . '/resources';
         self::$paths['assets'] = $this->projectPath . '/public/assets';
+        self::$paths['css'] = self::$paths['src']  . '/public/css';
+        self::$paths['js'] = self::$paths['src']  . '/public/js';
         self::$paths['components_config'] = $this->projectPath . '/component.json';
 
         if (!self::$silent) {

@@ -1,0 +1,1 @@
+npx tailwindcss -i ./src/public/css/tailwind.css -o ./storage/tmp/theme.css

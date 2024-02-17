@@ -10,7 +10,11 @@ MicroFramework to lekki framework PHP oparty na architekturze MVC, integrujący 
 - **Modułowość:** Projektowanie z myślą o modularności pozwala na łatwe dodawanie lub usuwanie komponentów.
 
 ## Instalacja
-
+### Instalacja wymaganych pakietów dla ubuntu
+```bash
+sudo apt install npm
+npm install -g grunt-cli
+```
 Za pomocą Composera MicroFramework można łatwo zainstalować, wykonując poniższą komendę w katalogu projektu:
 ```bash
 composer require krzysztofzylka/micro-framework

@@ -15,7 +15,10 @@ WORKDIR ${WEBROOT_PATH}
 
 # Package
 RUN apt update
-RUN apt -y install software-properties-common iproute2 ca-certificates apt-transport-https
+RUN apt -y install software-properties-common iproute2 ca-certificates apt-transport-https npm
+
+# NPM package
+RUN npm install tailwindcss postcss autoprefixer
 
 # Apache2
 RUN apt -y install apache2 libapache2-mod-fcgid composer && \

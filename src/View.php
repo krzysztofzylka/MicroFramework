@@ -23,9 +23,7 @@ class View
      */
     public static array $GLOBAL_VARIABLES = [
         'template' => [
-            'header' => '<script src="https://cdn.tailwindcss.com"></script>'
-                . PHP_EOL . '<link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />'
-                . PHP_EOL . '<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>',
+            'header' => '',
             'body' => '',
             'footer' => ''
         ]

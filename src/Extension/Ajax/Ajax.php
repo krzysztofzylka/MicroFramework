@@ -17,12 +17,6 @@ class Ajax
      */
     public static function load(): void
     {
-        View::addJsScript('https://code.jquery.com/jquery-3.7.1.min.js');
-        View::addJsScript('https://code.jquery.com/ui/1.13.1/jquery-ui.min.js');
-        View::addCssScript('https://code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css');
-        View::addJsScript('https://cdn.jsdelivr.net/npm/vanillatoasts@1.4.0/vanillatoasts.js');
-        View::addCssScript('https://cdn.jsdelivr.net/npm/vanillatoasts@1.4.0/vanillatoasts.css');
-
         foreach (scandir(__DIR__ . '/assets') as $asset) {
             $extension = File::getExtension($asset);
             File::mkdir(Kernel::getPath('assets') . '/ajax/');

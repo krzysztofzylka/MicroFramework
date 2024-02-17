@@ -27,7 +27,15 @@ module.exports = {
     'dark:focus:ring-blue-800', 'inset-y-0', 'rtl:inset-r-0', 'start-0', 'ps-3', 'pointer-events-none', 'p-2', 'ps-10', 'w-80', 'bg-gray-50',
     'focus:ring-blue-500', 'focus:border-blue-500', 'dark:placeholder-gray-400', 'dark:focus:ring-blue-500', 'dark:focus:border-blue-500', 'p-0', 'm-0',
     'relative', 'rtl:text-right', 'px-6', 'py-2', 'py-3', 'py-4', 'text-gray-700', 'uppercase', 'hover:bg-gray-50', 'md:w-1/2', 'w-4', 'h-4', 'rounded-s-lg',
-    'rounded-e-lg',
+    'rounded-e-lg', 'bg-red-50', 'border-red-500', 'text-red-900', 'placeholder-red-700', 'focus:ring-red-500', 'focus:border-red-500', 'p-2.5',
+    'dark:bg-red-100', 'dark:border-red-400', 'sm:text-sm', 'focus:ring-primary-600', 'focus:border-primary-600', 'cursor-pointer', 'border-red-300',
+    'dark:text-red-300', 'dark:bg-red-900', 'dark:border-red-600', 'dark:placeholder-red-400', 'px-0', 'border-0', 'focus:ring-0', 'line-flex', 'px-4',
+    'text-center', 'focus:ring-blue-200', 'dark:focus:ring-blue-900', 'focus:ring-red-100', 'bg-gray-100', 'dark:focus:ring-blue-600', 'dark:ring-offset-gray-800',
+    'dark:focus:ring-offset-gray-800', 'focus:ring-2', 'mr-2', 'w-11', 'h-6', 'bg-gray-200', 'peer-focus:outline-none', 'peer-focus:ring-4',
+    'peer-focus:ring-blue-300', 'dark:peer-focus:ring-blue-800', 'peer', 'peer-checked:after:translate-x-full', 'rtl:peer-checked:after:-translate-x-full',
+    'peer-checked:after:border-white', 'after:content-[\'\']', 'after:absolute', 'after:top-[2px]', 'after:start-[2px]', 'after:bg-white', 'after:border-gray-300',
+    'after:border', 'after:rounded-full', 'after:h-5', 'after:w-5', 'after:transition-all', 'peer-checked:bg-blue-600', 'mt-2', 'sm:w-auto', 'pl-10', 'left-0',
+    'pl-3.5', 'mt-1', 'dark:text-gray-300', 'rounded-t-lg', 'dark:bg-red-800', 'border-t', 'ml-2', 'h-5'
   ]
 }
 

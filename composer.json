@@ -35,7 +35,7 @@
         "krzysztofzylka/strings": "^1.0.0",
         "krzysztofzylka/request": "^1.0.1",
         "krzysztofzylka/file": "^1.0.1",
-        "krzysztofzylka/console": "^1.0.1",
+        "krzysztofzylka/console": "^1.0.3",
         "krzysztofzylka/env": "^1.0.1",
         "krzysztofzylka/html-generator": "^2.0.5",
         "krzysztofzylka/hash": "^1.0.2",

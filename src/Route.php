@@ -33,8 +33,8 @@ class Route
         $class->name = $controller;
         $class->action = $method;
         $class->response = new Response();
-        $class->loader = new Loader();
         $class->data = Request::isPost() ? Arrays::escape($_POST) : null;
+        $class->loader = new Loader();
         DebugBar::timeStop('define_variables');
 
         if (!is_null($class->data)) {

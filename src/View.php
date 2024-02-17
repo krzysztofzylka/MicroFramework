@@ -95,6 +95,7 @@ class View
             400 => 'Bad Request'
         };
 
+        header("HTTP/1.1 " . $code . " " . $message);
         self::simpleLoad(
             __DIR__ . '/Template/error.twig',
             [
@@ -106,7 +107,7 @@ class View
         );
 
         if ($_ENV['DEBUG']) {
-            echo DebugBar::renderHeader() . DebugBar::render();
+            echo DebugBar::render();
         }
     }
 

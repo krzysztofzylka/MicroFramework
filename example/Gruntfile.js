@@ -4,6 +4,8 @@ module.exports = function(grunt) {
         concat: {
             js: {
                 src: [
+                    'resources/jquery.min.js',
+                    'resources/jquery-ui.min.js',
                     'src/public/js/*.js',
                     'resources/**/*.js'
                 ],

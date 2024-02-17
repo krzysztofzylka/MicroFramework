@@ -23,7 +23,9 @@ class View
      */
     public static array $GLOBAL_VARIABLES = [
         'template' => [
-            'header' => '',
+            'header' => '<link href="/theme.css" rel="stylesheet" />'
+                . PHP_EOL . '<link href="/app.css" rel="stylesheet" />'
+                . PHP_EOL . '<script src="/app.js"></script>',
             'body' => '',
             'footer' => ''
         ]

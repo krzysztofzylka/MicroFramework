@@ -134,7 +134,6 @@ class Kernel
             View::$GLOBAL_VARIABLES['here'] = '/' . $controller . '/' . $method . ($parameters ? ('/' . implode('/', $parameters)) : '');
             DebugBar::timeStop('run');
             DebugBar::addFrameworkMessage(['controller' => $controller, 'method' => $method, 'parameters' => $parameters, 'url' => $url], 'Run route');
-            Ajax::load();
             $route = new Route();
             ob_start();
             $route->start($controller, $method, $parameters);

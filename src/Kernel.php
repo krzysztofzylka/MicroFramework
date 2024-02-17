@@ -228,6 +228,10 @@ class Kernel
                 $_SERVER['SERVER_PORT'] = 80;
             }
 
+            if (!isset($_SERVER['HTTP_HOST'])) {
+                $_SERVER['HTTP_HOST'] = '';
+            }
+
             $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
 
             $_ENV['URL'] = $protocol . '://' . $_SERVER['HTTP_HOST'] . '/';

@@ -2,6 +2,7 @@
 
 namespace Krzysztofzylka\MicroFramework\Console\Traits;
 
+use Krzysztofzylka\Console\Form;
 use Krzysztofzylka\File\File;
 use Krzysztofzylka\MicroFramework\Exception\MicroFrameworkException;
 use Krzysztofzylka\MicroFramework\Kernel;
@@ -22,7 +23,7 @@ trait InternalConsoleMake
     {
         switch ($name) {
             case 'controller':
-                $controllerName = $this->input('Controller name:');
+                $controllerName = Form::input('Controller name:');
                 $controllerDirectory = $this->path . '/src/Controller';
                 $controllerPath = $controllerDirectory . '/' . $controllerName . '.php';
 
@@ -47,7 +48,7 @@ trait InternalConsoleMake
                 Kernel::$silent = true;
                 new Kernel($this->path);
 
-                $controllerName = $this->input('Controller name:');
+                $controllerName = Form::input('Controller name:');
                 $controllerDirectory = $this->path . '/src/Controller';
                 $controllerPath = $controllerDirectory . '/' . $controllerName . '.php';
 
@@ -55,7 +56,7 @@ trait InternalConsoleMake
                     $this->print('Controller ' . $controllerName . ' not exists', color: 'red', exit: true);
                 }
 
-                $methodName = $this->input('Method name:');
+                $methodName = Form::input('Method name:');
                 $methodList = array_column(Reflection::getClassMethods('\src\Controller\\' . $controllerName), 'method');
 
                 if (in_array($methodName, $methodList)) {
@@ -63,9 +64,8 @@ trait InternalConsoleMake
                 }
 
                 $makeFile = 'method';
-                $createView = $this->input('Create view (y/n)');
 
-                if ($createView === 'y') {
+                if (Form::prompt('Create view', exit: false)) {
                     File::mkdir($this->path . '/src/View/' . $controllerName);
                     file_put_contents($this->path . '/src/View/' . $controllerName . '/' . $methodName . '.twig', '');
                     $makeFile = 'method_view';

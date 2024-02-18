@@ -2,7 +2,18 @@
 <?php
 ob_start();
 
-require(__DIR__ . '/../autoload.php');
+$paths = [
+    __DIR__ . '/../autoload.php',
+    __DIR__ . '/../../../autoload.php'
+];
+
+foreach ($paths as $path) {
+    if (file_exists($path)) {
+        require($path);
+
+        break;
+    }
+}
 
 $console = new \Krzysztofzylka\MicroFramework\Console\Console();
 $console->run();

@@ -1,5 +1,6 @@
 .idea
 package-lock.json
 local.env
+composer.lock
 node_modules
 storage/tmp/*

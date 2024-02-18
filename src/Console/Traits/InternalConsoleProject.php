@@ -29,6 +29,7 @@ trait InternalConsoleProject
             ], 0777);
 
             File::copyDirectory($this->frameworkPath . '/Console/resources/public', $path . '/public');
+            File::copyDirectory($this->frameworkPath . '/Console/resources/public/fonts', $path . '/public/fonts');
             File::copyDirectory($this->frameworkPath . '/Console/resources/resources', $path . '/resources', 0777);
 
             new Kernel($path);
@@ -36,6 +37,7 @@ trait InternalConsoleProject
             File::copy($this->frameworkPath . '/Console/resources/.gitignore', $path . '/.gitignore');
             File::copy($this->frameworkPath . '/Console/resources/package.json', $path . '/package.json');
             File::copy($this->frameworkPath . '/Console/resources/tailwind.config.js', $path . '/tailwind.config.js');
+            File::copy($this->frameworkPath . '/Console/resources/Gruntfile.js', $path . '/Gruntfile.js');
             File::copy($this->frameworkPath . '/Console/resources/src/public/css/tailwind.css', $path . '/src/public/css/tailwind.css');
 
         } catch (\Throwable $exception) {
